@@ -1,0 +1,11 @@
+a {
+    color:black;
+}
+.menu ul {
+    list-style-type:none;
+    border: 1px solid #666;
+}
+.menu li {
+    display:inline-block;
+}
+

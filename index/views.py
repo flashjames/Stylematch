@@ -9,6 +9,11 @@ from django.http import HttpResponseRedirect
 def index(request):
     return {}
 
+@render_to('profile_index.html')
+def profile_index(request):
+    return {}
+
+
 def logout_page(request):
     """
     Log users out and re-direct them to the main page.

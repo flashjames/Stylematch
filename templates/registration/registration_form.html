@@ -1,0 +1,16 @@
+{% extends "base_head.html" %}
+{% load url from future %}
+{% load index_extras %}
+
+{% block title %}Register plix{% endblock %}
+{% block content %}
+  <div class="prefix_5 grid_4">
+
+
+    <form action="" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="Submit" />
+    </form>
+  </div>
+{% endblock %}

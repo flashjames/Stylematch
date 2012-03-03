@@ -1,0 +1,16 @@
+{% extends "base_head.html" %}
+{% load url from future %}
+{% load index_extras %}
+
+
+{% block content %}
+  <div class="grid_4">
+    <p>Profile picture</p>
+  </div>
+  <div class="grid_10 prefix_1">
+    <p>Profile name: {{ profile.first_name }}  {{profile.last_name}}</p>
+    <p>Profile text: {{ profile.profile_text }}</p>
+    <p> This is the profile's url: {{ profile.url }} </p>
+  </div
+
+{% endblock %}

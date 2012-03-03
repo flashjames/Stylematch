@@ -1,9 +1,7 @@
 {% extends "base.html" %}
 {% load url from future %}
 
-{% block title %}Somebody should change me.{% endblock %}
-
-{% block content %}
+{% block header %}
   <div class="container_16">
     <div class="grid_4">
       {% if user.is_authenticated %}
@@ -24,20 +22,4 @@
       {% include 'menus/main_user_menu.html' %}
     </div>
     <div class="clear"></div>
-    <div class="grid_16">
-      <p>
-        Search field
-      </p>
-    </div>
-    <!-- end .grid_12 -->
-    <div class="clear"></div>
-    <div class="grid_3">
-      <p>
-        Linköping (gissade via IP), Button: Not right City?
-      </p>
-    </div>
-    <div class="clear"></div>
-    <div class="grid_12">
-      <p>Bilder på frisörer</p>
-    </div>
   {% endblock %}

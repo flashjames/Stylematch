@@ -1,7 +1,7 @@
 # Create your views here.
-from django.http import HttpResponse
+# from django.http import HttpResponse
 from annoying.decorators import render_to
-from django.shortcuts import render_to_response
+# from django.shortcuts import render_to_response
 from django.contrib import auth
 from django.http import HttpResponseRedirect
 
@@ -11,6 +11,7 @@ def index(request):
 
 @render_to('profile_index.html')
 def profile_index(request):
+    
     return {}
 
 

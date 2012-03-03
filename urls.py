@@ -5,7 +5,8 @@ from django.conf import settings
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     # Examples:
     # url(r'^$', 'styleseat.views.home', name='home'),
     # url(r'^styleseat/', include('styleseat.foo.urls')),
@@ -23,7 +24,10 @@ urlpatterns = patterns('',
     url(r'^profile_index$', 'index.views.profile_index'),
     url(r'^display_profile$', 'accounts.views.display_profile'),
     url(r'^$', 'index.views.index'),
+    (r'^accounts/', include('registration.urls')), # django-registration
     
+    (r'^profiles/', include('profiles.urls')), # django-profiles
+    (r'^test/(?P<username>\w+)$', 'profiles.views.profile_detail'),
 )
 
 if settings.DEBUG:

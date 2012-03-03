@@ -2,16 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>960 Grid System &mdash; Demo</title>
-    <link rel="stylesheet" href="static/css/reset.css" />
-    <link rel="stylesheet" href="static/css/text.css" />
-    <link rel="stylesheet" href="static/css/960.css" />
-    <link rel="stylesheet" href="static/css/demo.css" />
-    <link rel="stylesheet" href="static/css/style.css" />
-    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ request.get_full_path }}/static/css/reset.css" />
+    <link rel="stylesheet" href="{{ request.get_full_path }}/static/css/text.css" />
+    <link rel="stylesheet" href="{{ request.get_full_path }}/static/css/960.css" />
+    <link rel="stylesheet" href="{{ request.get_full_path }}/static/css/demo.css" />
+    <link rel="stylesheet" href="{{ request.get_full_path }}/static/css/style.css" />
+
+  
+    
+    <title>{% block title %}Hi{% endblock %}</title>
   </head>
   <body>
-    {% block content %}{% endblock %}
-    {% block footer %}{% endblock %}
+    {% block header %} {% endblock %}
+    {% block content %} {% endblock %}
+    {% block footer %} {% endblock %}
   </body>
 </html>

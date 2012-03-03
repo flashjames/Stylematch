@@ -1,5 +1,9 @@
+{% load url from future %}
+
 <ul>
-  <li><a href="">Hitta frisör</a></li>
-  <li><a href="">Få inspiration</a></li>
-  <li><a href="profile_index">Visa profil</a></li>
+  <li><a href="/">Hitta frisör</a></li>
+  <li><a href="/">Få inspiration</a></li>
+  {% if user.is_authenticated %}
+    <li><a href="{% url 'profiles_profile_detail' username=user.username %}">Visa profil</a></li>
+  {% endif %}
 </ul>

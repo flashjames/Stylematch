@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load index_extras %}
+{% block content %}
+  <p>Listing all profiles with an url</p>
+  {% for profile in object_list %}
+    <p> {{ profile.url }} </p>
+    <p> {{ profile.name }} </p>
+    <!-- ta ut profilen, kom på ett sätt att inspektera vad som finns i variabeln
+         Bästa sättet är antagligen att installera debug_toolbar-->
+
+       {% endfor %}
+    {% endblock %}

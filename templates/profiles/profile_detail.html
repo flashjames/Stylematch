@@ -16,5 +16,20 @@
     <p>Profile text: {{ profile.profile_text }}</p>
     <p> This is the profile's url: {{ profile.url }} </p>
   </div>
+  <div class="clear"></div>
+  <div class="grid_16">
+    <div id="gallery">
+            <img src="http://www.prelovac.com/vladimir/wp-content/uploads/2008/03/example.jpg">
+            <img src="http://www.flash-slideshow-maker.com/images/help_clip_image020.jpg">
+            <img src="http://freeimagesarchive.com/data/media/8/1_images.jpg">
+        </div>
+       <script>
+            Galleria.loadTheme('{{ GALLERIA_THEME }}');
+            $("#gallery").galleria({
+                width: 900,
+                height: 500
+            });
+        </script>
+  </div>
 
 {% endblock %}

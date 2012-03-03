@@ -1,2 +1,14 @@
 How to use virtualenv and get into right shell
 http://www.nerdydork.com/django-dev-environment-virtualenv-pip-git-pycharm.html
+
+Used this stub to install Galleria in Django (not really needed?)
+Mostly gives TEMPLATE_CONTEXT_VARIABLES
+https://github.com/andrewebdev/django-galleria
+Is it possible to add this to the requirements file, so it's 
+downloaded with pip even though it's not in PIP's catalogue. 
+I.e. download it from github and auto install.
+
+
+
+Before deploy:
+       Setup all static files, to be served different with if  DEBUG:

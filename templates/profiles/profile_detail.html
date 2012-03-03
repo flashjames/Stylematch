@@ -2,6 +2,10 @@
 {% load url from future %}
 {% load index_extras %}
 
+{% block html-head %}
+  <script src="{{ GALLERIA_SCRIPT }}" type="text/javascript" />
+  <script type="text/javascript"> Galleria.loadTheme('{{ GALLERIA_THEME }}'); </script>
+{% endblock %}
 
 {% block content %}
   <div class="grid_4">
@@ -11,6 +15,6 @@
     <p>Profile name: {{ profile.first_name }}  {{profile.last_name}}</p>
     <p>Profile text: {{ profile.profile_text }}</p>
     <p> This is the profile's url: {{ profile.url }} </p>
-  </div
+  </div>
 
 {% endblock %}

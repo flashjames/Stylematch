@@ -7,7 +7,11 @@
     <link rel="stylesheet" href="{{ request.get_full_path }}/static/css/960.css" />
     <link rel="stylesheet" href="{{ request.get_full_path }}/static/css/demo.css" />
     <link rel="stylesheet" href="{{ request.get_full_path }}/static/css/style.css" />
+    
+    <script type="text/javascript" src="{{ JQUERY_SCRIPT }}"></script>
 
+    {# Used to load js that's specific to a page #}
+    {% block html-head %}{% endblock %}
   
     
     <title>{% block title %}Hi{% endblock %}</title>

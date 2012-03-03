@@ -1,0 +1,45 @@
+{% extends "base_head.html" %}
+{% load upload_tags %}
+{% load url from future %}
+{% load index_extras %}
+
+{% block html-head %}
+<link rel="stylesheet" href="/static/jqueryui/1.8.14/themes/base/jquery.ui.all.css" id="theme">
+<link rel="stylesheet" href="/static/jquery.fileupload-ui.css">
+<link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="/static/thumbnail-scaling.css">
+
+{% endblock %}
+
+{% block content %}
+<div class="grid_16">
+<div id="fileupload">
+  <form method="post" action="" enctype="multipart/form-data">
+    <div class="fileupload-buttonbar">
+      {% csrf_token %}
+      <label class="fileinput-button">
+        <span>Add files...</span>
+        <input type="file" name="file" multiple>
+      </label>
+      <button type="submit" class="start">Start upload</button>
+      <button type="reset" class="cancel">Cancel upload</button>
+      <button type="button" class="delete">Delete files</button>
+    </div>
+  </form>
+  <div class="fileupload-content">
+    <table class="files"></table>
+    <div class="fileupload-progressbar"></div>
+  </div>
+
+  {% upload_js %}
+  <script src="/static/jquery-1.6.2.min.js"></script>
+  <script src="/static/jquery-ui-1.8.14.custom.min.js"></script>
+  <script src="/static/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+  <script src="/static/jquery.iframe-transport.js"></script>
+  <script src="/static/jquery.fileupload.js"></script>
+  <script src="/static/jquery.fileupload-ui.js"></script>
+  <script src="/static/application.js"></script>
+
+</div>
+
+{% endblock %}

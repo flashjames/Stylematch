@@ -5,10 +5,15 @@ from django.http import HttpResponse
 from django.utils import simplejson
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
+from django import forms
 
 from django.conf import settings
 
-import os, uuid
+from optparse import OptionParser
+
+import inspect
+
+import os, uuid, pdb
 def response_mimetype(request):
     if "application/json" in request.META['HTTP_ACCEPT']:
         return "application/json"
@@ -26,31 +31,34 @@ def get_image_url(filename):
 
 class PictureCreateView(CreateView):
     model = Picture
-    """
-    # Add some custom validation to our image field
-    def clean_image(self):
-        image = self.cleaned_data.get('image',False)
+      
+    # Add some custom validation to our image field.
+    # TODO: Should override a function, earlier in validation flow
+    # than form_valid() where it's called right now
+    def clean_image(self,image):
         if image:
-            if image._size > 20*1024*1024:
+            if image._size > settings.MAX_IMAGE_SIZE:
                 raise ValidationError("Image file too large ( > 20mb )")
             return image
         else:
             raise ValidationError("Couldn't read uploaded image")
-    """
-        
+      
     # Called when we're sure all fields in the form are valid
     def form_valid(self, form):
+
         f = self.request.FILES.get('file')
 
-        # This isnt the most beautiful way to pass user object
-        # to the model
+        # check if image size is ok
+        self.clean_image(f)
+
         filename=get_unique_filename(f.name)
         self.object = form.save(commit=False)
         self.object.save(user=self.request.user,filename=filename)
-
+        
         image_url = get_image_url(filename)
 
         data = [{'name': f.name, 'url': image_url, 'thumbnail_url': image_url, 'delete_url': reverse('upload-delete', args=[self.object.id]), 'delete_type': "DELETE"}]
+
         response = JSONResponse(data, {}, response_mimetype(self.request))
         response['Content-Disposition'] = 'inline; filename=files.json'
         return response

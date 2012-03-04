@@ -8,20 +8,20 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         
-        # Adding model 'Picture'
-        db.create_table('fileupload_picture', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('file', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(db_index=True, max_length=50, blank=True)),
-            ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
-        ))
-        db.send_create_signal('fileupload', ['Picture'])
+        # Removing unique constraint on 'Picture', fields ['user']
+        db.delete_unique('fileupload_picture', ['user_id'])
+
+        # Changing field 'Picture.user'
+        db.alter_column('fileupload_picture', 'user_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User']))
 
 
     def backwards(self, orm):
         
-        # Deleting model 'Picture'
-        db.delete_table('fileupload_picture')
+        # Changing field 'Picture.user'
+        db.alter_column('fileupload_picture', 'user_id', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True))
+
+        # Adding unique constraint on 'Picture', fields ['user']
+        db.create_unique('fileupload_picture', ['user_id'])
 
 
     models = {
@@ -66,7 +66,7 @@ class Migration(SchemaMigration):
             'file': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'slug': ('django.db.models.fields.SlugField', [], {'db_index': 'True', 'max_length': '50', 'blank': 'True'}),
-            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['auth.User']", 'unique': 'True'})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
         }
     }
 

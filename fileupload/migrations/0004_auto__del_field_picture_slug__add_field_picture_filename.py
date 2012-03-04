@@ -8,20 +8,20 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         
-        # Adding model 'Picture'
-        db.create_table('fileupload_picture', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('file', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(db_index=True, max_length=50, blank=True)),
-            ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
-        ))
-        db.send_create_signal('fileupload', ['Picture'])
+        # Deleting field 'Picture.slug'
+        db.delete_column('fileupload_picture', 'slug')
+
+        # Adding field 'Picture.filename'
+        db.add_column('fileupload_picture', 'filename', self.gf('django.db.models.fields.CharField')(default='', max_length=50, blank=True), keep_default=False)
 
 
     def backwards(self, orm):
         
-        # Deleting model 'Picture'
-        db.delete_table('fileupload_picture')
+        # Adding field 'Picture.slug'
+        db.add_column('fileupload_picture', 'slug', self.gf('django.db.models.fields.SlugField')(blank=True, default='', max_length=50, db_index=True), keep_default=False)
+
+        # Deleting field 'Picture.filename'
+        db.delete_column('fileupload_picture', 'filename')
 
 
     models = {
@@ -64,9 +64,9 @@ class Migration(SchemaMigration):
         'fileupload.picture': {
             'Meta': {'object_name': 'Picture'},
             'file': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
+            'filename': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'db_index': 'True', 'max_length': '50', 'blank': 'True'}),
-            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['auth.User']", 'unique': 'True'})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
         }
     }
 

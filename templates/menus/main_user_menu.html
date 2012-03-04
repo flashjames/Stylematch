@@ -6,5 +6,6 @@
   {% if user.is_authenticated %}
     <li><a href="{% url 'profiles_profile_detail' username=user.username %}">Visa profil</a></li>
      <li><a href="{% url 'profiles_edit_profile' %}">Förändra profil</a></li>
+     <li><a href="{% url 'upload-new' %}">Ladda upp bilder</a></li>
   {% endif %}
 </ul>

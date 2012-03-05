@@ -5,11 +5,8 @@ from django.http import HttpResponse
 from django.utils import simplejson
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
-from django import forms
 
 from django.conf import settings
-
-from optparse import OptionParser
 
 import inspect
 
@@ -42,7 +39,17 @@ class PictureCreateView(CreateView):
             return image
         else:
             raise ValidationError("Couldn't read uploaded image")
-      
+
+    def get_form(self, form_class):
+        form = super(PictureCreateView, self).get_form(form_class)
+        form.instance.user = self.request.user
+        # pdb.set_trace()
+        return form
+
+    def form_invalid(self, form):
+        pdb.set_trace()
+        return self.render_to_response(self.get_context_data(form=form))
+    
     # Called when we're sure all fields in the form are valid
     def form_valid(self, form):
 

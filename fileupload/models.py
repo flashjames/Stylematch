@@ -25,7 +25,7 @@ class Picture(models.Model):
     file = models.ImageField(upload_to=get_image_path)
     filename = models.CharField(max_length=50, blank=True)
     user = models.ForeignKey(User, editable=False)
-    upload_date = models.DateTimeField(auto_now_add=True)
+    upload_date = models.DateTimeField(auto_now_add=True,editable=False)
     
 
 

@@ -21,7 +21,12 @@ $(function () {
         acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
         resizeMaxWidth: 1920,
         resizeMaxHeight: 1200,
-	previewAsCanvas: false,
+
+	// change size of the images (when they are added to be uploaded)
+	// to change size of images that's already uploaded -> change css
+	// since they isnt rendered the same way
+	previewMaxWidth: 80,
+	previewMaxHeight: 80,
 
         // the three following parameters are set because
         // the django view expects a request for each fileupload

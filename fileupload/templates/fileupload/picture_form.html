@@ -71,6 +71,7 @@
     <form id="fileupload" action="" method="post" enctype="multipart/form-data">
         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
         <div class="row fileupload-buttonbar">
+	  {% csrf_token %}
             <div class="span7">
                 <!-- The fileinput-button span is used to style the file input field as button -->
                 <span class="btn btn-success fileinput-button">
@@ -103,7 +104,7 @@
     </form>
     <br>
     <div class="well">
-        <h3>Demo Notes</h3>
+        <h3>Demo Notess</h3>
         <ul>
             <li>The maximum file size for uploads in this demo is <strong>5 MB</strong> (default file size is unlimited).</li>
             <li>Only image files (<strong>JPG, GIF, PNG</strong>) are allowed in this demo (by default there is no file type restriction).</li>

@@ -47,7 +47,7 @@ class PictureCreateView(CreateView):
         return form
 
     def form_invalid(self, form):
-        pdb.set_trace()
+        #pdb.set_trace()
         return self.render_to_response(self.get_context_data(form=form))
     
     # Called when we're sure all fields in the form are valid

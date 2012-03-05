@@ -142,19 +142,23 @@
                         }
                         that._transition($(this)).done(
                             function () {
+				
                                 var node = $(this);
+				
                                 template = that._renderDownload([file])
                                     .css('height', node.height())
                                     .replaceAll(node);
                                 // Force reflow:
                                 that._reflow = $.support.transition &&
                                     template[0].offsetWidth;
+				debugger;
                                 that._transition(template).done(
                                     function () {
                                         data.context = $(this);
                                         that._trigger('completed', e, data);
                                     }
                                 );
+
                             }
                         );
                     });
@@ -368,6 +372,7 @@
             var that = this,
                 options = this.options,
                 deferred = $.Deferred();
+	    console.log(deferred);
             return (loadImage(
                 file,
                 function (img) {

@@ -16,50 +16,41 @@ $(function () {
     'use strict';
 
     // Initialize the jQuery File Upload widget:
-    $('#fileupload').fileupload();
+    $('#fileupload').fileupload({
+        maxFileSize: 5000000,
+        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+        resizeMaxWidth: 1920,
+        resizeMaxHeight: 1200,
+	previewAsCanvas: false,
+
+        // the three following parameters are set because
+        // the django view expects a request for each fileupload
+        // -> ineffecient, but didnt need to rebuild the view
+        singleFileUploads: true,
+        sequentialUploads: true,
+        paramName: 'file'
+    }
+                               );
 
     // Enable iframe cross-domain access via redirect option:
     $('#fileupload').fileupload(
         'option',
         'redirect',
         window.location.href.replace(
-            /\/[^\/]*$/,
+                /\/[^\/]*$/,
             '/cors/result.html?%s'
         )
     );
 
-    if (window.location.hostname === 'blueimp.github.com') {
-        // Demo settings:
-        $('#fileupload').fileupload('option', {
-            url: '//jquery-file-upload.appspot.com/',
-            maxFileSize: 5000000,
-            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-            resizeMaxWidth: 1920,
-            resizeMaxHeight: 1200
+    // Load existing files:
+    $('#fileupload').each(function () {
+        var that = this;
+        $.getJSON(this.action, function (result) {
+            if (result && result.length) {
+                $(that).fileupload('option', 'done')
+                    .call(that, null, {result: result});
+            }
         });
-        // Upload server status check for browsers with CORS support:
-        if ($.ajaxSettings.xhr().withCredentials !== undefined) {
-            $.ajax({
-                url: '//jquery-file-upload.appspot.com/',
-                type: 'HEAD'
-            }).fail(function () {
-                $('<span class="alert alert-error"/>')
-                    .text('Upload server currently unavailable - ' +
-                            new Date())
-                    .appendTo('#fileupload');
-            });
-        }
-    } else {
-        // Load existing files:
-        $('#fileupload').each(function () {
-            var that = this;
-            $.getJSON(this.action, function (result) {
-                if (result && result.length) {
-                    $(that).fileupload('option', 'done')
-                        .call(that, null, {result: result});
-                }
-            });
-        });
-    }
+    });
 
 });

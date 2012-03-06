@@ -4,6 +4,8 @@ Install
 How to use virtualenv and get into right shell
 http://www.nerdydork.com/django-dev-environment-virtualenv-pip-git-pycharm.html
 
+To install Galleria: pip install -r git+https://github.com/andrewebdev/django-galleria
+
 External dependencies
 JQuery libraries
 

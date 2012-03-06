@@ -24,3 +24,6 @@ https://github.com/blueimp/jQuery-File-Upload
 
 Before deploy:
        Setup all static files, to be served different with if  DEBUG:
+
+DNS till deploy server - 
+http://dev.avizera.com:8000/

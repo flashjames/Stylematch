@@ -20,6 +20,9 @@ I.e. download it from github and auto install.
 
 http://stackoverflow.com/questions/4830856/is-it-possible-to-use-pip-to-install-a-package-from-a-private-github-repository
 
+To install all requirements -
+pip install -r requirements.txt
+
 JQuery file upload
 https://github.com/blueimp/jQuery-File-Upload
 

@@ -1,0 +1,32 @@
+// GRID SYSTEM
+// -----------
+
+// Fixed (940px)
+#gridSystem > .generate(@gridColumns, @gridColumnWidth, @gridGutterWidth);
+
+// Fluid (940px)
+#fluidGridSystem > .generate(@gridColumns, @fluidGridColumnWidth, @fluidGridGutterWidth);
+
+/* Special grid styles
+-------------------------------------------------- */
+.show-grid {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+.show-grid [class*="span"] {
+  background-color: #eee;
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+ 
+}
+.show-grid:hover [class*="span"] {
+  background: #ddd;
+}
+.show-grid .show-grid {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.show-grid .show-grid [class*="span"] {
+  background-color: #ccc;
+}

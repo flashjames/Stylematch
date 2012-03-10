@@ -1,11 +1,53 @@
 {% load url from future %}
 
-<ul>
-  <li><a href="/">Hitta frisör</a></li>
-  <li><a href="/">Få inspiration</a></li>
-  {% if user.is_authenticated %}
-    <li><a href="{% url 'profiles_profile_detail' username=user.username %}">Visa profil</a></li>
-     <li><a href="{% url 'profiles_edit_profile' %}">Förändra profil</a></li>
-     <li><a href="{% url 'upload-new' %}">Ladda upp bilder</a></li>
-  {% endif %}
-</ul>
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <a class="brand" href="/">ProjectX</a>
+      <div class="nav-collapse">
+        <ul class="nav">
+          <li class="">
+            <a href="">Hitta frisör</a>
+          </li>
+          <li class="">
+            <a href="">Få inspiration</a>
+          </li>
+          {% if user.is_authenticated %}
+          <li class="">
+            <a href="{% url 'profiles_profile_detail' username=user.username %}">Visa profil</a>
+          </li>
+          <li class="">
+            <a href="{% url 'profiles_edit_profile' %}">Förändra profil</a>
+          </li>
+          <li class="">
+            <a href="{% url 'upload-new' %}">Ladda upp bilder</a>
+          </li>
+          {% endif %}
+	  <li class="divider-vertical"></li>
+	  
+	  {% if user.is_authenticated %}
+	  <li class="">
+	    <a href="logout">Logout</a>
+	  </li>
+	  {% else %}
+	  <li class="">
+	    <a href="/login">Login</a>
+	  </li>
+	  <li class="">
+	    <a href="">Bli medlem som kund</a>
+	  </li>
+	  <li class="">
+	    <a href="">Bli medlem som frisör</a>
+	  </li>
+
+	  {% endif %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

@@ -42,6 +42,7 @@ class Picture(models.Model):
     IMAGE_TYPE_CHOICES = (
         ('G', 'Gallery'),
         ('P', 'Profile'),
+        ('C', 'Current Profile Image'),
         )
     image_type = models.CharField(max_length=1, choices=IMAGE_TYPE_CHOICES,editable=False)
 

@@ -1,5 +1,5 @@
 {% load display_user_images %}
 
 {% for image in images %}
-    <img src="{{ image|get_image_url }}">
+    <img class="{{ css_class }}" src="{{ image|get_image_url }}">
 {% endfor %}

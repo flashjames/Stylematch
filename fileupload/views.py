@@ -8,9 +8,8 @@ from django.core.exceptions import ValidationError
 
 from django.conf import settings
 
-import inspect
+import os, uuid
 
-import os, uuid, pdb
 def response_mimetype(request):
     if "application/json" in request.META['HTTP_ACCEPT']:
         return "application/json"
@@ -21,10 +20,6 @@ def get_unique_filename(filename):
     ext = filename.split('.')[-1]
     filename = "%s.%s" % (uuid.uuid4(), ext)
     return filename
-
-def get_image_url(filename):
-    return os.path.join(settings.STATIC_URL,
-                    settings.PATH_USER_IMGS, filename)
 
 class PictureCreateView(CreateView):
     model = Picture
@@ -62,14 +57,13 @@ class PictureCreateView(CreateView):
         self.object = form.save(commit=False)
         self.object.save(user=self.request.user,filename=filename)
         
-        image_url = get_image_url(filename)
+        image_url = self.object.get_image_url()
 
         data = [{'name': f.name, 'url': image_url, 'thumbnail_url': image_url, 'delete_url': reverse('upload-delete', args=[self.object.id]), 'delete_type': "DELETE"}]
 
         response = JSONResponse(data, {}, response_mimetype(self.request))
         response['Content-Disposition'] = 'inline; filename=files.json'
         return response
-
 
 class PictureDeleteView(DeleteView):
     model = Picture
@@ -84,8 +78,6 @@ class PictureDeleteView(DeleteView):
         response = JSONResponse(True, {}, response_mimetype(self.request))
         response['Content-Disposition'] = 'inline; filename=files.json'
         return response
-
-
 
 class JSONResponse(HttpResponse):
     """JSON response class."""

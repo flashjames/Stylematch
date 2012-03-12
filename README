@@ -2,7 +2,14 @@
 
 I've done all development on debian, but ubuntu should be fine too.
 
+#INSTALLATION
 
+1.Clone the repository
+2.Execute setup_projectX.sh in root folder of the project
+3.Do the commands it tells you to do
+4.
+
+#OLD INSTALL INSTRUCTIONS
 Install
 First install libjpeg62-dev, apt-get install libjpeg62-dev  (this should be taken care off by setup.py)
 Else it wont be possible to upload jpeg's - http://dimamoroz.com/blog/3-ubuntu-pil-jpeg-support/

@@ -26,6 +26,7 @@ git submodule update
 git submodule init
 
 cd ..
+rm -rf django-galleria
 
 echo "The script is now completed. Please type in: "
 echo ""

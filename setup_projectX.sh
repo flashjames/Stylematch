@@ -21,7 +21,7 @@ echo "Cloning is complete. You now have the repostory"
 cd ProjectX/
 
 #Install python dev and so on
-sudo apt-get install python2.7 python-dev python-pip python-virtualenv
+sudo apt-get install python2.7 python-dev python-pip python-virtualenv libjpeg62-dev
 
 
 echo "Now initializing django-enviroment"

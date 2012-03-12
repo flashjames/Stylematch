@@ -1,6 +1,12 @@
 **Avizera**
 
+I've done all development on debian, but ubuntu should be fine too.
+
+
 Install
+First install libjpeg62-dev, apt-get install libjpeg62-dev  (this should be taken care off by setup.py)
+Else it wont be possible to upload jpeg's - http://dimamoroz.com/blog/3-ubuntu-pil-jpeg-support/
+
 How to use virtualenv and get into right shell
 http://www.nerdydork.com/django-dev-environment-virtualenv-pip-git-pycharm.html
 

@@ -1,8 +1,58 @@
 {% extends "base.html" %}
 
-{% block content %} 
+{% block content %}
+<div class="row show-grid">
+  <div class="span6">
+    <h2>Allmän info</h2>
+    <p>Namn</p>
+    <p>Hemort</p>
+    <p>Kön (kan användas sen tror jag till visa saker, men man kanske inte vill fråga det?)</p>
+  </div>
+  <div class="span6">
+    <h2>Profil</h2>
+    <p>Om mig</p>
+    <p>(bör finnas någon info om hur lång den bör vara, kanske någon länk också till hur man skriver en bra sådan) allt som underlättar för frisören att göra profilen är guld. Man kanske även kan förklara hur pass viktigt den är (när vi vet hur viktig den är..)</p>
+    <p>My ProjectX website: http://avizera.com/ [webmaster]</p>
+  </div>
+</div>
+<div class="row show-grid">
+  <div class="span6">
+    <h2>Kontaktuppgifter</h2>
+    <p>Personligt telefonnummer (+knapp för att visa på profilen)</p>
+    <p>E-postadress</p>
+    <p>Facebook: om connected with facebook, visa http://facebook.com/Jenso1988.
+      Annars: stor knapp för att "connect with facebook", samt visa anledningar till det.</p>
+    <p>Twitter användarnamn: visas exempelvis som http://twitter.com/Jenso88</p>
+  </div>
+   <div class="span6">
+    <h2>Salong</h2>
+    <p>Namn</p>
+    <p>Salongens telefonnummer (+knapp för att visa på profilen, endast ett av telefonnummrena visas)</p>
+    <p>Hemsida</p>
+    <p>Adress</p>
+    <p>Stad (Att välja ut stad, bör vara some facebook implementationen -> man får förslag)</p>
+    <p>Postnummer</p>
+    <p>Länk till bokningssystem</p>
+    <p>Vill att den visas på profilen JA/NEJ</p>
+  </div>
+</div>
+<div class="row show-grid">
+  <div class="span6">
+    <h2>Tjänster</h2>
+    <p>Visar nuvarandra listan</p>
+    <p>Klick på redigera -> gör att man kan lägga till nya och sortera</p>
+    <p></p>
+    <p></p>
+    <p></p>
+  </div>
+  <div class="span6">
+    <h2>Öppettider</h2>
+    
+  </div>
+</div>
+
 <form action="" method="post">{% csrf_token %}
-{{ form.as_p }}
-<input type="submit" value="Save" />
+  {{ form.as_p }}
+  <input type="submit" value="Save" />
 </form>
 {% endblock %}

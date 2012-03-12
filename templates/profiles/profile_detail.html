@@ -10,21 +10,21 @@
 
 {% block content %}
 <div class="row">
-  <div class="span12 masthead">
+  <!-- should be centerted instead of using offset -->
+  <div class="offset1 span11 masthead">
     <div class="span3">
       {% get_profile_image user %}
-      <p>Profile picture</p>
     </div>
-    <div class="span8">
-      <h2>Profile name: {{ profile.first_name }}  {{profile.last_name}}</h2>
-      <h3>Salong namn</h3>
-      <blockquote>Profile text: {{ profile.profile_text }}</blockquote>
+    <div class="span7">
+      <h2>{{ profile.first_name }}  {{profile.last_name}}</h2>
+      <h3>{{ profile.salon }}</h3>
+      <blockquote><p>{{ profile.profile_text }}</p></blockquote>
     </div>
 
   </div>
 </div>
 <hr class="soften">
-<div class="row show-grid">
+<div class="row">
   <div class="span12" id="gallery">
     {% get_gallery_images user %}
 
@@ -32,11 +32,25 @@
   <script>
     Galleria.loadTheme('{{ GALLERIA_THEME }}');
     $("#gallery").galleria({
-    width: 900,
+    width: 940,
     height: 500
     });
   </script>
 </div>
+<hr class="soften">
+<div class="row show-grid">
+  <div class="span2">
+    <h2>Tjänster</h2>
+  </div>
+</div>
+<div class="row show-grid">
+  <div class="span7">
+    <p>Hi</p>
+  </div>
+  <div class="offset1 span4">
+    <p>Kontakt</p>
+  </div>
+ </div>
 </div>
 
 {% endblock %}

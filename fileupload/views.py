@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 
 from django.conf import settings
 
-import os, uuid
+import os, uuid, pdb
 
 def response_mimetype(request):
     if "application/json" in request.META['HTTP_ACCEPT']:
@@ -38,16 +38,18 @@ class PictureCreateView(CreateView):
     def get_form(self, form_class):
         form = super(PictureCreateView, self).get_form(form_class)
         form.instance.user = self.request.user
-        # pdb.set_trace()
+        #pdb.set_trace()
         return form
 
+    # TODO: should return error in JSONformat, so upload interface
+    # can display the error message, and appropriate action for user
+    # errors is contained in form._errors
     def form_invalid(self, form):
-        #pdb.set_trace()
         return self.render_to_response(self.get_context_data(form=form))
     
     # Called when we're sure all fields in the form are valid
     def form_valid(self, form):
-
+        
         f = self.request.FILES.get('file')
 
         # check if image size is ok

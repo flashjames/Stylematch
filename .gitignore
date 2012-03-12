@@ -12,6 +12,7 @@ tramp
 .\#*
 .*
 !.gitignore
+!.gitmodules
 *~
 database/*.db
 xinit.sh

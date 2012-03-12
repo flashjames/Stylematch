@@ -36,5 +36,11 @@ echo "	source projectx/bin/activate"
 echo "	pip install django-galleria/"
 echo "	pip install -r requirements.txt"
 echo "  ./manage.py syndcb"
+
+# the --fake is needed since, the module fileupload and accounts are under south control
+# -> if we just do migrate (which is part of south) it will wine that the tables already is created
+
+echo "  ./manage.py migrate fileupload 0001 --fake"
+echo "  ./manage.py migrate accounts 0001 --fake"
 echo "  ./manage.py migrate"
 echo "  ./manage.py runserver_plus"

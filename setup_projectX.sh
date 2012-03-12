@@ -26,7 +26,7 @@ git submodule update
 git submodule init
 
 cd ..
-rm -rf django-galleria
+
 
 echo "The script is now completed. Please type in: "
 echo ""
@@ -42,4 +42,5 @@ echo "  ./manage.py syncdb"
 echo "  ./manage.py migrate fileupload 0001 --fake"
 echo "  ./manage.py migrate accounts 0001 --fake"
 echo "  ./manage.py migrate"
+echo "  rm -rf django-galleria"
 echo "  ./manage.py runserver_plus"

@@ -20,8 +20,6 @@ source projectx/bin/activate
 echo "Fetching Django-Galleria"
 git clone http://github.com/andrewebdev/django-galleria.git
 
-echo "Fetching jQuery-File-Upload"
-git clone http://github.com/blueimp/jQuery-File-Upload.git
 
 cd django-galleria/
 git submodule update

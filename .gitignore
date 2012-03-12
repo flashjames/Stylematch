@@ -13,6 +13,6 @@ tramp
 .*
 !.gitignore
 *~
-database/
+database/*.db
 xinit.sh
 media/user-imgs

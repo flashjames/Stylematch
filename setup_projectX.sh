@@ -20,14 +20,13 @@ source projectx/bin/activate
 echo "Fetching Django-Galleria"
 git clone http://github.com/andrewebdev/django-galleria.git
 
-echo "Fetching jQuery-File-Upload"
-git clone http://github.com/blueimp/jQuery-File-Upload.git
 
 cd django-galleria/
 git submodule update
 git submodule init
 
 cd ..
+
 
 echo "The script is now completed. Please type in: "
 echo ""
@@ -43,4 +42,5 @@ echo "  ./manage.py syncdb"
 echo "  ./manage.py migrate fileupload 0001 --fake"
 echo "  ./manage.py migrate accounts 0001 --fake"
 echo "  ./manage.py migrate"
+echo "  rm -rf django-galleria"
 echo "  ./manage.py runserver_plus"

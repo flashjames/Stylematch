@@ -27,6 +27,8 @@ git submodule init
 
 cd ..
 
+git submodule update
+git submodule init
 
 echo "The script is now completed. Please type in: "
 echo ""

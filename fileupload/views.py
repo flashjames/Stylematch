@@ -4,7 +4,8 @@ from django.views.generic import CreateView, DeleteView
 from django.http import HttpResponse
 from django.utils import simplejson
 from django.core.urlresolvers import reverse
-from django.forms.util import ErrorList
+from django.core.exceptions import ValidationError
+from django import forms
 
 from django.conf import settings
 
@@ -21,43 +22,52 @@ def get_unique_filename(filename):
     filename = "%s.%s" % (uuid.uuid4(), ext)
     return filename
 
+def convert_bytes(bytes):
+    bytes = float(bytes)
+    if bytes >= 1099511627776:
+        terabytes = bytes / 1099511627776
+        size = '%.2iT' % terabytes
+    elif bytes >= 1073741824:
+        gigabytes = bytes / 1073741824
+        size = '%.2iG' % gigabytes
+    elif bytes >= 1048576:
+        megabytes = bytes / 1048576
+        size = '%.1fMB' % megabytes
+    elif bytes >= 1024:
+        kilobytes = bytes / 1024
+        size = '%.iKB' % kilobytes
+    else:
+        size = '%.iB' % bytes
+    return size
+
+class PictureForm(forms.ModelForm):
+    def clean_file(self):
+        file = self.cleaned_data['file']
+        if file:
+            if file._size > settings.MAX_IMAGE_SIZE:
+                raise ValidationError("Image file too large ( > %s )" % convert_bytes(settings.MAX_IMAGE_SIZE))
+            return file
+        else:
+            raise ValidationError("Couldn't read uploaded image")
+
+    class Meta:
+        model = Picture
+
 class PictureCreateView(CreateView):
     model = Picture
+    form_class = PictureForm
       
-    # Add some custom validation to our image field.
-    # TODO: Should override a function, earlier in validation flow
-    # than form_valid() where it's called right now
-    def clean_image(self,image,form):
-        if image:
-            if image._size > settings.MAX_IMAGE_SIZE:
-                form._errors['file'] = 'Image is too large'
-                return False
-                #raise ValidationError("Image file too large ( > 20mb )")
-            return True
-        else:
-            form._errors['file'] = [u'Couldnt read uploaded image']
-            return False
-            #raise ValidationError("Couldn't read uploaded image")
-
-        
-
     def get_form(self, form_class):
         form = super(PictureCreateView, self).get_form(form_class)
         form.instance.user = self.request.user
         return form
 
-    # TODO: should return error in JSONformat, so upload interface
-    # can display the error message, and appropriate action for user
-    # errors is contained in form._errors
     def form_invalid(self, form):
-        error_msg = ""
-        for error in form._errors.values():
-            if isinstance(error, str):
-                error_msg += error
-            else:
-                error_msg += error.as_text()
- 
-        data = [{'error': error_msg}]
+        data = [{
+            # all form errors to a string, use list comprehension since every error
+            # is a ErrorList object, and remove the "*" from error string with [1:]
+            'error': "".join([ (error.as_text())[1:] for error in form.errors.values()]),
+            }]
         response = JSONResponse(data, {}, response_mimetype(self.request))
         response['Content-Disposition'] = 'inline; filename=files.json'
         return response
@@ -67,21 +77,17 @@ class PictureCreateView(CreateView):
         
         f = self.request.FILES.get('file')
 
-        # check if image size is ok
-        if(not self.clean_image(f,form)):
-            return HttpResponse(self.form_invalid(form))
-        else:
-            filename=get_unique_filename(f.name)
-            self.object = form.save(commit=False)
-            self.object.save(user=self.request.user,filename=filename)
-        
-            image_url = self.object.get_image_url()
+        filename=get_unique_filename(f.name)
+        self.object = form.save(commit=False)
+        self.object.save(user=self.request.user,filename=filename)
 
-            data = [{'name': f.name, 'url': image_url, 'thumbnail_url': image_url, 'delete_url': reverse('upload-delete', args=[self.object.id]), 'delete_type': "DELETE"}]
+        image_url = self.object.get_image_url()
 
-            response = JSONResponse(data, {}, response_mimetype(self.request))
-            response['Content-Disposition'] = 'inline; filename=files.json'
-            return response
+        data = [{'name': f.name, 'url': image_url, 'thumbnail_url': image_url, 'delete_url': reverse('upload-delete', args=[self.object.id]), 'delete_type': "DELETE"}]
+
+        response = JSONResponse(data, {}, response_mimetype(self.request))
+        response['Content-Disposition'] = 'inline; filename=files.json'
+        return response
 
 class PictureDeleteView(DeleteView):
     model = Picture

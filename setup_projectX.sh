@@ -10,7 +10,7 @@ echo ""
 echo ""
 
 #Install python dev and so on
-sudo apt-get install python2.7 python2.7-dev python-pip python-virtualenv python-imaging libjpeg62-dev
+sudo apt-get install python python-dev python-pip python-virtualenv python-imaging libjpeg62-dev
 
 
 echo "Now initializing django-enviroment"
@@ -27,6 +27,8 @@ git submodule init
 
 cd ..
 
+git submodule update
+git submodule init
 
 echo "The script is now completed. Please type in: "
 echo ""

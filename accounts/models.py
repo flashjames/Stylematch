@@ -35,6 +35,36 @@ class UserProfile(models.Model):
     zip_adress = models.IntegerField("Postnummer", max_length=6, blank=True, null=True)
     url_online_booking = models.URLField("Adress till online bokningssystem", blank=True)
     show_booking_url = models.BooleanField("Visa länk till bokningssystem på hemsidan", blank=True)
+
+class Service(models.Model):
+    TIME_CHOICES = (
+        (15, '15 minuter'),
+        (30, '30 minuter'),
+        (45,'45 minuter'),
+        (1, '1 timme'),
+        (1.15, '1 timme 15 minuter'),
+        (1.30,'1 timme 30 minuter'),
+        (1.45,'1 timme 45 minuter'),
+        (2,'2 timmar'),
+        (2.15,'2 timmar 15 minuter'),
+        (2.30,'2 timmar 30 minuter'),
+        (2.45,'2 timmar 45 minuter'),
+        (3,'3 timmar'),
+        (3.15,'3 timmar 15 minuter'),
+        (3.30,'3 timmar 30 minuter'),
+        (3.45,'3 timmar 45 minuter'),
+        (4,'4 timmar'),
+        (5,'5 timmar'),
+        (6,'6 timmar'),
+        (7,'7 timmar'),
+        )
+    length = models.IntegerField("Postnummer", max_length=6)
+    name = models.CharField("Service (ex. Färga hår)", max_length=40)
+    price = models.IntegerField("Pris i kronor", max_length=6)
+    # TODO: längd?
+    description = models.CharField("Förklaring", max_length=200)
+    display_on_profile = models.BooleanField("Visa på profil", blank=True)
+    
         
 
 # Return existing profile. If not created

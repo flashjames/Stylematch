@@ -35,6 +35,7 @@ class UserProfile(models.Model):
     zip_adress = models.IntegerField("Postnummer", max_length=6, blank=True, null=True)
     url_online_booking = models.URLField("Adress till online bokningssystem", blank=True)
     show_booking_url = models.BooleanField("Visa länk till bokningssystem på hemsidan", blank=True)
+<<<<<<< HEAD
 
 class Service(models.Model):
     TIME_CHOICES = (
@@ -65,6 +66,8 @@ class Service(models.Model):
     description = models.CharField("Förklaring", max_length=200)
     display_on_profile = models.BooleanField("Visa på profil", blank=True)
     
+=======
+>>>>>>> a41ce9a19f01756d68905731b206987b5a60c609
         
 
 # Return existing profile. If not created

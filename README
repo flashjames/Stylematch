@@ -46,3 +46,8 @@ Before deploy:
 
 DNS till deploy server - 
 http://dev.avizera.com:8000/
+
+
+Django Braces
+Reusable, generic mixins for Django
+https://github.com/brack3t/django-braces

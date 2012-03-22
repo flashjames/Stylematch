@@ -1,3 +1,6 @@
 [submodule "media/js/galleria"]
 	path = media/js/galleria
 	url = https://github.com/aino/galleria.git
+[submodule "django-braces"]
+	path = django-braces
+	url = https://github.com/brack3t/django-braces.git

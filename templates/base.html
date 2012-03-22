@@ -1,4 +1,6 @@
+{# load google_analytics #}
 {% load bootstrap %}
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7,7 +9,6 @@
 
     {% bootstrap_js all %}
     {% bootstrap_less %}
-
     {# Used to load js that's specific to a page #}
     {% block html-head %}{% endblock %}
   
@@ -25,5 +26,6 @@
       </section>
 	{% block footer %} {% endblock %}
     </div>
+  {# analytics #}
   </body>
 </html>

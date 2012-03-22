@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
+from accounts.views import ServiceCreateView
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -25,7 +26,7 @@ urlpatterns = patterns(
     url(r'^display_profile$', 'accounts.views.display_profile'),
     url(r'^$', 'index.views.index'),
     (r'^accounts/', include('registration.urls')), # django-registration
-    
+    (r'^test$', ServiceCreateView.as_view()),
     (r'^profiles/', include('profiles.urls')), # django-profiles
     url(r'^upload/', include('fileupload.urls')), # django-fileupload
 )

@@ -228,6 +228,12 @@ INSTALLED_APPS += (
     'fileupload',
     )
 
+GOOGLE_ANALYTICS_MODEL = True
+#if True: #not DEBUG:
+INSTALLED_APPS += (
+    'analytics',
+    )
+
 GALLERIA_URL = STATIC_URL + "js/galleria/src/"
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -240,3 +246,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 PATH_USER_IMGS = "user-imgs/"
 UPLOAD_PATH_USER_IMGS = "media/" + PATH_USER_IMGS
 MAX_IMAGE_SIZE = 20 * 1024 * 1024
+
+
+

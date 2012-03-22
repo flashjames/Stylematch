@@ -5,6 +5,15 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+# Return existing profile. If not created
+# create an empty UserProfile entry for user
+User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
+
+# used by django-profiles
+def get_absolute_url(self):
+        return ('profiles_profile_detail', (), { 'username': self.user.username })
+    
+get_absolute_url = models.permalink(get_absolute_url)
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True)
@@ -58,20 +67,16 @@ class Service(models.Model):
         (6,'6 timmar'),
         (7,'7 timmar'),
         )
-    length = models.IntegerField("Postnummer", max_length=6)
+    length = models.FloatField("Tid", choices=TIME_CHOICES,max_length=6)
     name = models.CharField("Service (ex. Färga hår)", max_length=40)
     price = models.IntegerField("Pris i kronor", max_length=6)
-    # TODO: längd?
+    # TODO: längd på desc?
     description = models.CharField("Förklaring", max_length=200)
     display_on_profile = models.BooleanField("Visa på profil", blank=True)
-    
+    # user that has this service
+    user = models.ForeignKey(User, unique=True, editable=False)
+    order = models.PositiveIntegerField(blank=True, editable=False)
 
-# Return existing profile. If not created
-# create an empty UserProfile entry for user
-User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
-
-# used by django-profiles
-def get_absolute_url(self):
-        return ('profiles_profile_detail', (), { 'username': self.user.username })
+    class Meta:
+        ordering = ['order']
     
-get_absolute_url = models.permalink(get_absolute_url)

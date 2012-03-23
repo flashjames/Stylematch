@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load upload_tags %}
+{% load url from future %}
+
+{% block content %} 
+
+<div class="container">
+  {% for service in services %}
+  <p> {{ service.name }} - {{ service.price }}</p>
+  {% endfor %}
+
+</div>
+{% endblock %}
+
+

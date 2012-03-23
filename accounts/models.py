@@ -74,9 +74,8 @@ class Service(models.Model):
     description = models.CharField("Förklaring", max_length=200)
     display_on_profile = models.BooleanField("Visa på profil", blank=True)
     # user that has this service
-    user = models.ForeignKey(User, unique=True, editable=False)
-    order = models.PositiveIntegerField(blank=True, editable=False)
+    user = models.ForeignKey(User, editable=False)
+    order = models.PositiveIntegerField(blank=True, editable=False, null=True)
 
     class Meta:
         ordering = ['order']
-    

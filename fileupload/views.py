@@ -6,6 +6,7 @@ from django.utils import simplejson
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
 from django import forms
+from braces.views import LoginRequiredMixin
 
 from django.conf import settings
 
@@ -53,7 +54,7 @@ class PictureForm(forms.ModelForm):
     class Meta:
         model = Picture
 
-class PictureCreateView(CreateView):
+class PictureCreateView(LoginRequiredMixin, CreateView):
     model = Picture
     form_class = PictureForm
       
@@ -89,7 +90,7 @@ class PictureCreateView(CreateView):
         response['Content-Disposition'] = 'inline; filename=files.json'
         return response
 
-class PictureDeleteView(DeleteView):
+class PictureDeleteView(LoginRequiredMixin, DeleteView):
     model = Picture
 
     def delete(self, request, *args, **kwargs):

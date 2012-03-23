@@ -79,8 +79,14 @@ class PictureCreateView(LoginRequiredMixin, CreateView):
         f = self.request.FILES.get('file')
 
         filename=get_unique_filename(f.name)
+
+        # add data to form fields that will be saved to db
         self.object = form.save(commit=False)
-        self.object.save(user=self.request.user,filename=filename)
+        self.object.user = self.request.user
+        self.object.filename = filename
+        # default image type for now, Gallery
+        self.object.image_type = 'G'
+        self.object.save()
 
         image_url = self.object.get_image_url()
 

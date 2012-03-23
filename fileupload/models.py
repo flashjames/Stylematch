@@ -23,13 +23,10 @@ class Picture(models.Model):
     def get_absolute_url(self):
         return ('upload-new', )
 
-    def save(self, user, filename, *args, **kwargs):
-        # fill the fields, with correct values
-        self.user = user
-        self.filename = filename
-
+    def save(self, *args, **kwargs):
+        import pdb
+        #pdb.set_trace()
         # default image type for now, Gallery
-        self.image_type = 'G'
         super(Picture, self).save(*args, **kwargs)
 
     file = models.ImageField(upload_to=get_image_path)

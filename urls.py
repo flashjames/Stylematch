@@ -28,6 +28,7 @@ urlpatterns = patterns(
     (r'^profiles/', include('profiles.urls')), # django-profiles
     url(r'^upload/', include('fileupload.urls')), # django-fileupload
     url(r'^test/', include('accounts.urls')), # accounts
+    url(r'^about/', 'index.views.about_us'), #about us
 )
 
 if settings.DEBUG:

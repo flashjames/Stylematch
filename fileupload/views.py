@@ -10,7 +10,7 @@ from braces.views import LoginRequiredMixin
 
 from django.conf import settings
 
-import os, uuid, pdb
+import uuid
 
 def response_mimetype(request):
     if "application/json" in request.META['HTTP_ACCEPT']:
@@ -53,7 +53,7 @@ class PictureForm(forms.ModelForm):
 
     class Meta:
         model = Picture
-
+       
 class PictureCreateView(LoginRequiredMixin, CreateView):
     model = Picture
     form_class = PictureForm
@@ -67,6 +67,7 @@ class PictureCreateView(LoginRequiredMixin, CreateView):
         data = [{
             # all form errors to a string, use list comprehension since every error
             # is a ErrorList object, and remove the "*" from error string with [1:]
+            # TODO: Edit the js lib to take usual django error messages
             'error': "".join([ (error.as_text())[1:] for error in form.errors.values()]),
             }]
         response = JSONResponse(data, {}, response_mimetype(self.request))
@@ -84,9 +85,11 @@ class PictureCreateView(LoginRequiredMixin, CreateView):
         self.object = form.save(commit=False)
         self.object.user = self.request.user
         self.object.filename = filename
+        
         # default image type for now, Gallery
         self.object.image_type = 'G'
         self.object.save()
+        form.save_m2m()
 
         image_url = self.object.get_image_url()
 

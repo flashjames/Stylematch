@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% load index_extras %}
+{% load url from future %}
+
 {% block content %}
 
 <form action="" method="post">{% csrf_token %}
@@ -35,7 +37,9 @@ url 'auth_password_change' #}">Byt lösenord</a>-->
   <div class="row show-grid">
     <div class="span6">
       <h2>Tjänster</h2>
-      <p>Visar nuvarandra listan</p>
+
+      <a href="{% url 'profiles_list_services' %}">Visa services</a>
+      <a href="{% url 'profiles_add_service' %}">Add service</a>
       <p>Klick på redigera -> gör att man kan lägga till nya och sortera</p>
       <p></p>
       <p></p>

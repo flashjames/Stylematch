@@ -27,7 +27,7 @@ urlpatterns = patterns(
     (r'^accounts/', include('registration.urls')), # django-registration
     (r'^profiles/', include('profiles.urls')), # django-profiles
     url(r'^upload/', include('fileupload.urls')), # django-fileupload
-    url(r'^test/', include('accounts.urls')), # accounts
+    url(r'^profiles/', include('accounts.urls')), # accounts
 )
 
 if settings.DEBUG:

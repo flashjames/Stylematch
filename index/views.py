@@ -11,8 +11,11 @@ def index(request):
 
 @render_to('profile_index.html')
 def profile_index(request):
-    
     return {}
+    
+@render_to('about_us.html')
+def about_us(request):
+	return {}
 
 
 def logout_page(request):

@@ -4,9 +4,9 @@ from django.views.generic import CreateView, ListView
 from accounts.models import Service
 from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin
-from django.forms.models import BaseModelFormSet, modelformset_factory
-from django.http import HttpResponseRedirect
 from django.forms import ModelForm
+from enhanced_cbv.views import ModelFormSetsView
+from enhanced_cbv.views.edit import EnhancedModelFormSet
 
 @render_to('display_profile.html')
 @login_required
@@ -15,17 +15,10 @@ def display_profile(request):
     url = user_profile.url
     return {'url': url}
 
-
-from enhanced_cbv.views import ModelFormSetsView
-
-
 class ServiceForm(ModelForm):
     class Meta:
         model = Service
         exclude = ('user', 'order', 'description', 'display_on_profile', 'price', 'length')
-
-
-from enhanced_cbv.views.edit import EnhancedFormSet, EnhancedModelFormSet
 
 class ServiceEnhancedModelFormSet(EnhancedModelFormSet):
     
@@ -76,54 +69,6 @@ class ServicesModelView(ModelFormSetsView):
                 base_formset(prefix=prefix, **self.get_formsets_kwargs(
                     enhanced_formset))
             )
-
-   
-
-
-ServiceFormSet = modelformset_factory(Service,form=ServiceForm)
-
-class ServiceEditView(CreateView, LoginRequiredMixin):
-    template_name = "service_formset.html"
-    model = Service
-    form_class = ServiceForm
-    success_url = 'thanks/'
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-        formset = context['formset']
-        if formset.is_valid():
-            self.object = form.save()
-            return HttpResponseRedirect('yay/')
-        else:
-            return HttpResponseRedirect('crap2/')
-
-    def post(self, request):
-        #context = self.get_context_data()
-        formset = ServiceFormSet(request.POST)
-        #formset = context['formset']
-        if formset.is_valid():
-            import pdb
-            pdb.set_trace()
-            pass
-            # do something with the cleaned_data on the formsets.
-
-    #def get_form(self, form_class):
-    #    form = super(ServiceEditView,self).get_form(form_class) #instantiate using parent
-    #    form.fields['my_list'].queryset = Service.objects.filter(user__exact=self.request.user.id)
-    #    return form
-
-    def form_invalid(self, form):
-        print form.errors
-        return HttpResponseRedirect('crap/')
-
-    def get_context_data(self, **kwargs):
-        context = super(ServiceEditView, self).get_context_data(**kwargs)
-
-        if self.request.POST:
-            context['formset'] = ServiceFormSet(self.request.POST)
-        else:
-            context['formset'] = ServiceFormSet(queryset=Service.objects.filter(user__exact=self.request.user.id))
-        return context
 
 class ServiceListView(LoginRequiredMixin, ListView):
     context_object_name = "services"

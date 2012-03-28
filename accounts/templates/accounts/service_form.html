@@ -1,14 +1,39 @@
 {% extends "base.html" %}
 {% load upload_tags %}
+{% load index_extras %}
 {% load url from future %}
 
-{% block content %} 
+{% block html-head %}
+<script src="/static/underscore-min.js"></script>
+<script src="/static/backbone-min.js"></script>
+<script src="/static/backbone-tastypie.js"></script>
+<script>TWEET_API = "/api/service/?format=json"</script>
+<script src="/static/ICanHaz.min.js"></script>
+
+{% endblock %}
+
+{% block content %}
+<!-- Templates -->
+<script type="text/template" id="tpl-service-list-item">
+  <div class="service-name"><%= name %></div>
+  <div class="service-description"><%= description %></div>
+  <div class="service-length">Length: <%= length %>. TODO: Should be converted to time (server-side?) </div>
+  <div class="service-price"><%= price %></div>
+  <% if(display_on_profile) { %>
+  <div class="service-price">Visas på profil</div>
+  <% } else { %>
+  <div class="service-price">Visas inte på profilen</div>
+  <% } %>
+</script>
 
 <div class="container">
   <form action="" method="post">{% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Submit" />
   </form>
- 
+  <div id="service-list">
+<button type="button">Hi</button>
 </div>
+
+<script src="/static/service.js"></script>
 {% endblock %}

@@ -24,10 +24,15 @@
   <% } else { %>
   <div class="service-price">Visas inte på profilen</div>
   <% } %>
+  <button class="btn btn-primary edit">Edit</button>
+  <button class="btn delete">Delete</button>
 </script>
 
 <div class="container">
-  <form action="" method="post">{% csrf_token %}
+  <div>
+    <button class="btn btn-primary new-service">New Service</button>
+  </div>
+  <form class="service-edit-form" action="" method="post">{% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Submit" />
   </form>

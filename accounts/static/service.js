@@ -52,6 +52,52 @@
             $(this.el).html(this.template(this.model.toJSON()));
             return this;
         },
+        events:{
+            "change input":"change",
+            "click .save":"saveService",
+	    "click .edit":"editService",
+            "click .delete":"deleteService"
+        },
+
+        change:function (event) {
+            var target = event.target;
+            console.log('changing ' + target.id + ' from: ' + target.defaultValue + ' to: ' + target.value);
+            // You could change your model on the spot, like this:
+            // var change = {};
+            // change[target.name] = target.value;
+            // this.model.set(change);
+        },
+	editService:function () {
+            console.log("edit");
+	},
+        saveService:function () {
+            console.log("save");
+            /*this.model.set({
+             name:$('#name').val(),
+             grapes:$('#grapes').val(),
+             country:$('#country').val(),
+             region:$('#region').val(),
+             year:$('#year').val(),
+             description:$('#description').val()
+             });
+             if (this.model.isNew()) {
+             app.wineList.create(this.model);
+             } else {
+             this.model.save();
+             }*/
+            return false;
+        },
+
+        deleteService:function () {
+            console.log("delete");
+            this.model.destroy({
+             success:function () {
+             alert('Wine deleted successfully');
+             window.history.back();
+             }
+             });
+            return false;
+        },
         close:function () {
             $(this.el).unbind();
             $(this.el).remove();
@@ -85,31 +131,31 @@
         },
 
         saveWine:function () {
-	    console.log("save");
+            console.log("save");
             /*this.model.set({
-                name:$('#name').val(),
-                grapes:$('#grapes').val(),
-                country:$('#country').val(),
-                region:$('#region').val(),
-                year:$('#year').val(),
-                description:$('#description').val()
-            });
-            if (this.model.isNew()) {
-                app.wineList.create(this.model);
-            } else {
-                this.model.save();
-            }*/
+             name:$('#name').val(),
+             grapes:$('#grapes').val(),
+             country:$('#country').val(),
+             region:$('#region').val(),
+             year:$('#year').val(),
+             description:$('#description').val()
+             });
+             if (this.model.isNew()) {
+             app.wineList.create(this.model);
+             } else {
+             this.model.save();
+             }*/
             return false;
         },
 
         deleteWine:function () {
-	    console.log("delete");
+            console.log("delete");
             /*this.model.destroy({
-                success:function () {
-                    alert('Wine deleted successfully');
-                    window.history.back();
-                }
-            });*/
+             success:function () {
+             alert('Wine deleted successfully');
+             window.history.back();
+             }
+             });*/
             return false;
         },
 

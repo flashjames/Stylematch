@@ -2,7 +2,7 @@ from django.conf.urls.defaults import *
 from accounts.views import ServiceCreateView, ServiceListView
 
 urlpatterns = patterns('',    
-    (r'^test$', ServiceCreateView.as_view(),{},'service-new'),
-    (r'^test2/$', ServiceListView.as_view()),           
+    (r'^add-service$', ServiceCreateView.as_view(),{},'profiles_add_service'),
+    (r'^list-services$', ServiceListView.as_view(), {}, 'profiles_list_services'),
 )
 

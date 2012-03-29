@@ -4,7 +4,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 # Return existing profile. If not created
 # create an empty UserProfile entry for user
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
@@ -17,10 +16,9 @@ get_absolute_url = models.permalink(get_absolute_url)
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True)
-    
-    # allmän info
     profile_name = models.CharField("Namn", max_length=40, blank=True)
     profile_phone_number = models.CharField("Personligt telefonnummer", max_length=30, blank=True)
+    
     # max_length? less?
     profile_text = models.CharField("Text att visa på profilen", max_length=500, blank=True)
 
@@ -50,32 +48,35 @@ class Service(models.Model):
         (15, '15 minuter'),
         (30, '30 minuter'),
         (45,'45 minuter'),
-        (1, '1 timme'),
-        (1.15, '1 timme 15 minuter'),
-        (1.30,'1 timme 30 minuter'),
-        (1.45,'1 timme 45 minuter'),
-        (2,'2 timmar'),
-        (2.15,'2 timmar 15 minuter'),
-        (2.30,'2 timmar 30 minuter'),
-        (2.45,'2 timmar 45 minuter'),
-        (3,'3 timmar'),
-        (3.15,'3 timmar 15 minuter'),
-        (3.30,'3 timmar 30 minuter'),
-        (3.45,'3 timmar 45 minuter'),
-        (4,'4 timmar'),
-        (5,'5 timmar'),
-        (6,'6 timmar'),
-        (7,'7 timmar'),
+        (60, '1 timme'),
+        (75, '1 timme 15 minuter'),
+        (90,'1 timme 30 minuter'),
+        (105,'1 timme 45 minuter'),
+        (120,'2 timmar'),
+        (135,'2 timmar 15 minuter'),
+        (150,'2 timmar 30 minuter'),
+        (165,'2 timmar 45 minuter'),
+        (180,'3 timmar'),
+        (195,'3 timmar 15 minuter'),
+        (210,'3 timmar 30 minuter'),
+        (225,'3 timmar 45 minuter'),
+        (240,'4 timmar'),
+        (300,'5 timmar'),
+        (360,'6 timmar'),
+        (420,'7 timmar'),
         )
-    length = models.FloatField("Tid", choices=TIME_CHOICES,max_length=6)
+    length = models.IntegerField("Tid", choices=TIME_CHOICES,max_length=3)
     name = models.CharField("Service (ex. Färga hår)", max_length=40)
     price = models.IntegerField("Pris i kronor", max_length=6)
+    
     # TODO: längd på desc?
     description = models.CharField("Förklaring", max_length=200)
     display_on_profile = models.BooleanField("Visa på profil", blank=True)
+    
     # user that has this service
     user = models.ForeignKey(User, editable=False)
-    order = models.PositiveIntegerField(blank=True, editable=False, null=True)
+    order = models.PositiveIntegerField(blank=True, editable=True, null=True)
 
     class Meta:
         ordering = ['order']
+

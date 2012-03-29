@@ -5,6 +5,12 @@ from django.conf import settings
 from django.contrib import admin
 admin.autodiscover()
 
+
+from accounts.views import ServiceResource
+
+service_resource = ServiceResource()
+
+
 urlpatterns = patterns(
     '',
     # Examples:
@@ -27,8 +33,9 @@ urlpatterns = patterns(
     (r'^accounts/', include('registration.urls')), # django-registration
     (r'^profiles/', include('profiles.urls')), # django-profiles
     url(r'^upload/', include('fileupload.urls')), # django-fileupload
-    url(r'^test/', include('accounts.urls')), # accounts
+    url(r'^profiles/', include('accounts.urls')), # accounts
     url(r'^about/', 'index.views.about_us'), #about us
+    (r'^api/', include(service_resource.urls)),
 )
 
 if settings.DEBUG:

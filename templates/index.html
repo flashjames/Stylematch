@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load url from future %}
 
-{% block title %}Somebody should change me.{% endblock %}
+{% block title %}Stylefinder{% endblock %}
 
 {% block content %}
   <div class="row show-grid">
@@ -15,14 +15,24 @@
   </div>
   <div class="row">
 
+</div>
+
+  <div class="row searchfield">
+    <div class="span12 ">	
+         <br><br>
+ <h1 id="searchfield-text">Hitta en kvalificerad fris&ouml;r i ditt n&auml;romr&aring;de och boka nu</h1>
+    <br><br><br>
+    
+    
+    <form class="form-search">
+    	<input type="text" style="height:20pt;font-size:15px;" class="input-medium search-query span4" placeholder="S&ouml;k efter namn (Valfritt)"><span class="help-inline" style="font-size:15px">N&Auml;RA:</span>
+		<input type="text" style="height:20pt;font-size:15px;" class="input-medium search-query" placeholder="Link&ouml;ping">
+  <button type="submit" style="margin-left:10px"class="btn btn-primary btn-large">Hitta!</button>
+</form>
+</div>
+
   </div>
-  <div class="row show-grid">
-    <div class="span12">
-      <p>
-        Search field
-      </p>
-    </div>
-  </div>
+  
   <div class="row show-grid">
     <div class="span3">
       <p>

@@ -1,6 +1,4 @@
-**Avizera**
-
-I've done all development on debian, but ubuntu should be fine too.
+#Avizera - ProjectX
 
 #INSTALLATION
 
@@ -10,44 +8,12 @@ I've done all development on debian, but ubuntu should be fine too.
 4.To be able to see your profile /profile/<username> (for your created super user) Right now you need to
 fill in som test data at http://localhost:8000/profiles/create/
 
-#OLD INSTALL INSTRUCTIONS
-Install
-First install libjpeg62-dev, apt-get install libjpeg62-dev  (this should be taken care off by setup.py)
-Else it wont be possible to upload jpeg's - http://dimamoroz.com/blog/3-ubuntu-pil-jpeg-support/
+#Platform
+Debian/Ubuntu.
+Works fine on MacOSX (a bit different install process)
 
-How to use virtualenv and get into right shell
-http://www.nerdydork.com/django-dev-environment-virtualenv-pip-git-pycharm.html
-
-To install Galleria: pip install -r git+https://github.com/andrewebdev/django-galleria
-
-External dependencies
-JQuery libraries
-
-Galleria - Display a photo gallery
-Django-Galleria -
-Used this stub to install Galleria in Django (not really needed?)
-Mostly gives TEMPLATE_CONTEXT_VARIABLES
-https://github.com/andrewebdev/django-galleria
-Is it possible to add this to the requirements file, so it's 
-downloaded with pip even though it's not in PIP's catalogue. 
-I.e. download it from github and auto install.
-
-http://stackoverflow.com/questions/4830856/is-it-possible-to-use-pip-to-install-a-package-from-a-private-github-repository
-
-To install all requirements -
-pip install -r requirements.txt
-
-JQuery file upload
-https://github.com/blueimp/jQuery-File-Upload
-
-
-Before deploy:
+##Before deploy
        Setup all static files, to be served different with if  DEBUG:
 
 DNS till deploy server - 
 http://dev.avizera.com:8000/
-
-
-Django Braces
-Reusable, generic mixins for Django
-https://github.com/brack3t/django-braces

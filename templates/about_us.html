@@ -1,40 +1,51 @@
 {% extends "base.html" %}
 {% load url from future %}
 
-{% block title %}Mamma ringer{% endblock %}
+{% block title %}Om oss{% endblock %}
 
 {% block content %}
-  <div class="row show-grid">
-
-    <div class="span2">
-      <p>LOGO</p>
-    </div>
-    <div class="span8">
-      <h2> THIS IS SUPPOSED TO BE THE FRONT PAGE, ORLY?</h2>
-    </div>
-  </div>
-  <div class="row">
-
-  </div>
-  <div class="row show-grid">
-    <div class="span12">
-      <p>
-        Search field
-      </p>
-    </div>
-  </div>
-  <div class="row show-grid">
-    <div class="span3">
-      <p>
-        Linköping (gissade via IP), Button: Not right City?
-      </p>
-    </div>
-  </div>
-
-  <div class="row show-grid">
-    <div class="span10">
-      <p>Bilder på frisörer</p>
-    </div>
-  </div>
-
+  
+  <div class="span11" id="vem-ar">
+	<h1>Vem &auml;r StyleFinder?</h1>
+	</div>
+	
+	<div class="span12" id="breaker">
+	<br>
+	</div>
+	
+		<div class="span4" id="vision-frame">
+		<h2>Om oss</h2><br>
+		<p>Vi &auml;r ett ungt och modernt internetf&ouml;retag med r&ouml;tter p&aring; Link&ouml;pings Universitet. Vi &auml;r ett team p&aring; fyra med blandade bakgrunder inom ekonomi, marknadsf&ouml;ring, webbutveckling, f&ouml;rs&auml;ljning och design. Vi &auml;r lite av specialister p&aring; internet och sociala medier och vill med v&aring;ran kunskap hj&auml;lpa fris&ouml;rer att f&aring; en enklare v&auml;g till framg&aring;ngar online. </p>
+		</div>
+		
+		<div class="span7" id="team-frame">
+		
+		<h2>Teamet</h2>
+		<br>
+		<div class="span3" id="team-medlemmar1">
+		<h4>Hampus Bergqvist</h4>
+		<p>VD<br>
+		073-848 73 10<br>
+		<a href="mailto:hampus@avizera.se">hampus@avizera.se</a></p>
+		<br>
+		<h4>Martin Andersson</h4>
+		<p>S&auml;lj- & marknadsansvarig<br>
+		073-388 50 88<br>
+		<a href="mailto:martin@avizera.se">martin@avizera.se</a></p>
+		</p>
+		</div>
+		<div class="span3" id="team-medlemmar2">
+		<h4>Marcus Padmo J&ouml;rgensen</h4>
+		<p>Produktansvarig<br>
+		070-732 75 75<br>
+		<a href="mailto:marcus@avizera.se">marcus@avizera.se</a></p>
+		<br>
+		<h4>Jens Ohring</h4>
+		<p>Teknikansvarig<br>
+		070-998 83 80<br>
+		<a href="mailto:jens@avizera.se">jens@avizera.se</a></p>
+		</div>
+		</div>
+	
+  
   {% endblock %}

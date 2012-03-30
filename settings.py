@@ -229,11 +229,11 @@ INSTALLED_APPS += (
     'fileupload',
     )
 
-GOOGLE_ANALYTICS_MODEL = True
+#GOOGLE_ANALYTICS_MODEL = True
 #if True: #not DEBUG:
-INSTALLED_APPS += (
-    'analytics',
-    )
+#INSTALLED_APPS += (
+#    'analytics',
+#    )
 
 GALLERIA_URL = STATIC_URL + "js/galleria/src/"
 

@@ -1,4 +1,3 @@
-
 #Client Side
 ##Backbone
 Structure up javascript code.
@@ -27,5 +26,16 @@ Used in the stylist profile edit interface. To handle upload of images.
 
 #Server Side
 ##Django Tastypie
-##
+##Django Registration
+##Django Social Auth
+##Django Braces
+##Django Annoying
+##Pillow
+
+#Dev tools - Server Side
+##South
+##Werkzeug
+##Django Debug Toolbar
+##Commonware
+##Django Extensions
 

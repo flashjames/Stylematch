@@ -1,6 +1,6 @@
 from annoying.decorators import render_to
 from django.contrib.auth.decorators import login_required
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, TemplateView
 from accounts.models import Service
 from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin
@@ -18,6 +18,18 @@ def display_profile(request):
     url = user_profile.url
     return {'url': url}
 
+class ServiceForm(ModelForm):
+    class Meta:
+        model = Service
+
+class ServicesView(TemplateView):
+    template_name = "accounts/service_form.html"
+
+    def get_context_data(self, **kwargs):
+        # auto_id = True  because Backbone.ModelBinding expects id's to be on the
+        # form id="name" not id="id_name"
+        return {'form': ServiceForm(auto_id=True)}
+
 class ServiceListView(LoginRequiredMixin, ListView):
     context_object_name = "services"
 
@@ -26,6 +38,7 @@ class ServiceListView(LoginRequiredMixin, ListView):
 
 class ServiceCreateView(LoginRequiredMixin, CreateView):
     model = Service
+    form_class = ServiceForm
 
     def __init__(self, *args, **kwargs):
         super(ServiceCreateView, self).__init__(*args, **kwargs)
@@ -76,9 +89,7 @@ class DjangoBasicAuthentication(BasicAuthentication):
                 return True
         return super(DjangoBasicAuthentication, self).is_authenticated(request, **kwargs)
 
-class ServiceForm(ModelForm):
-    class Meta:
-        model = Service
+
 
 class ServiceResource(ModelResource):
 

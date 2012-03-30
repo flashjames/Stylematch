@@ -2,4 +2,4 @@
 A small conversion layer to make backbone.js and django-tastypie work together happily.
 https://github.com/PaulUithol/backbone-tastypie
 
-
+120330 - Used on edit services page. But will be used 

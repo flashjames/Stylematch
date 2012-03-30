@@ -1,5 +1,5 @@
 (function($){
-   
+
     // Models
     window.Service = Backbone.Model.extend();
 
@@ -37,10 +37,11 @@
         template:_.template($('#tpl-service-list-item').html()),
 
         initialize:function () {
-	    _.bindAll(this, "saveService");
+            _.bindAll(this, "saveService");
             this.model.bind("change", this.render, this);
             this.model.bind("destroy", this.close, this);
-	    vent.bind("saveServices", this.saveService);
+	    //this.model.bind("", this.close, this);
+            vent.bind("saveServices", this.saveService);
         },
         render:function (eventName) {
             $(this.el).html(this.template(this.model.toJSON()));
@@ -87,12 +88,12 @@
     });
     FormView = Backbone.View.extend({
         el: "#form",
-	template:_.template($('#tpl-service-edit-form').html()),
+        template:_.template($('#tpl-service-edit-form').html()),
 
         initialize: function(){
             /* Uses Backbone.ModelBinding */
-	    $(this.el).html(this.template);
-	    Backbone.ModelBinding.bind(this);
+            $(this.el).html(this.template);
+            Backbone.ModelBinding.bind(this);
         },
         close: function(){
             // Model Unbinding
@@ -104,13 +105,13 @@
     window.ServiceView = Backbone.View.extend({
         el: $("body"),
         initialize:function () {
+            _.bindAll(this, "formSave", "changeModelToEdit");
             vent.bind("changeModelToEdit", this.changeModelToEdit);
 
             this.serviceList = new ServiceCollection();
             this.serviceListView = new ServiceListView({model:this.serviceList});
-	    
-	    this.FormView = new FormView({model:new Service()});
 
+            this.newForm();
 
             this.serviceList.fetch({
                 success: function(collection, response) {
@@ -121,15 +122,19 @@
             });
             $('#service-list').html(this.serviceListView.render().el);
         },
+        newForm: function() {
+            this.model = new Service();
+            this.FormView = new FormView({model: this.model});
+        },
         render:function (eventName) {
             $(this.el).html(this.template(this.model.toJSON()));
             return this;
         },
         events:{
-	    'click .save': 'formSave'
+            'click .save': 'formSave'
         },
         changeModelToEdit: function(model) {
-	    this.currentModel = model;
+            this.model = model;
             this.FormView = new FormView({model:model});
         },
         change:function (event) {
@@ -144,12 +149,31 @@
             $(this.el).unbind();
             $(this.el).empty();
         },
-	formSave: function() {
-	    console.log("save");
-	    //this.serviceList.add(this.FormView);
-	    vent.trigger("saveServices", this.model);
-	    return false;
-	}
+        formSave: function() {
+            console.log("save");
+
+            if(this.serviceList.create(this.model)) {
+                //form is valid (updated to backend), but we need to create a new form that's empty
+                this.newForm();
+
+
+                // order on services may have changed -> save all services
+                // TODO: check if they have changed, and also only change the ORDER field.
+                // when doing the TODO above: will need another IF to check for the case when changing fields on
+                // a model th that's not new but still need to be updated
+
+                vent.trigger("saveServices", this.model);
+            } else {
+                // form validation failed
+                // TODO: display validation errors
+            }
+
+            return false;
+        },
+        displayFormErrors: function() {
+
+        }
+
 
     });
 

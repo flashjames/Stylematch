@@ -27,10 +27,19 @@
   <button class="btn delete">Delete</button>
 </script>
 <script type="text/template" id="tpl-service-edit-form">
-  <form id="service-edit-form" action="" method="post">
+  <form class="form-horizontal" id="service-edit-form" action="" method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn btn-primary save">Save</button>
+      {% for field in form %}
+      <div class="control-group">
+        <label class="control-label" for="{{ field.value }}">{{ field.label }}</label>
+        <div class="controls">
+          {{ field }}
+          <span class="help-inline"></span>
+        </div>
+      </div>
+      {% endfor %}
+      <button class="btn btn-primary save">Save</button>
+    </fieldset>
   </form>
 </script>
 
@@ -40,10 +49,10 @@
     <button class="btn btn-primary new-service">New Service</button>
   </div>
   <div id="form">
-    
+
   </div>
   <div id="service-list">
-    
+
     <button type="button">Hi</button>
   </div>
 

@@ -6,6 +6,8 @@ Used on edit services page
 Backbone dependency
 ###Backbone Modelbinding
 Used on edit services page, mirrors models with the form.
+###Twitter Bootstrap
+CSS and Javscript bootstrap/framework
 
 ###JQuery
 ##Galleria

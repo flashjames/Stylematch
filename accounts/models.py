@@ -10,12 +10,12 @@ User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
 # used by django-profiles
 def get_absolute_url(self):
-        return ('profiles_profile_detail', (), { 'username': self.user.username })
+        return ('profile_display', (), { 'username': self.user.username })
     
 get_absolute_url = models.permalink(get_absolute_url)
 
 class UserProfile(models.Model):
-    user = models.ForeignKey(User, unique=True)
+    user = models.ForeignKey(User, unique=True, editable=False)
     profile_name = models.CharField("Namn", max_length=40, blank=True)
     profile_phone_number = models.CharField("Personligt telefonnummer", max_length=30, blank=True)
     

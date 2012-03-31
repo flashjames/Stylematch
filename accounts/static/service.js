@@ -1,7 +1,8 @@
 (function($){
 
     // Models
-    window.Service = Backbone.Model.extend();
+    window.Service = Backbone.Model.extend({
+    });
 
     window.ServiceCollection = Backbone.Collection.extend({
         model:Service,
@@ -40,7 +41,7 @@
             _.bindAll(this, "saveService");
             this.model.bind("change", this.render, this);
             this.model.bind("destroy", this.close, this);
-	    //this.model.bind("", this.close, this);
+            this.model.bind("sync", this.change, this);
             vent.bind("saveServices", this.saveService);
         },
         render:function (eventName) {
@@ -53,7 +54,6 @@
             "click .edit":"editService",
             "click .delete":"deleteService"
         },
-
         change:function (event) {
             var target = event.target;
             console.log('changing ' + target.id + ' from: ' + target.defaultValue + ' to: ' + target.value);
@@ -112,7 +112,7 @@
             this.serviceListView = new ServiceListView({model:this.serviceList});
 
             this.newForm();
-
+	    
             this.serviceList.fetch({
                 success: function(collection, response) {
                     if(!response)
@@ -125,6 +125,8 @@
         newForm: function() {
             this.model = new Service();
             this.FormView = new FormView({model: this.model});
+	    this.model.bind("error", this.displayFormErrors, this);
+	    this.model.bind("all", function(a,b,c,d) {console.log("yay"); console.log(a,b,c,d);}, this);
         },
         render:function (eventName) {
             $(this.el).html(this.template(this.model.toJSON()));
@@ -151,8 +153,33 @@
         },
         formSave: function() {
             console.log("save");
+	    console.log(this.model);
+	    //this.serviceList.create(this.model,{silent: true});
+	    this.serviceList.add(this.model,{silent: true});
+	    var self = this;
+	    this.model.save({},{
+		error:function(collection, error, options) {
+		    console.log("testAAA");
+		    self.serviceList.remove(this.model,{silent: true});
+		    self.displayFormErrors(collection, error, options);
+		},
+		success:function() {
 
-            if(this.serviceList.create(this.model)) {
+		    // TODO: eftersom jag kör this.serviceList.add med silent = true,
+		    // behöver jag trigga det som serviceList.add hade triggat. 
+		    // eftersom vi nu har validerat att det som skickats till servern är okej
+
+		    console.log("YAYAYYAYAY");
+		    
+		    self.newForm();
+		}
+	    });
+	    
+
+	    
+	    
+            /*if(this.serviceList.create(this.model)) {
+		console.log("asd");
                 //form is valid (updated to backend), but we need to create a new form that's empty
                 this.newForm();
 
@@ -164,14 +191,44 @@
 
                 vent.trigger("saveServices", this.model);
             } else {
+		console.log("asd2");
                 // form validation failed
                 // TODO: display validation errors
-            }
+            }*/
 
             return false;
         },
-        displayFormErrors: function() {
+        displayFormErrors: function(collection, error, options) {
+	    // error, this is a jqXHR object (jquery ajax object)
+	    // http://api.jquery.com/jQuery.ajax/#jqXHR
+	    
+	    // convert the responsetext that's a string with json data
+	    // to a usable object
+	    try {
+		// ugly hack to convert to json object, the other way around
+		// tho, is to go change in the Backbone framework code
+		// http://coded-codes101.blogspot.se/2011/07/jquery-ajax-error-function.html
+		eval("var errorResponseJSON = " + error.responseText + ";");
+		for( var field in errorResponseJSON) {
+		    // get the help-inline dom object for the field
+		    var control_group = $("#" + field).closest(".control-group");
+		    control_group.addClass("error");
 
+		    // display error message for field
+		    var help_inline = control_group.find(".help-inline");
+		    help_inline.text(errorResponseJSON[field][0]);
+		}
+
+		
+	    }
+	    catch(err) {
+		// TODO: Display error message somewhere better
+		console.log("ERROR: The error message response wasnt a JSON object");
+	    }
+	    console.log(errorResponseJSON);
+	    console.log(error);
+	    console.log(options);
+	    console.log(collection);
         }
 
 

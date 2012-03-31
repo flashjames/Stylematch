@@ -1,7 +1,5 @@
-from annoying.decorators import render_to
-from django.contrib.auth.decorators import login_required
-from django.views.generic import CreateView, ListView, TemplateView
-from accounts.models import Service
+from django.views.generic import CreateView, ListView, TemplateView, UpdateView, DetailView
+from accounts.models import Service, UserProfile
 from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin
 from django.forms import ModelForm
@@ -11,30 +9,56 @@ from tastypie.authorization import Authorization
 from tastypie.authentication import BasicAuthentication
 from django.contrib.auth.models import User
 
-@render_to('display_profile.html')
-@login_required
-def display_profile(request):
-    user_profile = request.user.profile
-    url = user_profile.url
-    return {'url': url}
-
 class ServiceForm(ModelForm):
     class Meta:
         model = Service
 
 class ServicesView(TemplateView):
     template_name = "accounts/service_form.html"
-
+    
     def get_context_data(self, **kwargs):
         # auto_id = True  because Backbone.ModelBinding expects id's to be on the
         # form id="name" not id="id_name"
         return {'form': ServiceForm(auto_id=True)}
+
+class DisplayProfileView(DetailView):
+    template_name = "profiles/profile_display.html"
+    model = UserProfile
+    slug_field = "profile_name"
+    context_object_name = "profile"
 
 class ServiceListView(LoginRequiredMixin, ListView):
     context_object_name = "services"
 
     def get_queryset(self):
         return Service.objects.filter(user__exact=self.request.user.id)
+
+class UserProfileForm(ModelForm):
+    class Meta:
+        model = UserProfile
+
+class EditProfileView(LoginRequiredMixin, UpdateView):
+    model = UserProfile
+    template_name = "profiles/profile_edit.html"
+
+    def __init__(self, *args, **kwargs):
+        super(EditProfileView, self).__init__(*args, **kwargs)
+
+        # written here in init since it will give reverse url error
+        # if just written in class definition. because urls.py isnt loaded
+        # when this class is defined
+        self.success_url=reverse('profile_edit')
+    
+    def get_object(self, queryset=None):
+        obj = UserProfile.objects.get(user__exact=self.request.user.id)
+        return obj
+    
+    def form_valid(self, form):
+        f = form.save(commit=False)
+        f.user = self.request.user
+        f.save()
+        form.save_m2m()
+        return super(EditProfileView, self).form_valid(form)
 
 class ServiceCreateView(LoginRequiredMixin, CreateView):
     model = Service
@@ -108,12 +132,12 @@ class ServiceResource(ModelResource):
 
         # CHANGED: Add current user to user field
         bundle.obj.user = request.user
-        
+
         bundle = self.full_hydrate(bundle)
-        
+
         # Save FKs just in case.
         self.save_related(bundle)
-        
+
         # Save the main object.
         bundle.obj.save()
 
@@ -121,7 +145,7 @@ class ServiceResource(ModelResource):
         m2m_bundle = self.hydrate_m2m(bundle)
         self.save_m2m(m2m_bundle)
         return bundle
- 
+
     class Meta:
         model = Service
         pass_request_user_to_django = True

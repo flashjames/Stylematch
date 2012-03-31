@@ -19,10 +19,10 @@
           </li>
           {% if user.is_authenticated %}
           <li class="">
-            <a href="{% url 'profiles_profile_detail' username=user.username %}">Visa profil</a>
+            <a href="{% url 'profile_display' slug=user.username %}">Visa profil</a>
           </li>
           <li class="">
-            <a href="{% url 'profiles_edit_profile' %}">Förändra profil</a>
+            <a href="{% url 'profile_edit' %}">Förändra profil</a>
           </li>
           <li class="">
             <a href="{% url 'upload-new' %}">Ladda upp bilder</a>

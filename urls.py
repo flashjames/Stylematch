@@ -28,10 +28,8 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
     #url(r'^$', 'direct_to_template', {'template': 'index.html'}, name='index'),
     url(r'^profile_index$', 'index.views.profile_index'),
-    url(r'^display_profile$', 'accounts.views.display_profile'),
     url(r'^$', 'index.views.index'),
     (r'^accounts/', include('registration.urls')), # django-registration
-    (r'^profiles/', include('profiles.urls')), # django-profiles
     url(r'^upload/', include('fileupload.urls')), # django-fileupload
     url(r'^profiles/', include('accounts.urls')), # accounts
     url(r'^about/', 'index.views.about_us'), #about us

@@ -16,18 +16,33 @@ class ServiceForm(ModelForm):
 
 class ServicesView(TemplateView):
     template_name = "accounts/service_form.html"
-    
+
     def get_context_data(self, **kwargs):
         # auto_id = True  because Backbone.ModelBinding expects id's to be on the
         # form id="name" not id="id_name"
         return {'form': ServiceForm(auto_id=True)}
 
 class DisplayProfileView(DetailView):
+    """
+    Display a stylist profile
+    """
     template_name = "profiles/profile_display.html"
     model = UserProfile
+    
     # case insensitive since __iexact
     slug_field = "profile_url__iexact"
     context_object_name = "profile"
+
+class CurrentUserProfileView(LoginRequiredMixin, DisplayProfileView):
+    """
+    Display currently logged in user's userprofile
+    TODO: Make sure it's stylist user, when we have more types of users
+    """
+    def get_object(self, queryset=None):
+        query = UserProfile.objects.filter(user=self.request.user).get()
+        if query:
+            self.kwargs['slug'] = query.profile_url
+        return super(DisplayProfileView, self).get_object(queryset)
 
 class ServiceListView(LoginRequiredMixin, ListView):
     context_object_name = "services"
@@ -48,7 +63,7 @@ class UserProfileForm(ModelForm):
     def is_unique_url_name(self, profile_url):
         # find profiles that have the specific profile_url
         query = UserProfile.objects.filter(profile_url__iexact=profile_url)
-        
+
         # the current profile shouldn't be in the result
         query = query.exclude(user=self.request.user)
         if query:
@@ -60,9 +75,9 @@ class UserProfileForm(ModelForm):
     def clean_profile_url(self):
         data = self.cleaned_data['profile_url']
         if not self.is_unique_url_name(data):
-            raise ValidationError("Den här sökvägen är redan tagen")     
+            raise ValidationError("Den här sökvägen är redan tagen")
         return data
-    
+
     class Meta:
         model = UserProfile
 
@@ -88,17 +103,19 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         Added request object to be sent to the form class
         """
         return form_class(self.request, **self.get_form_kwargs())
-    
+
     def get_object(self, queryset=None):
         obj = UserProfile.objects.get(user__exact=self.request.user.id)
         return obj
-    
+
     def form_valid(self, form):
         f = form.save(commit=False)
         f.user = self.request.user
         f.save()
         form.save_m2m()
         return super(EditProfileView, self).form_valid(form)
+
+
 
 class ServiceCreateView(LoginRequiredMixin, CreateView):
     model = Service

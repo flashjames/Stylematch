@@ -31,7 +31,7 @@ urlpatterns = patterns(
     url(r'^$', 'index.views.index'),
     (r'^accounts/', include('registration.urls')), # django-registration
     url(r'^upload/', include('fileupload.urls')), # django-fileupload
-    url(r'^profiles/', include('accounts.urls')), # accounts
+    url(r'^', include('accounts.urls')), # accounts
     url(r'^about/', 'index.views.about_us'), #about us
     (r'^api/', include(service_resource.urls)),
 )

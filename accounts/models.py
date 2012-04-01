@@ -1,19 +1,19 @@
 #!/usr/bin/python
 #-*- coding:utf-8 -*-
-
 from django.db import models
 from django.contrib.auth.models import User
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
-# Return existing profile. If not created
-# create an empty UserProfile entry for user
-User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
-
-# used by django-profiles
-def get_absolute_url(self):
-        return ('profile_display', (), { 'username': self.user.username })
-    
-get_absolute_url = models.permalink(get_absolute_url)
-
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    """
+    When a a new user is created, create a corresponding UserProfile
+    TODO: Create different profiles depending on if it's a stylist or a regular user
+    """
+    if created:
+        UserProfile.objects.create(user=instance)
+	
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True, editable=False)
     profile_name = models.CharField("Namn", max_length=40, blank=True)
@@ -42,7 +42,9 @@ class UserProfile(models.Model):
     zip_adress = models.IntegerField("Postnummer", max_length=6, blank=True, null=True)
     url_online_booking = models.URLField("Adress till online bokningssystem", blank=True)
     show_booking_url = models.BooleanField("Visa länk till bokningssystem på hemsidan", blank=True)
+    
 
+    
 class Service(models.Model):
     TIME_CHOICES = (
         (15, '15 minuter'),

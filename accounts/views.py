@@ -1,8 +1,9 @@
+#-*- coding:utf-8 -*-
 from django.views.generic import CreateView, ListView, TemplateView, UpdateView, DetailView
 from accounts.models import Service, UserProfile
 from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin
-from django.forms import ModelForm
+from django.forms import ModelForm, ValidationError
 from tastypie.validation import FormValidation
 from tastypie.resources import ModelResource
 from tastypie.authorization import Authorization
@@ -24,7 +25,8 @@ class ServicesView(TemplateView):
 class DisplayProfileView(DetailView):
     template_name = "profiles/profile_display.html"
     model = UserProfile
-    slug_field = "profile_name"
+    # case insensitive since __iexact
+    slug_field = "profile_url__iexact"
     context_object_name = "profile"
 
 class ServiceListView(LoginRequiredMixin, ListView):
@@ -33,13 +35,44 @@ class ServiceListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return Service.objects.filter(user__exact=self.request.user.id)
 
+
+
 class UserProfileForm(ModelForm):
+    """
+    Validates that profile_url is unique
+    """
+    def __init__(self, request, *args, **kwargs):
+        self.request = request
+        super(UserProfileForm, self).__init__(*args, **kwargs)
+
+    def is_unique_url_name(self, profile_url):
+        # find profiles that have the specific profile_url
+        query = UserProfile.objects.filter(profile_url__iexact=profile_url)
+        
+        # the current profile shouldn't be in the result
+        query = query.exclude(user=self.request.user)
+        if query:
+            return False
+
+        return True
+
+    # check if the url is unique ie. it's not in use
+    def clean_profile_url(self):
+        data = self.cleaned_data['profile_url']
+        if not self.is_unique_url_name(data):
+            raise ValidationError("Den här sökvägen är redan tagen")     
+        return data
+    
     class Meta:
         model = UserProfile
 
 class EditProfileView(LoginRequiredMixin, UpdateView):
+    """
+    Edit a stylist profile
+    """
     model = UserProfile
     template_name = "profiles/profile_edit.html"
+    form_class = UserProfileForm
 
     def __init__(self, *args, **kwargs):
         super(EditProfileView, self).__init__(*args, **kwargs)
@@ -48,6 +81,13 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         # if just written in class definition. because urls.py isnt loaded
         # when this class is defined
         self.success_url=reverse('profile_edit')
+
+    def get_form(self, form_class):
+        """
+        Returns an instance of the form to be used in this view.
+        Added request object to be sent to the form class
+        """
+        return form_class(self.request, **self.get_form_kwargs())
     
     def get_object(self, queryset=None):
         obj = UserProfile.objects.get(user__exact=self.request.user.id)

@@ -10,18 +10,6 @@ from tastypie.authorization import Authorization
 from tastypie.authentication import BasicAuthentication
 from django.contrib.auth.models import User
 
-class ServiceForm(ModelForm):
-    class Meta:
-        model = Service
-
-class ServicesView(TemplateView):
-    template_name = "accounts/service_form.html"
-
-    def get_context_data(self, **kwargs):
-        # auto_id = True  because Backbone.ModelBinding expects id's to be on the
-        # form id="name" not id="id_name"
-        return {'form': ServiceForm(auto_id=True)}
-
 class DisplayProfileView(DetailView):
     """
     Display a stylist profile
@@ -140,7 +128,21 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         form.save_m2m()
         return super(EditProfileView, self).form_valid(form)
 
+class ServiceForm(ModelForm):
+    def clean(self):
+        print "\n"*5,"hih"
+        return cleaned_data
+        
+    class Meta:
+        model = Service
 
+class ServicesView(TemplateView):
+    template_name = "accounts/service_form.html"
+
+    def get_context_data(self, **kwargs):
+        # auto_id = True  because Backbone.ModelBinding expects id's to be on the
+        # form id="name" not id="id_name"
+        return {'form': ServiceForm(auto_id=True)}
 
 class ServiceCreateView(LoginRequiredMixin, CreateView):
     model = Service

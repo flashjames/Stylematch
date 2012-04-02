@@ -1,8 +1,7 @@
 (function($){
 
     // Models
-    window.Service = Backbone.Model.extend({
-    });
+    window.Service = Backbone.Model.extend({});
 
     window.ServiceCollection = Backbone.Collection.extend({
         model:Service,
@@ -105,7 +104,7 @@
     window.ServiceView = Backbone.View.extend({
         el: $("body"),
         initialize:function () {
-            _.bindAll(this, "formSave", "changeModelToEdit");
+            _.bindAll(this, "formSave", "changeModelToEdit", "displayFormErrors");
             vent.bind("changeModelToEdit", this.changeModelToEdit);
 
             this.serviceList = new ServiceCollection();
@@ -125,9 +124,10 @@
         newForm: function() {
             this.model = new Service();
             this.FormView = new FormView({model: this.model});
-	    this.model.bind("error", this.displayFormErrors, this);
-	    this.model.bind("all", function(a,b,c,d) {console.log("yay"); console.log(a,b,c,d);}, this);
         },
+	cleanForm: function() {
+	    this.FormView = new FormView({model: this.model});
+	},
         render:function (eventName) {
             $(this.el).html(this.template(this.model.toJSON()));
             return this;
@@ -152,53 +152,29 @@
             $(this.el).empty();
         },
         formSave: function() {
-            console.log("save");
-	    console.log(this.model);
-	    //this.serviceList.create(this.model,{silent: true});
-	    this.serviceList.add(this.model,{silent: true});
-	    var self = this;
-	    this.model.save({},{
-		error:function(collection, error, options) {
-		    console.log("testAAA");
-		    self.serviceList.remove(this.model,{silent: true});
-		    self.displayFormErrors(collection, error, options);
+	    var ServiceView = this;
+	    
+	    this.serviceList.create(this.model,{
+		success: function(collection, error, options) {
+		    ServiceView.newForm();
 		},
-		success:function() {
-
-		    // TODO: eftersom jag kör this.serviceList.add med silent = true,
-		    // behöver jag trigga det som serviceList.add hade triggat. 
-		    // eftersom vi nu har validerat att det som skickats till servern är okej
-
-		    console.log("YAYAYYAYAY");
-		    
-		    self.newForm();
+		error: function(collection, error, options) {
+		    console.log("ag");
+		    ServiceView.cleanForm();
+		    ServiceView.displayFormErrors(collection, error, options);
 		}
+	
 	    });
-	    
 
-	    
-	    
-            /*if(this.serviceList.create(this.model)) {
-		console.log("asd");
-                //form is valid (updated to backend), but we need to create a new form that's empty
-                this.newForm();
-
-
-                // order on services may have changed -> save all services
-                // TODO: check if they have changed, and also only change the ORDER field.
-                // when doing the TODO above: will need another IF to check for the case when changing fields on
-                // a model th that's not new but still need to be updated
-
-                vent.trigger("saveServices", this.model);
-            } else {
-		console.log("asd2");
-                // form validation failed
-                // TODO: display validation errors
-            }*/
+	    // order on services may have changed -> save all services
+            // TODO: check if they have changed, and also only change the ORDER field.
+            // when doing the TODO above: will need another IF to check for the case when changing fields on
+            // a model th that's not new but still need to be updated
 
             return false;
         },
         displayFormErrors: function(collection, error, options) {
+	    
 	    // error, this is a jqXHR object (jquery ajax object)
 	    // http://api.jquery.com/jQuery.ajax/#jqXHR
 	    
@@ -225,10 +201,6 @@
 		// TODO: Display error message somewhere better
 		console.log("ERROR: The error message response wasnt a JSON object");
 	    }
-	    console.log(errorResponseJSON);
-	    console.log(error);
-	    console.log(options);
-	    console.log(collection);
         }
 
 

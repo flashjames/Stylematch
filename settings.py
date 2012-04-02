@@ -1,4 +1,4 @@
-# Django settings for styleseat project.
+# Django settings
 import os
 import iptools
 
@@ -10,7 +10,9 @@ INTERNAL_IPS = iptools.IpRangeList(
 
 PROJECT_DIR = os.path.dirname(__file__)
 
+# should be set with environment variable
 DEBUG = True
+
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -139,10 +141,6 @@ INSTALLED_APPS = (
     'bootstrap',
     'braces',
     'index',
-    # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
     'accounts',
 )
 
@@ -248,8 +246,10 @@ PATH_USER_IMGS = "user-imgs/"
 UPLOAD_PATH_USER_IMGS = "media/" + PATH_USER_IMGS
 MAX_IMAGE_SIZE = 20 * 1024 * 1024
 
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = '@gmail.com'
-EMAIL_HOST_PASSWORD = ''
-EMAIL_PORT = 587
+# use gmail as smtp server, useful during development
+if DEBUG:
+    EMAIL_USE_TLS = True
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_HOST_USER = '@gmail.com'
+    EMAIL_HOST_PASSWORD = ''
+    EMAIL_PORT = 587

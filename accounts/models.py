@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+import uuid
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -12,7 +13,7 @@ def create_user_profile(sender, instance, created, **kwargs):
     TODO: Create different profiles depending on if it's a stylist or a regular user
     """
     if created:
-        UserProfile.objects.create(user=instance)
+        UserProfile.objects.create(user=instance, temporary_profile_url=uuid.uuid4().hex)
 	
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True, editable=False)
@@ -24,6 +25,8 @@ class UserProfile(models.Model):
 
     # TODO: add check if unique
     profile_url = models.CharField("Min profil sida http://avizera.se/", max_length=15, blank=True)
+    # used to reach profile if no profile_url set
+    temporary_profile_url = models.CharField(editable=False, unique=True, max_length=36)
 
     """
     TODO:

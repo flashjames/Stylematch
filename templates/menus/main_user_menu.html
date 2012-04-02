@@ -19,7 +19,7 @@
           </li>
           {% if user.is_authenticated %}
           <li class="">
-            <a href="{% url 'profile_display' slug=user.username %}">Visa profil</a>
+            <a href="{% url 'profile_display_redirect' %}">Visa profil</a>
           </li>
           <li class="">
             <a href="{% url 'profile_edit' %}">Förändra profil</a>

@@ -1,5 +1,5 @@
 #-*- coding:utf-8 -*-
-from django.views.generic import CreateView, ListView, TemplateView, UpdateView, DetailView
+from django.views.generic import CreateView, ListView, TemplateView, UpdateView, DetailView, RedirectView
 from accounts.models import Service, UserProfile
 from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin
@@ -33,16 +33,37 @@ class DisplayProfileView(DetailView):
     slug_field = "profile_url__iexact"
     context_object_name = "profile"
 
-class CurrentUserProfileView(LoginRequiredMixin, DisplayProfileView):
+class CurrentUserProfileView(DisplayProfileView):
+    slug_field = "temporary_profile_url__exact"
+
+class RedirectToProfileView(RedirectView):
     """
-    Display currently logged in user's userprofile
-    TODO: Make sure it's stylist user, when we have more types of users
+    Redirect to the profile with the profile_url or if it's not set,
+    with temporary_profile_url
     """
-    def get_object(self, queryset=None):
+    
+    # if this is set to True, browsers will cache the redirect for ever
+    # which is no good (breaks the way we display the profile)
+    permanent = False
+    
+    def get_redirect_url(self):
+        profile_url = self.get_user_profile_url()
+
+        # if user havent set a profile_url, use the temporary_profile_url which is a uuid string
+        if not profile_url:
+            temporary_profile_url = self.get_user_temporary_profile_url()
+            return reverse('profile_display_without_profile_url', kwargs={'slug': temporary_profile_url})
+
+        return reverse('profile_display_with_profile_url', kwargs={'slug': profile_url})
+    
+    def get_user_profile_url(self):
         query = UserProfile.objects.filter(user=self.request.user).get()
-        if query:
-            self.kwargs['slug'] = query.profile_url
-        return super(DisplayProfileView, self).get_object(queryset)
+        return query.profile_url
+
+    def get_user_temporary_profile_url(self):
+        query = UserProfile.objects.filter(user=self.request.user).get()
+        return query.temporary_profile_url
+    
 
 class ServiceListView(LoginRequiredMixin, ListView):
     context_object_name = "services"
@@ -61,6 +82,10 @@ class UserProfileForm(ModelForm):
         super(UserProfileForm, self).__init__(*args, **kwargs)
 
     def is_unique_url_name(self, profile_url):
+        # should be ok to not have any profile_url set
+        if not profile_url:
+            return True
+        
         # find profiles that have the specific profile_url
         query = UserProfile.objects.filter(profile_url__iexact=profile_url)
 

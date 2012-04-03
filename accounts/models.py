@@ -4,6 +4,13 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+
+
+# used on all fields that need to have a forced max_length
+# django doesnt do this validation by itself
+# the value given to MaxLengthValidator should be same as max_length variable
+from django.core.validators import MaxLengthValidator
+
 import uuid
 
 @receiver(post_save, sender=User)
@@ -24,7 +31,7 @@ class UserProfile(models.Model):
     profile_text = models.CharField("Text att visa på profilen", max_length=500, blank=True)
 
     # TODO: add check if unique
-    profile_url = models.CharField("Min profil sida http://avizera.se/", max_length=15, blank=True)
+    profile_url = models.CharField("Min profil sida http://avizera.se/", max_length=15, blank=True, validators=[MaxLengthValidator(15)])
     # used to reach profile if no profile_url set
     temporary_profile_url = models.CharField(editable=False, unique=True, max_length=36)
 
@@ -71,11 +78,11 @@ class Service(models.Model):
         (420,'7 timmar'),
         )
     length = models.IntegerField("Tid", choices=TIME_CHOICES,max_length=3)
-    name = models.CharField("Service (ex. Färga hår)", max_length=40)
+    name = models.CharField("Service (ex. Färga hår)", max_length=20)
     price = models.IntegerField("Pris i kronor", max_length=6)
     
-    # TODO: längd på desc?
-    description = models.CharField("Förklaring", max_length=200)
+    # TODO: längd på desc? 
+    description = models.CharField("Förklaring", max_length=200, validators=[MaxLengthValidator(200)])
     display_on_profile = models.BooleanField("Visa på profil", blank=True)
     
     # user that has this service
@@ -84,4 +91,3 @@ class Service(models.Model):
 
     class Meta:
         ordering = ['order']
-

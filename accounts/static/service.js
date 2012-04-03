@@ -1,18 +1,15 @@
 (function($){
 
-    // Models
     window.Service = Backbone.Model.extend({});
 
     window.ServiceCollection = Backbone.Collection.extend({
         model:Service,
+	// TODO: Let django set this url? Instead of hardcoding it.
         url:"/api/service/"
     });
 
-    // Views
     window.ServiceListView = Backbone.View.extend({
-
         tagName:'ul',
-
         initialize:function () {
             this.model.bind("reset", this.render, this);
             var self = this;
@@ -20,46 +17,29 @@
                 $(self.el).append(new ServiceListItemView({model:service}).render().el);
             });
         },
-
         render:function (eventName) {
             _.each(this.model.models, function (service) {
                 $(this.el).append(new ServiceListItemView({model:service}).render().el);
             }, this);
             return this;
         }
-
     });
 
     window.ServiceListItemView = Backbone.View.extend({
-
         tagName:"li",
-
         template:_.template($('#tpl-service-list-item').html()),
 
         initialize:function () {
-            _.bindAll(this, "saveService");
             this.model.bind("change", this.render, this);
             this.model.bind("destroy", this.close, this);
-            this.model.bind("sync", this.change, this);
-            vent.bind("saveServices", this.saveService);
         },
         render:function (eventName) {
             $(this.el).html(this.template(this.model.toJSON()));
             return this;
         },
         events:{
-            "change input":"change",
-            "click .save":"saveService",
             "click .edit":"editService",
             "click .delete":"deleteService"
-        },
-        change:function (event) {
-            var target = event.target;
-            console.log('changing ' + target.id + ' from: ' + target.defaultValue + ' to: ' + target.value);
-            // You could change your model on the spot, like this:
-            // var change = {};
-            // change[target.name] = target.value;
-            // this.model.set(change);
         },
         editService:function () {
             /* Create bi-directional binding between the HTML form input elements
@@ -67,13 +47,10 @@
              * */
             vent.trigger("changeModelToEdit", this.model);
         },
-        saveService:function () {
-            this.model.save();
-            return false;
-        },
         deleteService:function () {
             this.model.destroy({
                 success:function () {
+		    // TODO: Add dialog in interface
                     console.log('Service deleted successfully');
                 }
             });
@@ -101,9 +78,12 @@
             Backbone.ModelBinding.unbind(this);
         }
     });
+
     window.ServiceView = Backbone.View.extend({
         el: $("body"),
         initialize:function () {
+	    //Glue code, that initialize's all views and models
+	    
             _.bindAll(this, "formSave", "changeModelToEdit", "displayFormErrors");
             vent.bind("changeModelToEdit", this.changeModelToEdit);
 
@@ -121,6 +101,10 @@
             });
             $('#service-list').html(this.serviceListView.render().el);
         },
+	events:{
+            'click .save': 'formSave',
+	    'click .new-service': 'newForm'
+        },
         newForm: function() {
             this.model = new Service();
             this.FormView = new FormView({model: this.model});
@@ -132,20 +116,9 @@
             $(this.el).html(this.template(this.model.toJSON()));
             return this;
         },
-        events:{
-            'click .save': 'formSave'
-        },
         changeModelToEdit: function(model) {
             this.model = model;
             this.FormView = new FormView({model:model});
-        },
-        change:function (event) {
-            var target = event.target;
-            console.log('changing ' + target.id + ' from: ' + target.defaultValue + ' to: ' + target.value);
-            // You could change your model on the spot, like this:
-            // var change = {};
-            // change[target.name] = target.value;
-            // this.model.set(change);
         },
         close:function () {
             $(this.el).unbind();
@@ -154,17 +127,24 @@
         formSave: function() {
 	    var ServiceView = this;
 	    
-	    this.serviceList.create(this.model,{
+	    // a callback used on both model.save() and serviceList.create()
+	    responseCallback = {
 		success: function(collection, error, options) {
 		    ServiceView.newForm();
 		},
 		error: function(collection, error, options) {
-		    console.log("ag");
 		    ServiceView.cleanForm();
 		    ServiceView.displayFormErrors(collection, error, options);
 		}
-	
-	    });
+	    };
+
+	    // if it's a model that's not synced to the server and not in the 
+	    // services list yet, on the page -> collection.create()
+	    if(this.model.isNew())
+		this.serviceList.create(this.model, responseCallback);
+	    // already on server, just sync it.
+	    else
+		this.model.save({}, responseCallback);
 
 	    // order on services may have changed -> save all services
             // TODO: check if they have changed, and also only change the ORDER field.
@@ -193,17 +173,13 @@
 		    // display error message for field
 		    var help_inline = control_group.find(".help-inline");
 		    help_inline.text(errorResponseJSON[field][0]);
-		}
-
-		
+		}	
 	    }
 	    catch(err) {
 		// TODO: Display error message somewhere better
 		console.log("ERROR: The error message response wasnt a JSON object");
 	    }
         }
-
-
     });
 
     //events used to delegate between views

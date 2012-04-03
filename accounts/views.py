@@ -129,24 +129,29 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         return super(EditProfileView, self).form_valid(form)
 
 class ServiceForm(ModelForm):
-    def clean(self):
-        print "\n"*5,"hih"
-        return cleaned_data
-        
     class Meta:
         model = Service
 
-class ServicesView(TemplateView):
+class ServicesView(LoginRequiredMixin, TemplateView):
+    """
+    Display edit services page
+    Many javascript dependencies one this page which interacts with the
+    REST API specified in class ServiceResource
+    """
     template_name = "accounts/service_form.html"
 
     def get_context_data(self, **kwargs):
         # auto_id = True  because Backbone.ModelBinding expects id's to be on the
-        # form id="name" not id="id_name"
+        # form, id="name" not id="id_name"
         return {'form': ServiceForm(auto_id=True)}
 
 class ServiceCreateView(LoginRequiredMixin, CreateView):
+    """
+    Should be removed when services UI and Backend is done
+    """
     model = Service
     form_class = ServiceForm
+    template_name = "accounts/service_form2.html"
 
     def __init__(self, *args, **kwargs):
         super(ServiceCreateView, self).__init__(*args, **kwargs)
@@ -154,7 +159,7 @@ class ServiceCreateView(LoginRequiredMixin, CreateView):
         # written here in init since it will give reverse url error
         # if just written in class definition. because urls.py isnt loaded
         # when this class is defined
-        self.success_url=reverse('profiles_add_service')
+        self.success_url=reverse('nana')
 
     def form_valid(self, form):
         f = form.save(commit=False)

@@ -1,6 +1,6 @@
 #-*- coding:utf-8 -*-
 from django.views.generic import CreateView, ListView, TemplateView, UpdateView, DetailView, RedirectView
-from accounts.models import Service, UserProfile
+from accounts.models import Service, UserProfile, OpenHours
 from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin
 from django.forms import ModelForm, ValidationError
@@ -9,6 +9,8 @@ from tastypie.resources import ModelResource
 from tastypie.authorization import Authorization
 from tastypie.authentication import BasicAuthentication
 from django.contrib.auth.models import User
+
+
 
 class DisplayProfileView(DetailView):
     """
@@ -244,3 +246,30 @@ class ServiceResource(ModelResource):
         limit = 50
         max_limit = 0
         validation = FormValidation(form_class=ServiceForm)
+
+
+class OpenHoursForm(ModelForm):
+    class Meta:
+        model = OpenHours
+
+class OpenHoursView(UpdateView):
+    model = OpenHours
+    template_name = "accounts/hours_form.html"
+    form_class = OpenHoursForm
+    success_url = "add-hours"
+
+
+    def get_object(self, queryset=None):
+        obj = OpenHours.objects.get(user__exact=self.request.user.id)
+           
+        setattr(obj, "test", 'test');
+        return obj
+    """
+    def form_valid(self, form):
+        f = form.save(commit=False)
+        f.user = self.request.user
+        f.save()
+        form.save_m2m()
+        return super(OpenHoursView, self).form_valid(form)
+    """
+

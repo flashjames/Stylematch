@@ -21,7 +21,8 @@ def create_user_profile(sender, instance, created, **kwargs):
     """
     if created:
         UserProfile.objects.create(user=instance, temporary_profile_url=uuid.uuid4().hex)
-	
+        OpenHours.objects.create(user=instance)
+
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True, editable=False)
     profile_name = models.CharField("Namn", max_length=40, blank=True)
@@ -91,3 +92,53 @@ class Service(models.Model):
 
     class Meta:
         ordering = ['order']
+
+class OpenHours(models.Model):
+    
+    time_list = []
+    
+    # Calculate minutes past for every quarter of an hour
+    # and generate a good looking output.
+    minutes = 0
+    while minutes < 60*24:
+
+        hours = minutes / 60
+        minutes_remaining = minutes - (hours * 60)
+
+        output_str = str(hours).zfill(2) + ":" + str(minutes_remaining).zfill(2) 
+
+        time_list.append((minutes, output_str))
+
+        minutes += 15
+    
+    # Since Python tuples are immutable we need to use a list as a temporary buffer
+    time_tuple = tuple(time_list)
+
+    user = models.ForeignKey(User, editable=False)
+
+    # 8:00 AM
+    default_open_time = 480
+    # 17:00 PM
+    default_close_time = 1020
+
+    # 12:00 - 13:00 PM
+    default_lunch_open = 720
+    default_lunch_close = 780
+
+    weekdays = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun']   
+
+    # Instead of having duplicate code we generate the code dynamically and 
+    # execute it. FIXME: This MIGHT be unsafe, so if any problem occurs in 
+    # this model this is probably why.
+    for day in weekdays:
+        code = day + ' = models.IntegerField("", choices=time_tuple, default = ' + str(default_open_time) + ')'
+        exec(code)
+
+        code = day + '_closed = models.IntegerField("", choices=time_tuple, default = ' + str(default_close_time) + ')'
+        exec(code)
+
+        code = day + '_lunch = models.IntegerField("", choices=time_tuple, default = ' + str(default_lunch_open) + ')'
+        exec(code)
+
+        code = day + '_lunch_closed = models.IntegerField("", choices=time_tuple, default = ' + str(default_lunch_close) + ')'
+        exec(code)

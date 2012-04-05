@@ -1,6 +1,6 @@
 #-*- coding:utf-8 -*-
 from django.views.generic import CreateView, ListView, TemplateView, UpdateView, DetailView, RedirectView
-from accounts.models import Service, UserProfile
+from accounts.models import Service, UserProfile, OpenHours
 from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin
 from django.forms import ModelForm, ValidationError
@@ -9,6 +9,10 @@ from tastypie.resources import ModelResource
 from tastypie.authorization import Authorization
 from tastypie.authentication import BasicAuthentication
 from django.contrib.auth.models import User
+
+from tools import *
+
+
 
 class DisplayProfileView(DetailView):
     """
@@ -20,6 +24,54 @@ class DisplayProfileView(DetailView):
     # case insensitive since __iexact
     slug_field = "profile_url__iexact"
     context_object_name = "profile"
+
+
+    def weekday_factory(self, obj, day = 'mon', pretty_dayname = 'Måndag'):
+
+        """ 
+        Helper function to create a list with relevant day information.
+        Extracts values from obj with attribute prefix DAY
+        """
+
+        attr_name = day
+        open_time = format_minutes_to_hhmm(getattr(obj, attr_name))
+
+        attr_name = day + "_closed"
+        closed_time = format_minutes_to_hhmm(getattr(obj, attr_name))
+
+
+        attr_name = day + "_lunch"
+        lunch_start = format_minutes_to_hhmm(getattr(obj, attr_name))
+
+
+        attr_name = day + "_lunch_closed"
+        lunch_end = format_minutes_to_hhmm(getattr(obj, attr_name))
+
+        day = [pretty_dayname, open_time, closed_time, lunch_start, lunch_end]        
+        return day
+
+    def get_context_data(self, **kwargs):
+        context = super(DisplayProfileView, self).get_context_data(**kwargs)
+
+
+        obj = OpenHours.objects.get(user__exact=self.request.user.id)
+
+        # Important: first value in every tuple must be exactly same as in OpenHours model.        
+        weekday_list =  [('mon', 'Måndag'), ('tues', 'Tisdag'), ('wed', 'Onsdag'), 
+                         ('thurs', 'Torsdag'), ('fri', 'Fredag'), ('sat', 'Lördag'),
+                         ('sun', 'Söndag')
+                        ]
+    
+        context['weekdays'] = []
+        for day in weekday_list:
+            day_dict = self.weekday_factory(obj, day[0], day[1])
+            context['weekdays'].append(day_dict)
+        
+        
+        return context
+
+
+   
 
 class CurrentUserProfileView(DisplayProfileView):
     slug_field = "temporary_profile_url__exact"
@@ -244,3 +296,22 @@ class ServiceResource(ModelResource):
         limit = 50
         max_limit = 0
         validation = FormValidation(form_class=ServiceForm)
+
+
+
+class OpenHoursView(UpdateView):
+    model = OpenHours
+    template_name = "accounts/hours_form.html"
+
+    def __init__(self, *args, **kwargs):
+        super(OpenHoursView, self).__init__(*args, **kwargs)
+
+        # written here in init since it will give reverse url error
+        # if just written in class definition. because urls.py isnt loaded
+        # when this class is defined
+        self.success_url=reverse('profile_display_redirect')
+
+    def get_object(self, queryset=None):
+        obj = OpenHours.objects.get(user__exact=self.request.user.id)
+        return obj
+

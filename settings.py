@@ -250,6 +250,6 @@ MAX_IMAGE_SIZE = 20 * 1024 * 1024
 if DEBUG:
     EMAIL_USE_TLS = True
     EMAIL_HOST = 'smtp.gmail.com'
-    EMAIL_HOST_USER = '@gmail.com'
-    EMAIL_HOST_PASSWORD = ''
+    EMAIL_HOST_USER = 'lookatyourright@gmail.com'
+    EMAIL_HOST_PASSWORD = 'testtest12'
     EMAIL_PORT = 587

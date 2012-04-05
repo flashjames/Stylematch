@@ -43,6 +43,30 @@
     <h2>Tjänster</h2>
   </div>
 </div>
+
+<div class="row show-grid">
+      <div class="span5">
+            <h2>Öppettider</h2>
+
+            <table class="table">
+                <thead>
+                    <th>Dag</th>
+                    <th>Öppettider</th>
+                    <th>Lunchstängt</th>
+                </thead>
+                <tbody>
+                
+            {% for day in weekdays %}
+                <tr>
+                <td> {{ day.0 }}</td>
+                <td>{{ day.1 }} - {{ day.2 }}</td>
+                <td>{{ day.3 }} - {{ day.4 }}</td>
+                </tr>
+            {% endfor %}
+                </tbody>
+            </table>
+      </div>
+</div>
 <div class="row show-grid">
   <div class="span7">
     <p>Hi</p>

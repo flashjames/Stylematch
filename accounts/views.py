@@ -10,6 +10,8 @@ from tastypie.authorization import Authorization
 from tastypie.authentication import BasicAuthentication
 from django.contrib.auth.models import User
 
+from tools import *
+
 
 
 class DisplayProfileView(DetailView):
@@ -22,6 +24,54 @@ class DisplayProfileView(DetailView):
     # case insensitive since __iexact
     slug_field = "profile_url__iexact"
     context_object_name = "profile"
+
+
+    def weekday_factory(self, obj, day = 'mon', pretty_dayname = 'Måndag'):
+
+        """ 
+        Helper function to create a list with relevant day information.
+        Extracts values from obj with attribute prefix DAY
+        """
+
+        attr_name = day
+        open_time = format_minutes_to_hhmm(getattr(obj, attr_name))
+
+        attr_name = day + "_closed"
+        closed_time = format_minutes_to_hhmm(getattr(obj, attr_name))
+
+
+        attr_name = day + "_lunch"
+        lunch_start = format_minutes_to_hhmm(getattr(obj, attr_name))
+
+
+        attr_name = day + "_lunch_closed"
+        lunch_end = format_minutes_to_hhmm(getattr(obj, attr_name))
+
+        day = [pretty_dayname, open_time, closed_time, lunch_start, lunch_end]        
+        return day
+
+    def get_context_data(self, **kwargs):
+        context = super(DisplayProfileView, self).get_context_data(**kwargs)
+
+
+        obj = OpenHours.objects.get(user__exact=self.request.user.id)
+
+        # Important: first value in every tuple must be exactly same as in OpenHours model.        
+        weekday_list =  [('mon', 'Måndag'), ('tues', 'Tisdag'), ('wed', 'Onsdag'), 
+                         ('thurs', 'Torsdag'), ('fri', 'Fredag'), ('sat', 'Lördag'),
+                         ('sun', 'Söndag')
+                        ]
+    
+        context['weekdays'] = []
+        for day in weekday_list:
+            day_dict = self.weekday_factory(obj, day[0], day[1])
+            context['weekdays'].append(day_dict)
+        
+        
+        return context
+
+
+   
 
 class CurrentUserProfileView(DisplayProfileView):
     slug_field = "temporary_profile_url__exact"
@@ -248,28 +298,13 @@ class ServiceResource(ModelResource):
         validation = FormValidation(form_class=ServiceForm)
 
 
-class OpenHoursForm(ModelForm):
-    class Meta:
-        model = OpenHours
 
 class OpenHoursView(UpdateView):
     model = OpenHours
     template_name = "accounts/hours_form.html"
-    form_class = OpenHoursForm
     success_url = "add-hours"
-
 
     def get_object(self, queryset=None):
         obj = OpenHours.objects.get(user__exact=self.request.user.id)
-           
-        setattr(obj, "test", 'test');
         return obj
-    """
-    def form_valid(self, form):
-        f = form.save(commit=False)
-        f.user = self.request.user
-        f.save()
-        form.save_m2m()
-        return super(OpenHoursView, self).form_valid(form)
-    """
 

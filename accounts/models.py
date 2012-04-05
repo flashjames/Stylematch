@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 
+from tools import *
 
 # used on all fields that need to have a forced max_length
 # django doesnt do this validation by itself
@@ -95,22 +96,8 @@ class Service(models.Model):
 
 class OpenHours(models.Model):
     
-    time_list = []
-    
-    # Calculate minutes past for every quarter of an hour
-    # and generate a good looking output.
-    minutes = 0
-    while minutes < 60*24:
+    time_list = generate_list_of_quarters()
 
-        hours = minutes / 60
-        minutes_remaining = minutes - (hours * 60)
-
-        output_str = str(hours).zfill(2) + ":" + str(minutes_remaining).zfill(2) 
-
-        time_list.append((minutes, output_str))
-
-        minutes += 15
-    
     # Since Python tuples are immutable we need to use a list as a temporary buffer
     time_tuple = tuple(time_list)
 

@@ -302,7 +302,14 @@ class ServiceResource(ModelResource):
 class OpenHoursView(UpdateView):
     model = OpenHours
     template_name = "accounts/hours_form.html"
-    success_url = "add-hours"
+
+    def __init__(self, *args, **kwargs):
+        super(OpenHoursView, self).__init__(*args, **kwargs)
+
+        # written here in init since it will give reverse url error
+        # if just written in class definition. because urls.py isnt loaded
+        # when this class is defined
+        self.success_url=reverse('profile_display_redirect')
 
     def get_object(self, queryset=None):
         obj = OpenHours.objects.get(user__exact=self.request.user.id)

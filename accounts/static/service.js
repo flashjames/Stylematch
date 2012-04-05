@@ -44,7 +44,7 @@
         editService:function () {
             /* Create bi-directional binding between the HTML form input elements
              * and the model for this Item
-             * */
+             */
             vent.trigger("changeModelToEdit", this.model);
         },
         deleteService:function () {
@@ -145,11 +145,6 @@
 	    // already on server, just sync it.
 	    else
 		this.model.save({}, responseCallback);
-
-	    // order on services may have changed -> save all services
-            // TODO: check if they have changed, and also only change the ORDER field.
-            // when doing the TODO above: will need another IF to check for the case when changing fields on
-            // a model th that's not new but still need to be updated
 
             return false;
         },

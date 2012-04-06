@@ -16,10 +16,10 @@
 {% block content %}
 <!-- Templates -->
 <script type="text/template" id="tpl-service-list-item">
-  <div class="service-name"><%= name %></div>
-  <div class="service-description"><%= description %></div>
-  <div class="service-length">Length: <%= length %>. TODO: Should be converted to time (server-side?) </div>
-  <div class="service-price"><%= price %></div>
+  <div class="service-name">Visningsnamn: <%= name %></div>
+  <div class="service-description">Description: <%= description %></div>
+  <div class="service-length">Length: <%= length %> minuter</div>
+  <div class="service-price">Pris: <%= price %>:-</div>
   <% if(display_on_profile) { %>
   <div class="service-price">Visas på profil</div>
   <% } else { %>

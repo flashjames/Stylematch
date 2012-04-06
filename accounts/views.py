@@ -1,5 +1,5 @@
 #-*- coding:utf-8 -*-
-from django.views.generic import CreateView, ListView, TemplateView, UpdateView, DetailView, RedirectView
+from django.views.generic import TemplateView, UpdateView, DetailView, RedirectView
 from accounts.models import Service, UserProfile, OpenHours
 from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin
@@ -10,9 +10,8 @@ from tastypie.authorization import Authorization
 from tastypie.authentication import BasicAuthentication
 from django.contrib.auth.models import User
 
+# TODO: import those that are used?
 from tools import *
-
-
 
 class DisplayProfileView(DetailView):
     """
@@ -24,7 +23,6 @@ class DisplayProfileView(DetailView):
     # case insensitive since __iexact
     slug_field = "profile_url__iexact"
     context_object_name = "profile"
-
 
     def weekday_factory(self, obj, day = 'mon', pretty_dayname = 'Måndag'):
 
@@ -53,8 +51,16 @@ class DisplayProfileView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(DisplayProfileView, self).get_context_data(**kwargs)
 
+        # to display the parts associated to the profile,
+        # we filter on the user_id of profile owner
+        profile_user_id = context['profile'].user_id
 
-        obj = OpenHours.objects.get(user__exact=self.request.user.id)
+        # services the displayed userprofile have
+        context['services'] = Service.objects.filter(user__exact=profile_user_id)
+
+        # opening hours the displayed userprofile have
+        # TODO: move this to a function?
+        obj = OpenHours.objects.get(user__exact=profile_user_id)
 
         # Important: first value in every tuple must be exactly same as in OpenHours model.        
         weekday_list =  [('mon', 'Måndag'), ('tues', 'Tisdag'), ('wed', 'Onsdag'), 
@@ -67,11 +73,7 @@ class DisplayProfileView(DetailView):
             day_dict = self.weekday_factory(obj, day[0], day[1])
             context['weekdays'].append(day_dict)
         
-        
         return context
-
-
-   
 
 class CurrentUserProfileView(DisplayProfileView):
     slug_field = "temporary_profile_url__exact"

@@ -104,15 +104,6 @@ class RedirectToProfileView(RedirectView):
         query = UserProfile.objects.filter(user=self.request.user).get()
         return query.temporary_profile_url
     
-
-class ServiceListView(LoginRequiredMixin, ListView):
-    context_object_name = "services"
-
-    def get_queryset(self):
-        return Service.objects.filter(user__exact=self.request.user.id)
-
-
-
 class UserProfileForm(ModelForm):
     """
     Validates that profile_url is unique
@@ -183,6 +174,7 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
 class ServiceForm(ModelForm):
     class Meta:
         model = Service
+        exclude = ('order')
 
 class ServicesView(LoginRequiredMixin, TemplateView):
     """
@@ -197,29 +189,10 @@ class ServicesView(LoginRequiredMixin, TemplateView):
         # form, id="name" not id="id_name"
         return {'form': ServiceForm(auto_id=True)}
 
-class ServiceCreateView(LoginRequiredMixin, CreateView):
-    """
-    Should be removed when services UI and Backend is done
-    """
-    model = Service
-    form_class = ServiceForm
-    template_name = "accounts/service_form2.html"
-
-    def __init__(self, *args, **kwargs):
-        super(ServiceCreateView, self).__init__(*args, **kwargs)
-
-        # written here in init since it will give reverse url error
-        # if just written in class definition. because urls.py isnt loaded
-        # when this class is defined
-        self.success_url=reverse('nana')
-
-    def form_valid(self, form):
-        f = form.save(commit=False)
-        f.user = self.request.user
-        f.save()
-        form.save_m2m()
-        return super(ServiceCreateView, self).form_valid(form)
-
+class ServiceFormAPI(ModelForm):
+    class Meta:
+        model = Service
+        exclude = ('order')
 
 class PerUserAuthorization(Authorization):
     """
@@ -295,7 +268,7 @@ class ServiceResource(ModelResource):
         queryset = Service.objects.all()
         limit = 50
         max_limit = 0
-        validation = FormValidation(form_class=ServiceForm)
+        validation = FormValidation(form_class=ServiceFormAPI)
 
 
 

@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-from accounts.views import ServiceCreateView, ServiceListView, ServicesView, EditProfileView, DisplayProfileView, CurrentUserProfileView, RedirectToProfileView
+from accounts.views import ServicesView, EditProfileView, DisplayProfileView, CurrentUserProfileView, RedirectToProfileView
 
 from accounts.views import OpenHoursView
 
@@ -12,9 +12,5 @@ urlpatterns = patterns('',
 
 
     (r'^add-hours$', OpenHoursView.as_view(),{},'profiles_add_hours'),
-
-    # remove these two asap
-    (r'^p/add-service2$', ServiceCreateView.as_view(),{},'nana'),
-    (r'^p/list-services$', ServiceListView.as_view(), {}, 'profiles_list_services'),
 )
 

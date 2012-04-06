@@ -55,8 +55,6 @@ class UserProfile(models.Model):
     url_online_booking = models.URLField("Adress till online bokningssystem", blank=True)
     show_booking_url = models.BooleanField("Visa länk till bokningssystem på hemsidan", blank=True)
     
-
-    
 class Service(models.Model):
     TIME_CHOICES = (
         (15, '15 minuter'),
@@ -92,6 +90,8 @@ class Service(models.Model):
     order = models.PositiveIntegerField(blank=True, editable=True, null=True)
 
     class Meta:
+        # deliver the services sorted on the order field
+        # needs to be here, or the services admin ui will break
         ordering = ['order']
 
 class OpenHours(models.Model):

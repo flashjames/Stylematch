@@ -10,19 +10,52 @@
 
     window.ServiceListView = Backbone.View.extend({
         tagName:'ul',
+	id: 'service-list',
         initialize:function () {
-            this.model.bind("reset", this.render, this);
+	    // TODO: change this.model to be this.collection
+	    // since this.model is currently a collection.
+	    // would that break anything?
+
+	    _.bindAll(this, 'updateOrder', 'saveEachModel');
+            this.model.bind('reset', this.render, this);
             var self = this;
-            this.model.bind("add", function (service) {
+            this.model.bind('add', function (service) {
                 $(self.el).append(new ServiceListItemView({model:service}).render().el);
             });
         },
         render:function (eventName) {
+	    // render each model object as a li object
             _.each(this.model.models, function (service) {
                 $(this.el).append(new ServiceListItemView({model:service}).render().el);
             }, this);
+
+	    var self = this;
+	    // make the ul list sortable with the function sortable() from jquery ui
+	    $(this.el).sortable({
+		items: 'li', 
+		//when a object have changed position, update the backbone models order field 
+		update: function() { 
+		    self.updateOrder();
+		}
+	    });
+
             return this;
-        }
+        },
+	updateOrder: function() {
+	    /*
+	     * Trigger update order of each Service model item
+	     * Need to trigger it on ServiceListItemView that hold's the model
+	     * since we need to access the li's index in the <ul> list
+	     */
+	    $(this.el).children("li").each(function(index, element) {
+		$(element).trigger('updateOrder');
+	    });
+	},
+	saveEachModel: function() {
+	    this.model.each(function(model) {
+		console.log(model);
+	    });
+	},
     });
 
     window.ServiceListItemView = Backbone.View.extend({
@@ -30,6 +63,8 @@
         template:_.template($('#tpl-service-list-item').html()),
 
         initialize:function () {
+	    _.bindAll(this, "updateModelOrder");
+	    $(this.el).bind('updateOrder', this.updateModelOrder);
             this.model.bind("change", this.render, this);
             this.model.bind("destroy", this.close, this);
         },
@@ -41,6 +76,20 @@
             "click .edit":"editService",
             "click .delete":"deleteService"
         },
+	updateModelOrder: function() {
+	    /*
+	     * Update the Service objects order field according to order in the <ul> list 
+	     */
+	    var indexInList = $(this.el).index();
+	    // silent => dont want to rerender the view
+	    this.model.set({order: indexInList, silent:true});
+	    this.model.save({}, {
+		 error: function(collection, error, options) {
+		     console.log("Error: Model didnt sync with server, after the order was changed");
+		 }
+	    });
+	    //console.log("na", $(this.el).index(), this.model);
+	},
         editService:function () {
             /* Create bi-directional binding between the HTML form input elements
              * and the model for this Item

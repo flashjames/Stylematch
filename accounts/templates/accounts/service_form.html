@@ -8,6 +8,8 @@
 <script src="/static/backbone-min.js"></script>
 <script src="/static/backbone-tastypie.js"></script>
 <script src="/static/backbone.modelbinding.js"></script>
+<link type="text/css" href="/static/jquery-ui-1.8.18.custom/css/ui-lightness/jquery-ui-1.8.18.custom.css" rel="Stylesheet" />
+<script type="text/javascript" src="/static/jquery-ui-1.8.18.custom.min.js"></script>
 
 {% endblock %}
 
@@ -29,32 +31,33 @@
 <script type="text/template" id="tpl-service-edit-form">
   <form class="form-horizontal" id="service-edit-form" action="" method="post">
     {% csrf_token %}
-      {% for field in form %}
-      <div class="control-group">
-        <label class="control-label" for="{{ field.value }}">{{ field.label }}</label>
-        <div class="controls">
-          {{ field }}
-          <span class="help-inline"></span>
-        </div>
+    {% for field in form %}
+    <div class="control-group">
+      <label class="control-label" for="{{ field.value }}">{{ field.label }}</label>
+      <div class="controls">
+        {{ field }}
+        <span class="help-inline"></span>
       </div>
-      {% endfor %}
-      <button class="btn btn-primary save">Save</button>
-    </fieldset>
-  </form>
+    </div>
+    {% endfor %}
+    <button class="btn btn-primary save">Save</button>
+</fieldset>
+</form>
 </script>
 
 
 <div class="container">
-  <div>
-    <button class="btn btn-primary new-service">New Service</button>
-  </div>
-  <div id="form">
+  <div class="row">
+       <div class="span6">
+         <div>
+           <button class="btn btn-primary new-service">New Service</button>
+         </div>
+         <div id="form"></div>
+         
+       </div>
+       <div id="service-list" class="span5 offset1"></div>
 
-  </div>
-  <div id="service-list">
+</div>
 
-    <button type="button">Hi</button>
-  </div>
-
-  <script src="/static/service.js"></script>
-  {% endblock %}
+<script src="/static/service.js"></script>
+{% endblock %}

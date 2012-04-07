@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% load url from future %}
 {% load index_extras %}
-{% load display_user_images %}
 
 {% block html-head %}
 <script src="{{ GALLERIA_SCRIPT }}" type="text/javascript" />
@@ -13,7 +12,7 @@
   <!-- should be centerted instead of using offset -->
   <div class="offset1 span11 masthead">
     <div class="span3">
-      {% get_profile_image user %}
+      {% include "profiles/display_images_snippet.html" with images=profile_image css_class='profile-image' %}
     </div>
     <div class="span7">
       <h2>{{ profile.profile_name }}</h2>
@@ -26,8 +25,7 @@
 <hr class="soften">
 <div class="row">
   <div class="span12" id="gallery">
-    {% get_gallery_images user %}
-
+    {% include "profiles/display_images_snippet.html" with images=gallery_images css_class='gallery-image' %}
   </div>
   <script>
     Galleria.loadTheme('{{ GALLERIA_THEME }}');

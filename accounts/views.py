@@ -1,6 +1,7 @@
 #-*- coding:utf-8 -*-
 from django.views.generic import TemplateView, UpdateView, DetailView, RedirectView
 from accounts.models import Service, UserProfile, OpenHours
+from fileupload.models import Picture
 from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin
 from django.forms import ModelForm, ValidationError
@@ -19,14 +20,37 @@ class DisplayProfileView(DetailView):
     """
     template_name = "profiles/profile_display.html"
     model = UserProfile
-    
+
     # case insensitive since __iexact
     slug_field = "profile_url__iexact"
     context_object_name = "profile"
 
+    def get_image_url(self, obj):
+        return obj.get_image_url()
+    
+    def get_images(self, user, image_type):
+        # TODO: should have limit on number of imgs to display
+        images = Picture.objects.filter(user__exact=user).filter(
+            image_type=image_type)
+
+        # send back urls to the images, instead of Picture objects
+        images_lst = []
+        for index, image in enumerate(images):
+            images_lst.append(self.get_image_url(image))
+            
+        return images_lst
+
+    def get_gallery_images(self, user, limit=0):
+        # 'G' = gallery images
+        return self.get_images(user, 'G')
+        
+    def get_profile_image(self, user):
+        # 'C' = current profile image
+        return self.get_images(user, 'C')
+
     def weekday_factory(self, obj, day = 'mon', pretty_dayname = 'Måndag'):
 
-        """ 
+        """
         Helper function to create a list with relevant day information.
         Extracts values from obj with attribute prefix DAY
         """
@@ -45,7 +69,7 @@ class DisplayProfileView(DetailView):
         attr_name = day + "_lunch_closed"
         lunch_end = format_minutes_to_hhmm(getattr(obj, attr_name))
 
-        day = [pretty_dayname, open_time, closed_time, lunch_start, lunch_end]        
+        day = [pretty_dayname, open_time, closed_time, lunch_start, lunch_end]
         return day
 
     def get_context_data(self, **kwargs):
@@ -55,6 +79,10 @@ class DisplayProfileView(DetailView):
         # we filter on the user_id of profile owner
         profile_user_id = context['profile'].user_id
 
+        # get images displayed on profile
+        context['profile_image'] = self.get_profile_image(profile_user_id)
+        context['gallery_images'] = self.get_gallery_images(profile_user_id)
+
         # services the displayed userprofile have
         context['services'] = Service.objects.filter(user__exact=profile_user_id)
 
@@ -62,17 +90,17 @@ class DisplayProfileView(DetailView):
         # TODO: move this to a function?
         obj = OpenHours.objects.get(user__exact=profile_user_id)
 
-        # Important: first value in every tuple must be exactly same as in OpenHours model.        
-        weekday_list =  [('mon', 'Måndag'), ('tues', 'Tisdag'), ('wed', 'Onsdag'), 
+        # Important: first value in every tuple must be exactly same as in OpenHours model.
+        weekday_list =  [('mon', 'Måndag'), ('tues', 'Tisdag'), ('wed', 'Onsdag'),
                          ('thurs', 'Torsdag'), ('fri', 'Fredag'), ('sat', 'Lördag'),
                          ('sun', 'Söndag')
                         ]
-    
+
         context['weekdays'] = []
         for day in weekday_list:
             day_dict = self.weekday_factory(obj, day[0], day[1])
             context['weekdays'].append(day_dict)
-        
+
         return context
 
 class CurrentUserProfileView(DisplayProfileView):
@@ -83,11 +111,11 @@ class RedirectToProfileView(RedirectView):
     Redirect to the profile with the profile_url or if it's not set,
     with temporary_profile_url
     """
-    
+
     # if this is set to True, browsers will cache the redirect for ever
     # which is no good (breaks the way we display the profile)
     permanent = False
-    
+
     def get_redirect_url(self):
         profile_url = self.get_user_profile_url()
 
@@ -97,7 +125,7 @@ class RedirectToProfileView(RedirectView):
             return reverse('profile_display_without_profile_url', kwargs={'slug': temporary_profile_url})
 
         return reverse('profile_display_with_profile_url', kwargs={'slug': profile_url})
-    
+
     def get_user_profile_url(self):
         query = UserProfile.objects.filter(user=self.request.user).get()
         return query.profile_url
@@ -105,7 +133,7 @@ class RedirectToProfileView(RedirectView):
     def get_user_temporary_profile_url(self):
         query = UserProfile.objects.filter(user=self.request.user).get()
         return query.temporary_profile_url
-    
+
 class UserProfileForm(ModelForm):
     """
     Validates that profile_url is unique
@@ -118,7 +146,7 @@ class UserProfileForm(ModelForm):
         # should be ok to not have any profile_url set
         if not profile_url:
             return True
-        
+
         # find profiles that have the specific profile_url
         query = UserProfile.objects.filter(profile_url__iexact=profile_url)
 

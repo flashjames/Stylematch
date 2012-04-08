@@ -23,25 +23,28 @@ class DisplayProfileView(DetailView):
     def get_image_url(self, obj):
         return obj.get_image_url()
     
-    def get_images(self, user, image_type):
-        # TODO: should have limit on number of imgs to display
-        images = Picture.objects.filter(user__exact=user).filter(
-            image_type=image_type)
-
+    def get_images(self, queryset):
         # send back urls to the images, instead of Picture objects
         images_lst = []
-        for index, image in enumerate(images):
+        for index, image in enumerate(queryset):
             images_lst.append(self.get_image_url(image))
             
         return images_lst
 
     def get_gallery_images(self, user, limit=0):
+        # TODO: should have limit on number of imgs to display
         # 'G' = gallery images
-        return self.get_images(user, 'G')
+        queryset = Picture.objects.filter(user__exact=user).filter(
+            image_type='G').filter(display_on_profile=True)
+
+        return self.get_images(queryset)
         
     def get_profile_image(self, user):
         # 'C' = current profile image
-        return self.get_images(user, 'C')
+        queryset = Picture.objects.filter(user__exact=user).filter(
+            image_type='C')
+        
+        return self.get_images(queryset)
 
     def weekday_factory(self, obj, day = 'mon', pretty_dayname = 'Måndag'):
 
@@ -79,7 +82,7 @@ class DisplayProfileView(DetailView):
         context['gallery_images'] = self.get_gallery_images(profile_user_id)
 
         # services the displayed userprofile have
-        context['services'] = Service.objects.filter(user__exact=profile_user_id)
+        context['services'] = Service.objects.filter(user__exact=profile_user_id).filter(display_on_profile=True)
 
         # opening hours the displayed userprofile have
         # TODO: move this to a function?

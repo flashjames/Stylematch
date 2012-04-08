@@ -22,27 +22,24 @@
 {% endblock %}
 
 {% block content %}
-<!-- Templates -->
-  <!--<img src="<%= image_url %>-->
+<!-- Underscore.js Templates -->
 <script type="text/template" id="tpl-image-list-item">
   <img src="<%= image_url %>">
   <div class="edit-images-image-bottom">
+    <!-- input checkbox should be checked=true if display_on_profile = true -->
     <% if(display_on_profile) { %>
     <label for="show_image_on_profile">Visa på profil</label>
-    <input checked="true" type="checkbox" class="show_image_on_profile">
+    <input checked="true" type="checkbox" name="show_image_on_profile" class="show_image_on_profile">
     <% } else { %>
     <label for="show_image_on_profile">Visa på profil</label>
-    <input checked="false" type="checkbox" class="show_image_on_profile">
+    <input type="checkbox" name="show_image_on_profile" class="show_image_on_profile">
     <% } %>
     <button class="btn delete">Delete</button>
   </div>
 </script>
 
 <div class="main-content edit-images">
-
     <div id="image-list" class="span12"></div>
-
-
   <!-- the code that does the magic on the page -->
   <script src="/static/picture.js"></script>
   {% endblock %}

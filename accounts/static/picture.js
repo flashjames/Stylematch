@@ -1,14 +1,12 @@
 (function($){
 
-    window.Service = Backbone.Model.extend({
-	
-    });
+    window.Service = Backbone.Model.extend({});
 
     window.ServiceCollection = Backbone.Collection.extend({
         model:Service,
 	// Set by the django template
         url: PICTURE_API_URL,
-	});
+    });
 
     window.ServiceListView = Backbone.View.extend({
         tagName:'ul',
@@ -61,7 +59,7 @@
 	    this.model.each(function(model) {
 		console.log(model);
 	    });
-	},
+	}
     });
 
     window.ServiceListItemView = Backbone.View.extend({
@@ -80,8 +78,32 @@
             return this;
         },
         events:{
-            "click .delete":"deleteService"
+            "click .delete":"deleteService",
+	    "click .show_image_on_profile":"switchDisplayOnProfile"
         },
+	switchDisplayOnProfile: function() {
+	    var display_on_profile = this.model.get("display_on_profile");
+	    console.log(display_on_profile, this.model);
+	    var bool;
+	    if(display_on_profile)
+		bool = false;
+	    else
+		bool = true;
+
+	    
+	    this.model.set({display_on_profile: bool, silent:true});
+
+	    this.model.save({}, {
+                success:function () {
+		    // TODO: Add dialog in interface
+                    console.log('Service deleted successfully');
+                },
+		error:function() {
+		      // TODO: Add dialog in interface
+                    console.log('Service delete made an error!');
+		}
+            });
+	},
 	updateModelOrder: function() {
 	    /*
 	     * Update the Service objects order field according to order in the <ul> list 
@@ -101,7 +123,11 @@
                 success:function () {
 		    // TODO: Add dialog in interface
                     console.log('Service deleted successfully');
-                }
+                },
+		error:function() {
+		      // TODO: Add dialog in interface
+                    console.log('Service delete made an error!');
+		}
             });
             return false;
         },
@@ -148,8 +174,6 @@
         },
     });
 
-    //events used to delegate between views
-    var vent = _.extend({}, Backbone.Events);
     this.ServiceView = new ServiceView();
 
 

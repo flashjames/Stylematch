@@ -39,8 +39,10 @@ virtualenv --no-site-packages projectx
 source projectx/bin/activate
 
 cd django-galleria/
-git submodule update
+
+# install modules that's downloaded with git, currently just galleria
 git submodule init
+git submodule update
 
 echo "PWD: ", $PWD
 

@@ -135,7 +135,6 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'social_auth',
     'registration',
-    'profiles',
     'django_extensions',
     'south',
     'bootstrap',

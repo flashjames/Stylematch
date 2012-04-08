@@ -9,7 +9,7 @@ profile_api = Api(api_name='profile')
 profile_api.register(ServiceResource())
 profile_api.register(PictureResource())
 
-urlpatterns = patterns('',   
+urlpatterns = patterns('',
     (r'^p/edit$', EditProfileView.as_view(),{},'profile_edit'),
     (r'^p/(?P<slug>\w+)/$', DisplayProfileView.as_view(),{},'profile_display_with_profile_url'),
     (r'^p/(?P<slug>\w+)$', CurrentUserProfileView.as_view(),{},'profile_display_without_profile_url'), 

@@ -4,7 +4,7 @@ from accounts.models import Service, UserProfile, OpenHours
 from fileupload.models import Picture
 from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin
-from django.forms import ModelForm, ValidationError
+from django.forms import ModelForm, ValidationError, Textarea
 
 # TODO: import those that are used?
 from tools import *
@@ -164,6 +164,9 @@ class UserProfileForm(ModelForm):
 
     class Meta:
         model = UserProfile
+        widgets = {
+            'profile_text': Textarea(attrs={'cols': 120, 'rows': 10}),
+            }
 
 class EditProfileView(LoginRequiredMixin, UpdateView):
     """

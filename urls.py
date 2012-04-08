@@ -1,12 +1,10 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
+from index.views import AboutPageView, IndexPageView
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
-
-
-
 
 urlpatterns = patterns(
     '',
@@ -24,12 +22,13 @@ urlpatterns = patterns(
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
     #url(r'^$', 'direct_to_template', {'template': 'index.html'}, name='index'),
-    url(r'^profile_index$', 'index.views.profile_index'),
-    url(r'^$', 'index.views.index'),
+    #url(r'^profile_index$', 'index.views.profile_index'),
+    (r'^about-us', IndexPageView.as_view(),{}, 'index_page'),
     (r'^accounts/', include('registration.urls')), # django-registration
     url(r'^upload/', include('fileupload.urls')), # django-fileupload
     url(r'^', include('accounts.urls')), # accounts
-    url(r'^about/', 'index.views.about_us'), #about us
+    (r'^about-us', AboutPageView.as_view(),{}, 'about_page'),
+    
 )
 
 if settings.DEBUG:

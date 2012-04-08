@@ -1,22 +1,21 @@
 # Create your views here.
 # from django.http import HttpResponse
-from annoying.decorators import render_to
 # from django.shortcuts import render_to_response
 from django.contrib import auth
 from django.http import HttpResponseRedirect
+from django.views.generic import TemplateView
 
-@render_to('index.html')
-def index(request):
-    return {}
+class AboutPageView(TemplateView):
+    """
+    Display about us page
+    """
+    template_name = "about_us.html"
 
-@render_to('profile_index.html')
-def profile_index(request):
-    return {}
-    
-@render_to('about_us.html')
-def about_us(request):
-	return {}
-
+class IndexPageView(TemplateView):
+    """
+    Display about us page
+    """
+    template_name = "index.html"
 
 def logout_page(request):
     """

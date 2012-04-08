@@ -6,9 +6,6 @@ from django.contrib import admin
 admin.autodiscover()
 
 
-from accounts.views import ServiceResource
-
-service_resource = ServiceResource()
 
 
 urlpatterns = patterns(
@@ -33,7 +30,6 @@ urlpatterns = patterns(
     url(r'^upload/', include('fileupload.urls')), # django-fileupload
     url(r'^', include('accounts.urls')), # accounts
     url(r'^about/', 'index.views.about_us'), #about us
-    (r'^api/', include(service_resource.urls)),
 )
 
 if settings.DEBUG:

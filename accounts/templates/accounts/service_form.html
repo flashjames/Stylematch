@@ -4,11 +4,14 @@
 {% load url from future %}
 
 {% block html-head %}
+<!-- used in the service.js file, to know where the service api is located -> doesnt need to hardcode the url -->
+<script> SERVICE_API_URL = "{% url 'api_dispatch_list' api_name="profile" resource_name="service" %}"; </script>
+
 <script src="/static/underscore-min.js"></script>
 <script src="/static/backbone-min.js"></script>
 <script src="/static/backbone-tastypie.js"></script>
 <script src="/static/backbone.modelbinding.js"></script>
-<link type="text/css" href="/static/jquery-ui-1.8.18.custom/css/ui-lightness/jquery-ui-1.8.18.custom.css" rel="Stylesheet" />
+<!--<link type="text/css" href="/static/jquery-ui-1.8.18.custom/css/ui-lightness/jquery-ui-1.8.18.custom.css" rel="Stylesheet" />-->
 <script type="text/javascript" src="/static/jquery-ui-1.8.18.custom.min.js"></script>
 
 {% endblock %}
@@ -48,16 +51,17 @@
 
 <div class="container">
   <div class="row">
-       <div class="span6">
-         <div>
-           <button class="btn btn-primary new-service">New Service</button>
-         </div>
-         <div id="form"></div>
-         
-       </div>
-       <div id="service-list" class="span5 offset1"></div>
+    <div class="span6">
+      <div>
+        <button class="btn btn-primary new-service">New Service</button>
+      </div>
+      <div id="form"></div>
 
-</div>
+    </div>
+    <div id="service-list" class="span5 offset1"></div>
 
-<script src="/static/service.js"></script>
-{% endblock %}
+  </div>
+
+  <!-- the code that does the magic on the page -->
+  <script src="/static/service.js"></script>
+  {% endblock %}

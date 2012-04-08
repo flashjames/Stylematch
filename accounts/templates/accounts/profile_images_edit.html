@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load upload_tags %}
+{% load index_extras %}
+{% load url from future %}
+
+{% block html-head %}
+<script> 
+  <!-- used in the service.js file, to know where the service api is located -> doesnt need to hardcode the url -->
+  PICTURE_API_URL = "{% url 'api_dispatch_list' api_name="profile" resource_name="picture" %}"; 
+  <!-- used in the service.js file, to know the full image path -->
+  PICTURE_PATH = "{{ user_images_path }}";
+  
+</script>
+
+<script src="/static/underscore-min.js"></script>
+<script src="/static/backbone-min.js"></script>
+<script src="/static/backbone-tastypie.js"></script>
+<script src="/static/backbone.modelbinding.js"></script>
+<!--<link type="text/css" href="/static/jquery-ui-1.8.18.custom/css/ui-lightness/jquery-ui-1.8.18.custom.css" rel="Stylesheet" />-->
+<script type="text/javascript" src="/static/jquery-ui-1.8.18.custom.min.js"></script>
+
+{% endblock %}
+
+{% block content %}
+<!-- Templates -->
+  <!--<img src="<%= image_url %>-->
+<script type="text/template" id="tpl-picture-list-item">
+  <div class="image-block">
+    <img style="width:200px;height:200px" src="<%= image_url %>">
+    <div class="edit-images-image-bottom">
+      <button class="btn btn-primary edit">Edit</button>
+      <button class="btn delete">Delete</button>
+    </div>
+  </div>
+</script>
+
+<div class="main-content edit-images">
+  <div class="row">
+    <p>WTF</p>
+
+    <div id="image-list" class="span11"></div>
+
+  </div>
+
+  <!-- the code that does the magic on the page -->
+  <script src="/static/picture.js"></script>
+  {% endblock %}

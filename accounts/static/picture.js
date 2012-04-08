@@ -1,16 +1,19 @@
 (function($){
 
-    window.Service = Backbone.Model.extend({});
+    window.Service = Backbone.Model.extend({
+	
+    });
 
     window.ServiceCollection = Backbone.Collection.extend({
         model:Service,
 	// Set by the django template
-        url: SERVICE_API_URL
-    });
+        url: PICTURE_API_URL,
+	});
 
     window.ServiceListView = Backbone.View.extend({
         tagName:'ul',
-	id: 'service-list',
+	className: 'image-list-horizontal',
+	//id: 'edit-images-image-list',
         initialize:function () {
 	    // TODO: change this.model to be this.collection
 	    // since this.model is currently a collection.
@@ -25,10 +28,12 @@
         },
         render:function (eventName) {
 	    // render each model object as a li object
+	    
             _.each(this.model.models, function (service) {
+		console.log("here");
                 $(this.el).append(new ServiceListItemView({model:service}).render().el);
             }, this);
-
+	    /*
 	    var self = this;
 	    // make the ul list sortable with the function sortable() from jquery ui
 	    $(this.el).sortable({
@@ -37,7 +42,7 @@
 		update: function() { 
 		    self.updateOrder();
 		}
-	    });
+	    });*/
 
             return this;
         },
@@ -60,7 +65,8 @@
 
     window.ServiceListItemView = Backbone.View.extend({
         tagName:"li",
-        template:_.template($('#tpl-service-list-item').html()),
+	className: "image-item",
+        template:_.template($('#tpl-picture-list-item').html()),
 
         initialize:function () {
 	    _.bindAll(this, "updateModelOrder");
@@ -69,6 +75,7 @@
             this.model.bind("destroy", this.close, this);
         },
         render:function (eventName) {
+	    console.log("here2", this.el);
             $(this.el).html(this.template(this.model.toJSON()));
             return this;
         },
@@ -111,12 +118,13 @@
         }
 
     });
+/*
     FormView = Backbone.View.extend({
         el: "#form",
         template:_.template($('#tpl-service-edit-form').html()),
 
         initialize: function(){
-            /* Uses Backbone.ModelBinding */
+       
             $(this.el).html(this.template);
             Backbone.ModelBinding.bind(this);
         },
@@ -126,29 +134,31 @@
             this.unbind();
             Backbone.ModelBinding.unbind(this);
         }
-    });
+    });*/
 
     window.ServiceView = Backbone.View.extend({
         el: $("body"),
         initialize:function () {
 	    //Glue code, that initialize's all views and models
 	    
-            _.bindAll(this, "formSave", "changeModelToEdit", "displayFormErrors");
-            vent.bind("changeModelToEdit", this.changeModelToEdit);
+            //_.bindAll(this, "formSave", "changeModelToEdit", "displayFormErrors");
+            //vent.bind("changeModelToEdit", this.changeModelToEdit);
 
             this.serviceList = new ServiceCollection();
             this.serviceListView = new ServiceListView({model:this.serviceList});
 
-            this.newForm();
+            //this.newForm();
 	    
             this.serviceList.fetch({
                 success: function(collection, response) {
                     if(!response)
                         //TODO: Display error message "couldnt get views"
                         console.log("Error: Couldnt get user's services from API");
+		    console.log("fetch()",response);
                 }
             });
-            $('#service-list').html(this.serviceListView.render().el);
+	    
+            $('#image-list').html(this.serviceListView.render().el);
         },
 	events:{
             'click .save': 'formSave',

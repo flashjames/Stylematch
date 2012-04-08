@@ -6,15 +6,19 @@ from django.core.files.storage import default_storage
 
 import os
 
+# client side url to images, without image filename
+# used in the view that edit the images on the profile
+def get_image_url(filename):
+    return os.path.join(settings.STATIC_URL,
+                    settings.PATH_USER_IMGS, filename)
+
 class Picture(models.Model):
-    # full path to upload image to, including filename
+    # server-side, full path to upload image including filename
     def get_image_path(instance, filename):
         return os.path.join(settings.UPLOAD_PATH_USER_IMGS, instance.filename)
 
-    # client side url to image
     def get_image_url(self):
-        return os.path.join(settings.STATIC_URL,
-                        settings.PATH_USER_IMGS, self.filename)
+        return get_image_url(self.filename)
 
     def __unicode__(self):
         return self.file.name
@@ -22,12 +26,6 @@ class Picture(models.Model):
     @models.permalink
     def get_absolute_url(self):
         return ('upload-new', )
-
-    def save(self, *args, **kwargs):
-        import pdb
-        #pdb.set_trace()
-        # default image type for now, Gallery
-        super(Picture, self).save(*args, **kwargs)
 
     file = models.ImageField(upload_to=get_image_path)
     filename = models.CharField(max_length=50, blank=True)

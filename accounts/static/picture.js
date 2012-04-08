@@ -13,7 +13,6 @@
     window.ServiceListView = Backbone.View.extend({
         tagName:'ul',
 	className: 'image-list-horizontal',
-	//id: 'edit-images-image-list',
         initialize:function () {
 	    // TODO: change this.model to be this.collection
 	    // since this.model is currently a collection.
@@ -30,19 +29,20 @@
 	    // render each model object as a li object
 	    
             _.each(this.model.models, function (service) {
-		console.log("here");
                 $(this.el).append(new ServiceListItemView({model:service}).render().el);
             }, this);
-	    /*
+	    
 	    var self = this;
 	    // make the ul list sortable with the function sortable() from jquery ui
 	    $(this.el).sortable({
+		scrollSensitivity: 2,
+		tolerance: 'pointer', // if this is not set, the reordering wont work properly
 		items: 'li', 
 		//when a object have changed position, update the backbone models order field 
 		update: function() { 
 		    self.updateOrder();
 		}
-	    });*/
+	    });
 
             return this;
         },
@@ -53,6 +53,7 @@
 	     * since we need to access the li's index in the <ul> list
 	     */
 	    $(this.el).children("li").each(function(index, element) {
+		console.log("asd");
 		$(element).trigger('updateOrder');
 	    });
 	},
@@ -65,8 +66,8 @@
 
     window.ServiceListItemView = Backbone.View.extend({
         tagName:"li",
-	className: "image-item",
-        template:_.template($('#tpl-picture-list-item').html()),
+	className: "image-block",
+        template:_.template($('#tpl-image-list-item').html()),
 
         initialize:function () {
 	    _.bindAll(this, "updateModelOrder");
@@ -75,12 +76,10 @@
             this.model.bind("destroy", this.close, this);
         },
         render:function (eventName) {
-	    console.log("here2", this.el);
             $(this.el).html(this.template(this.model.toJSON()));
             return this;
         },
         events:{
-            "click .edit":"editService",
             "click .delete":"deleteService"
         },
 	updateModelOrder: function() {
@@ -97,12 +96,6 @@
 	    });
 	    //console.log("na", $(this.el).index(), this.model);
 	},
-        editService:function () {
-            /* Create bi-directional binding between the HTML form input elements
-             * and the model for this Item
-             */
-            vent.trigger("changeModelToEdit", this.model);
-        },
         deleteService:function () {
             this.model.destroy({
                 success:function () {
@@ -118,23 +111,6 @@
         }
 
     });
-/*
-    FormView = Backbone.View.extend({
-        el: "#form",
-        template:_.template($('#tpl-service-edit-form').html()),
-
-        initialize: function(){
-       
-            $(this.el).html(this.template);
-            Backbone.ModelBinding.bind(this);
-        },
-        close: function(){
-            // Model Unbinding
-            this.remove();
-            this.unbind();
-            Backbone.ModelBinding.unbind(this);
-        }
-    });*/
 
     window.ServiceView = Backbone.View.extend({
         el: $("body"),
@@ -161,79 +137,15 @@
             $('#image-list').html(this.serviceListView.render().el);
         },
 	events:{
-            'click .save': 'formSave',
-	    'click .new-service': 'newForm'
         },
-        newForm: function() {
-            this.model = new Service();
-            this.FormView = new FormView({model: this.model});
-        },
-	cleanForm: function() {
-	    this.FormView = new FormView({model: this.model});
-	},
         render:function (eventName) {
             $(this.el).html(this.template(this.model.toJSON()));
             return this;
-        },
-        changeModelToEdit: function(model) {
-            this.model = model;
-            this.FormView = new FormView({model:model});
         },
         close:function () {
             $(this.el).unbind();
             $(this.el).empty();
         },
-        formSave: function() {
-	    var ServiceView = this;
-	    
-	    // a callback used on both model.save() and serviceList.create()
-	    responseCallback = {
-		success: function(collection, error, options) {
-		    ServiceView.newForm();
-		},
-		error: function(collection, error, options) {
-		    ServiceView.cleanForm();
-		    ServiceView.displayFormErrors(collection, error, options);
-		}
-	    };
-
-	    // if it's a model that's not synced to the server and not in the 
-	    // services list yet, on the page -> collection.create()
-	    if(this.model.isNew())
-		this.serviceList.create(this.model, responseCallback);
-	    // already on server, just sync it.
-	    else
-		this.model.save({}, responseCallback);
-
-            return false;
-        },
-        displayFormErrors: function(collection, error, options) {
-	    
-	    // error, this is a jqXHR object (jquery ajax object)
-	    // http://api.jquery.com/jQuery.ajax/#jqXHR
-	    
-	    // convert the responsetext that's a string with json data
-	    // to a usable object
-	    try {
-		// ugly hack to convert to json object, the other way around
-		// tho, is to go change in the Backbone framework code
-		// http://coded-codes101.blogspot.se/2011/07/jquery-ajax-error-function.html
-		eval("var errorResponseJSON = " + error.responseText + ";");
-		for( var field in errorResponseJSON) {
-		    // get the help-inline dom object for the field
-		    var control_group = $("#" + field).closest(".control-group");
-		    control_group.addClass("error");
-
-		    // display error message for field
-		    var help_inline = control_group.find(".help-inline");
-		    help_inline.text(errorResponseJSON[field][0]);
-		}	
-	    }
-	    catch(err) {
-		// TODO: Display error message somewhere better
-		console.log("ERROR: The error message response wasnt a JSON object");
-	    }
-        }
     });
 
     //events used to delegate between views

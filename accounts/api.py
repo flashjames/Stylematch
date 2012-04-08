@@ -134,6 +134,7 @@ class PictureResource(ModelResource):
         authentication = DjangoBasicAuthentication()
         authorization = PerUserAuthorization()
         queryset = Picture.objects.all()
+        excludes = ['file','user']
         limit = 50
         max_limit = 0
         validation = FormValidation(form_class=PictureForm)

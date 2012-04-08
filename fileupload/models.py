@@ -1,3 +1,4 @@
+#-*- coding:utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -27,7 +28,7 @@ class Picture(models.Model):
     def get_absolute_url(self):
         return ('upload-new', )
 
-    file = models.ImageField(upload_to=get_image_path)
+    file = models.ImageField(upload_to=get_image_path,editable=False)
     filename = models.CharField(max_length=50, blank=True)
     user = models.ForeignKey(User, editable=False)
     upload_date = models.DateTimeField(auto_now_add=True,editable=False)
@@ -36,10 +37,20 @@ class Picture(models.Model):
     # what i wanted was a real enum which could be used when setting the value
     IMAGE_TYPE_CHOICES = (
         ('G', 'Gallery'),
-        ('P', 'Profile'),
+        ('P', 'Unused Profile Image'),
         ('C', 'Current Profile Image'),
         )
     image_type = models.CharField(max_length=1, choices=IMAGE_TYPE_CHOICES,editable=False)
+    order = models.PositiveIntegerField(blank=True, editable=True, null=True)
+    
+    # unused if it's a profile image
+    display_on_profile = models.BooleanField("Visa på profil", blank=True)
+
+    class Meta:
+        # deliver the images sorted on the order field
+        # needs to be here, or the images admin ui will break
+        ordering = ['order']
+
 
 # Signals handler for deleting files after object record deleted
 # In Django 1.3, delete a record not remove the associated files

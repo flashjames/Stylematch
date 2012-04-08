@@ -24,23 +24,24 @@
 {% block content %}
 <!-- Templates -->
   <!--<img src="<%= image_url %>-->
-<script type="text/template" id="tpl-picture-list-item">
-  <div class="image-block">
-    <img style="width:200px;height:200px" src="<%= image_url %>">
-    <div class="edit-images-image-bottom">
-      <button class="btn btn-primary edit">Edit</button>
-      <button class="btn delete">Delete</button>
-    </div>
+<script type="text/template" id="tpl-image-list-item">
+  <img src="<%= image_url %>">
+  <div class="edit-images-image-bottom">
+    <% if(display_on_profile) { %>
+    <label for="show_image_on_profile">Visa på profil</label>
+    <input checked="true" type="checkbox" class="show_image_on_profile">
+    <% } else { %>
+    <label for="show_image_on_profile">Visa på profil</label>
+    <input checked="false" type="checkbox" class="show_image_on_profile">
+    <% } %>
+    <button class="btn delete">Delete</button>
   </div>
 </script>
 
 <div class="main-content edit-images">
-  <div class="row">
-    <p>WTF</p>
 
-    <div id="image-list" class="span11"></div>
+    <div id="image-list" class="span12"></div>
 
-  </div>
 
   <!-- the code that does the magic on the page -->
   <script src="/static/picture.js"></script>

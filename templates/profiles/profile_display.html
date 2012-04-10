@@ -61,9 +61,9 @@
 	
         {% for day in weekdays %}
         <tr>
-          <td> {{ day.0 }}</td>
-          <td>{{ day.1 }} - {{ day.2 }}</td>
-          <td>{{ day.3 }} - {{ day.4 }}</td>
+          <td> {{ day.day }}</td>
+          <td>{{ day.open }} - {{ day.closed }}</td>
+          <td>{{ day.lunch_start }} - {{ day.lunch_end }}</td>
         </tr>
         {% endfor %}
       </tbody>

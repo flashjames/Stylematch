@@ -49,7 +49,7 @@ class DisplayProfileView(DetailView):
     def weekday_factory(self, obj, day = 'mon', pretty_dayname = 'Måndag'):
 
         """
-        Helper function to create a list with relevant day information.
+        Helper function to create a dict with relevant day information.
         Extracts values from obj with attribute prefix DAY
         """
 
@@ -67,7 +67,7 @@ class DisplayProfileView(DetailView):
         attr_name = day + "_lunch_closed"
         lunch_end = format_minutes_to_hhmm(getattr(obj, attr_name))
 
-        day = [pretty_dayname, open_time, closed_time, lunch_start, lunch_end]
+        day = {'day': pretty_dayname, 'open': open_time, 'closed': closed_time, 'lunch_start': lunch_start, 'lunch_end': lunch_end}
         return day
 
     def get_context_data(self, **kwargs):

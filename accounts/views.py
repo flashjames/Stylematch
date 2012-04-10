@@ -70,6 +70,22 @@ class DisplayProfileView(DetailView):
         day = {'day': pretty_dayname, 'open': open_time, 'closed': closed_time, 'lunch_start': lunch_start, 'lunch_end': lunch_end}
         return day
 
+    def get_openinghours(self, profile_user_id):
+
+        obj = OpenHours.objects.get(user__exact=profile_user_id)
+
+        # Important: first value in every tuple must be exactly same as in OpenHours model.
+        weekday_list =  [('mon', 'Måndag'), ('tues', 'Tisdag'), ('wed', 'Onsdag'),
+                     ('thurs', 'Torsdag'), ('fri', 'Fredag'), ('sat', 'Lördag'),
+                     ('sun', 'Söndag')
+                        ]
+        openinghours_list =  []
+        for day in weekday_list:
+            day_dict = self.weekday_factory(obj, day[0], day[1])
+            openinghours_list.append(day_dict)
+
+        return openinghours_list
+
     def get_context_data(self, **kwargs):
         context = super(DisplayProfileView, self).get_context_data(**kwargs)
 
@@ -87,20 +103,10 @@ class DisplayProfileView(DetailView):
         for i in context['services']:
             i.length = format_minutes_to_pretty_format(i.length)
 
-        # opening hours the displayed userprofile have
-        # TODO: move this to a function?
-        obj = OpenHours.objects.get(user__exact=profile_user_id)
 
-        # Important: first value in every tuple must be exactly same as in OpenHours model.
-        weekday_list =  [('mon', 'Måndag'), ('tues', 'Tisdag'), ('wed', 'Onsdag'),
-                         ('thurs', 'Torsdag'), ('fri', 'Fredag'), ('sat', 'Lördag'),
-                         ('sun', 'Söndag')
-                        ]
-
-        context['weekdays'] = []
-        for day in weekday_list:
-            day_dict = self.weekday_factory(obj, day[0], day[1])
-            context['weekdays'].append(day_dict)
+        # opening hours the displayed userprofile have        
+        context['weekdays'] = self.get_openinghours(profile_user_id)
+        
 
         return context
 

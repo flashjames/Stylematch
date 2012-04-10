@@ -84,6 +84,9 @@ class DisplayProfileView(DetailView):
         # services the displayed userprofile have
         context['services'] = Service.objects.filter(user__exact=profile_user_id).filter(display_on_profile=True)
 
+        for i in context['services']:
+            i.length = format_minutes_to_pretty_format(i.length)
+
         # opening hours the displayed userprofile have
         # TODO: move this to a function?
         obj = OpenHours.objects.get(user__exact=profile_user_id)

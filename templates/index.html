@@ -32,6 +32,15 @@
 </div>
 
   </div>
+
+    <div class="row show-grid">
+      <div class="span8">
+	<p>Test</p>
+	{% for profile in profiles %}
+	{{ profile.profile_name }}
+	{% endfor %}
+      </div>
+    </div>
   
   <div class="row show-grid">
     <div class="span3">

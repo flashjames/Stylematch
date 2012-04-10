@@ -241,9 +241,11 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     )
 
 # Paths to user uploaded images, used in fileupload app
+
 PATH_USER_IMGS = "user-imgs/"
 UPLOAD_PATH_USER_IMGS = "media/" + PATH_USER_IMGS
 MAX_IMAGE_SIZE = 20 * 1024 * 1024
+FULL_PATH_USER_IMGS = os.path.join(STATIC_URL, PATH_USER_IMGS)
 
 # use gmail as smtp server, useful during development
 if DEBUG:

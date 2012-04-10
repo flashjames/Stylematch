@@ -28,6 +28,8 @@ class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True, editable=False)
     profile_name = models.CharField("Namn", max_length=40, blank=True)
     profile_phone_number = models.CharField("Personligt telefonnummer", max_length=30, blank=True)
+
+    display_on_first_page = models.BooleanField(editable=False)
     
     # max_length? less?
     profile_text = models.CharField("Text att visa på profilen", max_length=500, blank=True)

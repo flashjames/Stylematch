@@ -218,7 +218,7 @@ class ServicesView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         # auto_id = True  because Backbone.ModelBinding expects id's to be on the
         # form, id="name" not id="id_name"
-        return {'form': ServiceForm(auto_id=True)}
+        return {'form': ServiceForm(auto_id=True, initial={'display_on_profile': 1})}
 
 class PicturesView(LoginRequiredMixin, TemplateView):
     """

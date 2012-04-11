@@ -23,8 +23,34 @@ def create_user_profile(sender, instance, created, **kwargs):
     TODO: Create different profiles depending on if it's a stylist or a regular user
     """
     if created:
-        UserProfile.objects.create(user=instance, temporary_profile_url=uuid.uuid4().hex)
+        UserProfile.objects.create(user=instance,
+                                   temporary_profile_url= uuid.uuid4().hex, 
+                                   profile_name = 'Namn Namnsson', 
+                                   profile_phone_number = "0761234567",
+                                   display_on_first_page = True,
+                                   salon_name = 'Gunillas hårparadis',
+                                   salon_city = 'Linköping',
+                                   salon_adress = 'Musterivägen 12A',
+                                   salon_phone_number = '013523812',
+                                   zip_adress  = 38413,
+                                   profile_text = 'Det här är en beskrivande text av vad salongen är och står för, samt annan intressant information')
+
         OpenHours.objects.create(user=instance)
+
+        Service.objects.create(user = instance, 
+                                length = 60, 
+                                name = "Klippning",
+                                price = 500, 
+                                description = "Klipp ditt hår fint till sommaren", 
+                                display_on_profile = True)
+
+
+        Service.objects.create(user = instance, 
+                                length = 105, 
+                                name = "Hårfärgning",
+                                price = 140, 
+                                description = "Bli fin som en dräng med Pers intensiva hårfärg.", 
+                                display_on_profile = True)
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True, editable=False)

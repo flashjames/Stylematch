@@ -61,27 +61,10 @@ class UserProfile(models.Model):
     show_booking_url = models.BooleanField("Visa länk till bokningssystem på hemsidan", blank=True)
     
 class Service(models.Model):
-    TIME_CHOICES = (
-        (15, '15 minuter'),
-        (30, '30 minuter'),
-        (45,'45 minuter'),
-        (60, '1 timme'),
-        (75, '1 timme 15 minuter'),
-        (90,'1 timme 30 minuter'),
-        (105,'1 timme 45 minuter'),
-        (120,'2 timmar'),
-        (135,'2 timmar 15 minuter'),
-        (150,'2 timmar 30 minuter'),
-        (165,'2 timmar 45 minuter'),
-        (180,'3 timmar'),
-        (195,'3 timmar 15 minuter'),
-        (210,'3 timmar 30 minuter'),
-        (225,'3 timmar 45 minuter'),
-        (240,'4 timmar'),
-        (300,'5 timmar'),
-        (360,'6 timmar'),
-        (420,'7 timmar'),
-        )
+    buffer = generate_list_of_quarters(15, 420+15, format_minutes_to_pretty_format)
+    TIME_CHOICES = tuple(buffer)
+
+
     length = models.IntegerField("Tid", choices=TIME_CHOICES,max_length=3)
     name = models.CharField("Service (ex. Färga hår)", max_length=20)
     price = models.IntegerField("Pris i kronor", max_length=6)

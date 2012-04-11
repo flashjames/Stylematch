@@ -6,6 +6,8 @@ from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin
 from django.forms import ModelForm, ValidationError, Textarea
 
+
+from accounts.models import weekdays_model
 # TODO: import those that are used?
 from tools import *
 
@@ -74,14 +76,15 @@ class DisplayProfileView(DetailView):
 
         obj = OpenHours.objects.get(user__exact=profile_user_id)
 
-        # Important: first value in every tuple must be exactly same as in OpenHours model.
-        weekday_list =  [('mon', 'Måndag'), ('tues', 'Tisdag'), ('wed', 'Onsdag'),
-                     ('thurs', 'Torsdag'), ('fri', 'Fredag'), ('sat', 'Lördag'),
-                     ('sun', 'Söndag')
-                        ]
+        weekday_list =  ['Måndag',  'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 
+                        'Lördag', 'Söndag']
+
         openinghours_list =  []
-        for day in weekday_list:
-            day_dict = self.weekday_factory(obj, day[0], day[1])
+        for index, day in enumerate(weekday_list):
+
+            # Important:  weekdays_model[index] must be exactly same as in OpenHours model.
+            # Should not be a problem now but this could be a future source of bugs.
+            day_dict = self.weekday_factory(obj, weekdays_model[index], day[1])
             openinghours_list.append(day_dict)
 
         return openinghours_list
@@ -106,6 +109,9 @@ class DisplayProfileView(DetailView):
 
         # opening hours the displayed userprofile have        
         context['weekdays'] = self.get_openinghours(profile_user_id)
+
+
+        context['profile_image'] = 'profile_male.jpg'
         
 
         return context

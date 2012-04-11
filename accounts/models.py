@@ -7,6 +7,9 @@ from django.db.models.signals import post_save
 
 from tools import *
 
+
+weekdays_model = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun']   
+
 # used on all fields that need to have a forced max_length
 # django doesnt do this validation by itself
 # the value given to MaxLengthValidator should be same as max_length variable
@@ -114,12 +117,10 @@ class OpenHours(models.Model):
     default_lunch_open = 720
     default_lunch_close = 780
 
-    weekdays = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun']   
-
     # Instead of having duplicate code we generate the code dynamically and 
     # execute it. FIXME: This MIGHT be unsafe, so if any problem occurs in 
     # this model this is probably why.
-    for day in weekdays:
+    for day in weekdays_model:
         code = day + ' = models.IntegerField("", choices=time_tuple, default = ' + str(default_open_time) + ')'
         exec(code)
 

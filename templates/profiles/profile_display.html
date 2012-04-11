@@ -8,13 +8,20 @@
 {% endblock %}
 
 {% block content %}
+
 <div class="row">
+  
+
   <!-- should be centerted instead of using offset -->
   <div class="offset1 span11 masthead">
-    <div class="span3">
+    <!-- <div class="span3">
       {% include "profiles/display_images_snippet.html" with images=profile_image css_class='profile-image' %}
+    </div> -->
+    <div class="span5">
+        <img src="{{ profile_image }}" name="cprofile" width="400" height="400"> 
     </div>
     <div class="span7">
+
       <h2>{{ profile.profile_name }}</h2>
       <h3>{{ profile.salon_name }}</h3>
       <blockquote><p>{{ profile.profile_text }}</p></blockquote>

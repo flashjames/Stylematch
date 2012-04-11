@@ -31,9 +31,22 @@
     <label for="show_image_on_profile">Visa på profil</label>
     <input checked="true" type="checkbox" name="show_image_on_profile" class="show_image_on_profile">
     <% } else { %>
+
     <label for="show_image_on_profile">Visa på profil</label>
     <input type="checkbox" name="show_image_on_profile" class="show_image_on_profile">
     <% } %>
+    <% console.log( "Image type: " , image_type) %>
+    <br />
+
+    
+    <label for="profile_image_radiobutton">Välj som profilbild</label>
+
+    <% if(image_type == 'C'){ %>
+        <input type="radio" checked="checked"  name="profile_image_radiobutton" class="profile_image_radiobutton">
+     <% } else { %>
+        <input type="radio"  name="profile_image_radiobutton" class="profile_image_radiobutton">
+    <% } %>
+    <br />
     <button class="btn delete">Delete</button>
   </div>
 </script>

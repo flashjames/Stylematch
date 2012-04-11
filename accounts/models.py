@@ -7,7 +7,6 @@ from django.db.models.signals import post_save
 
 from tools import *
 
-
 weekdays_model = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun']   
 
 # used on all fields that need to have a forced max_length
@@ -57,6 +56,8 @@ class UserProfile(models.Model):
     
     # TODO: add validation https://docs.djangoproject.com/en/dev/ref/contrib/localflavor/#sweden-se
     zip_adress = models.IntegerField("Postnummer", max_length=6, blank=True, null=True)
+
+
     url_online_booking = models.URLField("Adress till online bokningssystem", blank=True)
     show_booking_url = models.BooleanField("Visa länk till bokningssystem på hemsidan", blank=True)
     

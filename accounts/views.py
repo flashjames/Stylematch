@@ -90,6 +90,17 @@ class DisplayProfileView(DetailView):
 
         return openinghours_list
 
+    def get_profile_image_url(self, profile_user_id):
+        profile_picture = ''
+        try:
+            profile_picture  = self.get_profile_image(profile_user_id)[0]
+            print "\n"*10, profile_picture
+        except:
+            # TODO: Genders?
+            profile_picture = '/static/user-imgs/profile_male.jpg'
+
+        return profile_picture
+
     def get_context_data(self, **kwargs):
         context = super(DisplayProfileView, self).get_context_data(**kwargs)
 
@@ -110,9 +121,8 @@ class DisplayProfileView(DetailView):
 
         # opening hours the displayed userprofile have        
         context['weekdays'] = self.get_openinghours(profile_user_id)
+        context['profile_image'] = self.get_profile_image_url(profile_user_id)
 
-
-        
 
         return context
 
@@ -233,6 +243,8 @@ class ServicesView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         # auto_id = True  because Backbone.ModelBinding expects id's to be on the
         # form, id="name" not id="id_name"
+
+        # "Initial"-dict defaults new services to show on profile.
         return {'form': ServiceForm(auto_id=True, initial={'display_on_profile': 1})}
 
 class PicturesView(LoginRequiredMixin, TemplateView):
@@ -243,8 +255,9 @@ class PicturesView(LoginRequiredMixin, TemplateView):
     """
     template_name = "accounts/profile_images_edit.html"
 
-    #def get_context_data(self, **kwargs):
-    #    return {'user_images_path': get_userimages_path()}
+    def get_context_data(self, **kwargs):
+        context = super(PicturesView, self).get_context_data(**kwargs)
+        return context
 
 
 class OpenHoursView(UpdateView):

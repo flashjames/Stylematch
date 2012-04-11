@@ -84,7 +84,10 @@ class DisplayProfileView(DetailView):
 
             # Important:  weekdays_model[index] must be exactly same as in OpenHours model.
             # Should not be a problem now but this could be a future source of bugs.
-            day_dict = self.weekday_factory(obj, weekdays_model[index], day[1])
+
+            print '\'' + str(weekdays_model[index]) + "\'\n"*10
+    
+            day_dict = self.weekday_factory(obj, weekdays_model[index], day)
             openinghours_list.append(day_dict)
 
         return openinghours_list

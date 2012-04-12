@@ -3,13 +3,21 @@
 {% load url from future %}
 
 {% block content %}
+<center>
+<ul class="nav nav-tabs">
+  <li><a href="#">Visa Profil</a></li>
+  <li class="active"><a href="#">Förändra Profil</a></li>
+  <li><a href="#">Förändra Öppetider</a></li>
+  <li><a href="#">Förändra Prislista</a></li>
+  <li><a href="#">Lägg Till Bilder</a></li>
+</ul>
+</center>
 
-<form action="" method="post">{% csrf_token %}
-  <div class="row show-grid">
-    <div class="span6">
+<form  action="" method="post">{% csrf_token %}
+  <div id="edit-profile-forms" class="row show-grid">
+    <div class="span6" >
       <h2>Allmän info</h2>
       {% include "profiles/form_snippet.html" with field=form.profile_name %}
-      <p>hej</p>
       {% include "profiles/form_snippet.html" with field=form.profile_phone_number %} 
       <p>(+knapp för att visa på profilen)</p>
       {% include "profiles/form_snippet.html" with field=form.profile_text %}

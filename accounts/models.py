@@ -60,7 +60,7 @@ class UserProfile(models.Model):
     display_on_first_page = models.BooleanField(editable=False)
     
     # max_length? less?
-    profile_text = models.CharField("Text att visa på profilen", max_length=500, blank=True)
+    profile_text = models.CharField("Om mig", max_length=500, blank=True)
 
     # TODO: add check if unique
     profile_url = models.CharField("Min profil sida http://avizera.se/", max_length=15, blank=True, validators=[MaxLengthValidator(15)])
@@ -76,9 +76,9 @@ class UserProfile(models.Model):
     # salong
     salon_name = models.CharField("Namn", max_length=30, blank=True)
     salon_city = models.CharField("Stad", max_length=30, blank=True)
-    salon_url = models.URLField("Hemsida", blank=True)
+    salon_url = models.URLField("Salongens Hemsida", blank=True)
     salon_adress = models.CharField(max_length=30, blank=True)
-    salon_phone_number = models.CharField("Telefonnummer", max_length=30, blank=True)
+    salon_phone_number = models.CharField("Salongens Telefonnummer", max_length=30, blank=True)
     
     # TODO: add validation https://docs.djangoproject.com/en/dev/ref/contrib/localflavor/#sweden-se
     zip_adress = models.IntegerField("Postnummer", max_length=6, blank=True, null=True)

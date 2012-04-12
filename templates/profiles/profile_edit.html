@@ -3,6 +3,9 @@
 {% load url from future %}
 
 {% block content %}
+
+<!--- Under ovan borde flyttas ut (dvs det tillhör inte content) ---!>
+
 <center>
 <ul class="nav nav-tabs">
   <li><a href="#">Visa Profil</a></li>
@@ -12,39 +15,70 @@
   <li><a href="#">Lägg Till Bilder</a></li>
 </ul>
 </center>
+<br><br>
 
+
+<div class="row">
+<div id="edit-profile-large" class="span11">
+<br><br>
+
+<!--- Detta ovan borde flyttas ut (dvs det tillhör inte content) ---!>
+
+<div id="edit-profile-forms">
 <form  action="" method="post">{% csrf_token %}
-  <div id="edit-profile-forms" class="row show-grid">
-    <div class="span6" >
-      <h2>Allmän info</h2>
+  
+    <div class="span4" >
       {% include "profiles/form_snippet.html" with field=form.profile_name %}
-      {% include "profiles/form_snippet.html" with field=form.profile_phone_number %} 
-      <p>(+knapp för att visa på profilen)</p>
       {% include "profiles/form_snippet.html" with field=form.profile_text %}
-      {% include "profiles/form_snippet.html" with field=form.profile_url %}
-      <p>Facebook: om connected with facebook, visa http://facebook.com/Jenso1988.
+      
+     
+      <p>{{ form.profile_url.label_tag }}</p>
+     {{ form.profile_url.errors }}
+     <p class="profile-horisontal-text"> http://www.stylefinder.se/</p>
+     {{ form.profile_url }}
+      
+      {% include "profiles/form_snippet.html" with field=form.salon_name %}
+     
+    
+        {% include "profiles/form_snippet.html" with field=form.salon_adress %}
+      
+      
+       {% include "profiles/form_snippet.html" with field=form.salon_city %}
+    
+    {% include "profiles/form_snippet.html" with field=form.zip_adress %}
+    
+    {% include "profiles/form_snippet.html" with field=form.profile_phone_number %} 
+      {% include "profiles/form_snippet.html" with field=form.salon_phone_number %}
+      
+      <label class="signup-label">Vilket telefonnummer ska visas på profilen?</label>
+              <select id="select01">
+                <option>Salongens Telefonnummer</option>
+                <option>Personlig Telefonnummer</option>
+              </select>	    	
+              
+    {% include "profiles/form_snippet.html" with field=form.salon_url %}
+    	
+    	
+    	
+    	
+    	
+      {% include "profiles/form_snippet.html" with field=form.show_booking_url %}
+      <input type="submit" value="Spara" />
+    
+     <p>Facebook: om connected with facebook, visa http://facebook.com/Jenso1988.
         Annars: stor knapp för att "connect with facebook", samt visa anledningar till det.</p>
       <p>Twitter användarnamn: visas exempelvis som http://twitter.com/Jenso88</p>
       <!--<a href="{# TODO: cant find reverse match from here
 url 'auth_password_change' #}">Byt lösenord</a>-->
-      <input type="submit" value="Spara" />
-    </div>
-    <div class="span6">
-      <h2>Salonginfo</h2>
-      {% include "profiles/form_snippet.html" with field=form.salon_name %}
-      {% include "profiles/form_snippet.html" with field=form.salon_city %}
-      {% include "profiles/form_snippet.html" with field=form.salon_url %}
-      {% include "profiles/form_snippet.html" with field=form.salon_phone_number %}
-       <p>(+knapp för att visa på profilen, endast ett av telefonnummrena visas)</p>
-      {% include "profiles/form_snippet.html" with field=form.salon_adress %}
-      {% include "profiles/form_snippet.html" with field=form.salon_zip_adress %}
-      {% include "profiles/form_snippet.html" with field=form.url_online_booking %}
-      {% include "profiles/form_snippet.html" with field=form.show_booking_url %}
-      <input type="submit" value="Spara" />
+    
     </div>
   </div>
+  </div>
+ 
+   
   <div class="row show-grid">
     <div class="span6">
+    
       <h2>Tjänster</h2>
 
       <a href="{% url 'profiles_edit_services' %}">Edit services</a>
@@ -61,6 +95,7 @@ url 'auth_password_change' #}">Byt lösenord</a>-->
        <a href="{% url 'profiles_add_hours' %}">Redigera öppettider</a>
         <br />
     </div>
+  </div>
   </div>
 </form>
 {% endblock %}

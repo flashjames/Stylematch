@@ -54,8 +54,8 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True, editable=False)
-    profile_name = models.CharField("Namn", max_length=40, blank=True)
-    profile_phone_number = models.CharField("Personligt telefonnummer", max_length=30, blank=True)
+    profile_name = models.CharField("Mitt Namn*", max_length=40, blank=True)
+    profile_phone_number = models.CharField("Personligt Telefonnummer", max_length=30, blank=True)
 
     display_on_first_page = models.BooleanField(editable=False)
     
@@ -63,7 +63,7 @@ class UserProfile(models.Model):
     profile_text = models.CharField("Om mig", max_length=500, blank=True)
 
     # TODO: add check if unique
-    profile_url = models.CharField("Min profil sida http://avizera.se/", max_length=15, blank=True, validators=[MaxLengthValidator(15)])
+    profile_url = models.CharField("Min Stylefinder hemsida*", max_length=15, blank=True, validators=[MaxLengthValidator(15)])
     # used to reach profile if no profile_url set
     temporary_profile_url = models.CharField(editable=False, unique=True, max_length=36)
 
@@ -74,7 +74,7 @@ class UserProfile(models.Model):
     """
     
     # salong
-    salon_name = models.CharField("Namn", max_length=30, blank=True)
+    salon_name = models.CharField("Salongens Namn", max_length=30, blank=True)
     salon_city = models.CharField("Stad", max_length=30, blank=True)
     salon_url = models.URLField("Salongens Hemsida", blank=True)
     salon_adress = models.CharField(max_length=30, blank=True)

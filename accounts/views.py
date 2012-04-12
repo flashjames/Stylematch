@@ -6,6 +6,8 @@ from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin
 from django.forms import ModelForm, ValidationError, Textarea
 
+
+from accounts.models import weekdays_model
 # TODO: import those that are used?
 from tools import *
 
@@ -70,6 +72,35 @@ class DisplayProfileView(DetailView):
         day = {'day': pretty_dayname, 'open': open_time, 'closed': closed_time, 'lunch_start': lunch_start, 'lunch_end': lunch_end}
         return day
 
+    def get_openinghours(self, profile_user_id):
+
+        obj = OpenHours.objects.get(user__exact=profile_user_id)
+
+        weekday_list =  ['Måndag',  'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 
+                        'Lördag', 'Söndag']
+
+        openinghours_list =  []
+        for index, day in enumerate(weekday_list):
+
+            # Important:  weekdays_model[index] must be exactly same as in OpenHours model.
+            # Should not be a problem now but this could be a future source of bugs.
+    
+            day_dict = self.weekday_factory(obj, weekdays_model[index], day)
+            openinghours_list.append(day_dict)
+
+        return openinghours_list
+
+    def get_profile_image_url(self, profile_user_id):
+        profile_picture = ''
+        try:
+            profile_picture  = self.get_profile_image(profile_user_id)[0]
+            print "\n"*10, profile_picture
+        except:
+            # TODO: Genders?
+            profile_picture = '/static/user-imgs/profile_male.jpg'
+
+        return profile_picture
+
     def get_context_data(self, **kwargs):
         context = super(DisplayProfileView, self).get_context_data(**kwargs)
 
@@ -84,20 +115,14 @@ class DisplayProfileView(DetailView):
         # services the displayed userprofile have
         context['services'] = Service.objects.filter(user__exact=profile_user_id).filter(display_on_profile=True)
 
-        # opening hours the displayed userprofile have
-        # TODO: move this to a function?
-        obj = OpenHours.objects.get(user__exact=profile_user_id)
+        for i in context['services']:
+            i.length = format_minutes_to_pretty_format(i.length)
 
-        # Important: first value in every tuple must be exactly same as in OpenHours model.
-        weekday_list =  [('mon', 'Måndag'), ('tues', 'Tisdag'), ('wed', 'Onsdag'),
-                         ('thurs', 'Torsdag'), ('fri', 'Fredag'), ('sat', 'Lördag'),
-                         ('sun', 'Söndag')
-                        ]
 
-        context['weekdays'] = []
-        for day in weekday_list:
-            day_dict = self.weekday_factory(obj, day[0], day[1])
-            context['weekdays'].append(day_dict)
+        # opening hours the displayed userprofile have        
+        context['weekdays'] = self.get_openinghours(profile_user_id)
+        context['profile_image'] = self.get_profile_image_url(profile_user_id)
+
 
         return context
 
@@ -218,7 +243,9 @@ class ServicesView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         # auto_id = True  because Backbone.ModelBinding expects id's to be on the
         # form, id="name" not id="id_name"
-        return {'form': ServiceForm(auto_id=True)}
+
+        # "Initial"-dict defaults new services to show on profile.
+        return {'form': ServiceForm(auto_id=True, initial={'display_on_profile': 1})}
 
 class PicturesView(LoginRequiredMixin, TemplateView):
     """
@@ -228,8 +255,9 @@ class PicturesView(LoginRequiredMixin, TemplateView):
     """
     template_name = "accounts/profile_images_edit.html"
 
-    #def get_context_data(self, **kwargs):
-    #    return {'user_images_path': get_userimages_path()}
+    def get_context_data(self, **kwargs):
+        context = super(PicturesView, self).get_context_data(**kwargs)
+        return context
 
 
 class OpenHoursView(UpdateView):

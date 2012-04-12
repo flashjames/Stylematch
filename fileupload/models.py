@@ -28,7 +28,7 @@ class Picture(models.Model):
     def get_absolute_url(self):
         return ('upload-new', )
 
-    file = models.ImageField(upload_to=get_image_path)
+    file = models.ImageField(upload_to=get_image_path, blank = True)
     filename = models.CharField(max_length=50, blank=True)
     user = models.ForeignKey(User, editable=False)
     upload_date = models.DateTimeField(auto_now_add=True,editable=False)
@@ -43,13 +43,29 @@ class Picture(models.Model):
     image_type = models.CharField(max_length=1, choices=IMAGE_TYPE_CHOICES,editable=False)
     order = models.PositiveIntegerField(blank=True, editable=True, null=True)
     
+
     # unused if it's a profile image
     display_on_profile = models.BooleanField("Visa på profil", blank=True)
+
+
+    def save(self, *args, **kwargs):
+        super(Picture, self).save(*args, **kwargs) 
+
+        if self.image_type == 'C':
+            # The newly saved Picture object was selected as current 
+            # profile picture. Therefor we need to reset the previous profile pic.
+
+            # There should not be more than 1 previous profile picture, but rather
+            # safe than sorry. 
+            Picture.objects.filter(user__exact= self.user).filter(
+            image_type='C').exclude(id = self.id).update(image_type = 'G')
 
     class Meta:
         # deliver the images sorted on the order field
         # needs to be here, or the images admin ui will break
         ordering = ['order']
+
+     
 
 
 # Signals handler for deleting files after object record deleted

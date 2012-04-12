@@ -7,6 +7,8 @@ from django.db.models.signals import post_save
 
 from tools import *
 
+weekdays_model = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun']   
+
 # used on all fields that need to have a forced max_length
 # django doesnt do this validation by itself
 # the value given to MaxLengthValidator should be same as max_length variable
@@ -21,8 +23,34 @@ def create_user_profile(sender, instance, created, **kwargs):
     TODO: Create different profiles depending on if it's a stylist or a regular user
     """
     if created:
-        UserProfile.objects.create(user=instance, temporary_profile_url=uuid.uuid4().hex)
+        UserProfile.objects.create(user=instance,
+                                   temporary_profile_url= uuid.uuid4().hex, 
+                                   profile_name = 'Namn Namnsson', 
+                                   profile_phone_number = "0761234567",
+                                   display_on_first_page = True,
+                                   salon_name = 'Gunillas hårparadis',
+                                   salon_city = 'Linköping',
+                                   salon_adress = 'Musterivägen 12A',
+                                   salon_phone_number = '013523812',
+                                   zip_adress  = 38413,
+                                   profile_text = 'Det här är en beskrivande text av vad salongen är och står för, samt annan intressant information')
+
         OpenHours.objects.create(user=instance)
+
+        Service.objects.create(user = instance, 
+                                length = 60, 
+                                name = "Klippning",
+                                price = 500, 
+                                description = "Klipp ditt hår fint till sommaren", 
+                                display_on_profile = True)
+
+
+        Service.objects.create(user = instance, 
+                                length = 105, 
+                                name = "Hårfärgning",
+                                price = 140, 
+                                description = "Bli fin som en dräng med Pers intensiva hårfärg.", 
+                                display_on_profile = True)
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True, editable=False)
@@ -54,31 +82,16 @@ class UserProfile(models.Model):
     
     # TODO: add validation https://docs.djangoproject.com/en/dev/ref/contrib/localflavor/#sweden-se
     zip_adress = models.IntegerField("Postnummer", max_length=6, blank=True, null=True)
+
+
     url_online_booking = models.URLField("Adress till online bokningssystem", blank=True)
     show_booking_url = models.BooleanField("Visa länk till bokningssystem på hemsidan", blank=True)
     
 class Service(models.Model):
-    TIME_CHOICES = (
-        (15, '15 minuter'),
-        (30, '30 minuter'),
-        (45,'45 minuter'),
-        (60, '1 timme'),
-        (75, '1 timme 15 minuter'),
-        (90,'1 timme 30 minuter'),
-        (105,'1 timme 45 minuter'),
-        (120,'2 timmar'),
-        (135,'2 timmar 15 minuter'),
-        (150,'2 timmar 30 minuter'),
-        (165,'2 timmar 45 minuter'),
-        (180,'3 timmar'),
-        (195,'3 timmar 15 minuter'),
-        (210,'3 timmar 30 minuter'),
-        (225,'3 timmar 45 minuter'),
-        (240,'4 timmar'),
-        (300,'5 timmar'),
-        (360,'6 timmar'),
-        (420,'7 timmar'),
-        )
+    buffer = generate_list_of_quarters(15, 420+15, format_minutes_to_pretty_format)
+    TIME_CHOICES = tuple(buffer)
+
+
     length = models.IntegerField("Tid", choices=TIME_CHOICES,max_length=3)
     name = models.CharField("Service (ex. Färga hår)", max_length=20)
     price = models.IntegerField("Pris i kronor", max_length=6)
@@ -114,12 +127,10 @@ class OpenHours(models.Model):
     default_lunch_open = 720
     default_lunch_close = 780
 
-    weekdays = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun']   
-
     # Instead of having duplicate code we generate the code dynamically and 
     # execute it. FIXME: This MIGHT be unsafe, so if any problem occurs in 
     # this model this is probably why.
-    for day in weekdays:
+    for day in weekdays_model:
         code = day + ' = models.IntegerField("", choices=time_tuple, default = ' + str(default_open_time) + ')'
         exec(code)
 

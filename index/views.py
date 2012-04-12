@@ -44,8 +44,13 @@ class IndexPageView(ListView):
     context_object_name = "profiles"
     template_name = "index.html"
     queryset = UserProfile.objects.all()
-    
-    #def get_context_data(self, **kwargs):
+
+    def get_context_data(self, **kwargs):
+        
+        context = super(IndexPageView, self).get_context_data(**kwargs)
+
+
+        return context
 
 def logout_page(request):
     """

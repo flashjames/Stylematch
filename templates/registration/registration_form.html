@@ -1,16 +1,63 @@
-{% extends "base.html" %}
+{% extends "base2.html" %}
 {% load url from future %}
 {% load index_extras %}
 
 {% block title %}Register plix{% endblock %}
 {% block content %}
-  <div class="prefix_5 grid_4">
+
+<br><br>
+	<div id="beta-signup-banner" class="shadow-beta well">
+	
+	<center><h1 class="beta-banner">G&aring; med nu!</h1></center>
+	
+	<br><br>
+	<form>
+	
+	<div class="span2 pull-left beta-signup-left">
+	 <label>F&ouml;rnamn</label>
+  <input type="text" class="beta-signup-left-form">
+  	</div>
+  	
+  	<div class="span2 pull-right beta-signup-right">
+  <label>Efternamn</label>
+  <input type="text" class="beta-signup-right-form">
+	</div>
+	
+	<div class="span3 beta-signup-email">
+  <label>Emailadress</label>
+  <input type="text" class="beta-signup-email-form">
+	</div>
+	
+	<div class="span2 pull-left beta-signup-left">
+	 <label>L&ouml;senord</label>
+  <input type="password" class="beta-signup-left-form">
+  	</div>
+  	
+  	<div class="span2 pull-right beta-signup-right">
+  <label>Upprepa L&ouml;senord</label>
+  <input type="password" class="beta-signup-right-form">
+	</div>
+	
+	<div class="span3 beta-signup-email">
+	<center>
+		<div class="span2 beta-signup-invite">
+  			<label>Inbjudningskod</label>
+ 		 	<input type="text" class="beta-signup-invite-form">
+ 		 </div>
+ 		</center>
+ 		 
+ 			 
+	</div>
+	<center>
+	<button type="submit" class="btn-large btn-info">Skapa konto</button>
+	</center>
+	
+	</form>
+	
+</div>
+
+<br><br>
 
 
-    <form action="" method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <input type="submit" value="Registrera" />
-    </form>
-  </div>
+  
 {% endblock %}

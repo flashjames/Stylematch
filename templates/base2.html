@@ -1,0 +1,30 @@
+{# load google_analytics #}
+{% load bootstrap %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <script type="text/javascript" src="{{ JQUERY_SCRIPT }}"></script>
+
+    {% bootstrap_js all %}
+    {% bootstrap_less %}
+    {# Used to load js that's specific to a page #}
+    {% block html-head %}{% endblock %}
+  
+    
+    <title>{% block title %}Hi{% endblock %}</title>
+  </head>
+  <body style="background-image:url('/static/img/wallpaper.jpg')" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true">
+    
+	{% block header %} 
+	{% endblock %}
+	<div class="container">
+      <section id="gridSystem">
+	{% block content %} {% endblock %}
+      </section>
+	{% block footer %} {% endblock %}
+    </div>
+  {# analytics #}
+  </body>
+</html>

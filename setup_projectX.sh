@@ -7,7 +7,8 @@ if [ "$0" != "bash" ]; then
     echo "Error! You need to use following syntax:"
     echo "source setup_projectX.sh"
     echo
-    exit 1
+    # if you're on ssh, this line will disconnect you from ssh
+    #exit 1
 fi
 
 clear
@@ -26,9 +27,9 @@ echo ""
 sudo apt-get install python python-dev python-pip python-virtualenv python-imaging libjpeg62-dev
 
 
-git clone git@github.com:Jenso/ProjectX.git
+#git clone git@github.com:Jenso/ProjectX.git
 
-cd ProjectX/
+#cd ProjectX/
 
 echo "Fetching Django-Galleria"
 git clone http://github.com/andrewebdev/django-galleria.git

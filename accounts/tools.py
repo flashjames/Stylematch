@@ -1,18 +1,3 @@
-def generate_list_of_quarters():
-    time_list = []
-    
-    # Calculate minutes past for every quarter of an hour
-    # and generate a good looking output.
-    minutes = 0
-    while minutes < 60*24:
-
-        output_str = format_minutes_to_hhmm(minutes)
-
-        time_list.append((minutes, output_str))
-
-        minutes += 15
-    
-    return time_list
 
 
 def format_minutes_to_hhmm(minutes):
@@ -49,7 +34,25 @@ def format_minutes_to_pretty_format(minutes):
             output_str += "timmar"
 
         output_str += " "
-
-    output_str += str(minutes_remaining) + " minuter"
+    
+    if minutes_remaining != 0:
+        output_str += str(minutes_remaining) + " minuter"
 
     return output_str
+
+def generate_list_of_quarters(min_minutes = 0, minutes_max = 60*24, output_format_func = format_minutes_to_hhmm):
+    """ 
+    Generates a list of tuples with very fifteen minutes occuring between 
+    min_minutes and minutes_max and a string generated from output_format_func.
+    """    
+    time_list = []
+    minutes = min_minutes
+    while minutes < minutes_max:
+
+        output_str = output_format_func(minutes)
+        time_list.append((minutes, output_str))
+
+        minutes += 15
+    
+    return time_list
+

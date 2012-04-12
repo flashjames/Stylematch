@@ -79,7 +79,8 @@
         },
         events:{
             "click .delete":"deleteService",
-	    "click .show_image_on_profile":"switchDisplayOnProfile"
+	        "click .show_image_on_profile":"switchDisplayOnProfile",            
+            "change .profile_image_radiobutton": "setProfileImage"
         },
 	switchDisplayOnProfile: function() {
 	    var display_on_profile = this.model.get("display_on_profile");
@@ -104,6 +105,25 @@
 		}
             });
 	},
+    setProfileImage: function(e) {
+
+        // FIXME: radiobuttons are weird when using model.set({...}) followed by 
+        // save() since they force re-rendering or something alike.
+        // Current solution is to do set and save in same operation...
+	    this.model.save({image_type: 'C'}, {silent:true,
+            success:function () {
+                // TODO: Add dialog in interface
+                console.log('setProfileImage successfully changed');
+            },
+            error:function() {
+                // TODO: Add dialog in interface
+                console.log('setProfileImage saving failed!');
+            }
+        });
+
+	},
+    
+
 	updateModelOrder: function() {
 	    /*
 	     * Update the Service objects order field according to order in the <ul> list 

@@ -1,0 +1,112 @@
+{# load google_analytics #}
+{% load bootstrap %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <script type="text/javascript" src="{{ JQUERY_SCRIPT }}"></script>
+
+    {% bootstrap_js all %}
+    {% bootstrap_less %}
+    {# Used to load js that's specific to a page #}
+    {% block html-head %}{% endblock %}
+  
+    
+    <title>{% block title %}Stylefinder - Framtidens marknadsf&ouml;ringsverktyg{% endblock %}</title>
+  </head>
+  <body style="background-image:url('static/img/wallpaper.jpg')">
+    
+	<div class="container">
+      <section id="gridSystem">
+	{% block content %} 
+	<br><br>
+	<div id="features-banner" class="shadow-beta well">
+<!-- start --!>
+
+<div class="span7">
+<h1> Modern marknadsf&ouml;ring f&ouml;r dig som utbildad fris&ouml;r</h1>
+		<br>
+		<p>	
+		Vi p&aring; StyleFinder tror p&aring; att f&ouml;renkla vardagen f&ouml;r dig som h&aring;rt arbetande fris&ouml;r och att lyfta fram din kreativa sida. Vi vill ge dig m&ouml;jlighet att st&auml;rka ditt personliga varum&auml;rke d&aring; vi vet att det &auml;r relationen mellan dig och dina kunder som &auml;r avg&ouml;rande.
+
+<br><br>StyleFinder &auml;r en tj&auml;nst d&auml;r du som fris&ouml;r kan skapa en egen professionell profilsida med endast n&aring;gra  klick. Sidan kan sedan anpassas efter din egen personlighet i form av text, bilder och layout. Med ett kraftfullt s&ouml;kverktyg kan kunder nu p&aring; ett nytt och roligt s&auml;tt hitta och boka just dig. Efter bes&ouml;ket kan dina kunder rekommendera dig till sina v&auml;nner via mail eller p&aring; sociala medier s&aring; som Facebook.
+
+<br><br>Vad som g&ouml;r StyleFinder unikt j&auml;mf&ouml;rt med andra tj&auml;nter p&aring; marknaden &auml;r att vi lyfter fram dig och din personlighet ist&auml;llet f&ouml;r den salong du jobbar p&aring;. StyleFinder &auml;r ett enkelt och modernt verktyg som l&aring;ter dig f&aring; ta del av de otroliga m&ouml;jligheterna som finns p&aring; internet.	
+
+<br><br><br>
+
+</div>
+	
+	
+	
+	<div class="span4 pull-right">
+	<h3>Varf&ouml;r Stylefinder?</h3>
+	<br><br>
+	<dt>Exklusivt n&auml;tverk f&ouml;r dig som utbildad fris&ouml;r</dt>
+    <dd>StyleFinder erbjuds endast till utbildade fris&ouml;rer vilket g&ouml;r att du som medlem f&aring;r en tydlig markering p&aring;  marknaden att du &auml;r kvalificerad.
+    </dd>
+	</dl>
+	<br>
+	<dt>Starkare relation med dina stamkunder</dt>
+    <dd>Med din personliga profilsida kan du forts&auml;tta att h&aring;lla kundrelationen vid liv &auml;ven utanf&ouml;r salongens v&auml;ggar. 
+    </dd>
+	</dl>
+	<br>
+	<dt>Syns du inte s&aring; finns du inte</dt>
+    <dd>L&aring;t dina kunder sk&ouml;ta marknadsf&ouml;ringen &aring;t dig via Facebook och andra sociala medier. Ta v&auml;l hand om dina kunder, de kommer att ta v&auml;l hand om dig.</dd>
+	</dl>
+	<br>
+	<dt>F&aring; fler &aring;terkommande kunder</dt>
+    <dd>Med StyleFinder s&aring; f&aring;r du nya kunder som passar just din personlighet. Vi matchar dig med kunder som du vill ska komma tillbaka. </dd>
+	<br>
+	<dt>Visa upp din dagliga konst</dt>
+    <dd>Vi l&aring;ter dig ladda upp bilder p&aring; dig sj&auml;lv och dina verk s&aring; du kan visa v&auml;rlden vem du &auml;r och vad du &auml;r b&auml;st p&aring;.</dl>
+	</div>
+	
+
+<div class="span7" id="referens">
+	<blockquote>
+  <p>"Grymt att ni avgr&auml;nsar er till enbart utbildade fris&ouml;rer, d&aring; blir det tydligare vilka akt&ouml;rer som &auml;r seri&ouml;sa."</p>
+  <small>Roger Olofsson, &Auml;gare Hairstudio Unique</small>
+</blockquote></div>
+<br>
+<div class="span7 pull-right" id="referens2">
+<blockquote class="pull-right">
+  <p>"Jag har velat synas p&aring; Facebook l&auml;nge men har inte vetat hur jag ska g&ouml;ra det p&aring; ett professionellt s&auml;tt."</p>
+  <small>Malin Avetun, Fris&ouml;r H&aring;rv&aring;rdsbaren Norrk&ouml;ping</small>
+</blockquote>
+</div>
+<div class="span7" id="referens">
+	<blockquote>
+  <p>"Nu n&auml;r jag flyttat till Link&ouml;ping m&aring;ste jag hitta en ny fris&ouml;r, och jag vet inte vart jag ska b&ouml;rja leta."
+	</p>
+  <small>Per Niblaeus, Student Link&ouml;ping</small>
+</blockquote></div>
+	
+<br><br>
+
+	<div class="span12">&nbsp;
+	<br><br>
+
+<center><h2><i> Stylefinder &auml;r framtidens s&auml;tt att marknadsf&ouml;ra sig som fris&ouml;r.</i></h2>
+  <p> Stylefinder lanseras snart inom Sverige. Ans&ouml;k om en inbjudan redan idag. </p>
+  <br>
+  <a class="btn-large btn-info" href="/">Ans&ouml;k om inbjudan</a> 
+	</center>
+	</div>
+	
+	</div>
+
+
+<!-- stop --!>
+	
+</div>
+	
+	{% endblock %}
+      </section>
+	{% block footer %} {% endblock %}
+    </div>
+  {# analytics #}
+  </body>
+</html>

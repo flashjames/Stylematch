@@ -1,0 +1,43 @@
+{# load google_analytics #}
+{% load bootstrap %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <script type="text/javascript" src="{{ JQUERY_SCRIPT }}"></script>
+
+    {% bootstrap_js all %}
+    {% bootstrap_less %}
+    {# Used to load js that's specific to a page #}
+    {% block html-head %}{% endblock %}
+  
+    
+    <title>{% block title %}Stylefinder - Framtidens marknadsf&ouml;ringsverktyg{% endblock %}</title>
+  </head>
+  <body style="background-image:url('static/img/wallpaper.jpg')">
+    
+	<div class="container">
+      <section id="gridSystem">
+	{% block content %} 
+	<br><br>
+	<div id="beta-banner" class="shadow-beta well"><center><h1 class="beta-banner">Framtidens marknadsf&ouml;ringsverktyg <span class="beta-banner">f&ouml;r utbildade fris&ouml;rer</span></h1></center>
+	<br>
+	<form >
+  <input id="beta-email-typein" type="text" placeholder="E-postadress">
+  <button type="submit" class="btn-large btn-info">Ans&ouml;k om inbjudan</button>
+</form>
+
+<h3 class="beta-banner">Har du redan en inbjudningskod? &nbsp;&nbsp;&nbsp;&nbsp;  <a href="/accounts/register/"> <button class="btn-large btn-info">G&aring; med h&auml;r!</button></a></h3>  
+<br>
+<h2 class="beta-banner"><a class="beta-banner" href="/features">L&auml;s mer om Stylefinder</a></h3>
+
+</div>
+	
+	{% endblock %}
+      </section>
+	{% block footer %} {% endblock %}
+    </div>
+  {# analytics #}
+  </body>
+</html>

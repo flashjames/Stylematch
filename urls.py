@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
-from index.views import AboutPageView, IndexPageView
+from index.views import AboutPageView, IndexPageView, BetaPageView, FeaturesPageView, SignupStep1PageView, SignupStep2PageView
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -23,11 +23,15 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
     #url(r'^$', 'direct_to_template', {'template': 'index.html'}, name='index'),
     #url(r'^profile_index$', 'index.views.profile_index'),
-    (r'^$', IndexPageView.as_view(),{}, 'index_page'),
+    (r'^startsida', IndexPageView.as_view(),{}, 'index_page'),
     (r'^accounts/', include('registration.urls')), # django-registration
     url(r'^upload/', include('fileupload.urls')), # django-fileupload
     url(r'^', include('accounts.urls')), # accounts
     (r'^about-us', AboutPageView.as_view(),{}, 'about_page'),
+    (r'^$', BetaPageView.as_view(),{}, 'beta_page'),
+    (r'^features', FeaturesPageView.as_view(),{}, 'features_page'),
+    (r'^signup-step1', SignupStep1PageView.as_view(),{}, 'signupstep1_page'),
+    (r'^signup-step2', SignupStep2PageView.as_view(),{}, 'signupstep2_page'),
     
 )
 

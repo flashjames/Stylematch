@@ -42,6 +42,7 @@
 
 
 <script type="text/template" id="tpl-service-list-item">
+  <div id="unique-list-item">
   <div class="service-name"><b>Visningsnamn:</b> <%= name %></div>
   <div class="service-description"><b>Beskrivning:</b> <%= description %></div>
   <div class="service-length"><b>Längd:</b> <%= length %> minuter</div>
@@ -51,8 +52,9 @@
   <% } else { %>
   <div class="service-price"><i>Visas inte på profilen</i></div>
   <% } %>
-  <button class="btn btn-info edit">Redigera</button>
-  <button class="btn delete">Ta bort</button>
+  <button style="margin-top:2px" class="btn btn-mini btn-info edit">Redigera</button>
+  <button style="margin-top:2px" class="btn btn-mini delete">Ta bort</button>
+  </div>
 </script>
 
 

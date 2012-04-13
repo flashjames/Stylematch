@@ -42,7 +42,6 @@
 
 
 <script type="text/template" id="tpl-service-list-item">
-<div style="background-color:red">
   <div class="service-name"><b>Visningsnamn:</b> <%= name %></div>
   <div class="service-description"><b>Beskrivning:</b> <%= description %></div>
   <div class="service-length"><b>Längd:</b> <%= length %> minuter</div>
@@ -54,14 +53,13 @@
   <% } %>
   <button class="btn btn-info edit">Redigera</button>
   <button class="btn delete">Ta bort</button>
-  </div>
 </script>
 
 
 
 <script type="text/template" id="tpl-service-edit-form">
-<div id="edit-service-form-left">
-  <form class="" id="service-edit-form" action="" method="post">
+<div class="edit-service-form-left">
+  <form class="service-edit-form" action="" method="post">
     {% csrf_token %}
     {% for field in form %}
     <div class="control-group">
@@ -73,22 +71,23 @@
     </div>
     {% endfor %}
     <button class="btn btn-info save">Lägg till</button>
+     
 </fieldset>
 </form>
 </div>
 </script>
 
 
-<div class="container" style="background-color:green">
+<div class="container">
   <div class="row">
-    <div class="span6">
-      <div>
-        <button class="btn btn-primary new-service">Lägg till ny tjänst</button>
+     <div style="margin-left:50px">
+       <button class="btn btn-delete new-service ">Rensa fält</button>
       </div>
-      <div id="form"></div>
-
-    </div>
-    <div id="service-list" class="span5 offset1"></div>
+      <br>
+     		 <div class="span6">
+      		<div id="form" ></div>
+   		 </div>
+    <div id="service-list" class="span5 edit-service-form-right"></div>
 
   
 </div>

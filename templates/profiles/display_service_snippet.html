@@ -1,6 +1,11 @@
 <div class="service">
-     <div class="service-name" >Visningsnamn: {{ service.name }}</div>
-     <div class="service-description">Description: {{ service.description }}</div>
-     <div class="service-length">Length: {{ service.length }}</div>
-     <div class="service-price">Pris: {{ service.price }}:-</div>
+	<div class="profile-service-list-item">
+     <div class="service-name profile-service-name" ><b>{{ service.name }}</b></div>
+     <div class="service-price profile-service-price">{{ service.price }}:-</div>
+     <div class="service-length profile-service-length">{{ service.length }}</div>
+     <div class="service-description profile-service-description">{{ service.description }}</div>
+     
+     </div>
 </div>
+
+<tr>

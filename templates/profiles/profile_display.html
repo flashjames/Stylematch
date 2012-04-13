@@ -44,45 +44,43 @@
 </div>
 <hr class="soften">
 {% if services %}
-<div class="row show-grid">
-  <div class="span5">
-    <h2>Tjänster</h2>
+
+<div class="row " >
+  <div class="span8">
+    <h3>Prislista</h3>
     {% for service in services %}
     {% include "profiles/display_service_snippet.html" with service=service %}
     {% endfor %}
   </div>
-</div>
-{% endif %}
 
-<div class="row show-grid">
-  <div class="span5">
-    <h2>Öppettider</h2>
-
-    <table class="table">
+<div class="span4 pull-right">
+    <center>
+    <table class="open-hours-profile">
       <thead>
-        <th>Dag</th>
-        <th>Öppettider</th>
-        <th>Lunchstängt</th>
+        <th>&nbsp;</th>
+        <th style="padding-left:15px;">Öppettider</th>
       </thead>
       <tbody>
 	
         {% for day in weekdays %}
         <tr>
-          <td> {{ day.day }}</td>
-          <td>{{ day.open }} - {{ day.closed }}</td>
-          <td>{{ day.lunch_start }} - {{ day.lunch_end }}</td>
+          <td > {{ day.day }}</td>
+          <td style="padding-left:15px;">{{ day.open }} - {{ day.closed }}</td>
+          
         </tr>
         {% endfor %}
       </tbody>
     </table>
-    	
+    <center>	
   </div>
+
+</div>
+{% endif %}
+
+<div class="row show-grid">
+  
 </div><div class="row show-grid">
-  <div>
-    <!--BEGIN LOOKS WIDGET--><script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script><script src="http://lookbook.nu/widget/looks.js?id=1797269&thumbs=4&source=hot_looks&gender=both&align=center&r=1334195474&hash=1818cd9f21c0b3408edfde6dca5d2e98"></script><div id="lb_looks_widget_1334195474"></div><!--END LOOKS WIDGET--> 
-</div>
-<!--BEGIN PROFILE WIDGET--><script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script><script src="http://lookbook.nu/widget/profile.js?id=1797269&width=standard&align=center&stats_fans=1&stats_looks=1&stats_loves=1&stats_karma=1&fanbox=yes&hash=1818cd9f21c0b3408edfde6dca5d2e98"></script><div id="profile_widget_container_1797269"></div><!--END PROFILE WIDGET--> 
-</div>
+  
 </div>
 
 {% endblock %}

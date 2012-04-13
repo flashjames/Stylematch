@@ -226,6 +226,8 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         f.save()
         form.save_m2m()
         return super(EditProfileView, self).form_valid(form)
+        
+ 
 
 class ServiceForm(ModelForm):
     class Meta:

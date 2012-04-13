@@ -10,7 +10,7 @@
 
     window.ServiceListView = Backbone.View.extend({
         tagName:'ul',
-	id: 'service-list',
+	className: 'service-list',
         initialize:function () {
 	    // TODO: change this.model to be this.collection
 	    // since this.model is currently a collection.
@@ -114,7 +114,13 @@
     FormView = Backbone.View.extend({
         el: "#form",
         template:_.template($('#tpl-service-edit-form').html()),
-
+	events: {
+	    'click .new-service': 'newForm',
+	},
+	newForm: function() {
+	    vent.trigger("newForm", this.model);
+	    return false;
+	},
         initialize: function(){
             /* Uses Backbone.ModelBinding */
             $(this.el).html(this.template);
@@ -135,6 +141,7 @@
 	    
             _.bindAll(this, "formSave", "changeModelToEdit", "displayFormErrors");
             vent.bind("changeModelToEdit", this.changeModelToEdit);
+	    vent.bind("newForm", this.newForm);
 
             this.serviceList = new ServiceCollection();
             this.serviceListView = new ServiceListView({model:this.serviceList});
@@ -152,7 +159,7 @@
         },
 	events:{
             'click .save': 'formSave',
-	    'click .new-service': 'newForm'
+
         },
         newForm: function() {
             this.model = new Service();

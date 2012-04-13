@@ -11,7 +11,9 @@
 <script src="/static/backbone-min.js"></script>
 <script src="/static/backbone-tastypie.js"></script>
 <script src="/static/backbone.modelbinding.js"></script>
-<!--<link type="text/css" href="/static/jquery-ui-1.8.18.custom/css/ui-lightness/jquery-ui-1.8.18.custom.css" rel="Stylesheet" />-->
+<!--
+    <link type="text/css" href="/static/jquery-ui-1.8.18.custom/css/ui-lightness/jquery-ui-1.8.18.custom.css" rel="Stylesheet" />
+    -->
 <script type="text/javascript" src="/static/jquery-ui-1.8.18.custom.min.js"></script>
 
 {% endblock %}
@@ -19,59 +21,58 @@
 {% block content %}
 <!-- Templates -->
 
-<!--- Under detta borde flyttas ut (dvs det tillhör inte content) ---!>
+<!-- Under detta borde flyttas ut (dvs det tillhör inte content) -->
 
 <center>
-<ul class="nav nav-tabs edit-navigation" style="margin-bottom:0px; ">
-  <li><a href="#">Visa Profil</a></li>
-  <li ><a href="{% url 'profile_edit' %}">Förändra Profil</a></li>
-  <li><a href="{% url 'profiles_add_hours' %}">Förändra Öppetider</a></li>
-  <li class="active"><a href="{% url 'profiles_edit_services' %}">Förändra Prislista</a></li>
-  <li><a href="{% url 'profiles_edit_images' %}">Lägg Till Bilder</a></li>
-</ul>
+  <ul class="nav nav-tabs edit-navigation" style="margin-bottom:0px; ">
+    <li><a href="#">Visa Profil</a></li>
+    <li ><a href="{% url 'profile_edit' %}">Förändra Profil</a></li>
+    <li><a href="{% url 'profiles_add_hours' %}">Förändra Öppetider</a></li>
+    <li class="active"><a href="{% url 'profiles_edit_services' %}">Förändra Prislista</a></li>
+    <li><a href="{% url 'profiles_edit_images' %}">Lägg Till Bilder</a></li>
+  </ul>
 </center>
 
 
 
 <div class="row" >
-<div id="edit-profile-large" class="span12" >
-<br><br>
+  <div id="edit-profile-large" class="span12" >
+    <br><br>
 
-<!--- Detta ovan borde flyttas ut (dvs det tillhör inte content) ---!>
+    <!-- Detta ovan borde flyttas ut (dvs det tillhör inte content) -->
 
-
-
-<script type="text/template" id="tpl-service-list-item">
-  <div class="service-name"><b>Visningsnamn:</b> <%= name %></div>
-  <div class="service-description"><b>Beskrivning:</b> <%= description %></div>
-  <div class="service-length"><b>Längd:</b> <%= length %> minuter</div>
-  <div class="service-price"><b>Pris:</b> <%= price %>:-</div>
-  <% if(display_on_profile) { %>
-  <div class="service-price"><i>Visas på profil</i></div>
-  <% } else { %>
-  <div class="service-price"><i>Visas inte på profilen</i></div>
-  <% } %>
-  <button class="btn btn-info edit">Redigera</button>
-  <button class="btn delete">Ta bort</button>
-</script>
+    <script type="text/template" id="tpl-service-list-item">
+      <div class="service-name"><b>Visningsnamn:</b> <%= name %></div>
+      <div class="service-description"><b>Beskrivning:</b> <%= description %></div>
+      <div class="service-length"><b>Längd:</b> <%= length %> minuter</div>
+      <div class="service-price"><b>Pris:</b> <%= price %>:-</div>
+      <% if(display_on_profile) { %>
+      <div class="service-price"><i>Visas på profil</i></div>
+      <% } else { %>
+      <div class="service-price"><i>Visas inte på profilen</i></div>
+      <% } %>
+      <button class="btn btn-info edit">Redigera</button>
+      <button class="btn delete">Ta bort</button>
+    </script>
 
 
 
-<script type="text/template" id="tpl-service-edit-form">
-<div class="edit-service-form-left">
-  <form class="service-edit-form" action="" method="post">
-    {% csrf_token %}
-    {% for field in form %}
-    <div class="control-group">
-      <label style="font-size:12px" class="control-label" for="{{ field.value }}">{{ field.label }}</label>
-      <div class="controls">
-        {{ field }}
-        <span class="help-inline"></span>
-      </div>
-    </div>
-    {% endfor %}
-    <button class="btn btn-info save">Lägg till</button>
-     
+    <script type="text/template" id="tpl-service-edit-form">
+      <div class="edit-service-form-left">
+        <form class="service-edit-form" action="" method="post">
+          {% csrf_token %}
+          {% for field in form %}
+          <div class="control-group">
+            <label style="font-size:12px" class="control-label" for="{{ field.value }}">{{ field.label }}</label>
+            <div class="controls">
+              {{ field }}
+              <span class="help-inline"></span>
+            </div>
+          </div>
+          {% endfor %}
+          <button class="btn btn-info save">Lägg till</button>
+	  <button class="btn btn-delete new-service ">Rensa fält</button>
+
 </fieldset>
 </form>
 </div>
@@ -80,18 +81,17 @@
 
 <div class="container">
   <div class="row">
-     <div style="margin-left:50px">
-       <button class="btn btn-delete new-service ">Rensa fält</button>
-      </div>
-      <br>
-     		 <div class="span6">
-      		<div id="form" ></div>
-   		 </div>
+    <div style="margin-left:50px">
+    </div>
+    <br>
+    <div class="span6">
+      <div id="form" ></div>
+    </div>
     <div id="service-list" class="span5 edit-service-form-right"></div>
 
-  
+
+  </div>
 </div>
-</div>
-  <!-- the code that does the magic on the page -->
-  <script src="/static/service.js"></script>
-  {% endblock %}
+<!-- the code that does the magic on the page -->
+<script src="/static/service.js"></script>
+{% endblock %}

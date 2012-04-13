@@ -18,50 +18,81 @@
 
 {% block content %}
 <!-- Templates -->
+
+<!--- Under detta borde flyttas ut (dvs det tillhör inte content) ---!>
+
+<center>
+<ul class="nav nav-tabs edit-navigation" style="margin-bottom:0px; ">
+  <li><a href="#">Visa Profil</a></li>
+  <li ><a href="{% url 'profile_edit' %}">Förändra Profil</a></li>
+  <li><a href="{% url 'profiles_add_hours' %}">Förändra Öppetider</a></li>
+  <li class="active"><a href="{% url 'profiles_edit_services' %}">Förändra Prislista</a></li>
+  <li><a href="{% url 'profiles_edit_images' %}">Lägg Till Bilder</a></li>
+</ul>
+</center>
+
+
+
+<div class="row" >
+<div id="edit-profile-large" class="span12" >
+<br><br>
+
+<!--- Detta ovan borde flyttas ut (dvs det tillhör inte content) ---!>
+
+
+
 <script type="text/template" id="tpl-service-list-item">
-  <div class="service-name">Visningsnamn: <%= name %></div>
-  <div class="service-description">Description: <%= description %></div>
-  <div class="service-length">Length: <%= length %> minuter</div>
-  <div class="service-price">Pris: <%= price %>:-</div>
+<div style="background-color:red">
+  <div class="service-name"><b>Visningsnamn:</b> <%= name %></div>
+  <div class="service-description"><b>Beskrivning:</b> <%= description %></div>
+  <div class="service-length"><b>Längd:</b> <%= length %> minuter</div>
+  <div class="service-price"><b>Pris:</b> <%= price %>:-</div>
   <% if(display_on_profile) { %>
-  <div class="service-price">Visas på profil</div>
+  <div class="service-price"><i>Visas på profil</i></div>
   <% } else { %>
-  <div class="service-price">Visas inte på profilen</div>
+  <div class="service-price"><i>Visas inte på profilen</i></div>
   <% } %>
-  <button class="btn btn-primary edit">Edit</button>
-  <button class="btn delete">Delete</button>
+  <button class="btn btn-info edit">Redigera</button>
+  <button class="btn delete">Ta bort</button>
+  </div>
 </script>
+
+
+
 <script type="text/template" id="tpl-service-edit-form">
-  <form class="form-horizontal" id="service-edit-form" action="" method="post">
+<div id="edit-service-form-left">
+  <form class="" id="service-edit-form" action="" method="post">
     {% csrf_token %}
     {% for field in form %}
     <div class="control-group">
-      <label class="control-label" for="{{ field.value }}">{{ field.label }}</label>
+      <label style="font-size:12px" class="control-label" for="{{ field.value }}">{{ field.label }}</label>
       <div class="controls">
         {{ field }}
         <span class="help-inline"></span>
       </div>
     </div>
     {% endfor %}
-    <button class="btn btn-primary save">Save</button>
+    <button class="btn btn-info save">Lägg till</button>
 </fieldset>
 </form>
+</div>
 </script>
 
 
-<div class="container">
+<div class="container" style="background-color:green">
   <div class="row">
     <div class="span6">
       <div>
-        <button class="btn btn-primary new-service">New Service</button>
+        <button class="btn btn-primary new-service">Lägg till ny tjänst</button>
       </div>
       <div id="form"></div>
 
     </div>
     <div id="service-list" class="span5 offset1"></div>
 
-  </div>
-
+  
+</div>
+</div>
   <!-- the code that does the magic on the page -->
   <script src="/static/service.js"></script>
   {% endblock %}

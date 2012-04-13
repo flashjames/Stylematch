@@ -4,22 +4,22 @@
 
 {% block content %}
 
-<!--- Under ovan borde flyttas ut (dvs det tillhör inte content) ---!>
+<!--- Under detta borde flyttas ut (dvs det tillhör inte content) ---!>
 
 <center>
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs edit-navigation" style="margin-bottom:0px; ">
   <li><a href="#">Visa Profil</a></li>
-  <li class="active"><a href="#">Förändra Profil</a></li>
-  <li><a href="#">Förändra Öppetider</a></li>
-  <li><a href="#">Förändra Prislista</a></li>
-  <li><a href="#">Lägg Till Bilder</a></li>
+  <li class="active"><a href="{% url 'profile_edit' %}">Förändra Profil</a></li>
+  <li><a href="{% url 'profiles_add_hours' %}">Förändra Öppetider</a></li>
+  <li><a href="{% url 'profiles_edit_services' %}">Förändra Prislista</a></li>
+  <li><a href="{% url 'profiles_edit_images' %}">Lägg Till Bilder</a></li>
 </ul>
 </center>
-<br><br>
 
 
-<div class="row">
-<div id="edit-profile-large" class="span11">
+
+<div class="row" >
+<div id="edit-profile-large" class="span12" >
 <br><br>
 
 <!--- Detta ovan borde flyttas ut (dvs det tillhör inte content) ---!>
@@ -32,9 +32,9 @@
       {% include "profiles/form_snippet.html" with field=form.profile_text %}
       
      
-      <p>{{ form.profile_url.label_tag }}</p>
+  <p>{{ form.profile_url.label_tag }}</p>
      {{ form.profile_url.errors }}
-     <p class="profile-horisontal-text"> http://www.stylefinder.se/</p>
+     <p style="float: left; font-size: 20px; margin-top: 5px; padding-right: 3px;"> http://www.stylefinder.se </p>
      {{ form.profile_url }}
       
       {% include "profiles/form_snippet.html" with field=form.salon_name %}
@@ -63,39 +63,15 @@
     	
     	
       {% include "profiles/form_snippet.html" with field=form.show_booking_url %}
-      <input type="submit" value="Spara" />
+      <input type="submit" class="btn-large btn-info" value="Spara ändringar" />
     
-     <p>Facebook: om connected with facebook, visa http://facebook.com/Jenso1988.
-        Annars: stor knapp för att "connect with facebook", samt visa anledningar till det.</p>
-      <p>Twitter användarnamn: visas exempelvis som http://twitter.com/Jenso88</p>
-      <!--<a href="{# TODO: cant find reverse match from here
-url 'auth_password_change' #}">Byt lösenord</a>-->
     
     </div>
   </div>
   </div>
  
    
-  <div class="row show-grid">
-    <div class="span6">
-    
-      <h2>Tjänster</h2>
-
-      <a href="{% url 'profiles_edit_services' %}">Edit services</a>
-      <a href="{% url 'profiles_edit_images' %}">Edit images</a>
-      <p>Klick på redigera -> gör att man kan lägga till nya och sortera</p>
-      <p></p>
-      <p></p>
-      <p></p>
-      <input type="submit" value="Spara" />
-    </div>
-    <div class="span6">
-      <h2>Öppettider</h2>
-
-       <a href="{% url 'profiles_add_hours' %}">Redigera öppettider</a>
-        <br />
-    </div>
-  </div>
+ 
   </div>
 </form>
 {% endblock %}

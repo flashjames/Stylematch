@@ -4,7 +4,31 @@
 
 {% block content %}
 
+
+
 <div class="container">
+
+<!--- Under ovan borde flyttas ut (dvs det tillhör inte content) ---!>
+
+<center>
+<ul class="nav nav-tabs edit-navigation" style="margin-bottom:0px; ">
+  <li><a href="#">Visa Profil</a></li>
+  <li><a href="{% url 'profile_edit' %}">Förändra Profil</a></li>
+  <li class="active"><a href="{% url 'profiles_add_hours' %}">Förändra Öppetider</a></li>
+  <li><a href="{% url 'profiles_edit_services' %}">Förändra Prislista</a></li>
+  <li><a href="{% url 'profiles_edit_images' %}">Lägg Till Bilder</a></li>
+</ul>
+</center>
+
+
+
+<div class="row" >
+<div id="edit-profile-large" class="span12" >
+<br><br>
+
+<!--- Detta ovan borde flyttas ut (dvs det tillhör inte content) ---!>
+
+<div class="edit-hours-form">
   <form method="post" action="">
     {% csrf_token %}
   
@@ -13,14 +37,14 @@
      <table>
         <thead>
             <th>Dag</th>
-            <th>Börjar</th>
-            <th>Slutar</th>
+            <th>Öppnar</th>
+            <th>Stänger</th>
         </thead>
       <tbody > 
         
             <tr>
-                <td>Måndag</td>
-                <td> {{ form.mon }} </td>
+                <td >Måndag</td>
+                <td > {{ form.mon }} </td>
                 <td> {{ form.mon_closed }} </td>     
             </tr>
             <tr>
@@ -115,10 +139,11 @@
 
     </tbody>
 </table>
-    <input type="submit" value="Save" class="btn-primary" />
+    <input type="submit" value="Spara ändringar" class="btn-large btn-info" />
     
   </form>
-
+</div>
+</div>
 </div>
 {% endblock %}
 

@@ -77,7 +77,7 @@ class UserProfile(models.Model):
     salon_name = models.CharField("Salongens Namn", max_length=30, blank=True)
     salon_city = models.CharField("Stad", max_length=30, blank=True)
     salon_url = models.URLField("Salongens Hemsida", blank=True)
-    salon_adress = models.CharField(max_length=30, blank=True)
+    salon_adress = models.CharField("Salongens Adress",max_length=30, blank=True)
     salon_phone_number = models.CharField("Salongens Telefonnummer", max_length=30, blank=True)
     
     # TODO: add validation https://docs.djangoproject.com/en/dev/ref/contrib/localflavor/#sweden-se
@@ -85,19 +85,19 @@ class UserProfile(models.Model):
 
 
     url_online_booking = models.URLField("Adress till online bokningssystem", blank=True)
-    show_booking_url = models.BooleanField("Visa länk till bokningssystem på hemsidan", blank=True)
+    show_booking_url = models.BooleanField("Min salong har online-bokning", blank=True)
     
 class Service(models.Model):
     buffer = generate_list_of_quarters(15, 420+15, format_minutes_to_pretty_format)
     TIME_CHOICES = tuple(buffer)
 
 
-    length = models.IntegerField("Tid", choices=TIME_CHOICES,max_length=3)
-    name = models.CharField("Service (ex. Färga hår)", max_length=20)
+    length = models.IntegerField("Längd", choices=TIME_CHOICES,max_length=3)
+    name = models.CharField("Namn (ex. Herrklippning)", max_length=20)
     price = models.IntegerField("Pris i kronor", max_length=6)
     
     # TODO: längd på desc? 
-    description = models.CharField("Förklaring", max_length=200, validators=[MaxLengthValidator(200)])
+    description = models.CharField("Beskrivning", max_length=200, validators=[MaxLengthValidator(200)])
     display_on_profile = models.BooleanField("Visa på profil", blank=True)
     
     # user that has this service

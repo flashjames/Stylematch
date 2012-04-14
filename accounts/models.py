@@ -111,7 +111,8 @@ class Service(models.Model):
 
 class OpenHours(models.Model):
     
-    time_list = generate_list_of_quarters()
+    time_list = generate_list_of_quarters(60 * 8, 60 * 22 + 15)
+    time_list.insert(0, (0, '---------------------------------'))
 
     # Since Python tuples are immutable we need to use a list as a temporary buffer
     time_tuple = tuple(time_list)

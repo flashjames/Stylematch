@@ -175,6 +175,9 @@
         changeModelToEdit: function(model) {
             this.model = model;
             this.FormView = new FormView({model:model});
+
+            var btn = $('.save');
+            btn.html("Redigera");
         },
         close:function () {
             $(this.el).unbind();

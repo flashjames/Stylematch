@@ -15,6 +15,9 @@ from tools import *
 
 from registration.forms import RegistrationForm
 from registration.views import register
+from django.contrib.auth import login
+from registration.signals import user_registered
+
 
 from django import forms
 
@@ -27,13 +30,19 @@ def user_created(sender, user, request, **kwargs):
     # could do something fun with it.
     form = UserRegistrationForm(request.POST)
 
-    # Force successfully created users to be activated. 
+    # Force successfully created users to be activated since authorization
+    # script requires this.
     userObject = User.objects.get(username = user)
     userObject.is_active = True
     userObject.save()
+
+    # Automatically login a user who was just created
+    # This probably makes them more keen on proceeding the signup form.
+    user.backend='django.contrib.auth.backends.ModelBackend'
+    login(request, user)
     
-from registration.signals import user_registered
 user_registered.connect(user_created)
+
 
 
 class UserRegistrationForm(RegistrationForm):    

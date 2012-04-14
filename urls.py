@@ -7,6 +7,7 @@ from django.contrib import admin
 
 
 
+from django.views.generic.simple import redirect_to
 
 from registration.views import register
 import registration.backends.default.urls as registrationURLs
@@ -33,9 +34,12 @@ urlpatterns = patterns(
     #url(r'^$', 'direct_to_template', {'template': 'index.html'}, name='index'),
     #url(r'^profile_index$', 'index.views.profile_index'),
     (r'^startsida', IndexPageView.as_view(),{}, 'index_page'),
+    
+    url(r'accounts/register/signup-step1', SignupStep1PageView.as_view(), {}, 'signup_step1'),
+    url(r'accounts/register/complete', redirect_to, {'url': '/accounts/register/signup-step1'}, 'redirect_to_signup_step1'),
 
     url(r'^accounts/register/$', register, {'backend': 'registration.backends.default.DefaultBackend','form_class': UserRegistrationForm}, name='registration_register'),
-	(r'^accounts/register/', include(registrationURLs)), # django-registration
+	(r'^accounts/', include(registrationURLs)), # django-registration
 
     url(r'^upload/', include('fileupload.urls')), # django-fileupload
     url(r'^', include('accounts.urls')), # accounts

@@ -5,56 +5,72 @@
 {% block title %}Register plix{% endblock %}
 {% block content %}
 
-<br><br>
+<div class="container">
+  <form method="post" action="">
+    {% csrf_token %}
+    <br><br> 
+
+
 	<div id="beta-signup-banner" class="shadow-beta well">
 	
 	<center><h1 class="beta-banner">G&aring; med nu!</h1></center>
-	
-	<br><br>
-	<form>
-	
-	<div class="span2 pull-left beta-signup-left">
-	 <label>F&ouml;rnamn</label>
-  <input type="text" class="beta-signup-left-form">
-  	</div>
-  	
-  	<div class="span2 pull-right beta-signup-right">
-  <label>Efternamn</label>
-  <input type="text" class="beta-signup-right-form">
+    <div class="beta-signup-left" style="float: left;">
+     {{ form.first_name.errors }}
+    {{ form.first_name.label }}
+        <div class="beta-signup-left-form">
+            {{ form.first_name }}
+        </div>
+   </div>
+    <div class="beta-signup-right pull-right beta-signup-right">
+        {{  form.last_name.errors }}
+        {{ form.last_name.label }}
+        <div class="beta-signup-left-form">
+            {{ form.last_name }}
+        </div>
+   </div>
+    <p style="clear: left;" />
+    <div class="span3 beta-signup-email">
+         {{ form.username.errors }}
+         {{ form.username.label }}
+        <div class="beta-signup-left-form">
+            {{ form.username }}
+        </div>
 	</div>
-	
-	<div class="span3 beta-signup-email">
-  <label>Emailadress</label>
-  <input type="text" class="beta-signup-email-form">
-	</div>
-	
-	<div class="span2 pull-left beta-signup-left">
-	 <label>L&ouml;senord</label>
-  <input type="password" class="beta-signup-left-form">
-  	</div>
-  	
-  	<div class="span2 pull-right beta-signup-right">
-  <label>Upprepa L&ouml;senord</label>
-  <input type="password" class="beta-signup-right-form">
-	</div>
-	
-	<div class="span3 beta-signup-email">
+
+   
+     <div class="beta-signup-left" style="float: left;">
+         {{ form.password1.errors }}
+         {{ form.password1.label }}
+        <div class="beta-signup-left-form">
+            {{ form.password1 }}
+        </div>
+   </div>
+
+    <div class="beta-signup-right pull-right beta-signup-right">
+        {{ form.password2.errors }}
+        {{ form.password2.label }}
+        <div class="beta-signup-left-form">
+            {{ form.password2 }}
+        </div>
+   </div>
+    
+    <p style="clear: left;" />
+    <center>
+  			{{ form.invite_code.errors }}
+            {{ form.invite_code.label }} <br>
+            <div class="beta-signup-invite-form">
+                {{ form.invite_code }}
+            </div>
+    </center> 			
+   <p style="clear: left;" />
 	<center>
-		<div class="span2 beta-signup-invite">
-  			<label>Inbjudningskod</label>
- 		 	<input type="text" class="beta-signup-invite-form">
- 		 </div>
- 		</center>
- 		 
- 			 
-	</div>
-	<center>
-	<button type="submit" class="btn-large btn-info">Skapa konto</button>
-	</center>
-	
+    <button type="submit" class="btn-large btn-info">Skapa konto</button>
+    </center>
+
 	</form>
 	
 </div>
+
 
 <br><br>
 

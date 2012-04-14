@@ -6,10 +6,87 @@ from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin
 from django.forms import ModelForm, ValidationError, Textarea
 
+from django.contrib.auth.models import User
 
 from accounts.models import weekdays_model
 # TODO: import those that are used?
 from tools import *
+
+
+from registration.forms import RegistrationForm
+from registration.views import register
+
+from django import forms
+
+
+# TODO: We should discuss a better structure for signals....
+# Store in another file?
+def user_created(sender, user, request, **kwargs):
+
+    # For future reasons we store the form data here
+    # could do something fun with it.
+    form = UserRegistrationForm(request.POST)
+
+    # Force successfully created users to be activated. 
+    userObject = User.objects.get(username = user)
+    userObject.is_active = True
+    userObject.save()
+    
+from registration.signals import user_registered
+user_registered.connect(user_created)
+
+
+class UserRegistrationForm(RegistrationForm):    
+    
+
+    email = forms.CharField(required = False)
+    first_name = forms.CharField(label = "Förnamn")   
+    last_name = forms.CharField(label = "Efternamn")       
+    invite_code = forms.CharField(label = "Inbjudningskod ('a' är giltig)")
+
+    username = forms.EmailField(max_length=64, label = "Emailadress")
+    
+    def __init__(self, *args, **kwargs):
+        super(UserRegistrationForm, self).__init__(*args, **kwargs)
+        #self.fields['username'].label = "Användarnamn"
+        #self.fields['email'].label = "Emailadress"
+        self.fields['password1'].label = "Lösenord"
+        self.fields['password2'].label = "Upprepa lösenord"
+
+        required_str = "Detta fält krävs för registeringen."
+
+        self.fields['username'].error_messages['invalid'] = "Skriv in en giltig e-mailadress."
+        # Since __init__ is called after the creation of invite_code and other
+        # extra fields, we can execute this loop and add our own error message
+        # for required fields.
+        for field in self.fields:
+            self.fields[field].error_messages['required'] =  required_str
+
+
+    def clean_email(self):
+        # Since its actually not the email field but the username presented on form
+        # we use username as email too.
+        email = ""
+        try:
+            email = self.cleaned_data['username']
+        except:
+            email = ""
+
+        return email
+
+
+    def clean_invite_code(self):
+
+        str = self.cleaned_data['invite_code']        
+
+        # TODO: Validate invite code through programming
+        code_valid = (str == 'a')
+        code = self.cleaned_data['invite_code']        
+        if code_valid == False:
+            raise forms.ValidationError(u'Din inbjudningskod (\'%s\') var felaktig. Vänligen kontrollera att du skrev rätt.' % code)
+ 
+    class Meta:
+        exclude = ('email',) 
 
 class DisplayProfileView(DetailView):
     """

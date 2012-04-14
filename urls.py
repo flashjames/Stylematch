@@ -4,6 +4,15 @@ from index.views import AboutPageView, IndexPageView, BetaPageView, FeaturesPage
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+
+
+
+
+from registration.views import register
+import registration.backends.default.urls as registrationURLs
+
+from accounts.views import UserRegistrationForm
+
 admin.autodiscover()
 
 urlpatterns = patterns(
@@ -24,7 +33,10 @@ urlpatterns = patterns(
     #url(r'^$', 'direct_to_template', {'template': 'index.html'}, name='index'),
     #url(r'^profile_index$', 'index.views.profile_index'),
     (r'^startsida', IndexPageView.as_view(),{}, 'index_page'),
-    (r'^accounts/', include('registration.urls')), # django-registration
+
+    url(r'^accounts/register/$', register, {'backend': 'registration.backends.default.DefaultBackend','form_class': UserRegistrationForm}, name='registration_register'),
+	(r'^accounts/register/', include(registrationURLs)), # django-registration
+
     url(r'^upload/', include('fileupload.urls')), # django-fileupload
     url(r'^', include('accounts.urls')), # accounts
     (r'^about-us', AboutPageView.as_view(),{}, 'about_page'),

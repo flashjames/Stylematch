@@ -6,6 +6,9 @@ from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView, ListView
 from accounts.models import UserProfile
 
+from django.core.urlresolvers import reverse
+from django.shortcuts import redirect
+
 class AboutPageView(TemplateView):
     """
     Display about us page
@@ -17,6 +20,14 @@ class BetaPageView(TemplateView):
     Display beta page
     """
     template_name = "betapage.html"
+
+    def get(self, request):
+        #redirect_to("http://www.google.se", )
+        if request.user.is_authenticated():
+            return redirect(reverse('index_page'))
+        else:
+            return super(BetaPageView, self).get(request)
+
     
 class FeaturesPageView(TemplateView):
     """

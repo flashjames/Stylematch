@@ -65,7 +65,12 @@
         {% for day in weekdays %}
         <tr>
           <td > {{ day.day }}</td>
-          <td style="padding-left:15px;">{{ day.open }} - {{ day.closed }}</td>
+            
+            {% if day.open == -1 or day.closed == -1 %}
+                <td style="padding-left:15px;">Stängt</td>
+            {% else %}
+                <td style="padding-left:15px;">{{ day.open }} - {{ day.closed }}</td>
+            {% endif %}
           
         </tr>
         {% endfor %}

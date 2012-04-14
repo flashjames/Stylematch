@@ -134,6 +134,20 @@ class DisplayProfileView(DetailView):
         
         return self.get_images(queryset)
 
+
+    def get_opening_time(self, obj, attr_name):
+        """
+        Helper function for opening hours.
+        If no time has been selected in the dropdown, -1 will be  the value.
+        This is then used in template to print "CLOSED".
+        """
+        time = format_minutes_to_hhmm(getattr(obj, attr_name))
+        if time == '':
+            time = -1
+
+        return time
+            
+
     def weekday_factory(self, obj, day = 'mon', pretty_dayname = 'Måndag'):
 
         """
@@ -142,20 +156,19 @@ class DisplayProfileView(DetailView):
         """
 
         attr_name = day
-        open_time = format_minutes_to_hhmm(getattr(obj, attr_name))
+        open_time = self.get_opening_time(obj, attr_name)
 
         attr_name = day + "_closed"
-        closed_time = format_minutes_to_hhmm(getattr(obj, attr_name))
-
+        closed_time = self.get_opening_time(obj,attr_name)
 
         attr_name = day + "_lunch"
-        lunch_start = format_minutes_to_hhmm(getattr(obj, attr_name))
-
+        lunch_start = self.get_opening_time(obj,attr_name)
 
         attr_name = day + "_lunch_closed"
-        lunch_end = format_minutes_to_hhmm(getattr(obj, attr_name))
+        lunch_end = self.get_opening_time(obj,attr_name)
 
         day = {'day': pretty_dayname, 'open': open_time, 'closed': closed_time, 'lunch_start': lunch_start, 'lunch_end': lunch_end}
+
         return day
 
     def get_openinghours(self, profile_user_id):

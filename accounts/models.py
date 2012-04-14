@@ -110,9 +110,13 @@ class Service(models.Model):
         ordering = ['order']
 
 class OpenHours(models.Model):
+
+    # Do not change if you dont know what you're doing!!
+    closed_value = -1
+
     
     time_list = generate_list_of_quarters(60 * 8, 60 * 22 + 15)
-    time_list.insert(0, (0, '---------------------------------'))
+    time_list.insert(0, (closed_value, '---------------------------------'))
 
     # Since Python tuples are immutable we need to use a list as a temporary buffer
     time_tuple = tuple(time_list)
@@ -124,14 +128,23 @@ class OpenHours(models.Model):
     # 17:00 PM
     default_close_time = 1020
 
-    # 12:00 - 13:00 PM
-    default_lunch_open = 720
-    default_lunch_close = 780
+    # For time being, default lunches to always be closed.
+    default_lunch_open = closed_value
+    default_lunch_close = closed_value
+
+    # Store days who should be defaulted as closed in a list for easier
+    # configuration in future.
+    default_closed_days = ['sun']
 
     # Instead of having duplicate code we generate the code dynamically and 
     # execute it. FIXME: This MIGHT be unsafe, so if any problem occurs in 
     # this model this is probably why.
     for day in weekdays_model:
+    
+        if day in default_closed_days:            
+            default_open_time = closed_value
+            default_close_time = closed_value
+
         code = day + ' = models.IntegerField("", choices=time_tuple, default = ' + str(default_open_time) + ')'
         exec(code)
 

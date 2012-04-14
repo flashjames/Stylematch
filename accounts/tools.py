@@ -5,11 +5,13 @@ def format_minutes_to_hhmm(minutes):
     Formats minutes passed in a day ('dygn') into HH:MM format
     where H is hour and M is minute.
     """
+    output_str = ""
+    if minutes >= 0:
 
-    hours = minutes / 60
-    minutes_remaining = minutes - (hours * 60)
+        hours = minutes / 60
+        minutes_remaining = minutes - (hours * 60)
 
-    output_str = str(hours).zfill(2) + ":" + str(minutes_remaining).zfill(2) 
+        output_str = str(hours).zfill(2) + ":" + str(minutes_remaining).zfill(2) 
 
     return output_str
 
@@ -22,21 +24,25 @@ def format_minutes_to_pretty_format(minutes):
         1 timme 15 minuter.
         10 timmar 45 minuter.
     """ 
-    hours = minutes / 60
-    minutes_remaining = minutes - (hours * 60)
 
     output_str = ""
-    if hours >= 1:
-        output_str += str(hours) + " "
-        if hours == 1:
-            output_str += "timme"
-        else:
-            output_str += "timmar"
+    if minutes >= 0:
+        hours = minutes / 60
+        minutes_remaining = minutes - (hours * 60)
 
-        output_str += " "
+        if hours >= 1:
+            output_str += str(hours) + " "
+            if hours == 1:
+                output_str += "timme"
+            else:
+                output_str += "timmar"
+
+            output_str += " "
+        
+        if minutes_remaining != 0:
+            output_str += str(minutes_remaining) + " minuter"
+
     
-    if minutes_remaining != 0:
-        output_str += str(minutes_remaining) + " minuter"
 
     return output_str
 

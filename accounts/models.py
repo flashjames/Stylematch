@@ -80,6 +80,8 @@ class UserProfile(models.Model):
     salon_adress = models.CharField("Salongens Adress",max_length=30, blank=True)
     salon_phone_number = models.CharField("Salongens Telefonnummer", max_length=30, blank=True)
     
+    
+    
     # TODO: add validation https://docs.djangoproject.com/en/dev/ref/contrib/localflavor/#sweden-se
     zip_adress = models.IntegerField("Postnummer", max_length=6, blank=True, null=True)
 

@@ -1,25 +1,39 @@
-{% extends "base.html" %}
 {% load url from future %}
 
 {% block header %}
-  <div class="container_16">
-    <div class="grid_4">
-      {% if user.is_authenticated %}
-        <p>Welcome, {{ user.username }}. Thanks for logging in. <a href="logout">Logout?</a></p>
-      {% else %}
-        <p>Welcome, new user. <a href="login">Please log in.</a></p>
-      {% endif %}
-    </div>
-    <div class="prefix_6 grid_6 menu">
-      {% include 'menus/main_sub_menu.html' %}
-    </div>
-    <div class="clear"></div>
-    <h2> 16 column grid </h2>
-    <div class="grid_2">
-      <p>LOGO</p>
-    </div>
-    <div class="grid_9 menu">
-      {% include 'menus/main_user_menu.html' %}
-    </div>
-    <div class="clear"></div>
+  <div class="row">
+  
+  {% if user.is_authenticated %}
+  	<div class="container page-header-custom-logged-in">
+  	<img src="/static/img/logo.png">
+  	</img>
+  	
+  
+  		
+  	<div class="page-header-custom-logged-in-links pull-right">
+  <a href="{% url 'profile_edit' %}">Redigera profil</a>
+  	<a href="#"> Bjud in en vän</a>
+  	<a href="/about-us/"> Om Oss</a>
+  	<a href="#"> Kontoinställningar</a>
+  	<a href="/logout/"> Logga ut</a>
+  	</div>
+  	</div>
+  	
+  {% else %}
+  
+  	<div class="container  page-header-custom">
+  	<img src="/static/img/logo.png">
+  	</img>
+  	
+  	<div class="page-header-custom-links pull-right">
+	    <a href="/login">Logga in</a>
+	    <a href="{% url 'registration_register' %}">Bli medlem som frisör</a>
+	    <a href="/about-us/"> Om Oss</a>
+  	</div>
+  	
+  	</div>
+  
+  {% endif %}
+  </div>
+
   {% endblock %}

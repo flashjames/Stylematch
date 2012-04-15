@@ -10,7 +10,9 @@
   <!-- used in the service.js file, to know the full image path -->
   PICTURE_PATH = "{{ user_images_path }}";
   
+  
 </script>
+<link rel="stylesheet" href="/static/css/jquery.fileupload-ui.css">
 
 <script src="/static/underscore-min.js"></script>
 <script src="/static/backbone-min.js"></script>
@@ -27,7 +29,7 @@
 
 <center>
 <ul class="nav nav-tabs edit-navigation" style="margin-bottom:0px; ">
-  <li><a href="#">Visa Profil</a></li>
+  <li><a href="{% url 'profile_display_redirect' %}">Visa Profil</a></li>
   <li><a href="{% url 'profile_edit' %}">Förändra Profil</a></li>
   <li><a href="{% url 'profiles_add_hours' %}">Förändra Öppetider</a></li>
   <li><a href="{% url 'profiles_edit_services' %}">Förändra Prislista</a></li>
@@ -42,6 +44,9 @@
 <br><br>
 
 <!--- Detta ovan borde flyttas ut (dvs det tillhör inte content) ---!>
+
+
+
 <!-- Underscore.js Templates -->
 <script type="text/template" id="tpl-image-list-item">
   <img src="<%= image_url %>">
@@ -79,7 +84,12 @@
     </div>
   </div>
   <div class="row">
+  
+  
     <div id="image-list" class="span12"></div>
+    
+    
+    
   </div>
   <!-- the code that does the magic on the page -->
   <script src="/static/picture.js"></script>

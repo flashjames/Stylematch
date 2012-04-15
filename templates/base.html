@@ -15,17 +15,18 @@
     
     <title>{% block title %}Hi{% endblock %}</title>
   </head>
-  <body data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true">
+  <body  class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true">
     
 	{% block header %} 
-	{% include 'menus/main_user_menu.html' %}
+	{% include 'base_head.html' %}
 	{% endblock %}
 	<div class="container">
       <section id="gridSystem">
 	{% block content %} {% endblock %}
       </section>
-	{% block footer %} {% endblock %}
-    </div>
+
+    </div>	
+    {% block footer %}{% include 'base_footer.html' %} {% endblock %}
   {# analytics #}
   </body>
 </html>

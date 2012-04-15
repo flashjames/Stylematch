@@ -1,6 +1,23 @@
+@logocolor: #96d5cc;
+
 .profile-image, .image-block img  {
     width:200px;
     height:200px;
+}
+
+.body-padding-zero{
+padding:0;
+}
+
+.login.start {
+position: absolute;
+right: 30px;
+top: 30px;
+z-index: 100;
+}
+
+.beta-header{
+height:100px;
 }
 
 .masthead {
@@ -15,6 +32,48 @@ hr.soften {
     background-image: -ms-linear-gradient(left, transparent, rgba(0, 0, 0, .1), transparent);
     background-image: -o-linear-gradient(left, transparent, rgba(0, 0, 0, .1), transparent);
     border: 0;
+}
+
+.page-header-custom{
+background-color:white;
+height:170px;
+padding:10px;
+padding-left:20px;
+}
+
+.page-header-custom-logged-in{
+background-color:white; 
+height:170px;
+padding:10px;
+padding-left:20px;
+}
+
+.page-header-custom img, .page-header-custom-logged-in img{
+height:150px;
+width:150px;
+}
+
+.page-header-custom-logged-in-links{
+width:600px;
+display:inline-block;
+padding: 100px 50px 10px 30px;
+}
+
+.page-header-custom-links a, .page-header-custom-logged-in-links a{
+text-decoration:none;
+font-size:14px;
+margin-right:10px;
+color:black;
+}
+
+.page-header-custom-links{
+width:550px;
+display:inline-block;
+padding: 100px 50px 10px 30px;
+}
+
+.page-header-custom-logged-in-links a:hover, .page-header-custom-links a:hover{
+color:grey;
 }
 
 /* FRONT PAGE */
@@ -163,6 +222,28 @@ width:110px;
 
 /* END BETA SIGNUP PAGE */
 
+/* LOG IN PAGE */
+
+.login-center-div{
+width:300px;
+margin-right:auto;
+margin-left:auto;
+padding:50px;
+border: 2px solid @logocolor;
+}
+.login-center-div li{
+list-style:none;
+}
+
+.base-footer-div{
+margin-top: 100px;
+height:200px;
+background-color:grey;
+}
+
+
+/* END LOG IN PAGE */
+
 /* SIGNUP STEPS */
 
 .signup-label{
@@ -196,17 +277,22 @@ font-size:12px;
 }
 
 #edit-profile-large{
-border: 1px solid Turquoise ;
+border: 1px solid @logocolor;
+border-top: solid 0px
+}
+
+#edit-profile-large-show{
+border: 0px solid @logocolor;
 border-top: solid 0px
 }
 
 .edit-navigation{
-border-bottom: 1px solid Turquoise ;
+border-bottom: 1px solid @logocolor;
 }
 
 .edit-navigation > .active > a, .edit-navigation > .active > a:hover {
 color: #555;
-border: 1px solid Turquoise;
+border: 1px solid @logocolor;
 border-bottom-color: transparent;
 cursor: default;
 }

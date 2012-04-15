@@ -9,17 +9,37 @@
 
 {% block content %}
 
-<div class="row">
+<div class="container">
+
+{% if user.is_authenticated %}
+<center>
+<ul class="nav nav-tabs edit-navigation" style="margin-bottom:0px; ">
+  <li class="active"><a href="{% url 'profile_display_redirect' %}">Visa Profil</a></li>
+  <li><a href="{% url 'profile_edit' %}">Förändra Profil</a></li>
+  <li ><a href="{% url 'profiles_add_hours' %}">Förändra Öppetider</a></li>
+  <li><a href="{% url 'profiles_edit_services' %}">Förändra Prislista</a></li>
+  <li><a href="{% url 'profiles_edit_images' %}">Lägg Till Bilder</a></li>
+</ul>
+</center>
+
+
+
+<div class="row" >
+<div id="edit-profile-large-show" class="span12" >
+<br><br>
+{% endif %}
   
 
   <!-- should be centerted instead of using offset -->
-  <div class="offset1 span11 masthead">
+  <div class="span11 masthead">
     <!-- <div class="span3">
       {% include "profiles/display_images_snippet.html" with images=profile_image css_class='profile-image' %}
     </div> -->
+
     <div class="span5 profile-image">
         <img src="{{ profile_image }}" name="cprofile" width="400" height="400"> 
     </div>
+
     <div class="span7">
 
       <h2>{{ profile.profile_name }}</h2>
@@ -28,7 +48,7 @@
     </div>
 
   </div>
-</div>
+
 <hr class="soften">
 <div class="row">
   <div class="span12" id="gallery">
@@ -86,6 +106,11 @@
   
 </div><div class="row show-grid">
   
+  
+{% if user.is_authenticated %}
+</div>
+</div>
+{% endif %}
 </div>
 
 {% endblock %}

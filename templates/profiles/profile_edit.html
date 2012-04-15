@@ -8,7 +8,7 @@
 
 <center>
 <ul class="nav nav-tabs edit-navigation" style="margin-bottom:0px; ">
-  <li><a href="#">Visa Profil</a></li>
+  <li><a href="{% url 'profile_display_redirect' %}">Visa Profil</a></li>
   <li class="active"><a href="{% url 'profile_edit' %}">Förändra Profil</a></li>
   <li><a href="{% url 'profiles_add_hours' %}">Förändra Öppetider</a></li>
   <li><a href="{% url 'profiles_edit_services' %}">Förändra Prislista</a></li>

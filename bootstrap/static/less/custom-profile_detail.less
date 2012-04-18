@@ -1,10 +1,5 @@
 @logocolor: #96d5cc;
 
-.profile-image, .image-block img  {
-    width:200px;
-    height:200px;
-}
-
 .body-padding-zero{
 padding:0;
 }
@@ -21,7 +16,8 @@ height:100px;
 }
 
 .masthead {
-
+    margin-top:20px;
+    xmargin-bottom:60px;
 }
 
 hr.soften {
@@ -378,6 +374,19 @@ display:block;
 
 /* PROFILE PAGE */
 
+/* Images should be scaled by django, 
+ie. this should be removed in the future 
+.image-block is used in "edit-images" ui
+*/
+.profile-image img, .image-block img  {
+    width:220px;
+    height:250px;
+}
+
+.profile-image {
+   margin-left:80px;
+}
+
 .profile-service-list-item{
 border-top: solid 1px lightgrey;
 padding: 0 0 5px 5px;
@@ -391,6 +400,11 @@ width:250px;
 margin-right:60px;
 padding-left:10px;
 }
+
+.profile-text-block {
+    margin-left:40px;
+}
+
 
 .profile-service-description{
 width:250px;

@@ -31,30 +31,26 @@ sudo apt-get install python python-dev python-pip python-virtualenv python-imagi
 
 #cd ProjectX/
 
-echo "Fetching Django-Galleria"
-git clone http://github.com/andrewebdev/django-galleria.git
-
-
 echo "Now initializing django-enviroment"
 virtualenv --no-site-packages projectx
 source projectx/bin/activate
-
-cd django-galleria/
 
 # install modules that's downloaded with git, currently just galleria
 git submodule init
 git submodule update
 
-echo "PWD: ", $PWD
+#echo "PWD: ", $PWD
 
-
-cd ../
-rm -rf django-galleria
+#cd ../
 
 source projectx/bin/activate
-pip install django-galleria/
-pip install -r requirements.txt
 
+echo "Fetching Django-Galleria"
+git clone http://github.com/andrewebdev/django-galleria.git
+pip install django-galleria/
+rm -rf django-galleria
+
+pip install -r requirements.txt
 
 # have syncdb initiate everything, and skip south for now
 ./manage.py syncdb --al

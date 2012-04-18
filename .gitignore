@@ -16,6 +16,7 @@ tramp
 *~
 database/*.db
 xinit.sh
-media/user-imgs
+static/user-imgs
 projectx/
 initial_data.json
+production/*

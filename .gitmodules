@@ -1,3 +1,3 @@
-[submodule "media/js/galleria"]
-	path = media/js/galleria
+[submodule "static/js/galleria"]
+	path = static/js/galleria
 	url = git://github.com/aino/galleria.git

@@ -81,12 +81,12 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_DOC_ROOT = os.path.join(PROJECT_DIR, "static")
+STATIC_DOC_ROOT = os.path.join(PROJECT_DIR, "static/")
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
-STATIC_ROOT = '/'
+STATIC_ROOT = os.path.join(PROJECT_DIR,"static/")
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
@@ -95,7 +95,6 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    PROJECT_DIR+"/media/",
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -136,8 +135,6 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )
-
-print PROJECT_DIR+"/templates/"
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -232,10 +229,10 @@ DEBUG_TOOLBAR_CONFIG = {
 
 # Galleria, jquery
 
-if DEBUG:
-    JQUERY_SCRIPT = STATIC_URL + "js/jquery/jquery-1.7.1.js"
-else:
-    JQUERY_SCRIPT = "should/be/some/CDN"
+#if DEBUG:
+JQUERY_SCRIPT = STATIC_URL + "js/jquery/jquery-1.7.1.js"
+#else:
+#    JQUERY_SCRIPT = "should/be/some/CDN"
 
 INSTALLED_APPS += (
     'fileupload',
@@ -258,7 +255,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 # Paths to user uploaded images, used in fileupload app
 
 PATH_USER_IMGS = "user-imgs/"
-UPLOAD_PATH_USER_IMGS = "media/" + PATH_USER_IMGS
+UPLOAD_PATH_USER_IMGS = "static/" + PATH_USER_IMGS
 MAX_IMAGE_SIZE = 20 * 1024 * 1024
 FULL_PATH_USER_IMGS = os.path.join(STATIC_URL, PATH_USER_IMGS)
 

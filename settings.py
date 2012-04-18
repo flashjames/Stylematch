@@ -36,6 +36,7 @@ if not DEBUG:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
+	    'NAME': 'avizeradjango',
             'USER': 'prox',
             'PASSWORD': 'KALSl23lKL31skk1',
             'HOST': 'django-avizera.cotgems7cuep.eu-west-1.rds.amazonaws.com',  
@@ -135,6 +136,8 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )
+
+print PROJECT_DIR+"/templates/"
 
 INSTALLED_APPS = (
     'django.contrib.auth',

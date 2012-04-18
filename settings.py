@@ -27,24 +27,19 @@ MANAGERS = ADMINS
 if DEBUG:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', asd'mysql', 'sqlite3' or 'oracle'.
-            'NAME': PROJECT_DIR + '/database/test.db',                      # Or path to database file if using sqlite3.
-            'USER': '',                      # Not used with sqlite3.
-            'PASSWORD': '',                  # Not used with sqlite3.
-            'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-            'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+            'ENGINE': 'django.db.backends.sqlite3', 
+            'NAME': PROJECT_DIR + '/database/test.db',
             }
         }
 
 if not DEBUG:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', asd'mysql', 'sqlite3' or 'oracle'.
-            'NAME': PROJECT_DIR + '/database/test.db',                      # Or path to database file if using sqlite3.
-            'USER': '',                      # Not used with sqlite3.
-            'PASSWORD': '',                  # Not used with sqlite3.
-            'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-            'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+            'ENGINE': 'django.db.backends.mysql',
+            'USER': 'prox',
+            'PASSWORD': 'KALSl23lKL31skk1',
+            'HOST': 'django-avizera.cotgems7cuep.eu-west-1.rds.amazonaws.com',  
+            'PORT': '3306',  
             }
         }
 

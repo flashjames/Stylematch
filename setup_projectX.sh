@@ -49,6 +49,7 @@ echo "PWD: ", $PWD
 
 
 cd ../
+rm -rf django-galleria
 
 source projectx/bin/activate
 pip install django-galleria/

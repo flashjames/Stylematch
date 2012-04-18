@@ -22,42 +22,38 @@
 </ul>
 </center>
 
-
-
-<div class="row" >
-<div id="edit-profile-large-show" class="span12" >
-<br><br>
 {% endif %}
   
-
+<div class="row masthead" >
   <!-- should be centerted instead of using offset -->
-  <div class="span11 masthead">
+
     <!-- <div class="span3">
       {% include "profiles/display_images_snippet.html" with images=profile_image css_class='profile-image' %}
     </div> -->
 
-    <div class="span5 profile-image">
+    <div class="span3 profile-image">
         <img src="{{ profile_image }}" name="cprofile" width="400" height="400"> 
     </div>
 
-    <div class="span7">
+    <div class="span8 profile-text-block">
 
       <h2>{{ profile.profile_name }}</h2>
       <h3>{{ profile.salon_name }}</h3>
       <blockquote><p>{{ profile.profile_text }}</p></blockquote>
     </div>
 
-  </div>
+
+</div>
 
 <hr class="soften">
 <div class="row">
-  <div class="span12" id="gallery">
+  <div class="span10 offset1" id="gallery">
     {% include "profiles/display_images_snippet.html" with images=gallery_images css_class='gallery-image' %}
   </div>
   <script>
     Galleria.loadTheme('{{ GALLERIA_THEME }}');
     $("#gallery").galleria({
-    width: 940,
+    width: 780,
     height: 500
     });
   </script>

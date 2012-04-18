@@ -2,6 +2,13 @@
 import os
 import iptools
 
+import socket
+
+if socket.gethostname() == 'avizera-deploy':
+    DEBUG = TEMPLATE_DEBUG = False
+else:
+    DEBUG = TEMPLATE_DEBUG = True
+
 INTERNAL_IPS = iptools.IpRangeList(
     '127.0.0.1',                # single ip
     '192.168/16',               # CIDR network block
@@ -10,27 +17,33 @@ INTERNAL_IPS = iptools.IpRangeList(
 
 PROJECT_DIR = os.path.dirname(__file__)
 
-# should be set with environment variable
-DEBUG = True
-
-TEMPLATE_DEBUG = DEBUG
-
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
+    ('Jenso', 'jenso1988@gmail.com'),
 )
 
 MANAGERS = ADMINS
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', asd'mysql', 'sqlite3' or 'oracle'.
-        'NAME': PROJECT_DIR + '/database/test.db',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-    }
-}
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3', 
+            'NAME': PROJECT_DIR + '/database/test.db',
+            }
+        }
+
+if not DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+	    'NAME': 'avizeradjango',
+            'USER': 'prox',
+            'PASSWORD': 'KALSl23lKL31skk1',
+            'HOST': 'django-avizera.cotgems7cuep.eu-west-1.rds.amazonaws.com',  
+            'PORT': '3306',  
+            }
+        }
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -70,10 +83,11 @@ MEDIA_URL = ''
 # Example: "/home/media/media.lawrence.com/static/"
 STATIC_DOC_ROOT = os.path.join(PROJECT_DIR, "static")
 
+
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
-STATIC_ROOT = '/'
+STATIC_ROOT = os.path.join(PROJECT_DIR,"static/")
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
@@ -217,20 +231,12 @@ DEBUG_TOOLBAR_CONFIG = {
 
 # Galleria, jquery
 
-if DEBUG:
-    JQUERY_SCRIPT = STATIC_URL + "js/jquery/jquery-1.7.1.js"
-else:
-    JQUERY_SCRIPT = "should/be/some/CDN"
+# should use some cdn in production
+JQUERY_SCRIPT = STATIC_URL + "js/jquery/jquery-1.7.1.js"
 
 INSTALLED_APPS += (
     'fileupload',
     )
-
-#GOOGLE_ANALYTICS_MODEL = True
-#if True: #not DEBUG:
-#INSTALLED_APPS += (
-#    'analytics',
-#    )
 
 GALLERIA_URL = STATIC_URL + "js/galleria/src/"
 

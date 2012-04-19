@@ -83,6 +83,7 @@ MEDIA_URL = ''
 # Example: "/home/media/media.lawrence.com/static/"
 STATIC_DOC_ROOT = os.path.join(PROJECT_DIR, "static/")
 
+
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
@@ -229,20 +230,12 @@ DEBUG_TOOLBAR_CONFIG = {
 
 # Galleria, jquery
 
-#if DEBUG:
+# should use some cdn in production
 JQUERY_SCRIPT = STATIC_URL + "js/jquery/jquery-1.7.1.js"
-#else:
-#    JQUERY_SCRIPT = "should/be/some/CDN"
 
 INSTALLED_APPS += (
     'fileupload',
     )
-
-#GOOGLE_ANALYTICS_MODEL = True
-#if True: #not DEBUG:
-#INSTALLED_APPS += (
-#    'analytics',
-#    )
 
 GALLERIA_URL = STATIC_URL + "js/galleria/src/"
 

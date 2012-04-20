@@ -12,7 +12,7 @@
   <li class="active"><a href="{% url 'profile_edit' %}">Förändra Profil</a></li>
   <li><a href="{% url 'profiles_add_hours' %}">Förändra Öppetider</a></li>
   <li><a href="{% url 'profiles_edit_services' %}">Förändra Prislista</a></li>
-  <li><a href="{% url 'profiles_edit_images' %}">Lägg Till Bilder</a></li>
+  <li><a href="{% url 'profiles_edit_images' %}"><i class="icon-camera"></i> Lägg Till Bilder</a></li>
 </ul>
 </center>
 
@@ -63,15 +63,16 @@
     	
     	
       {% include "profiles/form_snippet.html" with field=form.show_booking_url %}
+      <br>
       <input type="submit" class="btn-large btn-info" value="Spara ändringar" />
     
     
     </div>
   </div>
-  </div>
  
-   
- 
+ </form>
+  
+  </div> 
   </div>
-</form>
+
 {% endblock %}

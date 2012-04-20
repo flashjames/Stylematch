@@ -4,6 +4,14 @@
 padding:0;
 }
 
+.body-beta-background{
+background: url('/static/img/wallpaper.jpg') no-repeat center center fixed;
+-webkit-background-size: cover;
+-moz-background-size: cover;
+-o-background-size: cover;
+background-size: cover;
+}
+
 .login.start {
 position: absolute;
 right: 30px;
@@ -93,15 +101,18 @@ background-image:url('static/img/wallpaper.jpg');
 }
 
 
-#beta-banner{
-width: 60%;
-height:350px;
-margin: 0px auto;
-background-color:white;
+div.beta-banner{
+width: 400px;
+height:420px;
+xmargin: 0px auto;
+position: absolute;
+right:5%;
 padding:10px;
+xopacity: 0.6;
+background: rgba(0, 0, 0, 0.4);
 }
 
-.shadow-beta{
+x.shadow-beta{
   -moz-box-shadow:    3px 3px 5px 6px #696969;
   -webkit-box-shadow: 3px 3px 5px 6px #696969;
   box-shadow:         3px 3px 5px 6px #696969;
@@ -109,10 +120,14 @@ padding:10px;
 
 h1.beta-banner{
 padding:20px 20px;
+color: white;
+text-shadow: -1px -1px black;
 } 
 
 span.beta-banner{
 font-size:26px;
+color: white;
+text-shadow: -1px -1px black;
 }
 
 a.beta-banner:hover{
@@ -120,19 +135,26 @@ text-decoration:none;
 color:green;
 }
 
+a.beta-banner{
+color: lightgrey;
+}
+
 h2.beta-banner{
 margin:40px 0px;
 text-align:center;
+color: white;
+text-shadow: -1px -1px black;
 } 
 
 h3.beta-banner{
-margin: 40px 30px 0px 50px;
+color: white;
+text-shadow: -1px -1px black;
 }
 
 #beta-email-typein{
 height:25px;
-width: 45%;
-margin: 0px 30px 0px 50px;
+width: 35%;
+margin: 0px 30px 0px 0px;
 } 
 
 /* END BETA FRONT PAGE*/
@@ -149,12 +171,16 @@ background-color:white;
 
 /* BETA SIGNUP PAGE */
 
-#beta-signup-banner{
+.beta-signup-banner{
 width: 45%;
 height:500px;
 margin: 0px auto;
-background-color:white;
 padding:10px;
+background: rgba(0, 0, 0, 0.7);
+}
+
+.beta-signup-banner label{
+color:white;
 }
 
 .beta-signup-left{

@@ -13,9 +13,9 @@
     {% block html-head %}{% endblock %}
   
     
-    <title>{% block title %}Stylefinder - Framtidens marknadsf&ouml;ringsverktyg{% endblock %}</title>
+    <title>{% block title %}Stylematch - Framtidens marknadsf&ouml;ringsverktyg{% endblock %}</title>
   </head>
-  <body class="body-padding-zero" style="background-image:url('static/img/wallpaper.jpg')">
+  <body class="body-padding-zero body-beta-background">
     
 	<div class="container">
 	<div class="beta-header">
@@ -23,17 +23,15 @@
 	</div>
       <section id="gridSystem">
 	{% block content %} 
-	<br><br>
-	<div id="beta-banner" class="shadow-beta well"><center><h1 class="beta-banner">Framtidens marknadsf&ouml;ringsverktyg <span class="beta-banner">f&ouml;r utbildade fris&ouml;rer</span></h1></center>
+	<div class="beta-banner shadow-beta well"><center><h1 class="beta-banner">Framtidens marknadsf&ouml;ringsverktyg <br><span class="beta-banner">f&ouml;r utbildade fris&ouml;rer</span></h1></center>
 	<br>
 	<form >
-  <input id="beta-email-typein" type="text" placeholder="E-postadress">
-  <button type="submit" class="btn-large btn-info">Ans&ouml;k om inbjudan</button>
+  <center><input id="beta-email-typein" type="text" placeholder="E-postadress">
+  <button type="submit" class="btn-large btn-info">Ans&ouml;k om inbjudan</button></center>
 </form>
-
-<h3 class="beta-banner">Har du redan en inbjudningskod? &nbsp;&nbsp;&nbsp;&nbsp;  <a href="/accounts/register/"> <button class="btn-large btn-info">G&aring; med h&auml;r!</button></a></h3>  
 <br>
-<h2 class="beta-banner"><a class="beta-banner" href="/features">L&auml;s mer om Stylefinder</a></h3>
+<center><h3 class="beta-banner">Har du redan en inbjudningskod?</center><br> <a href="/accounts/register/"> <center><button class="btn-large btn-info">G&aring; med h&auml;r!</button></a></center></h3>  
+<h2 class="beta-banner"><a class="beta-banner" href="/features">L&auml;s mer om Stylematch</a></h3>
 
 </div>
 	

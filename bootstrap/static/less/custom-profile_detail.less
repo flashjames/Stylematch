@@ -1,4 +1,7 @@
 @logocolor: #96d5cc;
+@color1: white;
+
+/* GENERAL */
 
 .body-padding-zero{
 padding:0;
@@ -25,7 +28,7 @@ height:100px;
 
 .masthead {
     margin-top:20px;
-    xmargin-bottom:60px;
+    margin-bottom:20px;
 }
 
 hr.soften {
@@ -38,59 +41,54 @@ hr.soften {
     border: 0;
 }
 
-.page-header-custom{
-background-color:white;
-height:170px;
-padding:10px;
-padding-left:20px;
-}
 
-.page-header-custom-logged-in{
-background-color:white; 
-height:170px;
-padding:10px;
-padding-left:20px;
-}
 
 .page-header-custom img, .page-header-custom-logged-in img{
 height:70px;
 width:auto;
 }
 
-.page-header-custom-logged-in-links{
-width:600px;
-display:inline-block;
-padding: 100px 50px 10px 30px;
-}
-
-.page-header-custom-links a, .page-header-custom-logged-in-links a{
-text-decoration:none;
-font-size:14px;
-margin-right:10px;
-color:black;
-}
-
-.page-header-custom-links{
-width:550px;
-display:inline-block;
-padding: 100px 50px 10px 30px;
-}
-
 .page-header-custom-logged-in-links a:hover, .page-header-custom-links a:hover{
 color:grey;
 }
+
+.main-menu a {
+   color: @color1;
+   font-size:18px;
+}
+
+.main-menu a:hover {
+    color:red;
+    text-decoration:none;
+}
+
+.main-menu {
+    margin-top:28px;
+}
+
+#logo img {
+    width:380px;
+}
+
+/* END GENERAL */
 
 /* FRONT PAGE */
 
 .searchfield{
     background-color:lightgrey;
     height:220px;
+    margin-left:0px;
 }
 #searchfield-text{
     font-size:40px;
     background-color:transparent;
 }
 
+.main-background {
+    background-color:white;
+    padding:20px;
+    border-radius: 3px;
+}
 
 /* END FRONT PAGE*/
 

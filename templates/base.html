@@ -1,5 +1,6 @@
 {# load google_analytics #}
 {% load bootstrap %}
+{% load url from future %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -11,22 +12,41 @@
     {% bootstrap_less %}
     {# Used to load js that's specific to a page #}
     {% block html-head %}{% endblock %}
-  
-    
+
+
     <title>{% block title %}Hi{% endblock %}</title>
   </head>
-  <body  class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true">
-    
-	{% block header %} 
-	{% include 'base_head.html' %}
-	{% endblock %}
-	<div class="container">
-      <section id="gridSystem">
-	{% block content %} {% endblock %}
-      </section>
+  <body  class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true" style="background: url(/static/img/header_background.png) repeat-x;">
+    <div class="container">
+      <div class="row masthead">
+        <div class="span4">
+          <img src="/static/img/logo.png"/>
+        </div>
+        {% if user.is_authenticated %}
 
-    </div>	
+        <div class="span7 main-menu">
+          <a href="{% url 'profile_edit' %}">Redigera profil</a>
+          <a href="#"> Bjud in en vän</a>
+          <a href="#"> Kontoinställningar</a>
+          <a href="/logout/"> Logga ut</a>
+        </div>
+
+
+        {% else %}
+
+        <div class="span7 main-menu">
+          <a href="/login">Logga in</a>
+          <a href="{% url 'registration_register' %}">Bli medlem som frisör</a>
+          <a href="/about-us/"> Om Oss</a>
+        </div>
+
+        {% endif %}
+      </div>
+      <div class="main-background">
+      {% block content %} {% endblock %}
+      </div>
+    </div>
     {% block footer %}{% include 'base_footer.html' %} {% endblock %}
-  {# analytics #}
+    {# analytics #}
   </body>
 </html>

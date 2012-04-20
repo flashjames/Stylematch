@@ -377,11 +377,20 @@ display:block;
 /* Images should be scaled by django, 
 ie. this should be removed in the future 
 .image-block is used in "edit-images" ui
+
+Done this way right now
+http://techpp.com/2008/08/02/how-to-resize-the-images-using-css-without-losing-the-aspect-ratio/
 */
 .profile-image img, .image-block img  {
-    width:220px;
+    width:auto;
     height:250px;
 }
+
+.profile-image img, .image-block img  {
+    width:220px;
+    height:auto;
+}
+
 
 .profile-image {
    margin-left:80px;
@@ -480,7 +489,13 @@ ul.image-list-horizontal label {
 
 li.image-block img {
     width:200px;
+    height:auto;
+}
+
+li.image-block img {
+    width:auto;
     height:200px;
 }
+
 
 /* END EDIT IMAGES PAGE */

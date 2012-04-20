@@ -4,7 +4,7 @@
   <div class="row">
   
   {% if user.is_authenticated %}
-  	<div class="container page-header-custom-logged-in">
+  	<div class="container page-header-custom-logged-in" >
   	<img src="/static/img/logo.png">
   	</img>
   	
@@ -13,7 +13,6 @@
   	<div class="page-header-custom-logged-in-links pull-right">
   <a href="{% url 'profile_edit' %}">Redigera profil</a>
   	<a href="#"> Bjud in en vän</a>
-  	<a href="/about-us/"> Om oss</a>
   	<a href="#"> Kontoinställningar</a>
   	<a href="/logout/"> Logga ut</a>
   	</div>

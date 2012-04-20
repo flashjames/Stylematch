@@ -16,14 +16,14 @@
 	<center><h1 class="beta-banner">G&aring; med nu!</h1></center>
     <div class="beta-signup-left" style="float: left;">
      {{ form.first_name.errors }}
-    {{ form.first_name.label_tag }}
+    {{ form.first_name.label }}
         <div class="beta-signup-left-form">
             {{ form.first_name }}
         </div>
    </div>
     <div class="beta-signup-right pull-right beta-signup-right">
         {{  form.last_name.errors }}
-        {{ form.last_name.label_tag }}
+        {{ form.last_name.label }}
         <div class="beta-signup-left-form">
             {{ form.last_name }}
         </div>
@@ -31,16 +31,16 @@
     <p style="clear: left;" />
     <div class="span3 beta-signup-email">
          {{ form.username.errors }}
-         {{ form.username.label_tag }}
+         {{ form.username.label }}
         <div class="beta-signup-left-form">
             {{ form.username }}
         </div>
 	</div>
 
    
-     <div class="beta-signup-left" style="float:left;">
+     <div class="beta-signup-left" style="float: left;">
          {{ form.password1.errors }}
-         {{ form.password1.label_tag }}
+         {{ form.password1.label }}
         <div class="beta-signup-left-form">
             {{ form.password1 }}
         </div>
@@ -48,7 +48,7 @@
 
     <div class="beta-signup-right pull-right beta-signup-right">
         {{ form.password2.errors }}
-        {{ form.password2.label_tag }}
+        {{ form.password2.label }}
         <div class="beta-signup-left-form">
             {{ form.password2 }}
         </div>
@@ -57,7 +57,7 @@
     <p style="clear: left;" />
     <center>
   			{{ form.invite_code.errors }}
-            {{ form.invite_code.label_tag }} <br>
+            {{ form.invite_code.label }} <br>
             <div class="beta-signup-invite-form">
                 {{ form.invite_code }}
             </div>

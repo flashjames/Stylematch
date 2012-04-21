@@ -6,6 +6,9 @@
   <head>
     <meta charset="utf-8" />
     <script type="text/javascript" src="{{ JQUERY_SCRIPT }}"></script>
+    <script type="text/javascript">
+   $('#loginmodal').modal();
+    </script>
 
     {% bootstrap_js all %}
     {% bootstrap_less %}
@@ -19,7 +22,8 @@
     
 	<div class="container">
 	<div class="beta-header">
-	 <div class="login start"><a href="/login/" class="btn btn-large btn-info"><i class="icon-user"></i><span> Logga in</span></a></div>
+	 {% include "login_modal_snippet.html" %}
+	 <div class="login start"><a href="#loginmodal" data-toggle="modal" class="btn btn-large btn-info"><i class="icon-user"></i><span> Logga in</span></a></div>
 	</div>
 	{% block header %} 
 	{% endblock %}

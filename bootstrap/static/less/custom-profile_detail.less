@@ -1,5 +1,6 @@
 @logocolor: #96d5cc;
 @color1: white;
+@color-links-nav: rgb(215,145,10);
 
 /* GENERAL */
 
@@ -51,7 +52,7 @@ hr.soften {
 }
 
 .main-menu a {
-    color: @color1;
+    color: @color-links-nav;
     font-size:10px;
     text-transform: uppercase;
     margin-right: 12px;
@@ -59,7 +60,7 @@ hr.soften {
 }
 
 .main-menu a:hover {
-    color:red;
+    color:lightgrey;
     text-decoration:none;
 }
 
@@ -75,6 +76,11 @@ hr.soften {
     color: @color1;
     font-size: 11px;
     margin-right: 5px;
+}
+
+.top-right-menu a:hover{
+	color:lightgrey;
+	text-decoration:none;
 }
 
 #logo img {
@@ -97,18 +103,36 @@ text-decoration:none;
 /* FRONT PAGE */
 
 .searchfield{
-    background-color:lightgrey;
-    height:220px;
+	xbackground: rgba(40, 40, 40, 0.5);
+	xbackground-image:url('http://www.gotown.com/images/bg/bg_noise_squares.png');
+    background-image:url('/static/img/search_banner_background.png');
+    height:250px;
     margin-left:0px;
+    padding:10px;
 }
+
 #searchfield-text{
     font-size:40px;
-    background-color:transparent;
+    xbackground-color:transparent;
+    color:white;
+    xtext-shadow: -1px -1px black;
+    margin-top:20px;
+}
+
+div.search-form{
+	margin-top:70px;
+	background: rgba(0, 0, 0, 0.5);
+	padding:20px;
+	height:40px;
+}
+
+align-center-search-form{
+vertical-align:center;
 }
 
 .main-background {
     background-color:white;
-    padding:20px;
+    padding:10px;
     border-radius: 3px;
 }
 

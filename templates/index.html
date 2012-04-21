@@ -11,8 +11,8 @@
  <h1 id="searchfield-text">Hitta en kvalificerad fris&ouml;r i ditt n&auml;romr&aring;de och boka nu</h1>
     
     <div  class="search-form">
-    <div class="span9 align-center-search-form">
-    <form class="form-search search-form">
+    <div class="span9 align-center-search-form offset1">
+    <form class="form-search search-form ">
     	<input type="text" style="height:20pt;font-size:15px;" class="input-medium span4" placeholder="S&ouml;k efter namn (Valfritt)"><span class="help-inline" style="font-size:15px">N&Auml;RA:</span>
 		<input type="text" style="height:20pt;font-size:15px;" class="input-medium " placeholder="Link&ouml;ping">
   <button type="submit" style="margin-left:10px"class="btn btn-primary btn-large">Hitta!</button>
@@ -22,27 +22,27 @@
 
   </div>
 
-    <div class="row show-grid">
-      <div class="span8">
-	<p>Test</p>
-	{% for profile in profiles %}
-	{{ profile.profile_name }}
-	{% endfor %}
+    <div class="row" style="margin-top:60px">
+      <div class="span10 offset1">
+		 <div class="span3 profile-image">
+    		<div class="profile-image-border">
+      		<img src="/static/img/bild1.jpg" name="profile-image">
+    		</div>
+ 		 </div>
+		<div class="span3 profile-image">
+    		<div class="profile-image-border">
+      		<img src="/static/img/bild2.jpg" name="profile-image">
+    		</div>
+ 		 </div>
+ 		 <div class="span3 profile-image">
+    		<div class="profile-image-border">
+      		<img src="/static/img/bild3.jpg" name="profile-image">
+    		</div>
+ 		 </div>
+		
+		
       </div>
     </div>
   
-  <div class="row show-grid">
-    <div class="span3">
-      <p>
-        Linköping (gissade via IP), Button: Not right City?
-      </p>
-    </div>
-  </div>
-
-  <div class="row show-grid">
-    <div class="span10">
-      <p>Bilder på frisörer</p>
-    </div>
-  </div>
 
   {% endblock %}

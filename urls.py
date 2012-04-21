@@ -41,7 +41,7 @@ urlpatterns = patterns(
     url(r'^accounts/register/$', register, {'backend': 'registration.backends.default.DefaultBackend','form_class': UserRegistrationForm}, name='registration_register'),
 	(r'^accounts/', include(registrationURLs)), # django-registration
 
-    url(r'^upload/', include('fileupload.urls')), # django-fileupload
+    url(r'^p/', include('fileupload.urls')), # django-fileupload
     url(r'^', include('accounts.urls')), # accounts
     (r'^about-us', AboutPageView.as_view(),{}, 'about_page'),
     (r'^$', BetaPageView.as_view(),{}, 'beta_page'),

@@ -13,7 +13,6 @@
     {# Used to load js that's specific to a page #}
     {% block html-head %}{% endblock %}
 
-
     <title>{% block title %}Hi{% endblock %}</title>
   </head>
   <body  class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true" style="background: url(/static/img/header_background.png) repeat-x;">
@@ -62,7 +61,9 @@
         {% endif %}
 
       </div>
-      <div class="main-background">
+      <div class="main-background">	
+	<div class="main-background" style="margin-left:-20px;margin-top:-20px;width:900px;height:250px;position:absolute;background-color:black;z-index: -1;box-shadow: 0px 0px 22px 0.01px black;">
+	</div>
         {% block content %} {% endblock %}
       </div>
     </div>

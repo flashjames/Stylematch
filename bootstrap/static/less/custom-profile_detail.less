@@ -421,18 +421,25 @@ ul.service-list {
 /* Images should be scaled by django,
    ie. this should be removed in the future
    .image-block is used in "edit-images" ui
-
-Done this way right now
-http://techpp.com/2008/08/02/how-to-resize-the-images-using-css-without-losing-the-aspect-ratio/
 */
-.profile-image img, .image-block img  {
-    width:auto;
-    height:250px;
+
+div.profile-image-border {
+    background-color:grey;
+    width:230px;
+    height:230px;
+    position:relative
 }
 
-.profile-image img, .image-block img  {
+.profile-image img  {
+    height:220px;
     width:220px;
-    height:auto;
+
+    /* center image in parent div */
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -110px;
+    margin-top: -110px;
 }
 
 .profile-service-list-item{
@@ -526,14 +533,23 @@ ul.image-list-horizontal label {
     display:inline;
 }
 
-li.image-block img {
-    width:200px;
-    height:auto;
+div.edit-images-image-border {
+    background-color:grey;
+    width:230px;
+    height:230px;
+    position:relative
 }
 
-li.image-block img {
-    width:auto;
-    height:200px;
+.image-block img  {
+    height:220px;
+    width:220px;
+
+    /* center image in parent div */
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -110px;
+    margin-top: -110px;
 }
 
 

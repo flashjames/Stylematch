@@ -192,7 +192,7 @@ SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
 # END social_auth
 
 # inform where user profile model is defined
-AUTH_PROFILE_MODULE = "accounts.userprofile"
+AUTH_PROFILE_MODULE = "accounts.UserProfile"
 
 ### django-registration
 

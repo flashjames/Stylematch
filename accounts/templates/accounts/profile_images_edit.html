@@ -32,7 +32,9 @@
 
 <!-- Underscore.js Templates -->
 <script type="text/template" id="tpl-image-list-item">
-  <img src="<%= image_url %>">
+  <div class="edit-images-image-border">
+       <img src="<%= image_url %>">
+  </div>
   <div class="edit-images-image-bottom">
     <!-- input checkbox should be checked=true if display_on_profile = true -->
     <% if(display_on_profile) { %>

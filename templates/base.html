@@ -20,8 +20,10 @@
     <div class="container">
       <div class="row">
 	{% if user.is_authenticated %}
-        <div class="span3 offset9 top-right-menu">
-          <a href="{% url 'profile_display_redirect' %}">Hej Nisse</a>
+	
+	
+        <div class="span4 offset8 top-right-menu">
+          <a href="{% url 'profile_display_redirect' %}">Hej {{ user.get_profile.profile_name }}</a>
           <a href="#">Kontoinställningar</a>
           <a href="/logout/">Logga ut</a>
         </div>

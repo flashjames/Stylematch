@@ -43,11 +43,7 @@ def user_created(sender, user, request, **kwargs):
     
 user_registered.connect(user_created)
 
-
-
 class UserRegistrationForm(RegistrationForm):    
-    
-
     email = forms.CharField(required = False)
     first_name = forms.CharField(label = "Förnamn")   
     last_name = forms.CharField(label = "Efternamn")       
@@ -85,7 +81,6 @@ class UserRegistrationForm(RegistrationForm):
 
 
     def clean_invite_code(self):
-
         str = self.cleaned_data['invite_code']        
 
         # TODO: Validate invite code through programming

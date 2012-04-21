@@ -12,24 +12,26 @@
 {% if user.is_authenticated %}
 {% include "profiles/edit_profile_menu.html" with display_profile="active" %}
 {% endif %}
-  
+
 <div class="row masthead" >
   <!-- should be centerted instead of using offset -->
 
-    <!-- <div class="span3">
-      {% include "profiles/display_images_snippet.html" with images=profile_image css_class='profile-image' %}
-    </div> -->
+  <!-- <div class="span3">
+       {% include "profiles/display_images_snippet.html" with images=profile_image css_class='profile-image' %}
+       </div> -->
 
-    <div class="span3 profile-image">
-        <img src="{{ profile_image }}" name="profile-image"> 
+  <div class="span3 profile-image">
+    <div class="profile-image-border">
+      <img src="{{ profile_image }}" name="profile-image">
     </div>
+  </div>
 
-    <div class="span8 profile-text-block">
+  <div class="span8 profile-text-block">
 
-      <h2>{{ profile.profile_name }}</h2>
-      <h3>{{ profile.salon_name }}</h3>
-      <blockquote><p>{{ profile.profile_text }}</p></blockquote>
-    </div>
+    <h2>{{ profile.profile_name }}</h2>
+    <h3>{{ profile.salon_name }}</h3>
+    <blockquote><p>{{ profile.profile_text }}</p></blockquote>
+  </div>
 
 
 </div>
@@ -50,7 +52,7 @@
 <hr class="soften">
 {% if services %}
 
-<div class="row " >
+<div class="row" >
   <div class="span8">
     <h3>Prislista</h3>
     {% for service in services %}
@@ -58,41 +60,41 @@
     {% endfor %}
   </div>
 
-<div class="span4 pull-right">
-    <center>
-    <table class="open-hours-profile">
-      <thead>
-        <th>&nbsp;</th>
-        <th style="padding-left:15px;">Öppettider</th>
-      </thead>
-      <tbody>
-	
-        {% for day in weekdays %}
-        <tr>
-          <td > {{ day.day }}</td>
-            
+  <div class="span3 pull-right">
+    <div>
+      <table class="open-hours-profile">
+        <thead>
+          <th>&nbsp;</th>
+          <th style="padding-left:15px;">Öppettider</th>
+        </thead>
+        <tbody>
+
+          {% for day in weekdays %}
+          <tr>
+            <td > {{ day.day }}</td>
+
             {% if day.open == -1 or day.closed == -1 %}
-                <td style="padding-left:15px;">Stängt</td>
+            <td style="padding-left:15px;">Stängt</td>
             {% else %}
-                <td style="padding-left:15px;">{{ day.open }} - {{ day.closed }}</td>
+            <td style="padding-left:15px;">{{ day.open }} - {{ day.closed }}</td>
             {% endif %}
-          
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <center>	
+
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 
 </div>
 {% endif %}
 
 <div class="row show-grid">
-  
+
 </div><div class="row show-grid">
-  
-  
-{% if user.is_authenticated %}
+
+
+  {% if user.is_authenticated %}
 </div>
 </div>
 {% endif %}

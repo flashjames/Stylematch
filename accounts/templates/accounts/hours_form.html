@@ -8,25 +8,13 @@
 
 <div class="container">
 
-<!--- Under ovan borde flyttas ut (dvs det tillhör inte content) ---!>
-
-<center>
-<ul class="nav nav-tabs edit-navigation" style="margin-bottom:0px; ">
-  <li><a href="{% url 'profile_display_redirect' %}">Visa Profil</a></li>
-  <li><a href="{% url 'profile_edit' %}">Förändra Profil</a></li>
-  <li class="active"><a href="{% url 'profiles_add_hours' %}">Förändra Öppetider</a></li>
-  <li><a href="{% url 'profiles_edit_services' %}">Förändra Prislista</a></li>
-  <li><a href="{% url 'profiles_edit_images' %}">Lägg Till Bilder</a></li>
-</ul>
-</center>
-
-
+{% include "profiles/edit_profile_menu.html" with edit_openhours="active" %}
 
 <div class="row" >
 <div id="edit-profile-large" class="span12" >
 <br><br>
 
-<!--- Detta ovan borde flyttas ut (dvs det tillhör inte content) ---!>
+<!-- Detta ovan borde flyttas ut (dvs det tillhör inte content) -->
 
 <div class="edit-hours-form">
 

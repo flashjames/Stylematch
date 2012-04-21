@@ -1,0 +1,13 @@
+{% load url from future %}
+
+<div class="row profile-menu-underline">
+  <div class="span8 offset2">
+    <ul class="nav nav-tabs edit-navigation" style="margin-bottom:0px; ">
+      <li class="{{ display_profile }}"><a href="{% url 'profile_display_redirect' %}">Visa Profil</a></li>
+      <li class="{{ edit_profile }}"><a href="{% url 'profile_edit' %}">Förändra Profil</a></li>
+      <li class="{{ edit_openhours }}"><a href="{% url 'profiles_add_hours' %}">Förändra Öppetider</a></li>
+      <li class="{{ edit_services }}"><a href="{% url 'profiles_edit_services' %}">Förändra Prislista</a></li>
+      <li class="{{ edit_images }}"><a href="{% url 'profiles_edit_images' %}"><i class="icon-camera"></i> Lägg Till Bilder</a></li>
+    </ul>
+  </div>
+</div>

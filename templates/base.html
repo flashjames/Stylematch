@@ -18,6 +18,23 @@
   </head>
   <body  class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true" style="background: url(/static/img/header_background.png) repeat-x;">
     <div class="container">
+      <div class="row">
+	{% if user.is_authenticated %}
+        <div class="span3 offset9 top-right-menu">
+          <a href="{% url 'profile_display_redirect' %}">Hej Nisse</a>
+          <a href="#">Kontoinställningar</a>
+          <a href="/logout/">Logga ut</a>
+        </div>
+	{% else %}
+	<div class="span3 offset9 top-right-menu">
+	  <a href="{% url 'registration_register' %}">Bli medlem som frisör</a>
+          <a href="/login/">Logga in</a>
+        </div>
+	
+
+	{% endif %}
+      </div>
+
       <div class="row masthead">
         <div class="span4">
           <img src="/static/img/logo.png"/>
@@ -25,25 +42,26 @@
         {% if user.is_authenticated %}
 
         <div class="span7 main-menu">
-          <a href="{% url 'profile_edit' %}">Redigera profil</a>
-          <a href="#"> Bjud in en vän</a>
-          <a href="#"> Kontoinställningar</a>
-          <a href="/logout/"> Logga ut</a>
+          <a href="{% url 'profile_display_redirect' %}">Min profil</a>
+          <a href="#">Sök frisörer</a>
+          <a href="#">Hitta inspiration</a>
+          <a href="#">Bjud in vän</a>
         </div>
 
 
         {% else %}
 
         <div class="span7 main-menu">
-          <a href="/login">Logga in</a>
-          <a href="{% url 'registration_register' %}">Bli medlem som frisör</a>
-          <a href="/about-us/"> Om Oss</a>
+	  <a href="#">Sök frisörer</a>
+          <a href="#">Hitta inspiration</a>
+          <a href="/about-us/">Om Stylematch</a>
         </div>
 
         {% endif %}
+
       </div>
       <div class="main-background">
-      {% block content %} {% endblock %}
+        {% block content %} {% endblock %}
       </div>
     </div>
     {% block footer %}{% include 'base_footer.html' %} {% endblock %}

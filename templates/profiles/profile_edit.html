@@ -4,25 +4,12 @@
 
 {% block content %}
 
-<!-- Under detta borde flyttas ut (dvs det tillhör inte content) -->
-
-<center>
-<ul class="nav nav-tabs edit-navigation" style="margin-bottom:0px; ">
-  <li><a href="{% url 'profile_display_redirect' %}">Visa Profil</a></li>
-  <li class="active"><a href="{% url 'profile_edit' %}">Förändra Profil</a></li>
-  <li><a href="{% url 'profiles_add_hours' %}">Förändra Öppetider</a></li>
-  <li><a href="{% url 'profiles_edit_services' %}">Förändra Prislista</a></li>
-  <li><a href="{% url 'profiles_edit_images' %}"><i class="icon-camera"></i> Lägg Till Bilder</a></li>
-</ul>
-</center>
-
-
+{% include "profiles/edit_profile_menu.html" with edit_profile="active" %}
 
 <div class="row" >
 <div id="edit-profile-large" class="span12" >
 <br><br>
 
-<!-- Detta ovan borde flyttas ut (dvs det tillhör inte content) -->
 
 <div id="edit-profile-forms">
 <form  action="" method="post">{% csrf_token %}
@@ -34,7 +21,7 @@
      
   <p>{{ form.profile_url.label_tag }}</p>
      {{ form.profile_url.errors }}
-     <p style="float: left; font-size: 20px; margin-top: 5px; padding-right: 3px;"> http://www.stylefinder.se </p>
+     <p style="float: left; font-size: 20px; margin-top: 5px; padding-right: 3px;"> http://www.stylematch.se </p>
      {{ form.profile_url }}
       
       {% include "profiles/form_snippet.html" with field=form.salon_name %}

@@ -22,14 +22,18 @@
     </div>
   </div>
 
-  <div class="span8 profile-text-block">
-
+  <div class="span6 profile-text-block">
     <h2>{{ profile.profile_name }}</h2>
     <h3>{{ profile.salon_name }}</h3>
     <blockquote><p>{{ profile.profile_text }}</p></blockquote>
   </div>
-
-
+  <div class="span2" id="salon-information">
+    <h3>Kontakt</h3>
+    <p>{{ profile.salon_name }}</p>
+    <p>{{ profile.salon_city }}</p>
+    <p>{{ profile.salon_adress }}, {{ profile.zip_adress }}</p>
+    <p>{{ profile.salon_phone_number }}</p>
+  </div>
 </div>
 
 <hr class="soften">

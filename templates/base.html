@@ -23,15 +23,18 @@
         {% if user.is_authenticated %}
 
 
-        <div class="span4 offset8 top-right-menu">
-          <a href="{% url 'profile_display_redirect' %}">Hej {{ user.get_profile.profile_name }}</a>
-          <a href="#">Kontoinställningar</a>
-          <a href="/logout/">Logga ut</a>
+        <div class="span4 offset8 top-right-menu pull-right">
+           <a class="pull-right" href="/logout/">Logga ut</a>
+           <a class="pull-right top-menu-border" href="#">Kontoinställningar</a>
+           <a class="pull-right top-menu-border" href="{% url 'profile_display_redirect' %}">Hej {{ user.get_profile.profile_name }}</a>
+         
+         
         </div>
         {% else %}
-        <div class="span3 offset9 top-right-menu">
-          <a href="{% url 'registration_register' %}">Bli medlem som frisör</a>
-          <a href="/login/">Logga in</a>
+        <div class="span3 offset9 top-right-menu pull-right">
+          <a  class="pull-right" href="/login/">Logga in</a>
+          <a class="pull-right top-menu-border" href="{% url 'registration_register' %}">Bli medlem som frisör</a>
+          
         </div>
 
 

@@ -103,23 +103,33 @@ text-decoration:none;
 /* FRONT PAGE */
 
 .searchfield{
+	xbackground: rgba(255, 255, 255, 0.3);
 	xbackground: rgba(40, 40, 40, 0.5);
-	background-image:url('http://www.gotown.com/images/bg/bg_noise_squares.png');
+	xbackground-image:url('http://www.gotown.com/images/bg/bg_noise_squares.png');
     xbackground-image:url('http://sipp.cc/assets/img/bg.jpg');
+    background-image:url('/static/img/2.png');
+    background-size:100%;
+    xbackground: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#999));
     height:250px;
     margin-left:0px;
     padding:10px;
-    box-shadow:inset 0px 0px 85px rgba(0,0,0,.5);
--webkit-box-shadow:inset 0px 0px 85px rgba(0,0,0,.5);
--moz-box-shadow:inset 0px 0px 85px rgba(0,0,0,.5);
+    xbox-shadow:inset 0px 0px 85px rgba(0,0,0,.5);
+x-webkit-box-shadow:inset 0px 0px 85px rgba(0,0,0,.5);
+x-moz-box-shadow:inset 0px 0px 85px rgba(0,0,0,.5);
 }
 
 #searchfield-text{
-    font-size:40px;
+    font-size:50px;
     xbackground-color:transparent;
-    color:#D7910A;
-    text-shadow: -1px -1px black;
+    xcolor:#999;
+    color: rgb(65,59,51);
+    text-shadow: -1px -1px lightgrey;
     margin-top:40px;
+    font-weight:100;
+    letter-spacing:1.5px;
+    font-family:"Helvetica Neue";
+    margin-left:20px;
+    
 }
 
 div.search-form{
@@ -129,12 +139,16 @@ div.search-form{
 	height:40px;
 }
 
+.search-form label, input, button, select, textarea, span {
+font-weight:300;
+font-family:"Helvetica Neue";
+}
+
 align-center-search-form{
 vertical-align:center;
 }
 
 .main-background {
-    padding:10px;
     border-radius: 3px;
 }
 
@@ -162,6 +176,13 @@ x.shadow-beta{
     -moz-box-shadow:    3px 3px 5px 6px #696969;
     -webkit-box-shadow: 3px 3px 5px 6px #696969;
     box-shadow:         3px 3px 5px 6px #696969;
+}
+
+.shadow-around-a-div{
+	-webkit-box-shadow: 0 8px 6px -6px black;
+	   -moz-box-shadow: 0 8px 6px -6px black;
+	        box-shadow: 0 8px 6px -6px black;
+
 }
 
 h1.beta-banner{

@@ -11,7 +11,7 @@ p {
   font-family: @baseFontFamily;
   font-size: @baseFontSize;
   line-height: @baseLineHeight;
-  font-weight:300;
+  font-weight: lighter;
   small {
     font-size: @baseFontSize - 2;
     color: @grayLight;
@@ -38,7 +38,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 h1 {
-  font-size: 40px;
+  font-size: 36px;
   line-height: @baseLineHeight * 2;
   small {
     font-size: 18px;
@@ -120,6 +120,7 @@ ol.unstyled {
 // Description Lists
 dl {
   margin-bottom: @baseLineHeight;
+  font-weight:lighter;
 }
 dt,
 dd {
@@ -130,6 +131,8 @@ dt {
 }
 dd {
   margin-left: @baseLineHeight / 2;
+  
+  font-weight:lighter;
 }
 
 // MISC
@@ -167,6 +170,7 @@ blockquote {
   padding: 0 0 0 15px;
   margin: 0 0 @baseLineHeight;
   border-left: 5px solid @grayLighter;
+  font-weight:lighter;
   p {
     margin-bottom: 0;
     #font > .shorthand(16px,300,@baseLineHeight * 1.25);

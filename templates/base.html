@@ -15,25 +15,27 @@
 
     <title>{% block title %}Hi{% endblock %}</title>
   </head>
-  <body  class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true" style="background: url(/static/img/header_background.png) repeat-x;">
+  {% block html-body-styling %}
+  <body class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true" style="background: url(/static/img/header_background.png) repeat-x;background-size: auto 125px;">
+    {% endblock %}
     <div class="container">
       <div class="row">
-	{% if user.is_authenticated %}
-	
-	
+        {% if user.is_authenticated %}
+
+
         <div class="span4 offset8 top-right-menu">
           <a href="{% url 'profile_display_redirect' %}">Hej {{ user.get_profile.profile_name }}</a>
           <a href="#">Kontoinställningar</a>
           <a href="/logout/">Logga ut</a>
         </div>
-	{% else %}
-	<div class="span3 offset9 top-right-menu">
-	  <a href="{% url 'registration_register' %}">Bli medlem som frisör</a>
+        {% else %}
+        <div class="span3 offset9 top-right-menu">
+          <a href="{% url 'registration_register' %}">Bli medlem som frisör</a>
           <a href="/login/">Logga in</a>
         </div>
-	
 
-	{% endif %}
+
+        {% endif %}
       </div>
 
       <div class="row masthead">
@@ -53,7 +55,7 @@
         {% else %}
 
         <div class="span7 main-menu">
-	  <a href="#">Hitta frisör</a>
+          <a href="#">Hitta frisör</a>
           <a href="#">Bli inspirerad</a>
           <a href="/about-us/">Om Stylematch</a>
         </div>
@@ -61,15 +63,21 @@
         {% endif %}
 
       </div>
-      <div class="main-background">	
-	<div class="main-background" style="margin-left:-10px;margin-top:-10px;width:920px;height:315px;position:absolute;background-color:black;z-index: -1;box-shadow: 0px 0px 22px 0.01px black;">
-	</div>
-        {% block content %} {% endblock %}
-      </div>
     </div>
-    {% block footer %}{% include 'base_footer.html' %} {% endblock %}
-    {# analytics #}
-  </body>
-  
-  
+    {% block second-background %}
+    <div class="second-background" style="background: url(/static/img/Flow-Background.jpg);">
+      {% endblock %}
+      <div class="container">
+
+        <div class="main-background">
+          {% block content %} {% endblock %}
+        </div>
+      </div>
+      {% block footer %}{% include 'base_footer.html' %} {% endblock %}
+    </div>
+</div>
+{# analytics #}
+</body>
+
+
 </html>

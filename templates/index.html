@@ -2,11 +2,13 @@
 {% load url from future %}
 
 {% block title %}Stylematch{% endblock %}
-
-
+{% block html-body-styling %}
+  <body class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true" style="background: url(/static/img/header_background.png) repeat-x;">
+    {% endblock %}
+  
 {% block content %}
  
-  <div class="row searchfield">
+  <div class="row searchfield" style="position:absolute;top:160px;width:920px;">
 
  <h1 id="searchfield-text">Hitta en kvalificerad fris&ouml;r i ditt n&auml;romr&aring;de och boka nu</h1>
     
@@ -22,7 +24,7 @@
 
   </div>
 
-    <div class="row" style="margin-top:60px">
+    <div class="row" style="margin-top:120px">
       <div class="span10 offset1">
 		 <div class="span3 profile-image">
     		<div class="profile-image-border">
@@ -46,3 +48,7 @@
   
 
   {% endblock %}
+
+    {% block second-background %}
+    <div class="second-background" style="background: url(/static/img/Flow-Background.jpg);margin-top:212px;">
+      {% endblock %}

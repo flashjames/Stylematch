@@ -16,13 +16,6 @@
     background-size: cover;
 }
 
-.login.start {
-    position: absolute;
-    right: 30px;
-    top: 30px;
-    z-index: 100;
-}
-
 .beta-header{
     height:100px;
 }
@@ -127,7 +120,6 @@ hr.soften {
     margin-top:40px;
     font-weight:100;
     letter-spacing:1.5px;
-    font-family:"Helvetica Neue";
     margin-left:20px;
 
 }
@@ -139,9 +131,10 @@ div.search-form{
     height:40px;
 }
 
-.search-form label, input, button, select, textarea, span {
-    font-weight:300;
-    font-family:"Helvetica Neue";
+
+.search-form label, .search-form input, .search-form button, .search-form select,.search-form textarea,.search-form span {
+font-weight:300;
+font-family:"Helvetica Neue", "Century Gothic";
 }
 
 align-center-search-form{
@@ -167,9 +160,17 @@ div.beta-banner{
     xmargin: 0px auto;
     position: absolute;
     right:5%;
+    top: 17%;
     padding:10px;
     xopacity: 0.6;
     background: rgba(0, 0, 0, 0.4);
+}
+
+.login.start {
+    position: absolute; 
+    right:5%;
+    top: 5%;
+    z-index: 100;
 }
 
 x.shadow-beta{

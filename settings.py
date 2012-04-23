@@ -234,10 +234,6 @@ DEBUG_TOOLBAR_CONFIG = {
 # should use some cdn in production
 JQUERY_SCRIPT = STATIC_URL + "js/jquery/jquery-1.7.1.js"
 
-INSTALLED_APPS += (
-    'fileupload',
-    )
-
 GALLERIA_URL = STATIC_URL + "js/galleria/src/"
 
 TEMPLATE_CONTEXT_PROCESSORS = (

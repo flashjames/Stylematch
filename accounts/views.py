@@ -1,10 +1,12 @@
 #-*- coding:utf-8 -*-
-from django.views.generic import TemplateView, UpdateView, DetailView, RedirectView
-from accounts.models import Service, UserProfile, OpenHours
-from fileupload.models import Picture
+from django.views.generic import TemplateView, UpdateView, DetailView, RedirectView, CreateView
+from accounts.models import Service, UserProfile, OpenHours, Picture
+#from fileupload.models import Picture
 from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin
 from django.forms import ModelForm, ValidationError, Textarea
+from django.conf import settings
+import uuid
 
 from django.contrib.auth.models import User
 
@@ -343,7 +345,8 @@ class ServicesView(LoginRequiredMixin, TemplateView):
         # "Initial"-dict defaults new services to show on profile.
         return {'form': ServiceForm(auto_id=True, initial={'display_on_profile': 1})}
 
-class PicturesView(LoginRequiredMixin, TemplateView):
+
+class PicturesView1(LoginRequiredMixin, TemplateView):
     """
     Display edit pictures page
     Many javascript dependencies one this page which interacts with the
@@ -371,4 +374,85 @@ class OpenHoursView(UpdateView):
     def get_object(self, queryset=None):
         obj = OpenHours.objects.get(user__exact=self.request.user.id)
         return obj
+
+
+
+def get_unique_filename(filename):
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    return filename
+
+def convert_bytes(bytes):
+    bytes = float(bytes)
+    if bytes >= 1099511627776:
+        terabytes = bytes / 1099511627776
+        size = '%.2iT' % terabytes
+    elif bytes >= 1073741824:
+        gigabytes = bytes / 1073741824
+        size = '%.2iG' % gigabytes
+    elif bytes >= 1048576:
+        megabytes = bytes / 1048576
+        size = '%.1fMB' % megabytes
+    elif bytes >= 1024:
+        kilobytes = bytes / 1024
+        size = '%.iKB' % kilobytes
+    else:
+        size = '%.iB' % bytes
+    return size
+
+class PictureForm(forms.ModelForm):
+    def clean_file(self):
+        file = self.cleaned_data['file']
+        if file:
+            if file._size > settings.MAX_IMAGE_SIZE:
+                raise ValidationError("Bilden är för stor ( > %s )" % convert_bytes(settings.MAX_IMAGE_SIZE))
+            return file
+        else:
+            raise ValidationError("Filen kunde inte läsas")
+
+    class Meta:
+        model = Picture
+        fields = ('file',)
+       
+class PicturesView(LoginRequiredMixin, CreateView):
+    """
+    Display edit pictures page
+    Many javascript dependencies one this page which interacts with the
+    REST API specified in class PictureResource
+    """
+    template_name = "accounts/profile_images_edit.html"
+    model = Picture
+    form_class = PictureForm
+
+    def __init__(self, *args, **kwargs):
+        super(PicturesView, self).__init__(*args, **kwargs)
+
+        # written here in init since it will give reverse url error
+        # if just written in class definition. because urls.py isnt loaded
+        # when this class is defined
+        self.success_url=reverse('profiles_edit_images')
+
+      
+    def get_form(self, form_class):
+        form = super(PicturesView, self).get_form(form_class)
+        form.instance.user = self.request.user
+        return form
+
+    # Called when we're sure all fields in the form are valid
+    def form_valid(self, form):
+        
+        f = self.request.FILES.get('file')
+
+        filename=get_unique_filename(f.name)
+
+        # add data to form fields that will be saved to db
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.filename = filename
+        
+        # default image type, Gallery
+        self.object.image_type = 'G'
+        self.object.save()
+        form.save_m2m()
+        return super(PicturesView, self).form_valid(form)
 

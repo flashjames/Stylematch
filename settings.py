@@ -86,7 +86,7 @@ STATIC_DOC_ROOT = os.path.join(PROJECT_DIR, "static/")
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = '/static/'
+STATIC_URL = 'http://stylematch.s3-website-eu-west-1.amazonaws.com/'
 STATIC_ROOT = os.path.join(PROJECT_DIR,"static/")
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
@@ -155,7 +155,25 @@ INSTALLED_APPS = (
     'braces',
     'index',
     'accounts',
+    'storages',
 )
+
+### S3 storage - production
+
+if not DEBUG:
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+    STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
+    # credentials should maybe be set as environment variables on production server?
+    # -> more secure.
+
+    AWS_ACCESS_KEY_ID = "AKIAJHCGEY6XAXXOSYXA"
+    AWS_SECRET_ACCESS_KEY = "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"
+    AWS_STORAGE_BUCKET_NAME = "stylematch"
+
+### END S3 storage
+
+
 
 ### social auth
 

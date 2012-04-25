@@ -7,21 +7,59 @@
   <head>
     <meta charset="utf-8" />
     <script type="text/javascript" src="{{ JQUERY_SCRIPT }}"></script>
+    <script src="/static/js/bootstrap-tooltip.js" type="text/javascript"></script>
+    <script type="text/javascript">
+    /* Function to trigger tooltip when clicked and hide after a delay*/
+   	$(document).ready(function() {
+   		var defaultOption={trigger:'manual', delay: {hide: 500 }};
+   		function showAndHidePopover() {
+        	$(this).tooltip('toggle');
+        	var self = this;
+        	setTimeout(function() {
+        		$(self).tooltip('hide');
+        	}, 700);	
+    	}; 
+    	
+		$('.popover1').tooltip(defaultOption).click(showAndHidePopover);
+		
+	
+	});
+	</script> 
 
     {% bootstrap_js all %}
     {% bootstrap_less %}
     {# Used to load js that's specific to a page #}
     {% block html-head %}{% endblock %}
 
+
+	<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-31125034-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
     <title>{% block title %}Hi{% endblock %}</title>
   </head>
   {% block html-body-styling %}
-  <body class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true" style="background: url(/static/img/header_background.png) repeat-x;background-size: auto 125px;">
+  <body class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true" style="background: url(/static/img/header_background.png) repeat-x;background-size: auto 129px;">
     {% endblock %}
     <div class="container">
       <div class="row">
         {% if user.is_authenticated %}
 
+
+		<div class="absolut-position-betasign well">
+		<h1>BETA</h1>
+		</div>
 
         <div class="span4 offset8 top-right-menu pull-right">
            <a class="pull-right" href="/logout/">Logga ut</a>
@@ -48,18 +86,18 @@
         {% if user.is_authenticated %}
 
         <div class="span7 main-menu">
-          <a href="{% url 'profile_display_redirect' %}">Min profil</a>
-          <a href="#">Sök frisörer</a>
-          <a href="#">Få inspiration</a>
-          <a href="#">Bjud in vän</a>
+          <a href="{% url 'profile_display_redirect' %} ">Min profil</a>
+          <a href="#" class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart">Sök frisörer</a>
+          <a href="#"  class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart">Få inspiration</a>
+          <a href="#"  class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart">Bjud in vän</a>
         </div>
 
 
         {% else %}
 
         <div class="span7 main-menu">
-          <a href="#">Hitta frisör</a>
-          <a href="#">Bli inspirerad</a>
+          <a href="#"  class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart">Hitta frisör</a>
+          <a href="#"  class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart">Bli inspirerad </a>
           <a href="/about-us/">Om Stylematch</a>
         </div>
 
@@ -68,7 +106,7 @@
       </div>
     </div>
     {% block second-background %}
-    <div class="second-background" style="background: url(/static/img/Flow-Background.jpg);">
+    <div class="second-background" style="background: url(/static/img/Flow-Background.jpg); background-size: cover;">
       {% endblock %}
       <div class="container">
 

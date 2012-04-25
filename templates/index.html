@@ -14,7 +14,7 @@
  <h1 id="searchfield-text">Hitta en kvalificerad fris&ouml;r i ditt n&auml;romr&aring;de och boka nu</h1>
   </div>  
     <div  class="search-form">
-    <div class="span5 align-center-search-form offset5">
+    <div class="span5 align-center-search-form offset4">
     <form class="form-search search-form ">
     	<input type="text" style="height:25pt;font-size:15px;" class="input-medium span4" placeholder=" Linköping">
 		
@@ -51,5 +51,6 @@
   {% endblock %}
 
     {% block second-background %}
+    {# To keep the larger header on the front-page #}
     <div class="second-background" style="background: url(/static/img/Flow-Background.jpg) repeat-x;margin-top:210px;">
       {% endblock %}

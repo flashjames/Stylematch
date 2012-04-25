@@ -12,12 +12,12 @@
 
 </script>
 
-<script src="{{ STATIC_URL }}underscore-min.js"></script>
-<script src="{{STATIC_URL}}backbone-min.js"></script>
-<script src="{{STATIC_URL}}backbone-tastypie.js"></script>
-<script src="{{STATIC_URL}}backbone.modelbinding.js"></script>
-<!--<link type="text/css" href="/static/jquery-ui-1.8.18.custom/css/ui-lightness/jquery-ui-1.8.18.custom.css" rel="Stylesheet" />-->
-<script type="text/javascript" src="{{STATIC_URL}}jquery-ui-1.8.18.custom.min.js"></script>
+<script src="{{ STATIC_URL }}js/underscore-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
+<script src="{{ STATIC_URL }}js/backbone.modelbinding.js"></script>
+
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.18.custom.min.js"></script>
 
 {% endblock %}
 
@@ -88,7 +88,7 @@
         </form>
       </div>
       <!-- the code that does the magic on the page -->
-      <script src="{{STATIC_URL}}picture.js"></script>
+      <script src="{{ STATIC_URL }}js/picture.js"></script>
 
     </div>
   </div>

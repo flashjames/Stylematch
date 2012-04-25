@@ -166,8 +166,7 @@ INSTALLED_APPS = (
 ### S3 storage - production
 
 if not DEBUG:
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-    STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+    DEFAULT_FILE_STORAGE = STATICFILES_STORAGE = 'index.storage.CustomS3BotoStorage'
 
     # credentials should maybe be set as environment variables on production server?
     # -> more secure.
@@ -269,7 +268,11 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 # Paths to user uploaded images, used in fileupload app
 
 PATH_USER_IMGS = "user-imgs/"
-UPLOAD_PATH_USER_IMGS = "media/" + PATH_USER_IMGS
+if DEBUG:
+    UPLOAD_PATH_USER_IMGS = "media/" + PATH_USER_IMGS
+else:
+    UPLOAD_PATH_USER_IMGS = PATH_USER_IMGS
+        
 MAX_IMAGE_SIZE = 20 * 1024 * 1024
 FULL_PATH_USER_IMGS = os.path.join(STATIC_URL, PATH_USER_IMGS)
 

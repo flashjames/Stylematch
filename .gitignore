@@ -21,3 +21,4 @@ projectx/
 initial_data.json
 production/*
 django-galleria/
+bootstrap/static/style.css

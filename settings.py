@@ -24,14 +24,14 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-if DEBUG:
+if True: #DEBUG:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3', 
             'NAME': PROJECT_DIR + '/database/test.db',
             }
         }
-
+"""
 if not DEBUG:
     DATABASES = {
         'default': {
@@ -43,7 +43,7 @@ if not DEBUG:
             'PORT': '3306',  
             }
         }
-
+"""
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -86,7 +86,12 @@ STATIC_DOC_ROOT = os.path.join(PROJECT_DIR, "static/")
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = 'http://stylematch.s3-website-eu-west-1.amazonaws.com/'
+
+if DEBUG:
+    STATIC_URL = '/static/'
+else:
+    STATIC_URL = 'http://stylematch.s3-website-eu-west-1.amazonaws.com/'
+    
 STATIC_ROOT = os.path.join(PROJECT_DIR,"static/")
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
@@ -258,6 +263,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'index.context_processors.jquery_script',
     'index.context_processors.galleria_urls',
+    'django.core.context_processors.static', #used to access STATIC_URL in templates
     )
 
 # Paths to user uploaded images, used in fileupload app

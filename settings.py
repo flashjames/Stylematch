@@ -24,14 +24,14 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-if True: #DEBUG:
+if DEBUG:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3', 
             'NAME': PROJECT_DIR + '/database/test.db',
             }
         }
-"""
+
 if not DEBUG:
     DATABASES = {
         'default': {
@@ -43,7 +43,7 @@ if not DEBUG:
             'PORT': '3306',  
             }
         }
-"""
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -86,11 +86,7 @@ STATIC_DOC_ROOT = os.path.join(PROJECT_DIR, "static/")
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-if DEBUG:
-    STATIC_URL = '/static/'
-else:
-    STATIC_URL = 'http://stylematch.s3-website-eu-west-1.amazonaws.com/static/'
-
+STATIC_URL = 'http://stylematch.s3-website-eu-west-1.amazonaws.com/'
 STATIC_ROOT = os.path.join(PROJECT_DIR,"static/")
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
@@ -111,7 +107,6 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
@@ -161,7 +156,6 @@ INSTALLED_APPS = (
     'index',
     'accounts',
     'storages',
-    'compressor',
 )
 
 ### S3 storage - production
@@ -179,16 +173,7 @@ if not DEBUG:
 
 ### END S3 storage
 
-### Django-compress: compress and compile css/js/less
 
-#should not be set
-COMPRESS_OFFLINE = True
-
-COMPRESS_PRECOMPILERS = (
-    ('text/less', 'lessc {infile} {outfile}'),
-)
-
-### END Django-compress
 
 ### social auth
 
@@ -197,12 +182,14 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
+
 FACEBOOK_APP_ID              = '279761435376574'
 FACEBOOK_API_SECRET          = 'c3325b623f9f09303004b77aed231a71'
 
 LOGIN_URL          = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGIN_ERROR_URL    = '/login-error/'
+
 
 """
 Can be used to style social_auth in templates

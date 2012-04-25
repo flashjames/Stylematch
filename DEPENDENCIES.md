@@ -45,3 +45,10 @@ I.e. download it from github and auto install.
 ###Commonware
 ###Django Extensions
 
+## Dependencies on production server
+###node.js
+http://blog.marcqualie.com/2011/11/installing-nodejs-on-ubuntu-1110.html
+###less
+npm -g install less
+
+Configure 

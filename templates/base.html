@@ -9,13 +9,7 @@
     <script type="text/javascript" src="{{ JQUERY_SCRIPT }}"></script>
 
     {% bootstrap_js all %}
-
-    {% if DEBUG %}
-    <link charset="utf-8" rel="stylesheet" type="text/less" href="{{ STATIC_URL }}less/bootstrap.less">
-    {% else %}
-    <link charset="utf-8" rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style.css">
-    {% endif %}
-
+    {% bootstrap_less %}
 
     {# Used to load js and css that's specific to a page. Should add a block for js at end of this file for javascript #}
     {% block html-head %}{% endblock %}

@@ -63,7 +63,7 @@ def bootstrap_less():
         output = '\n'.join(output)
 
     else:
-        output = "<link charset='utf-8' rel='stylesheet' type='text/css' href='{{ STATIC_URL }}style.css'>"
+        output = "<link charset='utf-8' rel='stylesheet' type='text/css' href='%sstyle.css'>" % settings.STATIC_URL,
 
     return output
 

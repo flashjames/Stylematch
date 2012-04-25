@@ -158,8 +158,7 @@
             $('#service-list').html(this.serviceListView.render().el);
         },
 	events:{
-            'click .save': 'formSave',
-
+            'click .save': 'formSave'
         },
         newForm: function() {
             this.model = new Service();
@@ -177,7 +176,7 @@
             this.FormView = new FormView({model:model});
 
             var btn = $('.save');
-            btn.html("Redigera");
+            btn.html("Spara");
         },
         close:function () {
             $(this.el).unbind();
@@ -193,6 +192,9 @@
 		},
 		error: function(collection, error, options) {
 		    ServiceView.cleanForm();
+
+		    var btn = $('.save');
+		    btn.html("Spara");
 		    ServiceView.displayFormErrors(collection, error, options);
 		}
 	    };

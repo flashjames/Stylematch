@@ -168,7 +168,7 @@ INSTALLED_APPS = (
 
 if not DEBUG:
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-    STATICFILES_STORAGE = 'index.storage.CachedS3BotoStorage'
+    STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
     # credentials should maybe be set as environment variables on production server?
     # -> more secure.
@@ -180,15 +180,13 @@ if not DEBUG:
 ### END S3 storage
 
 ### Django-compress: compress and compile css/js/less
-if not DEBUG:
-    COMPRESS_OFFLINE = True
 
-    COMPRESS_PRECOMPILERS = (
-        ('text/less', 'lessc {infile} {outfile}'),
-        )
+#should not be set
+COMPRESS_OFFLINE = True
 
-    COMPRESS_URL = STATIC_URL
-    COMPRESS_STORAGE = DEFAULT_FILE_STORAGE
+COMPRESS_PRECOMPILERS = (
+    ('text/less', 'lessc {infile} {outfile}'),
+)
 
 ### END Django-compress
 

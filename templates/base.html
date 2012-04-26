@@ -1,5 +1,5 @@
-{# load google_analytics #}
 {% load bootstrap %}
+{% load index_extras %}
 {% load url from future %}
 
 <!DOCTYPE html>
@@ -79,7 +79,8 @@
       {% block footer %}{% include 'base_footer.html' %} {% endblock %}
     </div>
 </div>
-{# analytics #}
+{% block javascript-block %}{% endblock %}
+{% google_analytics %}
 </body>
 
 

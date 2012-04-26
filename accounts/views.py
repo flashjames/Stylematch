@@ -358,7 +358,7 @@ class PicturesView1(LoginRequiredMixin, TemplateView):
         return context
 
 
-class OpenHoursView(UpdateView):
+class OpenHoursView(LoginRequiredMixin, UpdateView):
     model = OpenHours
     template_name = "accounts/hours_form.html"
 

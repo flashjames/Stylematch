@@ -225,8 +225,6 @@ class Picture(models.Model):
         ordering = ['order']
 
      
-
-
 # Signals handler for deleting files after object record deleted
 # In Django 1.3, delete a record not remove the associated files
 def delete_filefield(sender, **kwargs):
@@ -242,6 +240,16 @@ def delete_filefield(sender, **kwargs):
     http://obroll.com/automatically-delete-file-in-filefield-django-1-3-when-object-record-deleted/
     """
     instance = kwargs.get('instance')
-    default_storage.delete(instance.file.path)
+
+    """
+    The most natural way to get name of file would be instance.file.path
+    but since we're using amazon S3 for storage, the file object does not
+    have a path() method, which is called when trying to get attribute .path
+    of a file object. -> using attribute .name which we save in the
+    model.
+    -> This will probably be a problem if we move to filebased storage.
+    """
+    
+    default_storage.delete(instance.file.name)
 
 post_delete.connect(delete_filefield, Picture)

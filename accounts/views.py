@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin
 from django.forms import ModelForm, ValidationError, Textarea
 from django.conf import settings
-import uuid
+import uuid, os
 
 from django.contrib.auth.models import User
 
@@ -186,14 +186,13 @@ class DisplayProfileView(DetailView):
 
         return openinghours_list
 
+
     def get_profile_image_url(self, profile_user_id):
         profile_picture = ''
         try:
             profile_picture  = self.get_profile_image(profile_user_id)[0]
-            print "\n"*10, profile_picture
-        except:
-            # TODO: Genders?
-            profile_picture = '/static/user-imgs/profile_male.jpg'
+        except:         
+            profile_picture = os.path.join(settings.STATIC_URL, 'img/default_image_profile.jpg')
 
         return profile_picture
 

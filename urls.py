@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
+from django.views.generic import TemplateView
 from index.views import AboutPageView, IndexPageView, BetaPageView, FeaturesPageView, SignupStep1PageView, SignupStep2PageView
 
 # Uncomment the next two lines to enable the admin:
@@ -48,6 +49,8 @@ urlpatterns = patterns(
     (r'^features', FeaturesPageView.as_view(),{}, 'features_page'),
     (r'^signup-step1', SignupStep1PageView.as_view(),{}, 'signupstep1_page'),
     (r'^signup-step2', SignupStep2PageView.as_view(),{}, 'signupstep2_page'),
+    (r'^google66ca7050dfade3e4.html', TemplateView.as_view(template_name="google66ca7050dfade3e4.html")), #tracking-code so google apps know we own the domain.
+    
     
 )
 

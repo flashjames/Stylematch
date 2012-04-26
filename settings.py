@@ -166,8 +166,7 @@ INSTALLED_APPS = (
 ### S3 storage - production
 
 if not DEBUG:
-    DEFAULT_FILE_STORAGE = STATICFILES_STORAGE = 'index.storage.CustomS3BotoStorage'
-
+    DEFAULT_FILE_STORAGE = STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
     # credentials should maybe be set as environment variables on production server?
     # -> more secure.
 

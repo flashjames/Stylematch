@@ -23,7 +23,7 @@
   </div>
 
   <div class="span6 profile-text-block">
-    <h2>{{ profile.profile_name }}</h2>
+    <h2>{{ profile.profile_first_name }} {{ profile.profile_last_name }}</h2>
     <h3>{{ profile.salon_name }}</h3>
     <blockquote><p>{{ profile.profile_text }}</p></blockquote>
   </div>
@@ -31,8 +31,13 @@
     <h3>Kontakt</h3>
     <p>{{ profile.salon_name }}</p>
     <p>{{ profile.salon_city }}</p>
-    <p>{{ profile.salon_adress }}, {{ profile.zip_adress }}</p>
-    <p>{{ profile.salon_phone_number }}</p>
+    <p>{{ profile.salon_adress }}{% if profile.zip_adress %} ,{{ profile.zip_adress }} {% endif %}</p>
+    </p>Telefonnummer
+    {% if profile.number_on_profile %}
+    {{ profile.personal_phone_number }}
+    {% else %}
+    {{ profile.salon_phone_number }}
+    {% endif %} </p>
   </div>
 </div>
 

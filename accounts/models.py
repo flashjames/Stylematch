@@ -24,16 +24,18 @@ def create_user_profile(sender, instance, created, **kwargs):
     """
     if created:
         UserProfile.objects.create(user=instance,
-                                   temporary_profile_url= uuid.uuid4().hex, 
-                                   profile_name = 'Namn Namnsson', 
-                                   profile_phone_number = "0761234567",
+                                   temporary_profile_url= uuid.uuid4().hex,
+                                   profile_first_name = 'Förnamn',
+                                   profile_last_name = 'Efternamn',
+                                   personal_phone_number = "",
                                    display_on_first_page = True,
-                                   salon_name = 'Gunillas hårparadis',
-                                   salon_city = 'Linköping',
-                                   salon_adress = 'Musterivägen 12A',
-                                   salon_phone_number = '013523812',
-                                   zip_adress  = 38413,
-                                   profile_text = 'Det här är en beskrivande text av vad salongen är och står för, samt annan intressant information')
+                                   salon_name = 'Namn på salongen',
+                                   salon_city = 'Stad',
+                                   salon_adress = 'Adress till salongen',
+                                   salon_phone_number = '',
+                                   profile_text = 'Det här är en beskrivande text av vad salongen är och står för, samt annan intressant information',
+                                   number_on_profile = True,
+                                   )
 
         OpenHours.objects.create(user=instance)
 
@@ -41,7 +43,7 @@ def create_user_profile(sender, instance, created, **kwargs):
                                 length = 60, 
                                 name = "Klippning",
                                 price = 500, 
-                                description = "Klipp ditt hår fint till sommaren", 
+                                description = "Kort klippning", 
                                 display_on_profile = True)
 
 
@@ -49,14 +51,20 @@ def create_user_profile(sender, instance, created, **kwargs):
                                 length = 105, 
                                 name = "Hårfärgning",
                                 price = 140, 
-                                description = "Bli fin som en dräng med Pers intensiva hårfärg.", 
+                                description = "Naturliga färger", 
                                 display_on_profile = True)
 
 class UserProfile(models.Model):
+    """
+    TODO:
+    fixa så email från huvudprofilen visas här
+    fixa så twitter och facebook profil visas här, se styleseat
+    """
+    
     user = models.ForeignKey(User, unique=True, editable=False)
-    profile_name = models.CharField("Mitt Namn*", max_length=40, blank=True)
-    profile_phone_number = models.CharField("Personligt Telefonnummer", max_length=30, blank=True)
-
+    profile_first_name = models.CharField("Förnamn*", max_length=40, blank=True)
+    profile_last_name = models.CharField("Efternamn*", max_length=40, blank=True)
+    
     display_on_first_page = models.BooleanField(editable=False)
     
     # max_length? less?
@@ -67,19 +75,21 @@ class UserProfile(models.Model):
     # used to reach profile if no profile_url set
     temporary_profile_url = models.CharField(editable=False, unique=True, max_length=36)
 
-    """
-    TODO:
-    fixa så email från huvudprofilen visas här
-    fixa så twitter och facebook profil visas här, se styleseat
-    """
+    # select phone number to display on profile
+    DISPLAY_NUMBER_CHOICES = (
+        (True, 'Personligt telefonnummer'),
+        (False, 'Salongens telefonnummer'),
+        )
+    number_on_profile = models.BooleanField("Vilket telefonnummer ska visas på profilen?",max_length=1, choices=DISPLAY_NUMBER_CHOICES)
     
+    personal_phone_number = models.CharField("Personligt Telefonnummer", max_length=30, blank=True)
+  
     # salong
+    salon_phone_number = models.CharField("Salongens Telefonnummer", max_length=30, blank=True)
     salon_name = models.CharField("Salongens Namn", max_length=30, blank=True)
     salon_city = models.CharField("Stad", max_length=30, blank=True)
     salon_url = models.URLField("Salongens Hemsida", blank=True)
     salon_adress = models.CharField("Salongens Adress",max_length=30, blank=True)
-    salon_phone_number = models.CharField("Salongens Telefonnummer", max_length=30, blank=True)
-    
     
     
     # TODO: add validation https://docs.djangoproject.com/en/dev/ref/contrib/localflavor/#sweden-se
@@ -161,7 +171,6 @@ class OpenHours(models.Model):
 
 
 
-#-*- coding:utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings

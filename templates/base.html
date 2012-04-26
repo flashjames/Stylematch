@@ -13,7 +13,7 @@
     {# Used to load js and css that's specific to a page. Should add a block for js at end of this file for javascript #}
     {% block html-head %}{% endblock %}
 
-    <title>{% block title %}Hi{% endblock %}</title>
+    <title>Stylematch | {% block title %}{% endblock %}</title>
   </head>
   {% block html-body-styling %}
   <body class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true" style="background: url({{STATIC_URL}}img/header_background.png) repeat-x;background-size: auto 125px;">
@@ -26,7 +26,7 @@
         <div class="span4 offset8 top-right-menu pull-right">
            <a class="pull-right" href="/logout/">Logga ut</a>
            <a class="pull-right top-menu-border" href="#">Kontoinställningar</a>
-           <a class="pull-right top-menu-border" href="{% url 'profile_display_redirect' %}">Hej {{ user.get_profile.profile_name }}</a>
+           <a class="pull-right top-menu-border" href="{% url 'profile_display_redirect' %}">Hej {{ user.get_profile.profile_first_name }}</a>
          
          
         </div>

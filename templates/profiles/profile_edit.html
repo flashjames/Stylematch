@@ -15,7 +15,8 @@
 <form  action="" method="post">{% csrf_token %}
   
     <div class="span8" >
-      {% include "profiles/form_snippet.html" with field=form.profile_name %}
+      {% include "profiles/form_snippet.html" with field=form.profile_last_name %}
+      {% include "profiles/form_snippet.html" with field=form.profile_first_name %}
       {% include "profiles/form_snippet.html" with field=form.profile_text %}
       
      <br>
@@ -44,20 +45,15 @@
 
 
       <p style="float:left; margin-right:10px;">
-  {{ form.profile_phone_number.errors }}
-  {{ form.profile_phone_number.label_tag }}
-  {{ form.profile_phone_number }}
+  {{ form.personal_phone_number.errors }}
+  {{ form.personal_phone_number.label_tag }}
+  {{ form.personal_phone_number }}
   </p>
      
       {% include "profiles/form_snippet.html" with field=form.salon_phone_number %}
+      {% include "profiles/form_snippet.html" with field=form.number_on_profile %}
       
-      <label class="signup-label">Vilket telefonnummer ska visas på profilen?</label>
-              <select id="select01">
-                <option>Salongens Telefonnummer</option>
-                <option>Personlig Telefonnummer</option>
-              </select>	    	
-              <br><br>
-    {% include "profiles/form_snippet.html" with field=form.salon_url %}
+      {% include "profiles/form_snippet.html" with field=form.salon_url %}
     	
     	
     	  <p style=" margin-right:10px;" class="edit-profile-label">

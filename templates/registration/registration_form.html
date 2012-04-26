@@ -8,71 +8,77 @@
 <div class="container">
   <form method="post" action="">
     {% csrf_token %}
-    
 
-	<div class="beta-signup-banner" class="shadow-beta well">
-	
-	<center><h1 class="beta-banner">G&aring; med nu!</h1></center>
-    <div class="beta-signup-left" style="float: left;">
-     {{ form.first_name.errors }}
-    {{ form.first_name.label_tag }}
+
+    <div class="beta-signup-banner" class="shadow-beta well">
+
+      <center><h1 class="beta-banner">G&aring; med nu!</h1></center>
+      <div class="beta-signup-left" style="float: left;">
+
+        {{ form.first_name.label_tag }}
         <div class="beta-signup-left-form">
-            {{ form.first_name }}
+          {{ form.first_name }}
         </div>
-   </div>
-    <div class="beta-signup-right pull-right beta-signup-right">
-        {{  form.last_name.errors }}
+        <div>{{ form.first_name.errors }}</div>
+      </div>
+      <div class="beta-signup-right pull-right beta-signup-right">
+
         {{ form.last_name.label_tag }}
         <div class="beta-signup-left-form">
-            {{ form.last_name }}
+          {{ form.last_name }}
         </div>
-   </div>
-    <p style="clear: left;" />
-    <div class="span3 beta-signup-email">
-         {{ form.username.errors }}
-         {{ form.username.label_tag }}
-        <div class="beta-signup-left-form">
-            {{ form.username }}
-        </div>
-	</div>
+        {{  form.last_name.errors }}
+      </div>
+      <p style="clear: left;" />
+      <div class="span3 beta-signup-email">
 
-   
-     <div class="beta-signup-left" style="float:left;">
-         {{ form.password1.errors }}
-         {{ form.password1.label_tag }}
+        {{ form.username.label_tag }}
         <div class="beta-signup-left-form">
-            {{ form.password1 }}
+          {{ form.username }}
         </div>
-   </div>
+        {{ form.username.errors }}
+      </div>
 
-    <div class="beta-signup-right pull-right beta-signup-right">
-        {{ form.password2.errors }}
+
+      <div class="beta-signup-left" style="float:left;">
+
+        {{ form.password1.label_tag }}
+        <div class="beta-signup-left-form">
+          {{ form.password1 }}
+        </div>
+        {{ form.password1.errors }}
+      </div>
+
+      <div class="beta-signup-right pull-right beta-signup-right">
+
         {{ form.password2.label_tag }}
         <div class="beta-signup-left-form">
-            {{ form.password2 }}
+          {{ form.password2 }}
         </div>
-   </div>
-    
-    <p style="clear: left;" />
-    <center>
-  			{{ form.invite_code.errors }}
-            {{ form.invite_code.label_tag }} <br>
-            <div class="beta-signup-invite-form">
-                {{ form.invite_code }}
-            </div>
-    </center> 			
-   <p style="clear: left;" />
-	<center>
-    <button type="submit" class="btn-large btn-info">Skapa konto</button>
-    </center>
+        {{ form.password2.errors }}
+      </div>
 
-	</form>
-	
-</div>
+      <p style="clear: left;" />
+      <center>
+       
+        {{ form.invite_code.label_tag }} <br>
+        <div class="beta-signup-invite-form">
+          {{ form.invite_code }}
+        </div>
+	 {{ form.invite_code.errors }}
+      </center>
+      <p style="clear: left;" />
+      <center>
+        <button type="submit" class="btn-large btn-info">Skapa konto</button>
+      </center>
+
+  </form>
+
+  </div>
 
 
-<br><br>
+  <br><br>
 
 
-  
-{% endblock %}
+
+  {% endblock %}

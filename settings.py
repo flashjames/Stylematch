@@ -275,10 +275,9 @@ else:
 MAX_IMAGE_SIZE = 20 * 1024 * 1024
 FULL_PATH_USER_IMGS = os.path.join(STATIC_URL, PATH_USER_IMGS)
 
-# use gmail as smtp server, useful during development
-if DEBUG:
-    EMAIL_USE_TLS = True
-    EMAIL_HOST = 'smtp.gmail.com'
-    EMAIL_HOST_USER = 'lookatyourright@gmail.com'
-    EMAIL_HOST_PASSWORD = 'testtest12'
-    EMAIL_PORT = 587
+# use gmail as smtp server, should use own smtp server for this later?
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'hello@stylematch.se'
+EMAIL_HOST_PASSWORD = 'kj234kjklJKLj324lk1jKlkj231'
+EMAIL_PORT = 587

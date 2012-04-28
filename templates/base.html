@@ -24,7 +24,7 @@
 
 
         <div class="span4 offset8 top-right-menu pull-right">
-           <a class="pull-right" href="/logout/">Logga ut</a>
+           <a class="pull-right" href="{% url 'logout' %}">Logga ut</a>
            <a class="pull-right top-menu-border" href="#">Kontoinställningar</a>
            <a class="pull-right top-menu-border" href="{% url 'profile_display_redirect' %}">Hej {{ user.get_profile.profile_first_name }}</a>
          
@@ -32,7 +32,7 @@
         </div>
         {% else %}
         <div class="span3 offset9 top-right-menu pull-right">
-          <a  class="pull-right" href="/login/">Logga in</a>
+          <a  class="pull-right" href="{% url 'login' %}">Logga in</a>
           <a class="pull-right top-menu-border" href="{% url 'registration_register' %}">Bli medlem som frisör</a>
           
         </div>
@@ -43,7 +43,7 @@
 
       <div class="row masthead">
         <div class="span4">
-          <a href="/startsida/"><img src="{{STATIC_URL}}img/logo.png"/></a>
+          <a href="{% url 'index_page' %}"><img src="{{STATIC_URL}}img/logo.png"/></a>
         </div>
         {% if user.is_authenticated %}
 
@@ -60,7 +60,7 @@
         <div class="span7 main-menu">
           <a href="#">Hitta frisör</a>
           <a href="#">Bli inspirerad</a>
-          <a href="/about-us/">Om Stylematch</a>
+          <a href="{% url 'about_page' %}">Om Stylematch</a>
         </div>
 
         {% endif %}

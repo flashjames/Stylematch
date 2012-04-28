@@ -19,36 +19,26 @@ admin.autodiscover()
 
 urlpatterns = patterns(
     '',
-    # Examples:
-    # url(r'^$', 'styleseat.views.home', name='home'),
-    # url(r'^styleseat/', include('styleseat.foo.urls')),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls'))
-    # Login / logout.
-    (r'^login/$', 'django.contrib.auth.views.login'),
-    (r'^logout/$', 'index.views.logout_page'),
+    (r'^login/$', 'django.contrib.auth.views.login',{},'login'),
+    (r'^logout/$', 'index.views.logout_page',{},'logout'),
     url(r'', include('social_auth.urls')),
                      
-    # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    #url(r'^$', 'direct_to_template', {'template': 'index.html'}, name='index'),
-    #url(r'^profile_index$', 'index.views.profile_index'),
     (r'^startsida', IndexPageView.as_view(),{}, 'index_page'),
     
-    url(r'accounts/register/signup-step1', SignupStep1PageView.as_view(), {}, 'signup_step1'),
-    url(r'accounts/register/complete', redirect_to, {'url': '/accounts/register/signup-step1'}, 'redirect_to_signup_step1'),
+    url(r'accounts/signup-step1', SignupStep1PageView.as_view(), {}, 'signup_step1'),
+    url(r'accounts/register/complete', redirect_to, {'url': '/accounts/signup-step1'}, 'redirect_to_signup_step1'),
+    (r'^accounts/signup-step1', SignupStep1PageView.as_view(),{}, 'signupstep1_page'),
+    (r'^accounts/signup-step2', SignupStep2PageView.as_view(),{}, 'signupstep2_page'),
 
     url(r'^accounts/register/$', register, {'backend': 'registration.backends.default.DefaultBackend','form_class': UserRegistrationForm}, name='registration_register'),
-	(r'^accounts/', include(registrationURLs)), # django-registration
-
+    (r'^accounts/', include(registrationURLs)), # django-registration
 
     url(r'^', include('accounts.urls')), # accounts
     (r'^about-us', AboutPageView.as_view(),{}, 'about_page'),
     (r'^$', BetaPageView.as_view(),{}, 'beta_page'),
     (r'^features', FeaturesPageView.as_view(),{}, 'features_page'),
-    (r'^signup-step1', SignupStep1PageView.as_view(),{}, 'signupstep1_page'),
-    (r'^signup-step2', SignupStep2PageView.as_view(),{}, 'signupstep2_page'),
+   
     (r'^google66ca7050dfade3e4.html', TemplateView.as_view(template_name="google66ca7050dfade3e4.html")), #tracking-code so google apps know we own the domain.
     
     

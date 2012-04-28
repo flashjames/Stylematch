@@ -260,6 +260,9 @@ class UserProfileForm(ModelForm):
         self.request = request
         super(UserProfileForm, self).__init__(*args, **kwargs)
 
+    def is_path_used(self, profile_url):
+        return False
+
     def is_unique_url_name(self, profile_url):
         # should be ok to not have any profile_url set
         if not profile_url:
@@ -278,7 +281,7 @@ class UserProfileForm(ModelForm):
     # check if the url is unique ie. it's not in use
     def clean_profile_url(self):
         data = self.cleaned_data['profile_url']
-        if not self.is_unique_url_name(data):
+        if not self.is_unique_url_name(data) and self.is_path_used(data):
             raise ValidationError("Den här sökvägen är redan tagen")
         return data
 

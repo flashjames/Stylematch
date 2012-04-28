@@ -15,8 +15,8 @@
 <form  action="" method="post">{% csrf_token %}
   
     <div class="span8" >
+	  {% include "profiles/form_snippet.html" with field=form.profile_first_name %}
       {% include "profiles/form_snippet.html" with field=form.profile_last_name %}
-      {% include "profiles/form_snippet.html" with field=form.profile_first_name %}
       {% include "profiles/form_snippet.html" with field=form.profile_text %}
       
      <br>

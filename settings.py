@@ -15,6 +15,8 @@ INTERNAL_IPS = iptools.IpRangeList(
     ('10.0.0.1', '10.0.0.19'),  # arbitrary range
 )
 
+# Absolute path to project directory.
+# If you rename/remove this you will break things
 PROJECT_DIR = os.path.dirname(__file__)
 
 ADMINS = (

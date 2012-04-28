@@ -6,17 +6,18 @@ from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin
 from django.forms import ModelForm, ValidationError, Textarea
 from django.conf import settings
-import uuid, os
+import uuid, os, imp, re
 
 from django.contrib.auth.models import User
 
 from accounts.models import weekdays_model
+
 # TODO: import those that are used?
 from tools import *
 
 
 from registration.forms import RegistrationForm
-from registration.views import register
+
 from django.contrib.auth import login
 from registration.signals import user_registered
 
@@ -42,17 +43,17 @@ def user_created(sender, user, request, **kwargs):
     # This probably makes them more keen on proceeding the signup form.
     user.backend='django.contrib.auth.backends.ModelBackend'
     login(request, user)
-    
+
 user_registered.connect(user_created)
 
-class UserRegistrationForm(RegistrationForm):    
+class UserRegistrationForm(RegistrationForm):
     email = forms.CharField(required = False)
-    first_name = forms.CharField(label = "Förnamn")   
-    last_name = forms.CharField(label = "Efternamn")       
+    first_name = forms.CharField(label = "Förnamn")
+    last_name = forms.CharField(label = "Efternamn")
     invite_code = forms.CharField(label = "Inbjudningskod ('a' är giltig)")
 
     username = forms.EmailField(max_length=64, label = "Emailadress")
-    
+
     def __init__(self, *args, **kwargs):
         super(UserRegistrationForm, self).__init__(*args, **kwargs)
         #self.fields['username'].label = "Användarnamn"
@@ -83,16 +84,16 @@ class UserRegistrationForm(RegistrationForm):
 
 
     def clean_invite_code(self):
-        str = self.cleaned_data['invite_code']        
+        str = self.cleaned_data['invite_code']
 
         # TODO: Validate invite code through programming
         code_valid = (str == 'a')
-        code = self.cleaned_data['invite_code']        
+        code = self.cleaned_data['invite_code']
         if code_valid == False:
             raise forms.ValidationError(u'Din inbjudningskod (\'%s\') var felaktig. Vänligen kontrollera att du skrev rätt.' % code)
- 
+
     class Meta:
-        exclude = ('email',) 
+        exclude = ('email',)
 
 class DisplayProfileView(DetailView):
     """
@@ -107,13 +108,13 @@ class DisplayProfileView(DetailView):
 
     def get_image_url(self, obj):
         return obj.get_image_url()
-    
+
     def get_images(self, queryset):
         # send back urls to the images, instead of Picture objects
         images_lst = []
         for index, image in enumerate(queryset):
             images_lst.append(self.get_image_url(image))
-            
+
         return images_lst
 
     def get_gallery_images(self, user, limit=0):
@@ -123,12 +124,12 @@ class DisplayProfileView(DetailView):
             image_type='G').filter(display_on_profile=True)
 
         return self.get_images(queryset)
-        
+
     def get_profile_image(self, user):
         # 'C' = current profile image
         queryset = Picture.objects.filter(user__exact=user).filter(
             image_type='C')
-        
+
         return self.get_images(queryset)
 
 
@@ -143,7 +144,7 @@ class DisplayProfileView(DetailView):
             time = -1
 
         return time
-            
+
 
     def weekday_factory(self, obj, day = 'mon', pretty_dayname = 'Måndag'):
 
@@ -172,7 +173,7 @@ class DisplayProfileView(DetailView):
 
         obj = OpenHours.objects.get(user__exact=profile_user_id)
 
-        weekday_list =  ['Måndag',  'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 
+        weekday_list =  ['Måndag',  'Tisdag', 'Onsdag', 'Torsdag', 'Fredag',
                         'Lördag', 'Söndag']
 
         openinghours_list =  []
@@ -180,7 +181,7 @@ class DisplayProfileView(DetailView):
 
             # Important:  weekdays_model[index] must be exactly same as in OpenHours model.
             # Should not be a problem now but this could be a future source of bugs.
-    
+
             day_dict = self.weekday_factory(obj, weekdays_model[index], day)
             openinghours_list.append(day_dict)
 
@@ -191,7 +192,7 @@ class DisplayProfileView(DetailView):
         profile_picture = ''
         try:
             profile_picture  = self.get_profile_image(profile_user_id)[0]
-        except:         
+        except:
             profile_picture = os.path.join(settings.STATIC_URL, 'img/default_image_profile.jpg')
 
         return profile_picture
@@ -214,7 +215,7 @@ class DisplayProfileView(DetailView):
             i.length = format_minutes_to_pretty_format(i.length)
 
 
-        # opening hours the displayed userprofile have        
+        # opening hours the displayed userprofile have
         context['weekdays'] = self.get_openinghours(profile_user_id)
         context['profile_image'] = self.get_profile_image_url(profile_user_id)
 
@@ -260,10 +261,26 @@ class UserProfileForm(ModelForm):
         self.request = request
         super(UserProfileForm, self).__init__(*args, **kwargs)
 
-    def is_path_used(self, profile_url):
+    def is_systempath(self, profile_url):
+        """
+        Is the url used by the system, ie. defined in urls.py.
+        It only matters under the root, since it's there the profiles will be.
+        """
+        # import python file with absolute path
+        urls = imp.load_source('module.name', settings.PROJECT_DIR + "/urls.py")
+        for urlpattern in urls.urlpatterns:
+            # first part of the urlpattern as it will look to the user
+            # ex. '^admin/asd$' -> 'admin'
+            pattern = re.sub(r'[\^$]','',urlpattern.regex.pattern.split('/')[0])
+            if pattern and pattern == profile_url:
+                return True
+
         return False
 
     def is_unique_url_name(self, profile_url):
+        """
+        Is url used by another user?
+        """
         # should be ok to not have any profile_url set
         if not profile_url:
             return True
@@ -278,10 +295,14 @@ class UserProfileForm(ModelForm):
 
         return True
 
-    # check if the url is unique ie. it's not in use
     def clean_profile_url(self):
+        """
+        Check if the url is unique ie. it's not in use
+        """
         data = self.cleaned_data['profile_url']
-        if not self.is_unique_url_name(data) and self.is_path_used(data):
+
+        # is profile url ok?
+        if not self.is_unique_url_name(data) or self.is_systempath(data):
             raise ValidationError("Den här sökvägen är redan tagen")
         return data
 
@@ -324,8 +345,8 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         f.save()
         form.save_m2m()
         return super(EditProfileView, self).form_valid(form)
-        
- 
+
+
 
 class ServiceForm(ModelForm):
     class Meta:
@@ -415,7 +436,7 @@ class PictureForm(forms.ModelForm):
     class Meta:
         model = Picture
         fields = ('file',)
-       
+
 class PicturesView(LoginRequiredMixin, CreateView):
     """
     Display edit pictures page
@@ -434,7 +455,7 @@ class PicturesView(LoginRequiredMixin, CreateView):
         # when this class is defined
         self.success_url=reverse('profiles_edit_images')
 
-      
+
     def get_form(self, form_class):
         form = super(PicturesView, self).get_form(form_class)
         form.instance.user = self.request.user
@@ -442,7 +463,7 @@ class PicturesView(LoginRequiredMixin, CreateView):
 
     # Called when we're sure all fields in the form are valid
     def form_valid(self, form):
-        
+
         f = self.request.FILES.get('file')
 
         filename=get_unique_filename(f.name)
@@ -451,7 +472,7 @@ class PicturesView(LoginRequiredMixin, CreateView):
         self.object = form.save(commit=False)
         self.object.user = self.request.user
         self.object.filename = filename
-        
+
         # default image type, Gallery
         self.object.image_type = 'G'
         self.object.save()

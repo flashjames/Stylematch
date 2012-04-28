@@ -6,8 +6,6 @@ from index.views import AboutPageView, IndexPageView, BetaPageView, FeaturesPage
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 
-
-
 from django.views.generic.simple import redirect_to
 
 from registration.views import register
@@ -34,13 +32,13 @@ urlpatterns = patterns(
     url(r'^accounts/register/$', register, {'backend': 'registration.backends.default.DefaultBackend','form_class': UserRegistrationForm}, name='registration_register'),
     (r'^accounts/', include(registrationURLs)), # django-registration
 
-    url(r'^', include('accounts.urls')), # accounts
+   
     (r'^about-us', AboutPageView.as_view(),{}, 'about_page'),
     (r'^$', BetaPageView.as_view(),{}, 'beta_page'),
     (r'^features', FeaturesPageView.as_view(),{}, 'features_page'),
    
     (r'^google66ca7050dfade3e4.html', TemplateView.as_view(template_name="google66ca7050dfade3e4.html")), #tracking-code so google apps know we own the domain.
-    
+     url(r'^', include('accounts.urls')), # accounts, should always be at the end. since a user may set a profile url that match another url.
     
 )
 

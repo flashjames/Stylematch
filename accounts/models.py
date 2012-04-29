@@ -27,12 +27,10 @@ def create_user_profile(sender, instance, created, **kwargs):
                                    temporary_profile_url= uuid.uuid4().hex,
                                    profile_first_name = 'Förnamn',
                                    profile_last_name = 'Efternamn',
-                                   personal_phone_number = "",
                                    display_on_first_page = True,
                                    salon_name = 'Namn på salongen',
                                    salon_city = 'Stad',
                                    salon_adress = 'Adress till salongen',
-                                   salon_phone_number = '',
                                    profile_text = 'Det här är en beskrivande text av vad salongen är och står för, samt annan intressant information',
                                    number_on_profile = True,
                                    )
@@ -82,23 +80,24 @@ class UserProfile(models.Model):
         )
     number_on_profile = models.BooleanField("Vilket telefonnummer ska visas på profilen?",max_length=1, choices=DISPLAY_NUMBER_CHOICES)
     
-    personal_phone_number = models.CharField("Personligt Telefonnummer", max_length=30, blank=True)
+    personal_phone_number = models.IntegerField("Personligt Telefonnummer", max_length=20, blank=True,null=True)
   
     # salong
-    salon_phone_number = models.CharField("Salongens Telefonnummer", max_length=30, blank=True)
+    salon_phone_number = models.IntegerField("Salongens Telefonnummer", max_length=20, blank=True,null=True)
     salon_name = models.CharField("Salongens Namn", max_length=30, blank=True)
     salon_city = models.CharField("Stad", max_length=30, blank=True)
     salon_url = models.URLField("Salongens Hemsida", blank=True)
     salon_adress = models.CharField("Salongens Adress",max_length=30, blank=True)
     
-    
-    # TODO: add validation https://docs.djangoproject.com/en/dev/ref/contrib/localflavor/#sweden-se
     zip_adress = models.IntegerField("Postnummer", max_length=6, blank=True, null=True)
 
 
     url_online_booking = models.URLField("Adress till online bokningssystem", blank=True)
     show_booking_url = models.BooleanField("Min salong har online-bokning", blank=True)
     
+    def __unicode__(self):
+        return u'%s %s' % (self.profile_first_name, self.profile_last_name)
+
 class Service(models.Model):
     buffer = generate_list_of_quarters(15, 420+15, format_minutes_to_pretty_format)
     TIME_CHOICES = tuple(buffer)
@@ -194,7 +193,7 @@ class Picture(models.Model):
         return get_image_url(self.filename)
 
     def __unicode__(self):
-        return self.file.name
+        return self.filename
 
     file = models.ImageField(upload_to=get_image_path, blank = True)
     filename = models.CharField(max_length=50, blank=True)
@@ -211,7 +210,6 @@ class Picture(models.Model):
     image_type = models.CharField(max_length=1, choices=IMAGE_TYPE_CHOICES,editable=False)
     order = models.PositiveIntegerField(blank=True, editable=True, null=True)
     
-
     # unused if it's a profile image
     display_on_profile = models.BooleanField("Visa på profil", blank=True)
 

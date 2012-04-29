@@ -20,6 +20,7 @@ urlpatterns = patterns(
     (r'^login/$', 'django.contrib.auth.views.login',{},'login'),
     (r'^logout/$', 'index.views.logout_page',{},'logout'),
     url(r'', include('social_auth.urls')),
+    (r'', include('registration.auth_urls')),
                      
     url(r'^admin/', include(admin.site.urls)),
     (r'^startsida', IndexPageView.as_view(),{}, 'index_page'),

@@ -23,3 +23,4 @@ wsgiref==0.1.2
 gunicorn==0.14.2
 django-storages==1.1.4
 boto==2.3.0
+raven==1.7.5

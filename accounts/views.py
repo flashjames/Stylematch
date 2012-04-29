@@ -27,22 +27,16 @@ from django import forms
 
 # TODO: We should discuss a better structure for signals....
 # Store in another file?
-def user_created(sender, user, request, **kwargs):
-
-    # For future reasons we store the form data here
-    # could do something fun with it.
-    form = UserRegistrationForm(request.POST)
-
-    # Force successfully created users to be activated since authorization
-    # script requires this.
-    userObject = User.objects.get(username = user)
-    userObject.is_active = True
-    userObject.save()
-
+def user_created(sender, user, request, **kwargs): 
     # Automatically login a user who was just created
     # This probably makes them more keen on proceeding the signup form.
     user.backend='django.contrib.auth.backends.ModelBackend'
     login(request, user)
+
+    # set is_active = True, must be set and saved to DB after login function is called.
+    userObject = User.objects.get(username = user)
+    userObject.is_active = True
+    userObject.save()
 
 user_registered.connect(user_created)
 

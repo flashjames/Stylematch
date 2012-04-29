@@ -45,6 +45,15 @@ I.e. download it from github and auto install.
 ###Commonware
 ###Django Extensions
 
+###Django default site
+https://github.com/oppianmatt/django-defaultsite
+Adds:
+SITE_DOMAIN: The domain to use to replace 'example.com'. Defaults to your machine's hostname.
+SITE_NAME: The sites name. Defaults to 'defaultsite'.
+
+To settings.py
+
+
 ## Dependencies on production server
 ###node.js
 http://blog.marcqualie.com/2011/11/installing-nodejs-on-ubuntu-1110.html

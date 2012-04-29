@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load url from future %}
+
+{% block title %}Stylematch{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="span12">
+    <h2>Byt lösenord och mailadress</h2>
+    <a href="{% url 'auth_password_change' %}">Byt lösenord</a>
+  </div>
+</div>
+
+
+{% endblock %}

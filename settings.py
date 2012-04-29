@@ -61,6 +61,8 @@ TIME_ZONE = 'Europe/Stockholm'
 LANGUAGE_CODE = 'sv'
 
 SITE_ID = 1
+SITE_DOMAIN = 'stylematch.se'
+SITE_NAME = 'Stylematch'
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
@@ -99,7 +101,7 @@ STATIC_ROOT = os.path.join(PROJECT_DIR,"static/")
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
-ADMIN_MEDIA_PREFIX = '/static/admin/'
+ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -163,6 +165,7 @@ INSTALLED_APPS = (
     'index',
     'accounts',
     'storages',
+    'defaultsite',
 )
 
 ### S3 storage - production

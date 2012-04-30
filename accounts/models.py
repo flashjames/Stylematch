@@ -68,7 +68,6 @@ class UserProfile(models.Model):
     # max_length? less?
     profile_text = models.CharField("Om mig", max_length=500, blank=True)
 
-    # TODO: add check if unique
     profile_url = models.CharField("Min Stylematch hemsida*", max_length=15, blank=True, validators=[MaxLengthValidator(15)])
     # used to reach profile if no profile_url set
     temporary_profile_url = models.CharField(editable=False, unique=True, max_length=36)

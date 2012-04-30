@@ -1,13 +1,16 @@
 #-*- coding:utf-8 -*-
 from django.views.generic import TemplateView, UpdateView, DetailView, RedirectView, CreateView
 from accounts.models import Service, UserProfile, OpenHours, Picture
-#from fileupload.models import Picture
+
 from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin
 from django.forms import ModelForm, ValidationError, Textarea
 from django.conf import settings
 import uuid, os, imp, re
 
+
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404
 from django.contrib.auth.models import User
 
 from accounts.models import weekdays_model
@@ -27,7 +30,7 @@ from django import forms
 
 # TODO: We should discuss a better structure for signals....
 # Store in another file?
-def user_created(sender, user, request, **kwargs): 
+def user_created(sender, user, request, **kwargs):
     # Automatically login a user who was just created
     # This probably makes them more keen on proceeding the signup form.
     user.backend='django.contrib.auth.backends.ModelBackend'
@@ -216,13 +219,40 @@ class DisplayProfileView(DetailView):
 
         return context
 
-class CurrentUserProfileView(DisplayProfileView):
-    slug_field = "temporary_profile_url__exact"
+    def get_object(self, queryset=None):
+        queryset = self.get_queryset()
+
+        # try find the profile with profile_url, which is a name
+        slug = self.kwargs.get('slug', None)
+        if slug is not None:
+            slug_field = self.get_slug_field()
+            queryset = queryset.filter(**{slug_field: slug})
+
+            # try find the profile, with a temporary profile url
+            try:
+                obj = queryset.get()
+            except ObjectDoesNotExist:
+                queryset = self.get_queryset()
+                slug_field = "temporary_profile_url__exact"
+                queryset = queryset.filter(**{slug_field: slug})
+
+        # If none of those are defined, it's an error.
+        else:
+            raise AttributeError(u"Generic detail view %s must be called with "
+                                 u"either an object pk or a slug."
+                                 % self.__class__.__name__)
+
+        try:
+            obj = queryset.get()
+        except ObjectDoesNotExist:
+            raise Http404(_(u"No %(verbose_name)s found matching the query") %
+                          {'verbose_name': queryset.model._meta.verbose_name})
+        return obj
 
 class RedirectToProfileView(RedirectView):
     """
-    Redirect to the profile with the profile_url or if it's not set,
-    with temporary_profile_url
+    Redirects to the logged in user's profile with the profile_url
+    or if it's not set, with temporary_profile_url.
     """
 
     # if this is set to True, browsers will cache the redirect for ever
@@ -235,7 +265,7 @@ class RedirectToProfileView(RedirectView):
         # if user havent set a profile_url, use the temporary_profile_url which is a uuid string
         if not profile_url:
             temporary_profile_url = self.get_user_temporary_profile_url()
-            return reverse('profile_display_without_profile_url', kwargs={'slug': temporary_profile_url})
+            return reverse('profile_display_with_profile_url', kwargs={'slug': temporary_profile_url})
 
         return reverse('profile_display_with_profile_url', kwargs={'slug': profile_url})
 

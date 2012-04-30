@@ -10,11 +10,20 @@ from accounts.views import UserRegistrationForm
 
 admin.autodiscover()
 
+"""
+WHEN ADDING NEW URLS
+
+Django have a setting called APPEND_SLASH, if Django doesnt find for example /index
+it will redirect to /index/ and try that instead (if APPEND_SLASH=True which it is by default).
+-> Always set urls without slash at the end, since there's no REMOVE_SLASH.
+"""
+
+
 urlpatterns = patterns(
     '',
-    (r'^logout/$', 'index.views.logout_page',{},'logout'), # redirects to main-page
+    (r'^logout$', 'index.views.logout_page',{},'logout'), # redirects to main-page
     url(r'', include('social_auth.urls')), # urls to connect with social media accountsm for example facebook
-     url(r'^accounts/register/$', register, {'backend': 'registration.backends.default.DefaultBackend','form_class': UserRegistrationForm}, name='registration_register'),
+     url(r'^accounts/register$', register, {'backend': 'registration.backends.default.DefaultBackend','form_class': UserRegistrationForm}, name='registration_register'),
     url(r'accounts/register/complete', redirect_to, {'url': '/accounts/signup-step1'}, 'registration_complete'),
     (r'', include('registration.auth_urls')), # login/logout/password-management urls             
     url(r'^admin/', include(admin.site.urls)),

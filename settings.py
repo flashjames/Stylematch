@@ -26,26 +26,28 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-if True: #DEBUG:
+if DEBUG:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3', 
+            'ENGINE': 'django.db.backends.sqlite3',
             'NAME': PROJECT_DIR + '/database/test.db',
             }
         }
-"""
-if not DEBUG:
+else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-	    'NAME': 'avizeradjango',
-            'USER': 'prox',
+            'NAME': 'django_stylematch',
+            'USER': 'djangostylematch',
             'PASSWORD': 'KALSl23lKL31skk1',
-            'HOST': 'django-avizera.cotgems7cuep.eu-west-1.rds.amazonaws.com',  
-            'PORT': '3306',  
+            'HOST': 'localhost',
+            'PORT': '3306',
+            'OPTIONS': {
+                'init_command': 'SET storage_engine=INNODB',
+                },
             }
         }
-"""
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -95,7 +97,7 @@ if DEBUG:
     STATIC_URL = '/static/'
 else:
     STATIC_URL = 'http://stylematch.s3-website-eu-west-1.amazonaws.com/'
-    
+
 STATIC_ROOT = os.path.join(PROJECT_DIR,"static/")
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
@@ -306,7 +308,7 @@ if DEBUG:
     UPLOAD_PATH_USER_IMGS = "media/" + PATH_USER_IMGS
 else:
     UPLOAD_PATH_USER_IMGS = PATH_USER_IMGS
-        
+
 MAX_IMAGE_SIZE = 20 * 1024 * 1024
 FULL_PATH_USER_IMGS = os.path.join(STATIC_URL, PATH_USER_IMGS)
 

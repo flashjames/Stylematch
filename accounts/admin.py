@@ -1,4 +1,4 @@
-from accounts.models import UserProfile, Picture
+from accounts.models import UserProfile, Picture,InviteCode
 from django.contrib import admin
 
 
@@ -7,3 +7,4 @@ class UserProfileAdmin(admin.ModelAdmin):
     
 admin.site.register(UserProfile,UserProfileAdmin)
 admin.site.register(Picture)
+admin.site.register(InviteCode)

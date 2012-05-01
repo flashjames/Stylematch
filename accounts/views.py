@@ -1,6 +1,6 @@
 #-*- coding:utf-8 -*-
 from django.views.generic import TemplateView, UpdateView, DetailView, RedirectView, CreateView
-from accounts.models import Service, UserProfile, OpenHours, Picture
+from accounts.models import Service, UserProfile, OpenHours, Picture, InviteCode
 
 from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin
@@ -8,9 +8,9 @@ from django.forms import ModelForm, ValidationError, Textarea
 from django.conf import settings
 import uuid, os, imp, re
 
-
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
+from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
 
 from accounts.models import weekdays_model
@@ -24,9 +24,7 @@ from registration.forms import RegistrationForm
 from django.contrib.auth import login
 from registration.signals import user_registered
 
-
 from django import forms
-
 
 # TODO: We should discuss a better structure for signals....
 # Store in another file?
@@ -47,30 +45,15 @@ class UserRegistrationForm(RegistrationForm):
     email = forms.CharField(required = False)
     first_name = forms.CharField(label = "Förnamn")
     last_name = forms.CharField(label = "Efternamn")
-    invite_code = forms.CharField(label = "Inbjudningskod ('a' är giltig)")
+    invite_code = forms.CharField(label = "Inbjudningskod (just nu behövs en inbjudan för att gå med)")
 
     username = forms.EmailField(max_length=64, label = "Emailadress")
 
-    def __init__(self, *args, **kwargs):
-        super(UserRegistrationForm, self).__init__(*args, **kwargs)
-        #self.fields['username'].label = "Användarnamn"
-        #self.fields['email'].label = "Emailadress"
-        self.fields['password1'].label = "Lösenord"
-        self.fields['password2'].label = "Upprepa lösenord"
-
-        required_str = "Detta fält krävs för registeringen."
-
-        self.fields['username'].error_messages['invalid'] = "Skriv in en giltig e-mailadress."
-        # Since __init__ is called after the creation of invite_code and other
-        # extra fields, we can execute this loop and add our own error message
-        # for required fields.
-        for field in self.fields:
-            self.fields[field].error_messages['required'] =  required_str
-
-
     def clean_email(self):
-        # Since its actually not the email field but the username presented on form
-        # we use username as email too.
+        """
+        Since its actually not the email field but the username
+        presented on form we use username as email too.
+        """
         email = ""
         try:
             email = self.cleaned_data['username']
@@ -79,15 +62,27 @@ class UserRegistrationForm(RegistrationForm):
 
         return email
 
-
     def clean_invite_code(self):
-        str = self.cleaned_data['invite_code']
+        """
+        Validates that the user have supplied a valid invite code.
+        And marks the code as used, if the other fields are correctly filled.
+        """
+        supplied_invite_code = self.cleaned_data['invite_code']
+        queryset = InviteCode.objects.filter(invite_code__iexact=supplied_invite_code).filter(used=False)
 
-        # TODO: Validate invite code through programming
-        code_valid = (str == 'a')
-        code = self.cleaned_data['invite_code']
-        if code_valid == False:
-            raise forms.ValidationError(u'Din inbjudningskod (\'%s\') var felaktig. Vänligen kontrollera att du skrev rätt.' % code)
+        # check that the invite_code exists
+        invite_code = queryset[:1]
+        if not invite_code:
+            raise forms.ValidationError(u'Din inbjudningskod (\'%s\') var felaktig. Vänligen kontrollera att du skrev rätt.' % supplied_invite_code)
+
+        # only set the invite code to used=True if all other fields have
+        # validated correctly
+        if self.is_valid():
+            invite_code = invite_code[0]
+            invite_code.used=True
+            invite_code.save()
+        
+        return supplied_invite_code
 
     class Meta:
         exclude = ('email',)
@@ -107,7 +102,9 @@ class DisplayProfileView(DetailView):
         return obj.get_image_url()
 
     def get_images(self, queryset):
-        # send back urls to the images, instead of Picture objects
+        """
+        Send back urls to the images, instead of Picture objects
+        """
         images_lst = []
         for index, image in enumerate(queryset):
             images_lst.append(self.get_image_url(image))
@@ -115,8 +112,10 @@ class DisplayProfileView(DetailView):
         return images_lst
 
     def get_gallery_images(self, user, limit=0):
-        # TODO: should have limit on number of imgs to display
-        # 'G' = gallery images
+        """
+        TODO: should have limit on number of imgs to display
+        'G' = gallery images
+        """
         queryset = Picture.objects.filter(user__exact=user).filter(
             image_type='G').filter(display_on_profile=True)
 
@@ -144,7 +143,6 @@ class DisplayProfileView(DetailView):
 
 
     def weekday_factory(self, obj, day = 'mon', pretty_dayname = 'Måndag'):
-
         """
         Helper function to create a dict with relevant day information.
         Extracts values from obj with attribute prefix DAY

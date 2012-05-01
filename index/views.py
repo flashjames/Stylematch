@@ -3,8 +3,9 @@
 # from django.shortcuts import render_to_response
 from django.contrib import auth
 from django.http import HttpResponseRedirect
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, CreateView
 from accounts.models import UserProfile
+from index.models import BetaEmail
 
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
@@ -15,11 +16,20 @@ class AboutPageView(TemplateView):
     """
     template_name = "about_us.html"
     
-class BetaPageView(TemplateView):
+class BetaPageView(CreateView):
     """
     Display beta page
     """
     template_name = "betapage.html"
+    model = BetaEmail
+
+    def __init__(self, *args, **kwargs):
+        super(BetaPageView, self).__init__(*args, **kwargs)
+
+        # written here in init since it will give reverse url error
+        # if just written in class definition. because urls.py isnt loaded
+        # when this class is defined
+        self.success_url=reverse('beta_page')
 
     def get(self, request):
         #redirect_to("http://www.google.se", )
@@ -56,11 +66,8 @@ class IndexPageView(ListView):
     template_name = "index.html"
     queryset = UserProfile.objects.all()
 
-    def get_context_data(self, **kwargs):
-        
+    def get_context_data(self, **kwargs):   
         context = super(IndexPageView, self).get_context_data(**kwargs)
-
-
         return context
 
 def logout_page(request):

@@ -1,4 +1,4 @@
-{# load google_analytics #}
+{% load index_extras %}
 {% load bootstrap %}
 
 <!DOCTYPE html>
@@ -7,30 +7,31 @@
     <meta charset="utf-8" />
     <script type="text/javascript" src="{{ JQUERY_SCRIPT }}"></script>
     <script type="text/javascript">
-   $('#loginmodal').modal();
+      $('#loginmodal').modal();
     </script>
 
     {% bootstrap_js all %}
     {% bootstrap_less %}
     {# Used to load js that's specific to a page #}
     {% block html-head %}{% endblock %}
-  
-    
+
+
     <title>Stylematch | {% block title %}Hi{% endblock %}</title>
   </head>
-   <body class="body-padding-zero body-beta-background">
-    
-	<div class="container">
-	<div class="beta-header">
-	</div>
-	{% block header %} 
-	{% endblock %}
-	<div class="container">
-      <section id="gridSystem">
-	{% block content %} {% endblock %}
-      </section>
-	{% block footer %} {% endblock %}
-    </div>
-  {# analytics #}
+  <body class="body-padding-zero body-beta-background">
+
+    <div class="container">
+      <div class="beta-header">
+      </div>
+      {% block header %}
+      {% endblock %}
+      <div class="container">
+        <section id="gridSystem">
+          {% block content %} {% endblock %}
+        </section>
+        {% block footer %} {% endblock %}
+      </div>
+
+      {% google_analytics %}
   </body>
 </html>

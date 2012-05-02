@@ -10,7 +10,7 @@ profile_api.register(ServiceResource())
 profile_api.register(PictureResource())
 
 urlpatterns = patterns('',
-    (r'^profile$', RedirectToProfileView.as_view(),{},'profile_display_redirect'), # need to be first, or redirection to profile wont work.
+    (r'^profile/$', RedirectToProfileView.as_view(),{},'profile_display_redirect'), # need to be first, or redirection to profile wont work.
     (r'^profile/edit/$', EditProfileView.as_view(),{},'profile_edit'),
    
  

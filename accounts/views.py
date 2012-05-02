@@ -41,6 +41,51 @@ def user_created(sender, user, request, **kwargs):
 
 user_registered.connect(user_created)
 
+
+
+
+
+class SignupViewForm(ModelForm):
+
+    
+    
+    def __init__(self, *args, **kwargs):
+        
+        super(SignupViewForm, self).__init__(*args, **kwargs)
+        # self.form.fields['zip_adress'].widget.attrs = {'class':'span1'}
+
+
+    class Meta:
+        model = UserProfile
+        fields = ( 'salon_name', 'salon_adress', 'salon_city', 'zip_adress', 'personal_phone_number', 'salon_phone_number', 'number_on_profile')
+
+
+class SignupView(UpdateView):
+
+    template_name = "accounts/signup_step1.html"    
+    form_class = SignupViewForm    
+        
+    def __init__(self, *args, **kwargs):
+        super(SignupView, self).__init__(*args, **kwargs)
+        self.success_url=reverse('profile_display_redirect')
+        
+        
+    def get_object(self, queryset=None):
+        obj = UserProfile.objects.get(user__exact=self.request.user.id)
+        return obj     
+        
+    def form_valid(self, form):
+        f = form.save(commit=False)
+        f.user = self.request.user
+        f.save()
+        form.save_m2m()
+        return super(SignupView, self).form_valid(form)
+     
+
+    def clean(self):    
+        return super(SignupView, self).clean()
+        
+
 class UserRegistrationForm(RegistrationForm):
     email = forms.CharField(required = False)
     first_name = forms.CharField(label = "Förnamn")
@@ -69,12 +114,13 @@ class UserRegistrationForm(RegistrationForm):
         """
         supplied_invite_code = self.cleaned_data['invite_code']
         queryset = InviteCode.objects.filter(invite_code__iexact=supplied_invite_code).filter(used=False)
-
+       
         # check that the invite_code exists
         invite_code = queryset[:1]
         if not invite_code:
             raise forms.ValidationError(u'Din inbjudningskod (\'%s\') var felaktig. Vänligen kontrollera att du skrev rätt.' % supplied_invite_code)
-
+            
+            
         # only set the invite code to used=True if all other fields have
         # validated correctly
         if self.is_valid():

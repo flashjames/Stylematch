@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load index_extras %}
+
+{% block title %}Register plix{% endblock %}
+{% block content %}
+
+<h2>Först, börja med att fylla i information om din salong.</h2>
+
+
+<div class="row" >
+  <div id="edit-profile-large" class="span12" >
+    <br><br>
+
+<!--
+    <div id="edit-profile-forms">
+      <form  action="" method="post">{% csrf_token %}
+        
+        <div class="span8" >
+          {% include "profiles/form_snippet.html" with field=form.profile_first_name %}
+          
+          {% include "profiles/form_snippet.html" with field=form.profile_last_name %}
+          {% include "profiles/form_snippet.html" with field=form.profile_text %}
+
+          <br>
+          <p class="edit-profile-label">{{ form.profile_url.label_tag }}<span id="popover" rel="popover" data-content="" data-original-title="Detta blir din personliga Stylematch-adress. Det är denna du kommer kunna ge till kunder och vänner så att de direkt kan besöka din profil."> &nbsp;<i class="icon-info-sign"></i></span></p>
+          {{ form.profile_url.errors }}
+
+          <p style="float: left; font-size: 17px; margin-top: 5px; padding-right: 3px;"> http://www.stylematch.se/ </p>
+          {{ form.profile_url }}
+
+          <br> <br>
+          {% include "profiles/form_snippet.html" with field=form.salon_name %}
+
+
+          {% include "profiles/form_snippet.html" with field=form.salon_adress %}
+
+          <p style="float:left; margin-right:10px;">
+            {{ form.salon_city.errors }}
+            {{ form.salon_city.label_tag }}
+            {{ form.salon_city }}
+          </p>
+          <p>
+            {{ form.zip_adress.errors }}
+            {{ form.zip_adress.label_tag }}
+            {{ form.zip_adress }}
+          </p>
+
+
+          <p style="float:left; margin-right:10px;">
+            {{ form.personal_phone_number.errors }}
+            {{ form.personal_phone_number.label_tag }}
+            {{ form.personal_phone_number }}
+          </p>
+
+          {% include "profiles/form_snippet.html" with field=form.salon_phone_number %}
+          {% include "profiles/form_snippet.html" with field=form.number_on_profile %}
+
+          {% include "profiles/form_snippet.html" with field=form.salon_url %}
+
+
+          <p style=" margin-right:10px;" class="edit-profile-label">
+            {{ form.show_booking_url.errors }}
+            {{ form.show_booking_url.label_tag }}
+            {{ form.show_booking_url }}
+          </p>
+
+
+
+          <br>
+          <input type="submit" class="btn-large btn-info" value="Spara ändringar" />
+
+
+        </div>-->
+   
+
+<!--
+      <form  action="" method="post">{% csrf_token %}
+<div class="span12 signup-label-div">
+  
+          {% include "accounts/form_snippet.html" with field=form.salon_name %}
+	</div>
+	<br>
+<div class="span12 signup-label-div">
+          {% include "accounts/form_snippet.html" with field=form.salon_adress %}
+	</div>
+	<br>
+<div class="span3 signup-label-div">
+          {% include "accounts/form_snippet.html" with field=form.salon_city %}
+  </div>
+  <br>
+  <div class="span12 signup-label-div">
+          {% include "accounts/form_snippet.html" with field=form.zip_adress %}
+	</div>
+	<br>
+<div class="span3 signup-label-div">
+  <label class="signup-label">Salongens Telefonnummer</label>
+  <input type="text" class="span3">
+  </div>
+  <div class="span8 signup-label-div">
+  <label class="signup-label">Personligt Telefonnummer</label>
+  <input type="text" class="span3">
+	</div>
+<div class="span12 signup-label-div">
+  <label class="signup-label">Vilket telefonnummer ska visas på profilen?</label>
+              <select id="select01">
+                <option>Salongens Telefonnummer</option>
+                <option>Personlig Telefonnummer</option>
+              </select>
+	</div>
+	<br>
+	<br>
+	<br><br><br>
+<div class="span12 signup-label-button">
+	<a href="/signup-step2"><button type="submit" class="btn-large btn-info">Forsätt vidare</button></a>
+</div>
+
+-->
+        <form  action="" method="post" class="form-horizontal">{% csrf_token %}
+            <fieldset>
+                {% for field in form %}
+                    {% include "accounts/form_snippet.html" with field=field %}
+                {% endfor %}
+                
+            <div class="span12 signup-label-button">
+	            <a href="/signup-step2"><button type="submit" class="btn-large btn-info">Forsätt vidare</button></a>
+            </div>
+            
+            </fieldset>
+        </form>
+{% endblock %}

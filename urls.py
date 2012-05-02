@@ -6,7 +6,7 @@ from index.views import AboutPageView, IndexPageView, BetaPageView, FeaturesPage
 from django.contrib import admin
 from django.views.generic.simple import redirect_to
 from registration.views import register
-from accounts.views import UserRegistrationForm
+from accounts.views import UserRegistrationForm, SignupView
 
 admin.autodiscover()
 
@@ -29,10 +29,8 @@ urlpatterns = patterns(
     (r'', include('registration.auth_urls')), # login/logout/password-management urls             
     url(r'^admin/', include(admin.site.urls)),
     (r'^startsida/', IndexPageView.as_view(),{}, 'index_page'),
-    
-    url(r'accounts/signup-step1/', SignupStep1PageView.as_view(), {}, 'signup_step1'),
-    
-    (r'^accounts/signup-step1/', SignupStep1PageView.as_view(),{}, 'signupstep1_page'),
+        
+    (r'^accounts/signup-step1/', SignupView.as_view(),{}, 'signupstep1_page'),
     (r'^accounts/signup-step2/', SignupStep2PageView.as_view(),{}, 'signupstep2_page'),
 
    

@@ -8,69 +8,77 @@
 <div class="container">
   <form method="post" action="">
     {% csrf_token %}
-
+    <fieldset>
     <div class="beta-signup-banner" class="shadow-beta well">
 
       <center><h1 class="beta-banner">G&aring; med nu!</h1></center>
-      <div class="beta-signup-left" style="float: left;">
+      <div class="beta-signup-left control-group" style="float: left; {% if form.first_name.errors %} color: red; {% endif %} ">
 
-        {{ form.first_name.label_tag }}
+        <label class="control-label" style="{% if form.first_name.errors %} color: red; {% endif %} " >{{ form.first_name.label }}</label>        
         <div class="beta-signup-left-form">
           {{ form.first_name }}
         </div>
-        <div>{{ form.first_name.errors }}</div>
+        <div style="{% if form.first_name.errors %} color: red; {% endif %} " class="control-group {% if form.first_name.errors %} error {% endif %}">{{ form.first_name.errors.as_text }}</div>
       </div>
       <div class="beta-signup-right pull-right beta-signup-right">
 
-        {{ form.last_name.label_tag }}
-        <div class="beta-signup-left-form">
+
+        <label class="control-label" style="{% if form.last_name.errors %} color: red; {% endif %} " >{{ form.last_name.label }}</label> 
+        
+        <div class="beta-signup-left-form ">
           {{ form.last_name }}
         </div>
-        {{  form.last_name.errors }}
+        
+        <div style="{% if form.last_name.errors %} color: red; {% endif %} " class="control-group {% if form.last_name.errors %} error {% endif %}">{{ form.last_name.errors.as_text }}</div>
+
       </div>
       <p style="clear: left;" />
       <div class="span3 beta-signup-email">
-
-        {{ form.username.label_tag }}
+      
+        <label class="control-label" style="{% if form.username.errors %} color: red; {% endif %} " >{{ form.username.label }}</label>        
+        
         <div class="beta-signup-left-form">
           {{ form.username }}
         </div>
-        {{ form.username.errors }}
+        
+        <div style="{% if form.username.errors %} color: red; {% endif %} " class="control-group {% if form.username.errors %} error {% endif %}">{{ form.username.errors.as_text }}</div>
       </div>
 
 
       <div class="beta-signup-left" style="float:left;">
 
-        {{ form.password1.label_tag }}
+        <label class="control-label" style="{% if form.password1.errors %} color: red; {% endif %} " >{{ form.password1.label }}</label>        
         <div class="beta-signup-left-form">
           {{ form.password1 }}
         </div>
-        {{ form.password1.errors }}
+        <div style="{% if form.password1.errors %} color: red; {% endif %} " class="control-group {% if form.password1.errors %} error {% endif %}">{{ form.password1.errors.as_text }}</div>
       </div>
 
       <div class="beta-signup-right pull-right beta-signup-right">
-
-        {{ form.password2.label_tag }}
+      
+        <label class="control-label" style="{% if form.password1.errors %} color: red; {% endif %} " >{{ form.password2.label }}</label>        
+       
         <div class="beta-signup-left-form">
           {{ form.password2 }}
         </div>
-        {{ form.password2.errors }}
+        <div style="{% if form.password2.errors %} color: red; {% endif %} " class="control-group {% if form.password2.errors %} error {% endif %}">{{ form.password2.errors.as_text }}</div>
       </div>
 
       <p style="clear: left;" />
       <center>
-
-        {{ form.invite_code.label_tag }} <br>
+ 
+        <label class="control-label" style="{% if form.invite_code.errors %} color: red; {% endif %} " >{{ form.invite_code.label }}</label>        
+       
         <div class="beta-signup-invite-form">
           {{ form.invite_code }}
         </div>
-        {{ form.invite_code.errors }}
+        <div style="{% if form.invite_code.errors %} color: red; {% endif %} " class="control-group {% if form.invite_code.errors %} error {% endif %}">{{ form.invite_code.errors.as_text }}</div>
       </center>
       <p style="clear: left;" />
       <center>
         <button type="submit" class="btn-large btn-info">Skapa konto</button>
       </center>
-
+        </fieldset>
   </form>
 
   </div>

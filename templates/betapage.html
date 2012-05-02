@@ -15,7 +15,13 @@
     
 
     {% bootstrap_js all %}
-    {% bootstrap_less %}
+    {% if DEBUG %}
+    <link charset="utf-8" rel="stylesheet" type="text/less" href="{{ STATIC_URL }}less/bootstrap.less">
+    {% else %}
+    <link charset="utf-8" rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style.css">
+    {% endif %}
+
+
     {# Used to load js that's specific to a page #}
     {% block html-head %}
     

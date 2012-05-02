@@ -1,6 +1,6 @@
 #-*- coding:utf-8 -*-
 from accounts.models import Service
-from fileupload.models import Picture
+from accounts.models import Picture
 from django.forms import ModelForm
 from tastypie.validation import FormValidation
 from tastypie.resources import ModelResource
@@ -91,7 +91,7 @@ class PictureForm(ModelForm):
     class Meta:
         model = Picture
 
-from fileupload.models import get_image_url
+from accounts.models import get_image_url
 
 class PictureResource(ModelResource):
 

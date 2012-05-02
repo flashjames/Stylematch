@@ -3,7 +3,7 @@
 
 {% block title %}Stylematch{% endblock %}
 {% block html-body-styling %}
-  <body class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true" style="background: url(/static/img/header_background.png) repeat-x;">
+  <body class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true" style="background: url({{STATIC_URL}}img/header_background.png) repeat-x;">
     {% endblock %}
   
 {% block content %}
@@ -29,17 +29,17 @@
       <div class="span10 offset1">
 		 <div class="span3 profile-image">
     		<div class="profile-image-border">
-      		<img src="/static/img/bild1.jpg" name="profile-image">
+      		<img src="{{STATIC_URL}}img/bild1.jpg" name="profile-image">
     		</div>
  		 </div>
 		<div class="span3 profile-image">
     		<div class="profile-image-border">
-      		<img src="/static/img/bild2.jpg" name="profile-image">
+      		<img src="{{STATIC_URL}}img/bild2.jpg" name="profile-image">
     		</div>
  		 </div>
  		 <div class="span3 profile-image">
     		<div class="profile-image-border">
-      		<img src="/static/img/bild3.jpg" name="profile-image">
+      		<img src="{{STATIC_URL}}img/bild3.jpg" name="profile-image">
     		</div>
  		 </div>
 		
@@ -51,6 +51,9 @@
   {% endblock %}
 
     {% block second-background %}
+
     {# To keep the larger header on the front-page #}
-    <div class="second-background" style="background: url(/static/img/Flow-Background.jpg) repeat-x;margin-top:210px;">
+
+    <div class="second-background" style="background: url({{ STATIC_URL }}img/Flow-Background.jpg) repeat-x;margin-top:210px;">
+
       {% endblock %}

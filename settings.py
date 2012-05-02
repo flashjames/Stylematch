@@ -24,14 +24,14 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-if DEBUG:
+if True: #DEBUG:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3', 
             'NAME': PROJECT_DIR + '/database/test.db',
             }
         }
-
+"""
 if not DEBUG:
     DATABASES = {
         'default': {
@@ -43,7 +43,7 @@ if not DEBUG:
             'PORT': '3306',  
             }
         }
-
+"""
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -86,7 +86,12 @@ STATIC_DOC_ROOT = os.path.join(PROJECT_DIR, "static/")
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = '/static/'
+
+if DEBUG:
+    STATIC_URL = '/static/'
+else:
+    STATIC_URL = 'http://stylematch.s3-website-eu-west-1.amazonaws.com/'
+    
 STATIC_ROOT = os.path.join(PROJECT_DIR,"static/")
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
@@ -155,7 +160,25 @@ INSTALLED_APPS = (
     'braces',
     'index',
     'accounts',
+    'storages',
 )
+
+### S3 storage - production
+
+if not DEBUG:
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+    STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
+    # credentials should maybe be set as environment variables on production server?
+    # -> more secure.
+
+    AWS_ACCESS_KEY_ID = "AKIAJHCGEY6XAXXOSYXA"
+    AWS_SECRET_ACCESS_KEY = "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"
+    AWS_STORAGE_BUCKET_NAME = "stylematch"
+
+### END S3 storage
+
+
 
 ### social auth
 
@@ -234,16 +257,13 @@ DEBUG_TOOLBAR_CONFIG = {
 # should use some cdn in production
 JQUERY_SCRIPT = STATIC_URL + "js/jquery/jquery-1.7.1.js"
 
-INSTALLED_APPS += (
-    'fileupload',
-    )
-
 GALLERIA_URL = STATIC_URL + "js/galleria/src/"
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'index.context_processors.jquery_script',
     'index.context_processors.galleria_urls',
+    'django.core.context_processors.static', #used to access STATIC_URL in templates
     )
 
 # Paths to user uploaded images, used in fileupload app

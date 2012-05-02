@@ -31,23 +31,6 @@
     {# Used to load js and css that's specific to a page. Should add a block for js at end of this file for javascript #}
     {% block html-head %}{% endblock %}
 
-
-
-	<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-31125034-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-
-
     <title>{% block title %}Hi{% endblock %}</title>
   </head>
   {% block html-body-styling %}

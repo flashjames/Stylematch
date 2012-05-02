@@ -70,6 +70,10 @@ class UserRegistrationForm(RegistrationForm):
         supplied_invite_code = self.cleaned_data['invite_code']
         queryset = InviteCode.objects.filter(invite_code__iexact=supplied_invite_code).filter(used=False)
 
+        # a permanent key which can be used by us
+        if supplied_invite_code == "permanent1":
+            return supplied_invite_code
+        
         # check that the invite_code exists
         invite_code = queryset[:1]
         if not invite_code:
@@ -77,12 +81,30 @@ class UserRegistrationForm(RegistrationForm):
 
         # only set the invite code to used=True if all other fields have
         # validated correctly
+        # TODO: this is run even if the passwords doesnt match in the clean() method. since this function is run before clean()
         if self.is_valid():
             invite_code = invite_code[0]
             invite_code.used=True
             invite_code.save()
         
         return supplied_invite_code
+
+    def clean(self):
+        """
+        Verifiy that the values entered into the two password fields
+        match. Note that an error here will end up in
+        ``non_field_errors()`` because it doesn't apply to a single
+        field.
+        
+        """
+        if 'password1' in self.cleaned_data and 'password2' in self.cleaned_data:
+            if self.cleaned_data['password1'] != self.cleaned_data['password2']:
+                raise forms.ValidationError(_("The two password fields didn't match."))
+
+        MIN_LENGTH = 6
+        if len(self.cleaned_data['password1']) < MIN_LENGTH:
+            raise forms.ValidationError("Lösenordet är för kort, det ska innehålla minst 6 tecken.")
+        return self.cleaned_data
 
     class Meta:
         exclude = ('email',)
@@ -111,6 +133,19 @@ class DisplayProfileView(DetailView):
 
         return images_lst
 
+    def get_profile_image_url(self, profile_user_id):
+        
+        profile_picture = ''
+        try:
+            profile_picture  = self.get_profile_image(profile_user_id)[0]
+        except:
+            if self.is_authenticated:
+                profile_picture = os.path.join(settings.STATIC_URL, 'img/default_image_profile_logged_in.jpg')
+            else:
+                profile_picture = os.path.join(settings.STATIC_URL, 'img/default_image_profile_not_logged_in.jpg')
+
+        return profile_picture
+
     def get_gallery_images(self, user, limit=0):
         """
         TODO: should have limit on number of imgs to display
@@ -119,7 +154,13 @@ class DisplayProfileView(DetailView):
         queryset = Picture.objects.filter(user__exact=user).filter(
             image_type='G').filter(display_on_profile=True)
 
-        return self.get_images(queryset)
+        images = self.get_images(queryset)
+
+        # if no gallery images uploaded, display a default image
+        if not images:
+            images = [os.path.join(settings.STATIC_URL, 'img/default_image_profile_not_logged_in.jpg')]
+
+        return images
 
     def get_profile_image(self, user):
         # 'C' = current profile image
@@ -182,19 +223,9 @@ class DisplayProfileView(DetailView):
 
         return openinghours_list
 
-
-    def get_profile_image_url(self, profile_user_id):
-        profile_picture = ''
-        try:
-            profile_picture  = self.get_profile_image(profile_user_id)[0]
-        except:
-            profile_picture = os.path.join(settings.STATIC_URL, 'img/default_image_profile.jpg')
-
-        return profile_picture
-
     def get_context_data(self, **kwargs):
         context = super(DisplayProfileView, self).get_context_data(**kwargs)
-
+        
         # to display the parts associated to the profile,
         # we filter on the user_id of profile owner
         profile_user_id = context['profile'].user_id
@@ -247,6 +278,11 @@ class DisplayProfileView(DetailView):
                           {'verbose_name': queryset.model._meta.verbose_name})
         return obj
 
+    def get(self, request, **kwargs):
+        # used to check if user is authenticated, in get_profile_image_url()
+        self.is_authenticated = request.user.is_authenticated()
+        return super(DisplayProfileView, self).get(request, **kwargs)
+        
 class RedirectToProfileView(RedirectView):
     """
     Redirects to the logged in user's profile with the profile_url

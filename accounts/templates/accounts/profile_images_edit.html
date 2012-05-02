@@ -25,6 +25,23 @@
 
 {% include "profiles/edit_profile_menu.html" with edit_images="active" %}
 
+<div class="row">
+
+    <p>Stylea det här! Tänk på felmeddelanden.</p>
+    <form method="post" enctype="multipart/form-data" action=" ">
+      {% csrf_token %}
+      {{ form.file.errors }}
+      <input type="file" name="file" id="id_file" >
+      
+      {{ form.non_field_errors }}
+      {{ form.docfile.help_text }}
+      {{ form.docfile.label_tag }}
+      {{ form.docfile.errors }}
+      {{ form.docfile }}
+      <input type="submit" value="Upload"  class="btn btn-primary" />
+    </form>
+  </div>
+
 <div class="row" >
   <div id="edit-profile-large" class="span12" >
 
@@ -74,25 +91,13 @@
 
 
   </div>
-  <div class="row">
 
-    <p>Stylea det här! Tänk på felmeddelanden.</p>
-    <form method="post" enctype="multipart/form-data" action=" ">
-      {% csrf_token %}
-      {{ form.as_p }}
-      {{ form.non_field_errors }}
-      {{ form.docfile.help_text }}
-      {{ form.docfile.label_tag }}
-      {{ form.docfile.errors }}
-      {{ form.docfile }}
-      <input type="submit" value="Upload" />
-    </form>
-  </div>
   <!-- the code that does the magic on the page -->
   <script src="{{ STATIC_URL }}js/picture.js"></script>
 
 </div>
 
+</div>
 </div>
 
 {% endblock %}

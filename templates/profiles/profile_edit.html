@@ -7,82 +7,78 @@
 {% include "profiles/edit_profile_menu.html" with edit_profile="active" %}
 
 <div class="row" >
-<div id="edit-profile-large" class="span12" >
-<br><br>
+  <div id="edit-profile-large" class="span12" >
+    <br><br>
 
 
-<div id="edit-profile-forms">
-<form  action="" method="post">{% csrf_token %}
-  
-    <div class="span8" >
-      {% include "profiles/form_snippet.html" with field=form.profile_name %}
-      {% include "profiles/form_snippet.html" with field=form.profile_text %}
-      
-     <br>
-  <p class="edit-profile-label">{{ form.profile_url.label_tag }}<span id="popover" rel="popover" data-content="" data-original-title="Detta blir din personliga Stylematch-adress. Det är denna du kommer kunna ge till kunder och vänner så att de direkt kan besöka din profil."> &nbsp;<i class="icon-info-sign"></i></span></p>
-     {{ form.profile_url.errors }}
-     
-     <p style="float: left; font-size: 17px; margin-top: 5px; padding-right: 3px;"> http://www.stylematch.se/p/ </p>
-     {{ form.profile_url }}
-      
-      <br> <br>
-      {% include "profiles/form_snippet.html" with field=form.salon_name %}
-     
-    
-        {% include "profiles/form_snippet.html" with field=form.salon_adress %}
-      
-      <p style="float:left; margin-right:10px;">
-  {{ form.salon_city.errors }}
-  {{ form.salon_city.label_tag }}
-  {{ form.salon_city }}
-  </p>
-  <p>
-  {{ form.zip_adress.errors }}
-  {{ form.zip_adress.label_tag }}
-  {{ form.zip_adress }}
-  </p>
+    <div id="edit-profile-forms">
+      <form  action="" method="post">{% csrf_token %}
+
+        <div class="span8" >
+          {% include "profiles/form_snippet.html" with field=form.profile_first_name %}
+          {% include "profiles/form_snippet.html" with field=form.profile_last_name %}
+          {% include "profiles/form_snippet.html" with field=form.profile_text %}
+
+          <br>
+          <p class="edit-profile-label">{{ form.profile_url.label_tag }}<span id="popover" rel="popover" data-content="" data-original-title="Detta blir din personliga Stylematch-adress. Det är denna du kommer kunna ge till kunder och vänner så att de direkt kan besöka din profil."> &nbsp;<i class="icon-info-sign"></i></span></p>
+          {{ form.profile_url.errors }}
+
+          <p style="float: left; font-size: 17px; margin-top: 5px; padding-right: 3px;"> http://www.stylematch.se/ </p>
+          {{ form.profile_url }}
+
+          <br> <br>
+          {% include "profiles/form_snippet.html" with field=form.salon_name %}
 
 
-      <p style="float:left; margin-right:10px;">
-  {{ form.profile_phone_number.errors }}
-  {{ form.profile_phone_number.label_tag }}
-  {{ form.profile_phone_number }}
-  </p>
-     
-      {% include "profiles/form_snippet.html" with field=form.salon_phone_number %}
-      
-      <label class="signup-label">Vilket telefonnummer ska visas på profilen?</label>
-              <select id="select01">
-                <option>Salongens Telefonnummer</option>
-                <option>Personlig Telefonnummer</option>
-              </select>	    	
-              <br><br>
-    {% include "profiles/form_snippet.html" with field=form.salon_url %}
-    	
-    	
-    	  <p style=" margin-right:10px;" class="edit-profile-label">
-  {{form.show_booking_url.errors }}
-  {{ form.show_booking_url.label_tag }}
-  {{ form.show_booking_url }}
-  </p>
-    	
-    	
-      
-      <br>
-      <input type="submit" class="btn-large btn-info" value="Spara ändringar" />
-    
-    
+          {% include "profiles/form_snippet.html" with field=form.salon_adress %}
+
+          <p style="float:left; margin-right:10px;">
+            {{ form.salon_city.errors }}
+            {{ form.salon_city.label_tag }}
+            {{ form.salon_city }}
+          </p>
+          <p>
+            {{ form.zip_adress.errors }}
+            {{ form.zip_adress.label_tag }}
+            {{ form.zip_adress }}
+          </p>
+
+
+          <p style="float:left; margin-right:10px;">
+            {{ form.personal_phone_number.errors }}
+            {{ form.personal_phone_number.label_tag }}
+            {{ form.personal_phone_number }}
+          </p>
+
+          {% include "profiles/form_snippet.html" with field=form.salon_phone_number %}
+          {% include "profiles/form_snippet.html" with field=form.number_on_profile %}
+
+          {% include "profiles/form_snippet.html" with field=form.salon_url %}
+
+
+          <p style=" margin-right:10px;" class="edit-profile-label">
+            {{ form.show_booking_url.errors }}
+            {{ form.show_booking_url.label_tag }}
+            {{ form.show_booking_url }}
+          </p>
+
+
+
+          <br>
+          <input type="submit" class="btn-large btn-info" value="Spara ändringar" />
+
+
+        </div>
     </div>
+
+    </form>
+
   </div>
- 
- </form>
-  
-  </div> 
-  </div>
-<script type="text/javascript" src="{{ STATIC_URL}}jquery-ui-1.8.18.custom.min.js"></script>
+</div>
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.18.custom.min.js"></script>
 <script src="{{ STATIC_URL}}js/bootstrap-tooltip.js" type="text/javascript"></script>
 <script type="text/javascript">
-$('#popover').tooltip();
+  $('#popover').tooltip();
 </script>
 
 {% endblock %}

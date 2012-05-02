@@ -4,7 +4,7 @@ from django.conf import settings
 register = template.Library()
 
 SCRIPT_TAG = '<script src="%sjs/bootstrap-%s.js" type="text/javascript"></script>'
-
+  
 class BootstrapJSNode(template.Node):
 
     def __init__(self, args):
@@ -54,13 +54,18 @@ def bootstrap_css():
 
 @register.simple_tag
 def bootstrap_less():
-    LESS_TAG = '<link rel="stylesheet/less" type="text/css" href="%sless/%s">'
+    if settings.DEBUG:
+        LESS_TAG = '<link rel="stylesheet/less" type="text/css" href="%sless/%s">'
 
-    output = [LESS_TAG % (settings.STATIC_URL, "bootstrap.less"),
-         '<script src="%sjs/less-1.2.2.min.js" type="text/javascript"></script>' % settings.STATIC_URL,
-              ]
+        output = [LESS_TAG % (settings.STATIC_URL, "bootstrap.less"),
+                  '<script src="%sjs/less-1.2.2.min.js" type="text/javascript"></script>' % settings.STATIC_URL,
+                  ]
+        output = '\n'.join(output)
 
-    return '\n'.join(output)
+    else:
+        output = '<link charset="utf-8" rel="stylesheet" type="text/css" href="%scss/style.css">' % (settings.STATIC_URL)
+
+    return output
 
 @register.tag(name='bootstrap_js')
 def do_bootstrap_js(parser, token):

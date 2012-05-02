@@ -1,78 +1,59 @@
 #-*- coding:utf-8 -*-
 from django.views.generic import TemplateView, UpdateView, DetailView, RedirectView, CreateView
-from accounts.models import Service, UserProfile, OpenHours, Picture
-#from fileupload.models import Picture
+from accounts.models import Service, UserProfile, OpenHours, Picture, InviteCode
+
 from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin
 from django.forms import ModelForm, ValidationError, Textarea
 from django.conf import settings
-import uuid
+import uuid, os, imp, re
 
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404
+from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
 
 from accounts.models import weekdays_model
+
 # TODO: import those that are used?
 from tools import *
 
 
 from registration.forms import RegistrationForm
-from registration.views import register
+
 from django.contrib.auth import login
 from registration.signals import user_registered
 
-
 from django import forms
-
 
 # TODO: We should discuss a better structure for signals....
 # Store in another file?
 def user_created(sender, user, request, **kwargs):
-
-    # For future reasons we store the form data here
-    # could do something fun with it.
-    form = UserRegistrationForm(request.POST)
-
-    # Force successfully created users to be activated since authorization
-    # script requires this.
-    userObject = User.objects.get(username = user)
-    userObject.is_active = True
-    userObject.save()
-
     # Automatically login a user who was just created
     # This probably makes them more keen on proceeding the signup form.
     user.backend='django.contrib.auth.backends.ModelBackend'
     login(request, user)
-    
+
+    # set is_active = True, must be set and saved to DB after login function is called.
+    userObject = User.objects.get(username = user)
+    userObject.is_active = True
+    userObject.save()
+
 user_registered.connect(user_created)
 
-class UserRegistrationForm(RegistrationForm):    
+class UserRegistrationForm(RegistrationForm):
     email = forms.CharField(required = False)
-    first_name = forms.CharField(label = "Förnamn")   
-    last_name = forms.CharField(label = "Efternamn")       
-    invite_code = forms.CharField(label = "Inbjudningskod ('a' är giltig)")
+    first_name = forms.CharField(label = "Förnamn")
+    last_name = forms.CharField(label = "Efternamn")
+    invite_code = forms.CharField(label = "Inbjudningskod (just nu behövs en inbjudan för att gå med)")
 
     username = forms.EmailField(max_length=64, label = "Emailadress")
-    
-    def __init__(self, *args, **kwargs):
-        super(UserRegistrationForm, self).__init__(*args, **kwargs)
-        #self.fields['username'].label = "Användarnamn"
-        #self.fields['email'].label = "Emailadress"
-        self.fields['password1'].label = "Lösenord"
-        self.fields['password2'].label = "Upprepa lösenord"
-
-        required_str = "Detta fält krävs för registeringen."
-
-        self.fields['username'].error_messages['invalid'] = "Skriv in en giltig e-mailadress."
-        # Since __init__ is called after the creation of invite_code and other
-        # extra fields, we can execute this loop and add our own error message
-        # for required fields.
-        for field in self.fields:
-            self.fields[field].error_messages['required'] =  required_str
-
 
     def clean_email(self):
-        # Since its actually not the email field but the username presented on form
-        # we use username as email too.
+        """
+        Since its actually not the email field but the username
+        presented on form we use username as email too.
+        """
         email = ""
         try:
             email = self.cleaned_data['username']
@@ -81,18 +62,30 @@ class UserRegistrationForm(RegistrationForm):
 
         return email
 
-
     def clean_invite_code(self):
-        str = self.cleaned_data['invite_code']        
+        """
+        Validates that the user have supplied a valid invite code.
+        And marks the code as used, if the other fields are correctly filled.
+        """
+        supplied_invite_code = self.cleaned_data['invite_code']
+        queryset = InviteCode.objects.filter(invite_code__iexact=supplied_invite_code).filter(used=False)
 
-        # TODO: Validate invite code through programming
-        code_valid = (str == 'a')
-        code = self.cleaned_data['invite_code']        
-        if code_valid == False:
-            raise forms.ValidationError(u'Din inbjudningskod (\'%s\') var felaktig. Vänligen kontrollera att du skrev rätt.' % code)
- 
+        # check that the invite_code exists
+        invite_code = queryset[:1]
+        if not invite_code:
+            raise forms.ValidationError(u'Din inbjudningskod (\'%s\') var felaktig. Vänligen kontrollera att du skrev rätt.' % supplied_invite_code)
+
+        # only set the invite code to used=True if all other fields have
+        # validated correctly
+        if self.is_valid():
+            invite_code = invite_code[0]
+            invite_code.used=True
+            invite_code.save()
+        
+        return supplied_invite_code
+
     class Meta:
-        exclude = ('email',) 
+        exclude = ('email',)
 
 class DisplayProfileView(DetailView):
     """
@@ -107,28 +100,32 @@ class DisplayProfileView(DetailView):
 
     def get_image_url(self, obj):
         return obj.get_image_url()
-    
+
     def get_images(self, queryset):
-        # send back urls to the images, instead of Picture objects
+        """
+        Send back urls to the images, instead of Picture objects
+        """
         images_lst = []
         for index, image in enumerate(queryset):
             images_lst.append(self.get_image_url(image))
-            
+
         return images_lst
 
     def get_gallery_images(self, user, limit=0):
-        # TODO: should have limit on number of imgs to display
-        # 'G' = gallery images
+        """
+        TODO: should have limit on number of imgs to display
+        'G' = gallery images
+        """
         queryset = Picture.objects.filter(user__exact=user).filter(
             image_type='G').filter(display_on_profile=True)
 
         return self.get_images(queryset)
-        
+
     def get_profile_image(self, user):
         # 'C' = current profile image
         queryset = Picture.objects.filter(user__exact=user).filter(
             image_type='C')
-        
+
         return self.get_images(queryset)
 
 
@@ -143,10 +140,9 @@ class DisplayProfileView(DetailView):
             time = -1
 
         return time
-            
+
 
     def weekday_factory(self, obj, day = 'mon', pretty_dayname = 'Måndag'):
-
         """
         Helper function to create a dict with relevant day information.
         Extracts values from obj with attribute prefix DAY
@@ -172,7 +168,7 @@ class DisplayProfileView(DetailView):
 
         obj = OpenHours.objects.get(user__exact=profile_user_id)
 
-        weekday_list =  ['Måndag',  'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 
+        weekday_list =  ['Måndag',  'Tisdag', 'Onsdag', 'Torsdag', 'Fredag',
                         'Lördag', 'Söndag']
 
         openinghours_list =  []
@@ -180,20 +176,19 @@ class DisplayProfileView(DetailView):
 
             # Important:  weekdays_model[index] must be exactly same as in OpenHours model.
             # Should not be a problem now but this could be a future source of bugs.
-    
+
             day_dict = self.weekday_factory(obj, weekdays_model[index], day)
             openinghours_list.append(day_dict)
 
         return openinghours_list
 
+
     def get_profile_image_url(self, profile_user_id):
         profile_picture = ''
         try:
             profile_picture  = self.get_profile_image(profile_user_id)[0]
-            print "\n"*10, profile_picture
         except:
-            # TODO: Genders?
-            profile_picture = '/static/user-imgs/profile_male.jpg'
+            profile_picture = os.path.join(settings.STATIC_URL, 'img/default_image_profile.jpg')
 
         return profile_picture
 
@@ -215,20 +210,47 @@ class DisplayProfileView(DetailView):
             i.length = format_minutes_to_pretty_format(i.length)
 
 
-        # opening hours the displayed userprofile have        
+        # opening hours the displayed userprofile have
         context['weekdays'] = self.get_openinghours(profile_user_id)
         context['profile_image'] = self.get_profile_image_url(profile_user_id)
 
 
         return context
 
-class CurrentUserProfileView(DisplayProfileView):
-    slug_field = "temporary_profile_url__exact"
+    def get_object(self, queryset=None):
+        queryset = self.get_queryset()
+
+        # try find the profile with profile_url, which is a name
+        slug = self.kwargs.get('slug', None)
+        if slug is not None:
+            slug_field = self.get_slug_field()
+            queryset = queryset.filter(**{slug_field: slug})
+
+            # try find the profile, with a temporary profile url
+            try:
+                obj = queryset.get()
+            except ObjectDoesNotExist:
+                queryset = self.get_queryset()
+                slug_field = "temporary_profile_url__exact"
+                queryset = queryset.filter(**{slug_field: slug})
+
+        # If none of those are defined, it's an error.
+        else:
+            raise AttributeError(u"Generic detail view %s must be called with "
+                                 u"either an object pk or a slug."
+                                 % self.__class__.__name__)
+
+        try:
+            obj = queryset.get()
+        except ObjectDoesNotExist:
+            raise Http404(_(u"No %(verbose_name)s found matching the query") %
+                          {'verbose_name': queryset.model._meta.verbose_name})
+        return obj
 
 class RedirectToProfileView(RedirectView):
     """
-    Redirect to the profile with the profile_url or if it's not set,
-    with temporary_profile_url
+    Redirects to the logged in user's profile with the profile_url
+    or if it's not set, with temporary_profile_url.
     """
 
     # if this is set to True, browsers will cache the redirect for ever
@@ -241,7 +263,7 @@ class RedirectToProfileView(RedirectView):
         # if user havent set a profile_url, use the temporary_profile_url which is a uuid string
         if not profile_url:
             temporary_profile_url = self.get_user_temporary_profile_url()
-            return reverse('profile_display_without_profile_url', kwargs={'slug': temporary_profile_url})
+            return reverse('profile_display_with_profile_url', kwargs={'slug': temporary_profile_url})
 
         return reverse('profile_display_with_profile_url', kwargs={'slug': profile_url})
 
@@ -261,7 +283,26 @@ class UserProfileForm(ModelForm):
         self.request = request
         super(UserProfileForm, self).__init__(*args, **kwargs)
 
+    def is_systempath(self, profile_url):
+        """
+        Is the url used by the system, ie. defined in urls.py.
+        It only matters under the root, since it's there the profiles will be.
+        """
+        # import python file with absolute path
+        urls = imp.load_source('module.name', settings.PROJECT_DIR + "/urls.py")
+        for urlpattern in urls.urlpatterns:
+            # first part of the urlpattern as it will look to the user
+            # ex. '^admin/asd$' -> 'admin'
+            pattern = re.sub(r'[\^$]','',urlpattern.regex.pattern.split('/')[0])
+            if pattern and pattern == profile_url:
+                return True
+
+        return False
+
     def is_unique_url_name(self, profile_url):
+        """
+        Is url used by another user?
+        """
         # should be ok to not have any profile_url set
         if not profile_url:
             return True
@@ -276,10 +317,14 @@ class UserProfileForm(ModelForm):
 
         return True
 
-    # check if the url is unique ie. it's not in use
     def clean_profile_url(self):
+        """
+        Check if the url is unique ie. it's not in use
+        """
         data = self.cleaned_data['profile_url']
-        if not self.is_unique_url_name(data):
+
+        # is profile url ok?
+        if not self.is_unique_url_name(data) or self.is_systempath(data):
             raise ValidationError("Den här sökvägen är redan tagen")
         return data
 
@@ -322,8 +367,8 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         f.save()
         form.save_m2m()
         return super(EditProfileView, self).form_valid(form)
-        
- 
+
+
 
 class ServiceForm(ModelForm):
     class Meta:
@@ -359,7 +404,7 @@ class PicturesView1(LoginRequiredMixin, TemplateView):
         return context
 
 
-class OpenHoursView(UpdateView):
+class OpenHoursView(LoginRequiredMixin, UpdateView):
     model = OpenHours
     template_name = "accounts/hours_form.html"
 
@@ -413,7 +458,7 @@ class PictureForm(forms.ModelForm):
     class Meta:
         model = Picture
         fields = ('file',)
-       
+
 class PicturesView(LoginRequiredMixin, CreateView):
     """
     Display edit pictures page
@@ -432,7 +477,7 @@ class PicturesView(LoginRequiredMixin, CreateView):
         # when this class is defined
         self.success_url=reverse('profiles_edit_images')
 
-      
+
     def get_form(self, form_class):
         form = super(PicturesView, self).get_form(form_class)
         form.instance.user = self.request.user
@@ -440,7 +485,7 @@ class PicturesView(LoginRequiredMixin, CreateView):
 
     # Called when we're sure all fields in the form are valid
     def form_valid(self, form):
-        
+
         f = self.request.FILES.get('file')
 
         filename=get_unique_filename(f.name)
@@ -449,7 +494,7 @@ class PicturesView(LoginRequiredMixin, CreateView):
         self.object = form.save(commit=False)
         self.object.user = self.request.user
         self.object.filename = filename
-        
+
         # default image type, Gallery
         self.object.image_type = 'G'
         self.object.save()

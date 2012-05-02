@@ -24,16 +24,16 @@ def create_user_profile(sender, instance, created, **kwargs):
     """
     if created:
         UserProfile.objects.create(user=instance,
-                                   temporary_profile_url= uuid.uuid4().hex, 
-                                   profile_name = 'Namn Namnsson', 
-                                   profile_phone_number = "0761234567",
+                                   temporary_profile_url= uuid.uuid4().hex,
+                                   profile_first_name = 'Förnamn',
+                                   profile_last_name = 'Efternamn',
                                    display_on_first_page = True,
-                                   salon_name = 'Gunillas hårparadis',
-                                   salon_city = 'Linköping',
-                                   salon_adress = 'Musterivägen 12A',
-                                   salon_phone_number = '013523812',
-                                   zip_adress  = 38413,
-                                   profile_text = 'Det här är en beskrivande text av vad salongen är och står för, samt annan intressant information')
+                                   salon_name = 'Namn på salongen',
+                                   salon_city = 'Stad',
+                                   salon_adress = 'Adress till salongen',
+                                   profile_text = 'Det här är en beskrivande text av vad salongen är och står för, samt annan intressant information',
+                                   number_on_profile = True,
+                                   )
 
         OpenHours.objects.create(user=instance)
 
@@ -41,7 +41,7 @@ def create_user_profile(sender, instance, created, **kwargs):
                                 length = 60, 
                                 name = "Klippning",
                                 price = 500, 
-                                description = "Klipp ditt hår fint till sommaren", 
+                                description = "Kort klippning", 
                                 display_on_profile = True)
 
 
@@ -49,46 +49,54 @@ def create_user_profile(sender, instance, created, **kwargs):
                                 length = 105, 
                                 name = "Hårfärgning",
                                 price = 140, 
-                                description = "Bli fin som en dräng med Pers intensiva hårfärg.", 
+                                description = "Naturliga färger", 
                                 display_on_profile = True)
 
 class UserProfile(models.Model):
-    user = models.ForeignKey(User, unique=True, editable=False)
-    profile_name = models.CharField("Mitt Namn*", max_length=40, blank=True)
-    profile_phone_number = models.CharField("Personligt Telefonnummer", max_length=30, blank=True)
-
-    display_on_first_page = models.BooleanField(editable=False)
-    
-    # max_length? less?
-    profile_text = models.CharField("Om mig", max_length=500, blank=True)
-
-    # TODO: add check if unique
-    profile_url = models.CharField("Min Stylematch hemsida*", max_length=15, blank=True, validators=[MaxLengthValidator(15)])
-    # used to reach profile if no profile_url set
-    temporary_profile_url = models.CharField(editable=False, unique=True, max_length=36)
-
     """
     TODO:
     fixa så email från huvudprofilen visas här
     fixa så twitter och facebook profil visas här, se styleseat
     """
     
+    user = models.ForeignKey(User, unique=True, editable=False)
+    profile_first_name = models.CharField("Förnamn*", max_length=40, blank=True)
+    profile_last_name = models.CharField("Efternamn*", max_length=40, blank=True)
+    
+    display_on_first_page = models.BooleanField(editable=False)
+    
+    # max_length? less?
+    profile_text = models.CharField("Om mig", max_length=500, blank=True)
+
+    profile_url = models.CharField("Min Stylematch hemsida*", max_length=15, blank=True, validators=[MaxLengthValidator(15)])
+    # used to reach profile if no profile_url set
+    temporary_profile_url = models.CharField(editable=False, unique=True, max_length=36)
+
+    # select phone number to display on profile
+    DISPLAY_NUMBER_CHOICES = (
+        (True, 'Personligt telefonnummer'),
+        (False, 'Salongens telefonnummer'),
+        )
+    number_on_profile = models.BooleanField("Vilket telefonnummer ska visas på profilen?",max_length=1, choices=DISPLAY_NUMBER_CHOICES)
+    
+    personal_phone_number = models.IntegerField("Personligt Telefonnummer", max_length=20, blank=True,null=True)
+  
     # salong
+    salon_phone_number = models.IntegerField("Salongens Telefonnummer", max_length=20, blank=True,null=True)
     salon_name = models.CharField("Salongens Namn", max_length=30, blank=True)
     salon_city = models.CharField("Stad", max_length=30, blank=True)
     salon_url = models.URLField("Salongens Hemsida", blank=True)
     salon_adress = models.CharField("Salongens Adress",max_length=30, blank=True)
-    salon_phone_number = models.CharField("Salongens Telefonnummer", max_length=30, blank=True)
     
-    
-    
-    # TODO: add validation https://docs.djangoproject.com/en/dev/ref/contrib/localflavor/#sweden-se
     zip_adress = models.IntegerField("Postnummer", max_length=6, blank=True, null=True)
 
 
     url_online_booking = models.URLField("Adress till online bokningssystem", blank=True)
     show_booking_url = models.BooleanField("Min salong har online-bokning", blank=True)
     
+    def __unicode__(self):
+        return u'%s %s' % (self.profile_first_name, self.profile_last_name)
+
 class Service(models.Model):
     buffer = generate_list_of_quarters(15, 420+15, format_minutes_to_pretty_format)
     TIME_CHOICES = tuple(buffer)
@@ -161,7 +169,6 @@ class OpenHours(models.Model):
 
 
 
-#-*- coding:utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -185,7 +192,7 @@ class Picture(models.Model):
         return get_image_url(self.filename)
 
     def __unicode__(self):
-        return self.file.name
+        return self.filename
 
     file = models.ImageField(upload_to=get_image_path, blank = True)
     filename = models.CharField(max_length=50, blank=True)
@@ -202,7 +209,6 @@ class Picture(models.Model):
     image_type = models.CharField(max_length=1, choices=IMAGE_TYPE_CHOICES,editable=False)
     order = models.PositiveIntegerField(blank=True, editable=True, null=True)
     
-
     # unused if it's a profile image
     display_on_profile = models.BooleanField("Visa på profil", blank=True)
 
@@ -225,8 +231,6 @@ class Picture(models.Model):
         ordering = ['order']
 
      
-
-
 # Signals handler for deleting files after object record deleted
 # In Django 1.3, delete a record not remove the associated files
 def delete_filefield(sender, **kwargs):
@@ -242,6 +246,22 @@ def delete_filefield(sender, **kwargs):
     http://obroll.com/automatically-delete-file-in-filefield-django-1-3-when-object-record-deleted/
     """
     instance = kwargs.get('instance')
-    default_storage.delete(instance.file.path)
+
+    """
+    The most natural way to get name of file would be instance.file.path
+    but since we're using amazon S3 for storage, the file object does not
+    have a path() method, which is called when trying to get attribute .path
+    of a file object. -> using attribute .name which we save in the
+    model.
+    -> This will probably be a problem if we move to filebased storage.
+    """
+    
+    default_storage.delete(instance.file.name)
 
 post_delete.connect(delete_filefield, Picture)
+
+class InviteCode(models.Model):
+    used = models.BooleanField("Have the invite code been used?", default=False)
+    invite_code = models.CharField("The string to use as invite code", max_length=30)
+    def __unicode__(self):
+        return u'Invitecode: %s Used: %s' % (self.invite_code, self.used)

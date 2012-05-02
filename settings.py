@@ -15,6 +15,8 @@ INTERNAL_IPS = iptools.IpRangeList(
     ('10.0.0.1', '10.0.0.19'),  # arbitrary range
 )
 
+# Absolute path to project directory.
+# If you rename/remove this you will break things
 PROJECT_DIR = os.path.dirname(__file__)
 
 ADMINS = (
@@ -24,26 +26,28 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-if True: #DEBUG:
+if DEBUG:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3', 
+            'ENGINE': 'django.db.backends.sqlite3',
             'NAME': PROJECT_DIR + '/database/test.db',
             }
         }
-"""
-if not DEBUG:
+else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-	    'NAME': 'avizeradjango',
-            'USER': 'prox',
+            'NAME': 'django_stylematch',
+            'USER': 'djangostylematch',
             'PASSWORD': 'KALSl23lKL31skk1',
-            'HOST': 'django-avizera.cotgems7cuep.eu-west-1.rds.amazonaws.com',  
-            'PORT': '3306',  
+            'HOST': 'localhost',
+            'PORT': '3306',
+            'OPTIONS': {
+                'init_command': 'SET storage_engine=INNODB',
+                },
             }
         }
-"""
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -52,13 +56,15 @@ if not DEBUG:
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'Europe/Stockholm'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'sv'
 
 SITE_ID = 1
+SITE_DOMAIN = 'stylematch.se'
+SITE_NAME = 'Stylematch'
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
@@ -91,13 +97,13 @@ if DEBUG:
     STATIC_URL = '/static/'
 else:
     STATIC_URL = 'http://stylematch.s3-website-eu-west-1.amazonaws.com/'
-    
+
 STATIC_ROOT = os.path.join(PROJECT_DIR,"static/")
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
-ADMIN_MEDIA_PREFIX = '/static/admin/'
+ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -161,14 +167,13 @@ INSTALLED_APPS = (
     'index',
     'accounts',
     'storages',
+    'defaultsite',
 )
 
 ### S3 storage - production
 
 if not DEBUG:
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-    STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-
+    DEFAULT_FILE_STORAGE = STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
     # credentials should maybe be set as environment variables on production server?
     # -> more secure.
 
@@ -224,28 +229,58 @@ ACCOUNT_ACTIVATION_DAYS = 7
 
 # END django-registration
 
-# A sample logging configuration. The only tangible logging
-# performed by this configuration is to send an email to
-# the site admins on every HTTP 500 error.
-# See http://docs.djangoproject.com/en/dev/topics/logging for
-# more details on how to customize your logging configuration.
+### Logging with Sentry
+
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
+    'root': {
+        'level': 'WARNING',
+        'handlers': ['sentry'],
+    },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+    },
     'handlers': {
-        'mail_admins': {
+        'sentry': {
             'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler'
-        }
+            'class': 'raven.contrib.django.handlers.SentryHandler',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
     },
     'loggers': {
-        'django.request': {
-            'handlers': ['mail_admins'],
+        'django.db.backends': {
             'level': 'ERROR',
-            'propagate': True,
+            'handlers': ['console'],
+            'propagate': False,
         },
-    }
+        'raven': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'sentry.errors': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+    },
 }
+
+# Set your DSN value
+SENTRY_DSN = 'http://97940c10be3546cabf3bd163c09c43b5:779efa2a3ea14e3ab12ee054ea227d11@localhost:9000/1'
+
+# Add raven to the list of installed apps
+INSTALLED_APPS = INSTALLED_APPS + (
+# ...
+'raven.contrib.django',
+)
 
 # Debug toolbar
 DEBUG_TOOLBAR_CONFIG = {
@@ -269,14 +304,17 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 # Paths to user uploaded images, used in fileupload app
 
 PATH_USER_IMGS = "user-imgs/"
-UPLOAD_PATH_USER_IMGS = "media/" + PATH_USER_IMGS
+if DEBUG:
+    UPLOAD_PATH_USER_IMGS = "media/" + PATH_USER_IMGS
+else:
+    UPLOAD_PATH_USER_IMGS = PATH_USER_IMGS
+
 MAX_IMAGE_SIZE = 20 * 1024 * 1024
 FULL_PATH_USER_IMGS = os.path.join(STATIC_URL, PATH_USER_IMGS)
 
-# use gmail as smtp server, useful during development
-if DEBUG:
-    EMAIL_USE_TLS = True
-    EMAIL_HOST = 'smtp.gmail.com'
-    EMAIL_HOST_USER = 'lookatyourright@gmail.com'
-    EMAIL_HOST_PASSWORD = 'testtest12'
-    EMAIL_PORT = 587
+# use gmail as smtp server, should use own smtp server for this later?
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'hello@stylematch.se'
+EMAIL_HOST_PASSWORD = 'kj234kjklJKLj324lk1jKlkj231'
+EMAIL_PORT = 587

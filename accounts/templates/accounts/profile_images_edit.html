@@ -12,12 +12,12 @@
 
 </script>
 
-<script src="{{ STATIC_URL }}underscore-min.js"></script>
-<script src="{{STATIC_URL}}backbone-min.js"></script>
-<script src="{{STATIC_URL}}backbone-tastypie.js"></script>
-<script src="{{STATIC_URL}}backbone.modelbinding.js"></script>
-<!--<link type="text/css" href="/static/jquery-ui-1.8.18.custom/css/ui-lightness/jquery-ui-1.8.18.custom.css" rel="Stylesheet" />-->
-<script type="text/javascript" src="{{STATIC_URL}}jquery-ui-1.8.18.custom.min.js"></script>
+<script src="{{ STATIC_URL }}js/underscore-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
+<script src="{{ STATIC_URL }}js/backbone.modelbinding.js"></script>
+
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.18.custom.min.js"></script>
 
 {% endblock %}
 
@@ -56,55 +56,43 @@
         <% } %>
         <br />
         <button class="btn delete">Delete</button>
-      </divs>
-    </script>
+</divs>
+</script>
 
-    <div class="main-content edit-images">
-      <div class="row">
-        <div class="span4">
-          <h2>Galleri bilder</h2>
-          <p>Dra bild för att ändra ordning i galleriet</p>
-        </div>
-      </div>
-      <div class="row">
-
-
-        <div id="image-list" class="span12"></div>
-
-
-
-      </div>
-      <div class="row">
-	<p>Stylea det här! Tänk på felmeddelanden.</p>
-        <form method="post" enctype="multipart/form-data" action=" ">
-          {% csrf_token %}
-          {{ form.as_p }}
-          {{ form.non_field_errors }}
-          {{ form.docfile.help_text }}
-          {{ form.docfile.label_tag }}
-          {{ form.docfile.errors }}
-          {{ form.docfile }}
-          <input type="submit" value="Upload" />
-        </form>
-      </div>
-      <!-- the code that does the magic on the page -->
-      <script src="{{STATIC_URL}}picture.js"></script>
-
+<div class="main-content edit-images">
+  <div class="row">
+    <div class="span4">
+      <h2>Galleri bilder</h2>
+      <p>Dra bild för att ändra ordning i galleriet</p>
     </div>
   </div>
   <div class="row">
-  
-  
+
+
     <div id="image-list" class="span12"></div>
-    
-    
-      </div>
+
+
+
+  </div>
+  <div class="row">
+
+    <p>Stylea det här! Tänk på felmeddelanden.</p>
+    <form method="post" enctype="multipart/form-data" action=" ">
+      {% csrf_token %}
+      {{ form.as_p }}
+      {{ form.non_field_errors }}
+      {{ form.docfile.help_text }}
+      {{ form.docfile.label_tag }}
+      {{ form.docfile.errors }}
+      {{ form.docfile }}
+      <input type="submit" value="Upload" />
+    </form>
   </div>
   <!-- the code that does the magic on the page -->
-  <script src="/static/picture.js"></script>
-  
-  </div>
-  </div>
-  
+  <script src="{{ STATIC_URL }}js/picture.js"></script>
 
-  {% endblock %}
+</div>
+
+</div>
+
+{% endblock %}

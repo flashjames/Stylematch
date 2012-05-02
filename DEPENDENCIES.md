@@ -45,3 +45,24 @@ I.e. download it from github and auto install.
 ###Commonware
 ###Django Extensions
 
+###Django default site
+https://github.com/oppianmatt/django-defaultsite
+Adds:
+SITE_DOMAIN: The domain to use to replace 'example.com'. Defaults to your machine's hostname.
+SITE_NAME: The sites name. Defaults to 'defaultsite'.
+
+To settings.py
+
+
+## Dependencies on production server
+###node.js
+http://blog.marcqualie.com/2011/11/installing-nodejs-on-ubuntu-1110.html
+###less
+npm -g install less
+
+Configure 
+1. Create one .less file and then import other .less files into it.
+2. If you have style.less , please put it as style.css in {% compress css %}, Benefit - instead of importing those css files in compiled version individually, it actually imports them into the main file thus faster page load time.
+3. Use the less.js file to render all the less css in development environment (or if you are using Mac, use Less app)
+4. Install node.js, npm and less on your server
+5. In your deploy script (Fabric for me), put the command to compile .less into .css (if you did not use Less app in step 3)

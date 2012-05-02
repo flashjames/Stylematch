@@ -3,50 +3,53 @@
 
 {% block title %}Stylematch{% endblock %}
 {% block html-body-styling %}
-  <body class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true" style="background: url({{STATIC_URL}}img/header_background.png) repeat-x;">
-    {% endblock %}
-  
-{% block content %}
- 
+<body class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true" style="background: url({{STATIC_URL}}img/header_background.png) repeat-x;background-color:grey;">
+  {% endblock %}
+
+  {% block content %}
+
   <div class="row searchfield shadow-around-a-div absolut-position-searchfield">
 
-<div class="search-form-title">
- <h1 id="searchfield-text">Hitta en kvalificerad fris&ouml;r i ditt n&auml;romr&aring;de och boka nu</h1>
-  </div>  
+    <div class="search-form-title">
+      <h1 id="searchfield-text">Hitta en kvalificerad fris&ouml;r i ditt n&auml;romr&aring;de och boka nu</h1>
+      
+    </div>
     <div  class="search-form">
-    <div class="span5 align-center-search-form offset4">
-    <form class="form-search search-form ">
-    	<input type="text" style="height:25pt;font-size:15px;" class="input-medium span4" placeholder=" Linköping">
-		
-  <button type="submit" style="margin-left:10px"class="btn btn-primary btn-large">Hitta!</button>
-</form>
-	</div>
-	</div>
+
+
+      <div class="span5 align-center-search-form offset5">
+        <form class="form-search search-form ">
+          <input type="text" style="height:25pt;font-size:15px;" class="input-medium span4" placeholder=" Linköping">
+
+          <button type="submit" style="margin-left:10px"class="btn btn-primary btn-large">Hitta!</button>
+        </form>
+      </div>
+    </div>
 
   </div>
 
-    <div class="row" style="margin-top:120px">
-      <div class="span10 offset1">
-		 <div class="span3 profile-image">
-    		<div class="profile-image-border">
-      		<img src="{{STATIC_URL}}img/bild1.jpg" name="profile-image">
-    		</div>
- 		 </div>
-		<div class="span3 profile-image">
-    		<div class="profile-image-border">
-      		<img src="{{STATIC_URL}}img/bild2.jpg" name="profile-image">
-    		</div>
- 		 </div>
- 		 <div class="span3 profile-image">
-    		<div class="profile-image-border">
-      		<img src="{{STATIC_URL}}img/bild3.jpg" name="profile-image">
-    		</div>
- 		 </div>
-		
-		
+  <div class="row" style="margin-top:120px">
+    <div class="span10 offset1">
+      <div class="span3 profile-image">
+        <div class="profile-image-border">
+          <img src="{{STATIC_URL}}img/bild1.jpg" name="profile-image">
+        </div>
       </div>
+      <div class="span3 profile-image">
+        <div class="profile-image-border">
+          <img src="{{STATIC_URL}}img/bild2.jpg" name="profile-image">
+        </div>
+      </div>
+      <div class="span3 profile-image">
+        <div class="profile-image-border">
+          <img src="{{STATIC_URL}}img/bild3.jpg" name="profile-image">
+        </div>
+      </div>
+
+
     </div>
-  
+  </div>
+
 
   {% endblock %}
 
@@ -57,3 +60,4 @@
     <div class="second-background" style="background: url({{ STATIC_URL }}img/Flow-Background.jpg) repeat-x;margin-top:210px;">
 
       {% endblock %}
+

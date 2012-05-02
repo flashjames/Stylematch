@@ -60,15 +60,15 @@ class UserProfile(models.Model):
     """
     
     user = models.ForeignKey(User, unique=True, editable=False)
-    profile_first_name = models.CharField("Förnamn*", max_length=40, blank=True)
-    profile_last_name = models.CharField("Efternamn*", max_length=40, blank=True)
+    profile_first_name = models.CharField("Förnamn", max_length=40, blank=True)
+    profile_last_name = models.CharField("Efternamn", max_length=40, blank=True)
     
     display_on_first_page = models.BooleanField(editable=False)
     
     # max_length? less?
     profile_text = models.CharField("Om mig", max_length=500, blank=True)
 
-    profile_url = models.CharField("Min Stylematch hemsida*", max_length=15, blank=True, validators=[MaxLengthValidator(15)])
+    profile_url = models.CharField("Min Stylematchhemsida", max_length=15, blank=True, validators=[MaxLengthValidator(15)])
     # used to reach profile if no profile_url set
     temporary_profile_url = models.CharField(editable=False, unique=True, max_length=36)
 
@@ -79,14 +79,14 @@ class UserProfile(models.Model):
         )
     number_on_profile = models.BooleanField("Vilket telefonnummer ska visas på profilen?",max_length=1, choices=DISPLAY_NUMBER_CHOICES)
     
-    personal_phone_number = models.IntegerField("Personligt Telefonnummer", max_length=20, blank=True,null=True)
+    personal_phone_number = models.IntegerField("Personligt telefonnummer", max_length=20, blank=True,null=True)
   
     # salong
-    salon_phone_number = models.IntegerField("Salongens Telefonnummer", max_length=20, blank=True,null=True)
-    salon_name = models.CharField("Salongens Namn", max_length=30, blank=True)
+    salon_phone_number = models.IntegerField("Salongens telefonnummer", max_length=20, blank=True,null=True)
+    salon_name = models.CharField("Salongens namn", max_length=30, blank=True)
     salon_city = models.CharField("Stad", max_length=30, blank=True)
-    salon_url = models.URLField("Salongens Hemsida", blank=True)
-    salon_adress = models.CharField("Salongens Adress",max_length=30, blank=True)
+    salon_url = models.URLField("Salongens hemsida", blank=True)
+    salon_adress = models.CharField("Salongens adress",max_length=30, blank=True)
     
     zip_adress = models.IntegerField("Postnummer", max_length=6, blank=True, null=True)
 

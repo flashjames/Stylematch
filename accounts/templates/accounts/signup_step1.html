@@ -5,10 +5,12 @@
 {% block title %}Register plix{% endblock %}
 {% block content %}
 
+
+<div class="row signupsstep-div" >
 <h2>Först, börja med att fylla i information om din salong.</h2>
 
 
-<div class="row" >
+
   <div id="edit-profile-large" class="span12" >
     <br><br>
 
@@ -123,7 +125,7 @@
                 {% endfor %}
                 
             <div class="span12 signup-label-button">
-	            <a href="/signup-step2"><button type="submit" class="btn-large btn-info">Forsätt vidare</button></a>
+	            <a href="{% url 'profile_display_redirect' %}"><button type="submit" class="btn-large btn-info">Forsätt vidare</button></a>
             </div>
             
             </fieldset>

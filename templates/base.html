@@ -3,7 +3,7 @@
 {% load url from future %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="height:100%;">
   <head>
     <meta charset="utf-8" />
     <script type="text/javascript" src="{{ JQUERY_SCRIPT }}"></script>
@@ -35,11 +35,12 @@
   </head>
   {% block html-body-styling %}
 
-  <body class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true" style="background: url({{STATIC_URL}}img/header_background.png) repeat-x;background-size: auto 129px;">
+  <body class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true" style="height:100%; background: url({{STATIC_URL}}img/header_background.png) repeat-x; background-size: auto 129px; ">
 
 
     {% endblock %}
-    <div class="container">
+    <div class="bigpage">
+    	<div class="container ">
       <div class="row">
         {% if user.is_authenticated %}
 
@@ -75,7 +76,7 @@
         <div class="span7 main-menu">
           <a href="{% url 'profile_display_redirect' %} ">Min profil</a>
           <a href="#" class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart">Sök frisörer</a>
-          <a href="#"  class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart">Få inspiration</a>
+          <a href="/about-us">Kontakta Oss</a>
           <a href="#"  class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart">Bjud in vän</a>
         </div>
 
@@ -94,19 +95,22 @@
 
       </div>
     </div>
-    {% block second-background %}
+    	{% block second-background %}
 
-    <div class="second-background" style="background: url({{STATIC_URL}}img/Flow-Background.jpg); background-size: cover;">
-      {% endblock %}
-      <div class="container">
+    	<div class="second-background testar-footer" style="background: url({{STATIC_URL}}img/Flow-Background.jpg); background-size: cover;">
+     	 {% endblock %}
+      		<div class="container ">
 
-        <div class="main-background">
-          {% block content %} {% endblock %}
-        </div>
-      </div>
+        		<div class="main-background">
+          			{% block content %} {% endblock %}
+       		 	</div>
+      		</div>
+     
+    	</div>
+	</div> 
+
       {% block footer %}{% include 'base_footer.html' %} {% endblock %}
-    </div>
-</div>
+
 {% block javascript-block %}{% endblock %}
 {% google_analytics %}
 </body>

@@ -12,7 +12,9 @@
     <script type="text/javascript">
       $('#loginmodal').modal();
     </script>
-
+	<script type="text/javascript">
+      $('#invitemodal').modal();
+    </script>
 
     {% bootstrap_js all %}
     {% bootstrap_less %}
@@ -36,15 +38,10 @@
       <section id="gridSystem">
         {% block content %}
         <div class="beta-banner shadow-beta well"><center><h1 class="beta-banner">Framtidens marknadsf&ouml;ringsverktyg <br><span class="beta-banner">f&ouml;r utbildade fris&ouml;rer</span></h1></center>
-          <br>
-          <form action="" method="post">{% csrf_token %}
-            <center><input style="height:25px;width:35%;margin: 0px 30px 0px 0px;" name="email" id="id_email" type="text" placeholder="E-postadress">
-	      
-              <button type="submit" class="btn-large btn-info">Ans&ouml;k om inbjudan</button></center>
-	    {{ form.email.errors }}
-          </form>
-          <br>
-          <center><h3 class="beta-banner">Har du redan en inbjudningskod?</center><br> <a href="/accounts/register/"> <center><button class="btn-large btn-info">G&aring; med h&auml;r!</button></a></center></h3>
+          
+           {% include "invite_modal_snippet.html" %}
+         <br> <center><a href="#invitemodal" data-toggle="modal" class="btn btn-large btn-info">G&aring; med h&auml;r!</button></a></center></h3>
+         <br>
           <h2 class="beta-banner"><a class="beta-banner" href="/features">L&auml;s mer om Stylematch</a></h3>
 
 </div>

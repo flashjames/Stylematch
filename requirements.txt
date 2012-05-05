@@ -25,3 +25,4 @@ gunicorn==0.14.2
 django-storages==1.1.4
 boto==2.3.0
 raven==1.7.5
+django-ses==0.4.1

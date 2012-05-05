@@ -174,15 +174,19 @@ INSTALLED_APPS = (
 
 if not DEBUG:
     DEFAULT_FILE_STORAGE = STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-    # credentials should maybe be set as environment variables on production server?
-    # -> more secure.
-
-    AWS_ACCESS_KEY_ID = "AKIAJHCGEY6XAXXOSYXA"
-    AWS_SECRET_ACCESS_KEY = "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"
-    AWS_STORAGE_BUCKET_NAME = "stylematch"
-
 ### END S3 storage
 
+### Amazon credentials and mail
+
+# credentials should maybe be set as environment variables on production server?
+# -> more secure.
+AWS_ACCESS_KEY_ID = 'AKIAJHCGEY6XAXXOSYXA'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'stylematch'
+EMAIL_BACKEND = 'django_ses.SESBackend'
+DEFAULT_FROM_EMAIL = 'hampus.bergqvist@stylematch.se'
+
+### END Amazon credentials
 
 
 ### social auth
@@ -313,8 +317,10 @@ MAX_IMAGE_SIZE = 20 * 1024 * 1024
 FULL_PATH_USER_IMGS = os.path.join(STATIC_URL, PATH_USER_IMGS)
 
 # use gmail as smtp server, should use own smtp server for this later?
+"""
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'hello@stylematch.se'
 EMAIL_HOST_PASSWORD = 'kj234kjklJKLj324lk1jKlkj231'
 EMAIL_PORT = 587
+"""

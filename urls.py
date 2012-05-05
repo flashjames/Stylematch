@@ -1,12 +1,12 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 from django.views.generic import TemplateView
-from index.views import AboutPageView, IndexPageView, BetaPageView, FeaturesPageView, SignupStep1PageView, SignupStep2PageView
+from index.views import AboutPageView, IndexPageView, BetaPageView, FeaturesPageView, SignupStep2PageView
 
 from django.contrib import admin
 from django.views.generic.simple import redirect_to
 from registration.views import register
-from accounts.views import UserRegistrationForm, SignupView
+from accounts.register_views import UserRegistrationForm, SignupView
 
 admin.autodiscover()
 

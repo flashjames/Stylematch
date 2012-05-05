@@ -25,8 +25,6 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance,
                                    temporary_profile_url= uuid.uuid4().hex,
-                                   profile_first_name = 'Förnamn',
-                                   profile_last_name = 'Efternamn',
                                    display_on_first_page = True,
                                    salon_name = 'Namn på salongen',
                                    salon_city = 'Stad',

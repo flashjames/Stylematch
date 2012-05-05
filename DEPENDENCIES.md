@@ -38,13 +38,8 @@ Is it possible to add this to the requirements file, so it's
 downloaded with pip even though it's not in PIP's catalogue. 
 I.e. download it from github and auto install.
 
-##Dev tools - Server Side
-###South
-###Werkzeug
-###Django Debug Toolbar
-###Commonware
-###Django Extensions
-
+###Django-SES
+Send mail through Amazon SES
 ###Django default site
 https://github.com/oppianmatt/django-defaultsite
 Adds:
@@ -53,6 +48,12 @@ SITE_NAME: The sites name. Defaults to 'defaultsite'.
 
 To settings.py
 
+##Dev tools - Server Side
+###South
+###Werkzeug
+###Django Debug Toolbar
+###Commonware
+###Django Extensions
 
 ## Dependencies on production server
 ###node.js

@@ -1,3 +1,5 @@
+{% load url from future %}
+
 <div class="modal hide fade no-underline-links" id="loginmodal">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">×<a>
@@ -19,6 +21,7 @@
   <input type="submit" value="Logga in" class="btn btn-info"/>
   <input type="hidden" name="next" value="/"> <!--value="{{ next|escape }}" />-->
 </form>
+   <a href="{% url 'auth_password_reset' %}">Glömt lösenord</a>
 </div>
     
   </div>

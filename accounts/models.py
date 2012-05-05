@@ -263,5 +263,7 @@ post_delete.connect(delete_filefield, Picture)
 class InviteCode(models.Model):
     used = models.BooleanField("Have the invite code been used?", default=False)
     invite_code = models.CharField("The string to use as invite code", max_length=30)
+    comment = models.CharField("To who was the invitecode given? And so on..", max_length=500)
+    
     def __unicode__(self):
         return u'Invitecode: %s Used: %s' % (self.invite_code, self.used)

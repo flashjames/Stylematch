@@ -1,3 +1,17 @@
-Activation key: {{ activation_key }}
-Expiration days: {{ expiration_days }}
-The site url {{  site}}
+Hej och välkommen till StyleMatch!
+
+Jag heter Hampus Bergqvist och är VD på StyleMatch. Det känns mycket roligt att du har valt att stärka ditt personliga varumärke som grym frisör med vår nya och smarta hemsida. Jag hoppas du tycker det känns lika spännande som vi gör att få vara en av de utvalda under vår V.I.P.-beta period!
+
+Din feedback betyder otroligt mycket för oss så att vi kan fortsätta att utveckla StyleMatch precis som du vill ha det. Tveka inte att ringa mig på 073 848 73 10 eller skicka ett mail till hampus@stylematch.se om du har en fråga, vill skälla ut oss eller bara snacka skit!
+
+Like:a oss på Facebook:
+http://www.facebook.com/StyleMatch.SE
+
+Följ oss på Twitter:
+https://twitter.com/StyleMatch_SE
+
+Hälsningar,
+
+Hampus Bergqvist
+hampus@stylematch.se
+073 848 73 10

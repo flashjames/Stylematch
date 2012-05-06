@@ -272,12 +272,16 @@ class UserProfileForm(ModelForm):
         """
         Check if the url is unique ie. it's not in use
         """
+        raise ValidationError('Asd')
         data = self.cleaned_data['profile_url']
 
         # is profile url ok?
         if not self.is_unique_url_name(data) or self.is_systempath(data):
             raise ValidationError("Den här sökvägen är redan tagen")
         return data
+
+    def clean_profile_text(self):
+        raise ValidationError('Asd')
 
     def save(self, *args, **kw):
         # save the fields that dont belong to UserProfile object

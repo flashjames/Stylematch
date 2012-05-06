@@ -1,5 +1,9 @@
-<p class="{{ css_class }}">
-  {{ field.errors }}
-  {{ field.label_tag }}
-  {{ field }}
-</p>
+<div class="control-group {{ css_class }} {% if field.errors %} error {% endif %}">
+  <label class="control-label {% if field.errors %} error {% endif %} " for="inputWarning">{{ field.label }}</label>
+  <div class="controls ">
+    {{ field }}
+    <span class="help-inline">{{ field.errors.as_text }}</span>
+    <p class="help-block">{{ help_text }}</p>
+  </div>
+</div>
+

@@ -48,7 +48,7 @@ class UserProfile(models.Model):
     # max_length? less?
     profile_text = models.CharField("Om mig", max_length=500, blank=True)
 
-    profile_url = models.CharField("Min Stylematchhemsida", max_length=40, blank=True)
+    profile_url = models.CharField("http://stylematch.se/", max_length=40, blank=True)
     # used to reach profile if no profile_url set
     temporary_profile_url = models.CharField(editable=False, unique=True, max_length=36)
 

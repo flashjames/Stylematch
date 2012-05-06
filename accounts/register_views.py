@@ -21,7 +21,7 @@ class SignupViewForm(ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ( 'salon_name', 'salon_adress', 'salon_city', 'zip_adress', 'personal_phone_number', 'salon_phone_number', 'number_on_profile')
+        fields = ( 'salon_name', 'salon_adress', 'salon_city', 'personal_phone_number', 'salon_phone_number', 'number_on_profile')
 
 class SignupView(UpdateView):
     """
@@ -35,21 +35,9 @@ class SignupView(UpdateView):
         super(SignupView, self).__init__(*args, **kwargs)
         self.success_url=reverse('profile_display_redirect')
         
-        
     def get_object(self, queryset=None):
         obj = UserProfile.objects.get(user__exact=self.request.user.id)
         return obj     
-        
-    def form_valid(self, form):
-        f = form.save(commit=False)
-        f.user = self.request.user
-        f.save()
-        form.save_m2m()
-        return super(SignupView, self).form_valid(form)
-     
-    def clean(self):    
-        return super(SignupView, self).clean()
-        
 
 class RegisterCustomBackend(DefaultBackend):
     """
@@ -135,12 +123,13 @@ class UserRegistrationForm(RegistrationForm):
         field.
         """
         if 'password1' in self.cleaned_data and 'password2' in self.cleaned_data:
-            if self.cleaned_data['password1'] != self.cleaned_data['password2']:
+            if self.cleaned_data.get('password1') != self.cleaned_data.get('password2'):
                 raise ValidationError(_("The two password fields didn't match."))
 
-        MIN_LENGTH = 6
-        if len(self.cleaned_data['password1']) < MIN_LENGTH:
-            raise forms.ValidationError("Lösenordet är för kort, det ska innehålla minst 6 tecken.")
+            MIN_LENGTH = 6
+            if len(self.cleaned_data['password1']) < MIN_LENGTH:
+                raise forms.ValidationError("Lösenordet är för kort, det ska innehålla minst 6 tecken.")
+
         return self.cleaned_data
 
     class Meta:

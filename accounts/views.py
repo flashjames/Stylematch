@@ -224,8 +224,8 @@ class UserProfileForm(ModelForm):
     """
     Validates that profile_url is unique
     """
-    first_name = forms.CharField(label=_(u'Förnamn'), max_length=30)
-    last_name = forms.CharField(label=_(u'Efternamn'), max_length=30)
+    first_name = forms.CharField(label=_(u'Förnamn'), max_length=30, required = False)
+    last_name = forms.CharField(label=_(u'Efternamn'), max_length=30, required = False)
     
     def __init__(self, request, *args, **kwargs):
         self.request = request

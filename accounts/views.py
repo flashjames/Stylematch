@@ -10,6 +10,7 @@ import uuid, os, imp, re
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
+from django.utils.translation import ugettext as _
 
 from accounts.models import weekdays_model
 from django import forms
@@ -223,9 +224,15 @@ class UserProfileForm(ModelForm):
     """
     Validates that profile_url is unique
     """
+    first_name = forms.CharField(label=_(u'Förnamn'), max_length=30)
+    last_name = forms.CharField(label=_(u'Efternamn'), max_length=30)
+    
     def __init__(self, request, *args, **kwargs):
         self.request = request
         super(UserProfileForm, self).__init__(*args, **kwargs)
+        #import pdb;pdb.set_trace()
+        self.fields['first_name'].initial = self.instance.user.first_name
+        self.fields['last_name'].initial = self.instance.user.last_name
 
     def is_systempath(self, profile_url):
         """
@@ -272,6 +279,13 @@ class UserProfileForm(ModelForm):
             raise ValidationError("Den här sökvägen är redan tagen")
         return data
 
+    def save(self, *args, **kw):
+        # save the fields that dont belong to UserProfile object
+        self.request.user.first_name = self.cleaned_data.get('first_name')
+        self.request.user.last_name = self.cleaned_data.get('last_name')
+        self.request.user.save()
+        return super(UserProfileForm, self).save(*args, **kw)
+
     class Meta:
         model = UserProfile
         widgets = {
@@ -304,15 +318,6 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         obj = UserProfile.objects.get(user__exact=self.request.user.id)
         return obj
-
-    def form_valid(self, form):
-        f = form.save(commit=False)
-        f.user = self.request.user
-        f.save()
-        form.save_m2m()
-        return super(EditProfileView, self).form_valid(form)
-
-
 
 class ServiceForm(ModelForm):
     class Meta:

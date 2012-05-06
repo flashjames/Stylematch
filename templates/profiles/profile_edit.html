@@ -16,8 +16,8 @@
 	{% csrf_token %}
 
         <div class="span8" >
-          {% include "profiles/form_snippet.html" with field=form.profile_first_name %}
-          {% include "profiles/form_snippet.html" with field=form.profile_last_name %}
+          {% include "profiles/form_snippet.html" with field=form.first_name %}
+          {% include "profiles/form_snippet.html" with field=form.last_name %}
           {% include "profiles/form_snippet.html" with field=form.profile_text %}
 
           <p class="edit-profile-label">{{ form.profile_url.label_tag }}<span id="popover" rel="popover" data-content="" data-original-title="Detta blir din personliga Stylematch-adress. Det är denna du kommer kunna ge till kunder och vänner så att de direkt kan besöka din profil."> &nbsp;<i class="icon-info-sign"></i></span></p>

@@ -52,7 +52,7 @@
         <div class="span4 offset8 top-right-menu pull-right">
            <a class="pull-right" href="{% url 'logout' %}">Logga ut</a>
            <a class="pull-right top-menu-border" href="{% url 'edit-account-settings' %}">Kontoinställningar</a>
-           <a class="pull-right top-menu-border" href="{% url 'profile_display_redirect' %}">Hej {{ user.get_profile.profile_first_name }}</a>
+           <a class="pull-right top-menu-border" href="{% url 'profile_display_redirect' %}">Hej {{ user.first_name }}</a>
          
          
         </div>

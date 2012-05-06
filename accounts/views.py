@@ -272,7 +272,6 @@ class UserProfileForm(ModelForm):
         """
         Check if the url is unique ie. it's not in use
         """
-        raise ValidationError('Asd')
         data = self.cleaned_data['profile_url']
 
         # is profile url ok?
@@ -280,9 +279,20 @@ class UserProfileForm(ModelForm):
             raise ValidationError("Den här sökvägen är redan tagen")
         return data
 
-    def clean_profile_text(self):
-        raise ValidationError('Asd')
+    def strip_all_except_digits(self, number):
+        """
+        Removes all characters except digits
+        """
+        return re.sub("[^0-9]", "", number)
+    
+    def clean_personal_phone_number(self):
+        number = self.cleaned_data.get('personal_phone_number')
+        return self.strip_all_except_digits(number)
 
+    def clean_salon_phone_number(self):
+        number = self.cleaned_data.get('salon_phone_number')
+        return self.strip_all_except_digits(number)
+    
     def save(self, *args, **kw):
         # save the fields that dont belong to UserProfile object
         self.request.user.first_name = self.cleaned_data.get('first_name')

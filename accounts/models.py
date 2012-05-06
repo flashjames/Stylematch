@@ -81,12 +81,12 @@ class Service(models.Model):
     TIME_CHOICES = tuple(buffer)
 
 
-    length = models.IntegerField("Längd", choices=TIME_CHOICES,max_length=3)
+    length = models.IntegerField("Tidsåtgång", choices=TIME_CHOICES,max_length=3)
     name = models.CharField("Namn (ex. Herrklippning)", max_length=20)
     price = models.IntegerField("Pris i kronor", max_length=6)
     
     # TODO: längd på desc? 
-    description = models.CharField("Beskrivning", max_length=200, validators=[MaxLengthValidator(200)])
+    description = models.CharField("Beskrivning", max_length=200, validators=[MaxLengthValidator(200)], blank=True)
     display_on_profile = models.BooleanField("Visa på profil", blank=True)
     
     # user that has this service

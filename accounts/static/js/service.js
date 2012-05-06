@@ -141,21 +141,28 @@
 	    
             _.bindAll(this, "formSave", "changeModelToEdit", "displayFormErrors");
             vent.bind("changeModelToEdit", this.changeModelToEdit);
-	    vent.bind("newForm", this.newForm);
+	    	vent.bind("newForm", this.newForm);
 
             this.serviceList = new ServiceCollection();
             this.serviceListView = new ServiceListView({model:this.serviceList});
 
             this.newForm();
-	    
+	    	self = this;
             this.serviceList.fetch({
                 success: function(collection, response) {
+                	if(collection.size() > 0) {
+                		self.showPriceList();                		
+                	}
+
                     if(!response)
                         //TODO: Display error message "couldnt get views"
                         console.log("Error: Couldnt get user's services from API");
                 }
             });
             $('#service-list').html(this.serviceListView.render().el);
+        },
+        showPriceList: function () {
+        	$('.edit-service-form-right').removeClass('hide-block');
         },
 	events:{
             'click .save': 'formSave'
@@ -186,9 +193,11 @@
 	    var ServiceView = this;
 	    
 	    // a callback used on both model.save() and serviceList.create()
+	    self = this;
 	    responseCallback = {
 		success: function(collection, error, options) {
 		    ServiceView.newForm();
+		    self.showPriceList();
 		},
 		error: function(collection, error, options) {
 		    ServiceView.cleanForm();

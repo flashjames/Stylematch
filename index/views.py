@@ -34,7 +34,7 @@ class BetaPageView(CreateView):
     def get(self, request):
         #redirect_to("http://www.google.se", )
         if request.user.is_authenticated():
-            return redirect(reverse('index_page'))
+            return redirect(reverse('profile_display_redirect'))
         else:
             return super(BetaPageView, self).get(request)
 

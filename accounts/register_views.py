@@ -7,40 +7,27 @@ from django import forms
 from registration.forms import RegistrationForm
 
 from django.contrib.auth import login
-from registration.signals import user_registered
-from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
 from django.utils.translation import ugettext as _
-
-# TODO: We should discuss a better structure for signals....
-# Store in another file?
-def user_created(sender, user, request, **kwargs):
-    # Automatically login a user who was just created
-    # This probably makes them more keen on proceeding the signup form.
-    user.backend='django.contrib.auth.backends.ModelBackend'
-    login(request, user)
-
-    # set is_active = True, must be set and saved to DB after login function is called.
-    userObject = User.objects.get(username = user)
-    userObject.is_active = True
-    userObject.save()
-
-user_registered.connect(user_created)
+from registration.backends.default import DefaultBackend
 
 class SignupViewForm(ModelForm):
-
+    """
+    Form used in registration step 1, used to filter out wanted fields
+    """
     def __init__(self, *args, **kwargs):
-        
         super(SignupViewForm, self).__init__(*args, **kwargs)
 
     class Meta:
         model = UserProfile
         fields = ( 'salon_name', 'salon_adress', 'salon_city', 'zip_adress', 'personal_phone_number', 'salon_phone_number', 'number_on_profile')
 
-
 class SignupView(UpdateView):
-
+    """
+    Step 1 in the user registration, after the main user registration.
+    The user is asked to fill in some of the other fields.
+    """
     template_name = "accounts/signup_step1.html"    
     form_class = SignupViewForm    
         
@@ -60,12 +47,38 @@ class SignupView(UpdateView):
         form.save_m2m()
         return super(SignupView, self).form_valid(form)
      
-
     def clean(self):    
         return super(SignupView, self).clean()
         
 
+class RegisterCustomBackend(DefaultBackend):
+    """
+    Extends django registration DefaultBackend, since we want
+    to activate the user, save first_name and last_name.
+    Followed this example:
+    http://inka-labs.com/en-us/blog/2012/01/13/add-custom-backend-django-registration/
+
+    TODO: Possible problem, the guide said you have to define a skelleton and call super, for the other functions to work. But I dont think you need to.
+    """
+    def register(self, request, **kwargs):
+        user = super(RegisterCustomBackend, self).register(request, **kwargs)
+        user.backend='django.contrib.auth.backends.ModelBackend'
+        # login the newly registered user
+        login(request, user)
+
+        user.first_name = kwargs['first_name']        
+        user.last_name = kwargs['last_name']
+        # set is_active = True, must be set and saved to DB after login function is called.
+        user.is_active = True
+
+        user.save()
+        return user
+
+
 class UserRegistrationForm(RegistrationForm):
+    """
+    Custom user registration form. Used as the main registration form.
+    """
     email = forms.CharField(required = False)
     first_name = forms.CharField(label = "Förnamn")
     last_name = forms.CharField(label = "Efternamn")
@@ -116,13 +129,11 @@ class UserRegistrationForm(RegistrationForm):
 
     def clean(self):
         """
-        Verifiy that the values entered into the two password fields
+        Verifies that the values entered into the two password fields
         match. Note that an error here will end up in
         ``non_field_errors()`` because it doesn't apply to a single
         field.
-        
         """
-        import pdb;pdb.set_trace()
         if 'password1' in self.cleaned_data and 'password2' in self.cleaned_data:
             if self.cleaned_data['password1'] != self.cleaned_data['password2']:
                 raise ValidationError(_("The two password fields didn't match."))

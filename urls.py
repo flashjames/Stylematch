@@ -24,7 +24,7 @@ urlpatterns = patterns(
     '',
     (r'^logout/$', 'index.views.logout_page',{},'logout'), # redirects to main-page
     url(r'', include('social_auth.urls')), # urls to connect with social media accountsm for example facebook
-     url(r'^accounts/register/$', register, {'backend': 'registration.backends.default.DefaultBackend','form_class': UserRegistrationForm}, name='registration_register'),
+     url(r'^accounts/register/$', register, {'backend': 'accounts.register_views.RegisterCustomBackend','form_class': UserRegistrationForm}, name='registration_register'),
     url(r'accounts/register/complete/', redirect_to, {'url': '/accounts/signup-step1'}, 'registration_complete'),
     (r'', include('registration.auth_urls')), # login/logout/password-management urls             
     url(r'^admin/', include(admin.site.urls)),

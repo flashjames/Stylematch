@@ -35,21 +35,6 @@ def create_user_profile(sender, instance, created, **kwargs):
 
         OpenHours.objects.create(user=instance)
 
-        Service.objects.create(user = instance, 
-                                length = 60, 
-                                name = "Klippning",
-                                price = 500, 
-                                description = "Kort klippning", 
-                                display_on_profile = True)
-
-
-        Service.objects.create(user = instance, 
-                                length = 105, 
-                                name = "Hårfärgning",
-                                price = 140, 
-                                description = "Naturliga färger", 
-                                display_on_profile = True)
-
 class UserProfile(models.Model):
     """
     TODO:

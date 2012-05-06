@@ -322,7 +322,9 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
 class ServiceForm(ModelForm):
     class Meta:
         model = Service
+        fields = ('name','length','price', 'description','display_on_profile')
         exclude = ('order')
+        
 
 class ServicesView(LoginRequiredMixin, TemplateView):
     """

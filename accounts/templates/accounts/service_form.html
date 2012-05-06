@@ -26,7 +26,12 @@
 <script type="text/template" id="tpl-service-list-item">
   <div class="unique-list-item">
   <div class="service-name unique-list-item-part"><b> <%= name %></b></div>
-  <div class="service-length unique-list-item-part pull-right">för <%= length %> minuter</div>
+  <div class="service-length unique-list-item-part pull-right"><% if(length != "") 
+  { %>
+  för <%= length %> minuter
+    
+<% } %></div>
+  
   <div class="service-price unique-list-item-part pull-right"><%= price %>kr&nbsp;</div>
   
   <div class="service-description unique-list-item-block"><%= description %></div>
@@ -77,7 +82,8 @@
       <div id="form" ></div>
     </div>
     </div>
-    <div class="span6 edit-service-form-right">
+    <div class="span6 edit-service-form-right hide-block">
+
     <h2>Prislista</h2>
     <h5>Drag på behandlingarna för att ändra ordningen.</h5>
     <br>

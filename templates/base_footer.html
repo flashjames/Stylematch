@@ -2,21 +2,24 @@
 {% load url from future %}
 
 {% block footer %}
-  <div class="row base-footer-div">
-  
-  <div class="container base-footer-div-2">
-  		<div class="span4 offset2">
-  			<h3>Följ vår resa på Facebook och Twitter</h3>
-  			<br>
-   			<a href="https://www.facebook.com/StyleMatch.SE" target="_blank"><img src="{{STATIC_URL}}img/facebook-button.png"/></a>
-         	<a href="http://twitter.com/#!/stylematch_SE" target="_blank"><img src="{{STATIC_URL}}img/twitter-button.png"/></a>
-         </div>
-        <div class="span3 offset2 base-footer-div-3">
-        
-        	<a href="/about-us/"> <h2>KONTAKTA OSS</h2> </a>
-        
-        </div>
-  </div>
+<div class="base-footer-div">
+  <div class="container row">
+    <div class="span6 footer-menu">
+      <a href="{% url 'features_page' %}">Synas på StyleMatch</a>
+      <a href="{% url 'about_page' %}">Kontakt</a>
+    </div>
+    <div class="span1 offset3">
+      <div class="fb-like" data-href="https://www.facebook.com/StyleMatch.SE" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
+    </div>
+    <div class="span1">
+      <a href="https://twitter.com/StyleMatch_SE" class="twitter-follow-button" data-show-count="false" data-lang="sv">Följ @StyleMatch_SE</a>
+      <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </div>
+
   </div>
 
-  {% endblock %}
+</div>
+
+</div>
+
+{% endblock %}

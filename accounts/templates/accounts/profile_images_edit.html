@@ -27,8 +27,7 @@
 
 <div class="row">
 
-    <p>Stylea det här! Tänk på felmeddelanden.</p>
-    <form method="post" enctype="multipart/form-data" action=" ">
+    <form method="post" enctype="multipart/form-data" action="">
       {% csrf_token %}
       {{ form.file.errors }}
       <input type="file" name="file" id="id_file" >
@@ -38,7 +37,7 @@
       {{ form.docfile.label_tag }}
       {{ form.docfile.errors }}
       {{ form.docfile }}
-      <input type="submit" value="Upload"  class="btn btn-primary" />
+      <input type="submit" value="Ladda upp bilden"  class="btn btn-primary" />
     </form>
   </div>
 
@@ -80,7 +79,7 @@
   <div class="row">
     <div class="span4">
       <h2>Galleri bilder</h2>
-      <p>Dra bild för att ändra ordning i galleriet</p>
+      <p>Dra i bilden för att ändra ordning i galleriet</p>
     </div>
   </div>
   <div class="row">

@@ -82,11 +82,11 @@ class Service(models.Model):
 
 
     length = models.IntegerField("Tidsåtgång", choices=TIME_CHOICES,max_length=3)
-    name = models.CharField("Namn (ex. Herrklippning)", max_length=20)
+    name = models.CharField("Namn (ex. Klippning kort hår)", max_length=20)
     price = models.IntegerField("Pris i kronor", max_length=6)
     
     # TODO: längd på desc? 
-    description = models.CharField("Beskrivning", max_length=200, validators=[MaxLengthValidator(200)], blank=True)
+    description = models.CharField("Beskrivning (ex. Klippning inkl tvätt & fön)", max_length=200, validators=[MaxLengthValidator(200)], blank=True)
     display_on_profile = models.BooleanField("Visa på profil", blank=True)
     
     # user that has this service

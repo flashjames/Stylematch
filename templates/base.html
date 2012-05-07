@@ -8,7 +8,11 @@
     <meta charset="utf-8" />
     <script type="text/javascript" src="{{ JQUERY_SCRIPT }}"></script>
     <script src="/static/js/bootstrap-tooltip.js" type="text/javascript"></script>
+    <script src="/static/js/bootstrap-dropdown.js" type="text/javascript"></script>
     <script type="text/javascript">
+    
+    $('.dropdown-toggle').dropdown({trigger:'hover'});
+    
     /* Function to trigger tooltip when clicked and hide after a delay*/
    	$(document).ready(function() {
    		var defaultOption={trigger:'manual', delay: {hide: 500 }};
@@ -20,10 +24,10 @@
         	}, 700);	
     	}; 
     	
-		$('.popover1').tooltip(defaultOption).click(showAndHidePopover);
-		
+	$('.popover1').tooltip(defaultOption).click(showAndHidePopover);
 	
 	});
+	
 	</script> 
 
     {% bootstrap_less %}
@@ -74,7 +78,23 @@
         {% if user.is_authenticated %}
 
         <div class="span7 main-menu">
-          <a href="{% url 'profile_display_redirect' %} ">Min profil</a>
+        
+   
+    
+    
+     <ul class="dropdown" id="testmenu1" style="display:inline-block">    		
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#testmenu1">
+      Min profil
+      <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-edited-color">
+      <li><a href="{% url 'profile_display_redirect' %} ">Visa profil</a></li>
+      <li class="{{ edit_profile }}"><a href="{% url 'profile_edit' %}">Förändra profil</a></li>
+      <li class="{{ edit_openhours }}"><a href="{% url 'profiles_add_hours' %}">Förändra öppetider</a></li>
+      <li class="{{ edit_services }}"><a href="{% url 'profiles_edit_services' %}">Förändra prislista</a></li>
+      <li class="{{ edit_images }}"><a href="{% url 'profiles_edit_images' %}">Förändra bilder</a></li>
+    </ul> 
+    </ul>
           <a href="#" class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart">Sök frisörer</a>
           <a href="/about-us">Kontakta Oss</a>
           <a href="#"  class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart">Bjud in vän</a>

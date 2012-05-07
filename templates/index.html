@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% load url from future %}
 
-{% block title %}Stylematch{% endblock %}
-{% block html-body-styling %}
-<body class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true" style="background: url({{STATIC_URL}}img/header_background.png) repeat-x;background-color:grey;">
+{% block title %}Välkommen{% endblock %}
+{% block background-top %}
+<div class="bigpage" style="background-size:auto;">
   {% endblock %}
+
+
 
   {% block content %}
 
@@ -12,7 +14,7 @@
 
     <div class="search-form-title">
       <h1 id="searchfield-text">Hitta en kvalificerad fris&ouml;r i ditt n&auml;romr&aring;de och boka nu</h1>
-      
+
     </div>
     <div  class="search-form">
 
@@ -46,11 +48,11 @@
         </div>
       </div>
       <!--
-      Facebook block
-      <div class="span3">
-	<div class="fb-like-box" data-href="http://www.facebook.com/stylematch.se" data-width="240" data-show-faces="true" data-border-color="white" data-stream="false" data-header="false"></div>
-      </div>
-      -->
+         Facebook block
+         <div class="span3">
+           <div class="fb-like-box" data-href="http://www.facebook.com/stylematch.se" data-width="240" data-show-faces="true" data-border-color="white" data-stream="false" data-header="false"></div>
+         </div>
+         -->
 
     </div>
   </div>
@@ -58,11 +60,10 @@
 
   {% endblock %}
 
-    {% block second-background %}
+  {% block second-background %}
 
-    {# To keep the larger header on the front-page #}
+  {# To keep the larger header on the front-page #}
+  <div class="content-background" style="margin-top:210px;">
 
-    <div class="second-background" style="background: url({{ STATIC_URL }}img/Flow-Background.jpg) repeat-x;margin-top:210px;">
-
-      {% endblock %}
+    {% endblock %}
 

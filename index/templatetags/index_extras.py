@@ -19,3 +19,7 @@ def google_analytics():
         return '<script src="%sjs/google_analytics.js" type="text/javascript"></script>' % settings.STATIC_URL
 
     return ""
+
+@register.simple_tag
+def facebook():
+        return '<script src="%sjs/facebook.js" type="text/javascript"></script>' % settings.STATIC_URL

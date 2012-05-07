@@ -31,15 +31,15 @@
     {# Used to load js and css that's specific to a page. Should add a block for js at end of this file for javascript #}
     {% block html-head %}{% endblock %}
 
-    <title>{% block title %}Hi{% endblock %}</title>
+    <title>StyleMatch | {% block title %}{% endblock %}</title>
   </head>
-  {% block html-body-styling %}
+  
 
-  <body class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true" style="height:100%; background: url({{STATIC_URL}}img/header_background.png) repeat-x; background-size: auto 129px;">
+  <body class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true">
 
-
-    {% endblock %}
-    <div class="bigpage" >
+    {% block background-top %}
+    <div class="bigpage">
+      {% endblock %}
     	<div class="container ">
       <div class="row">
         {% if user.is_authenticated %}
@@ -97,31 +97,20 @@
     </div>
     	{% block second-background %}
 
-    	<div class="second-background testar-footer" style="background: url({{STATIC_URL}}img/Flow-Background.jpg); background-size: cover;padding-top:20px;">
+    	<div class="content-background">
      	 {% endblock %}
-      		<div class="container ">
-
-        		<div class="main-background">
-          			{% block content %} {% endblock %}
-       		 	</div>
+      		<div class="container content">	
+          	  {% block content %} {% endblock %}
       		</div>
-     
     	</div>
-	</div> 
+    </div> 
 
       {% block footer %}{% include 'base_footer.html' %} {% endblock %}
 
 {% block javascript-block %}
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/sv_SE/all.js#xfbml=1&appId=309825002426259";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
 {% endblock %}
 {% google_analytics %}
+{% facebook %}
 </body>
 
 

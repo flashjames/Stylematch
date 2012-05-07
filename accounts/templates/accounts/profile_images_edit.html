@@ -25,8 +25,8 @@
 
 {% include "profiles/edit_profile_menu.html" with edit_images="active" %}
 
-<div class="row">
-
+<div class="row" style="margin-top:25px">
+  <h3>Ladda upp bilder</h3>
     <form method="post" enctype="multipart/form-data" action="">
       {% csrf_token %}
       {{ form.file.errors }}

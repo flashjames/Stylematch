@@ -1,6 +1,7 @@
 #-*- coding:utf-8 -*-
 from django.views.generic import TemplateView, UpdateView, DetailView, RedirectView, CreateView
 from accounts.models import Service, UserProfile, OpenHours, Picture
+from django.contrib.auth.models import User
 
 from django.core.urlresolvers import reverse
 from braces.views import LoginRequiredMixin
@@ -150,6 +151,10 @@ class DisplayProfileView(DetailView):
             i.length = format_minutes_to_pretty_format(i.length)
 
 
+        profile_user = User.objects.filter(id__exact=profile_user_id)[0]
+        context['first_name'] = profile_user.first_name
+        context['last_name'] = profile_user.last_name
+        
         # opening hours the displayed userprofile have
         context['weekdays'] = self.get_openinghours(profile_user_id)
         context['profile_image'] = self.get_profile_image_url(profile_user_id)

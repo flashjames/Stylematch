@@ -7,6 +7,8 @@
 <script type="text/javascript"> Galleria.loadTheme('{{ GALLERIA_THEME }}'); </script>
 {% endblock %}
 
+{% block title %}{{ first_name }} {{ last_name }}{% endblock %}
+
 {% block content %}
 
 {% if user.is_authenticated %}

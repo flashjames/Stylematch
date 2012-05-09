@@ -40,12 +40,12 @@
     <blockquote><p>{{ profile.profile_text }}</p></blockquote>
   </div>
   <div class="span2" id="salon-information">
-    <h3>Kontakt</h3>
+    <h2>Kontakt</h2>
     <p>{{ profile.salon_name }}</p>
 
    
     <p>{{ profile.salon_adress }}, {{ profile.salon_city }}</p>
-    </p>Telefonnummer
+    </p>Telefonnummer:
     {% if profile.number_on_profile %}
     {{ profile.personal_phone_number }}
     {% else %}

@@ -1,6 +1,7 @@
 @logocolor: #96d5cc;
 @color1: #C0C0C0;
 @color-links-nav: #DDB670;
+@background-image1: url('http://localhost:8000/static/less/../img/Flow-Background.jpg');
 
 /* GENERAL */
 
@@ -10,7 +11,8 @@
 }
 
 .body-beta-background{
-    background: url('../img/wallpaper.jpg') no-repeat center center fixed;
+	background-color: white;
+    xbackground: url('../img/wallpaper.jpg') no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -169,9 +171,16 @@ hr.soften {
     background-size:cover;
 }
 
+.logo-account-pages{
+	margin-left:0px;
+	margin-top:30px;
+}
+
 /* END GENERAL */
 
 /* FRONT PAGE */
+
+
 
 .profile-images-front-page-div{
     margin-bottom:100px;
@@ -241,6 +250,34 @@ align-center-search-form{
     box-shadow:         3px 3px 5px 6px #ccc;
 }
 
+.join-now-block-frontpage{
+	 background: -webkit-gradient(linear, left top, left bottom, from(#3A352E), to(#534C42));
+	    -moz-box-shadow:    3px 3px 5px 6px #ccc;
+    -webkit-box-shadow: 3px 3px 5px 6px #ccc;
+    box-shadow:         3px 3px 5px 6px #ccc;
+    height:130px;
+}
+
+
+.join-now-block-frontpage h1{
+	margin-left:35px;
+	margin-top:15px;
+	color:white;
+	margin-bottom:12px;
+	
+}
+
+.join-now-block-frontpage a{
+	margin-top:10px;
+	margin-left:35px;
+}
+
+.fb-like-box-edited{
+	margin-left:20px;
+	margin-top:20px;
+	
+}
+
 /* END FRONT PAGE*/
 
 /* BETA FRONT PAGE*/
@@ -283,8 +320,8 @@ x.shadow-beta{
 
 h1.beta-banner{
     padding:20px 20px;
-    color: white;
-    text-shadow: -1px -1px black;
+    color: black;
+    xtext-shadow: -1px -1px black;
     font-size:30px;
     letter-spacing:1.5px;
 }
@@ -333,7 +370,7 @@ h3.beta-banner{
 #features-banner{
     width: 100%;
     height:800px;
-    background-color:white;
+    background: @background-image1;
 }
 
 /* END FEATURES PAGE */
@@ -341,18 +378,35 @@ h3.beta-banner{
 /* BETA SIGNUP PAGE */
 
 .beta-signup-banner{
-    width: 45%;
+    width: 100%;
     height:500px;
-    margin: 0px auto;
+    xmargin: 0px auto;
+    margin-top:50px;
     padding:10px;
-    background: rgba(0, 0, 0, 0.7);
+    background: url('http://localhost:8000/static/less/../img/Flow-Background.jpg');
+    background-size: cover;
 }
+
+.account-register-info{
+	margin-top:50px;
+}
+
+.account-register-info h2{
+	margin-bottom:10px;
+	margin-top:50px;
+	color:black;
+}
+
+.account-register-info h3{
+	color:black;
+}
+
 .beta-signup-banner li {
-    color:white;
+    color:black;
 }
 
 .beta-signup-banner label{
-    color:white;
+    color:black;
 }
 
 .beta-signup-left{
@@ -378,7 +432,7 @@ h3.beta-banner{
 
 .beta-signup-left-form input
 {
-    width: 95%;
+    width: 90%;
 }
 
 .beta-signup-right{
@@ -394,7 +448,7 @@ h3.beta-banner{
 }
 
 .beta-signup-email{
-    width:383px;
+    width:100%;
     height:80px;
 }
 
@@ -428,7 +482,7 @@ h3.beta-banner{
 }
 
 .footer-menu a {
-    color: silver;
+    color: black;
     font-size:12px;
     text-transform: uppercase;
     margin-right: 14px;
@@ -791,7 +845,6 @@ a.edit-profile-image-test-links:hover{
 #vision-frame{
     background-color:transparent;
     height:300px;
-    margin-left:30px;
 }
 #breaker{
     background-color:transparent;
@@ -801,13 +854,26 @@ a.edit-profile-image-test-links:hover{
 #team-frame{
     background-color:transparent;
     height:300px;
-    margin-right:30px;
     float:right;
 }
-#team-medlemmar1{
+div.team-medlemmar1{
     background-color:transparent;
 }
-#team-medlemmar2{
+
+
+.pictures-team-members{
+	width:100px;
+	display:block;
+	float:left;
+}
+
+.team-medlemmar-liten{
+	margin-left:110px;
+	height:120px;
+}
+
+
+.team-medlemmar2{
     background-color:transparent;
 }
 

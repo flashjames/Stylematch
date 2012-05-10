@@ -28,7 +28,7 @@ urlpatterns = patterns(
     url(r'accounts/register/complete/', redirect_to, {'url': '/accounts/signup-step1'}, 'registration_complete'),
     (r'', include('registration.auth_urls')), # login/logout/password-management urls             
     url(r'^admin/', include(admin.site.urls)),
-    (r'^startsida/', IndexPageView.as_view(),{}, 'index_page'),
+    (r'^$', IndexPageView.as_view(),{}, 'index_page'),
         
     (r'^accounts/signup-step1/', SignupView.as_view(),{}, 'signupstep1_page'),
     (r'^accounts/signup-step2/', SignupStep2PageView.as_view(),{}, 'signupstep2_page'),
@@ -38,7 +38,7 @@ urlpatterns = patterns(
     (r'^accounts/edit-settings/', TemplateView.as_view(template_name="edit-account-settings.html"),{},'edit-account-settings'),
    
     (r'^about-us/', AboutPageView.as_view(),{}, 'about_page'),
-    (r'^$', BetaPageView.as_view(),{}, 'beta_page'),
+    (r'^betapage', BetaPageView.as_view(),{}, 'beta_page'),
     (r'^features/', FeaturesPageView.as_view(),{}, 'features_page'),
    
     (r'^google66ca7050dfade3e4.html', TemplateView.as_view(template_name="google66ca7050dfade3e4.html")), #tracking-code so google apps know we own the domain.

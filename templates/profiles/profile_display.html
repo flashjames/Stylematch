@@ -5,6 +5,9 @@
 {% block html-head %}
 <script src="{{ GALLERIA_SCRIPT }}" type="text/javascript" />
 <script type="text/javascript"> Galleria.loadTheme('{{ GALLERIA_THEME }}'); </script>
+<meta property="og:image" content="{{ profile_image }}">
+
+
 {% endblock %}
 
 {% block title %}{{ first_name }} {{ last_name }}{% endblock %}

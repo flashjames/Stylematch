@@ -6,10 +6,13 @@
 {% block content %}
 
 <div class="container">
+
+<div class="row">
+<div class="span6">
   <form method="post" action="">
     {% csrf_token %}
     <fieldset>
-    <div class="beta-signup-banner" class="shadow-beta well">
+    <div class="beta-signup-banner shadow-beta well">
 
       <center><h1 class="beta-banner">G&aring; med nu!</h1></center>
       <div class="beta-signup-left control-group" style="float: left; {% if form.first_name.errors %} color: red; {% endif %} ">
@@ -80,7 +83,29 @@
       </center>
         </fieldset>
   </form>
+  
+  </div>
+  
+  <div class="span5 offset1 account-register-info">
+	<h2>MED STYLEMATCH FÅR DU...</h2>
+	
+	<h3>- En personlig hemsida (www.stylematch.se/dittnamn)<br>
+	- Vara med i StyleMatch exklusiva sökmotor
+	</h3>
+	
+	<h2>DÄR DU KAN...</h2>
+	<h3>
+	- Lyfta fram din stil<br>
+	- Få nya kunder som passar dig<br>
+	- Sprida din hemsida via sociala medier<br>
+	</h3>
+	
+	
+	
+</div>
 
+
+	</div>
   </div>
 
 

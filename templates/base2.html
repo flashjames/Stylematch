@@ -1,5 +1,6 @@
 {% load index_extras %}
 {% load bootstrap %}
+{% load url from future %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,13 +17,17 @@
     {% block html-head %}{% endblock %}
 
 
-    <title>Stylematch | {% block title %}Hi{% endblock %}</title>
+    <title>Stylematch | {% block title %}{% endblock %}</title>
   </head>
   <body class="body-padding-zero body-beta-background">
 
-    <div class="container">
-      <div class="beta-header">
-      </div>
+	<div class="bigpage">
+	<div class="container">
+		<div class="span4 logo-account-pages">
+    		<a href="{% url 'index_page' %}"><img src="{{STATIC_URL}}img/logo.png"/></a>
+    	</div>
+    </div>
+    
       {% block header %}
       {% endblock %}
       <div class="container">

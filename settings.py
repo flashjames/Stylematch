@@ -277,8 +277,8 @@ LOGGING = {
     },
 }
 
-# Set your DSN value
-SENTRY_DSN = 'http://97940c10be3546cabf3bd163c09c43b5:779efa2a3ea14e3ab12ee054ea227d11@localhost:9000/1'
+# Sentry (loggin) DSN value, the key used to send logs to Sentry
+SENTRY_DSN = 'http://20195eef47244f21a845b9eaa12a3af3:68325bc8efe64aceaec134815ef41850@www.stylematch.se:9000/1'
 
 # Add raven to the list of installed apps
 INSTALLED_APPS = INSTALLED_APPS + (

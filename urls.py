@@ -7,6 +7,7 @@ from django.contrib import admin
 from django.views.generic.simple import redirect_to
 from registration.views import register
 from accounts.register_views import UserRegistrationForm, SignupView
+from accounts.views import OpenHoursView
 
 admin.autodiscover()
 
@@ -31,7 +32,7 @@ urlpatterns = patterns(
     (r'^$', IndexPageView.as_view(),{}, 'index_page'),
         
     (r'^accounts/signup-step1/', SignupView.as_view(),{}, 'signupstep1_page'),
-    (r'^accounts/signup-step2/', SignupStep2PageView.as_view(),{}, 'signupstep2_page'),
+    (r'^accounts/signup-step2/', OpenHoursView.as_view(),{}, 'signupstep2_page'),
 
    
     

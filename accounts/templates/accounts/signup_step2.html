@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load url from future %}
+
+{% block content %}
+
+
+<div class="container">
+
+
+
+<div class="row" >
+<div id="edit-profile-large" class="span12" >
+<br><br>
+
+<!-- Detta ovan borde flyttas ut (dvs det tillhör inte content) -->
+
+<div class="edit-hours-form">
+
+<h2>Vänligen fyll i er salongs öppettider.</h2> 
+<h3>Ifall ni har lunchstängt vissa tider, fyll i dessa. Annars lämna fältet lunch tomt.</h3><br><br>
+  <form method="post" action="">
+    {% csrf_token %}
+  
+    {{ test}}
+    {{ form.test }}
+     <table>
+        <thead>
+            <th>Dag</th>
+            <th>Öppnar</th>
+            <th>Stänger</th>
+        </thead>
+      <tbody > 
+        
+            <tr>
+                <td >Måndag</td>
+                <td > {{ form.mon }} </td>
+                <td> {{ form.mon_closed }} </td>     
+            </tr>
+            <tr>
+                <td>Lunch</td>
+                <td> {{ form.mon_lunch }} </td>
+                <td> {{ form.mon_lunch_closed }} </td>     
+            
+            </tr>
+            <tr><td><hr /></td><td> <hr /></td><td> <hr /></td></tr>
+            
+            <tr> 
+                <td>Tisdag</td>
+                <td> {{ form.tues }} </td>
+                <td> {{ form.tues_closed }} </td>     
+            </tr> 
+            <tr>
+                <td>Lunch</td>
+                <td> {{ form.tues_lunch }} </td>
+                <td> {{ form.tues_lunch_closed }} </td>     
+            
+            </tr>
+
+            <tr><td><hr /></td><td> <hr /></td><td> <hr /></td></tr>
+
+            <tr >
+                <td>Onsdag</td>
+                <td> {{ form.wed }} </td>
+                <td> {{ form.wed_closed }} </td>     
+            </tr> 
+            <tr>
+                <td>Lunch</td>
+                <td> {{ form.wed_lunch }} </td>
+                <td> {{ form.wed_lunch_closed }} </td>     
+            
+            </tr>
+
+            <tr><td><hr /></td><td> <hr /></td><td> <hr /></td></tr>
+
+            <tr>
+                <td>Torsdag</td>
+                <td> {{ form.thurs }} </td>
+                <td> {{ form.thurs_closed }} </td>     
+            </tr> 
+            <tr>
+                <td>Lunch</td>
+                <td> {{ form.thurs_lunch }} </td>
+                <td> {{ form.thurs_lunch_closed }} </td>     
+            
+            </tr>
+
+            <tr><td><hr /></td><td> <hr /></td><td> <hr /></td></tr>
+            <tr>
+                <td>Fredag</td>
+                <td> {{ form.fri }} </td>
+                <td> {{ form.fri_closed }} </td>     
+            </tr> 
+
+            <tr>
+                <td>Lunch</td>
+                <td> {{ form.fri_lunch }} </td>
+                <td> {{ form.fri_lunch_closed }} </td>     
+            
+            </tr>
+
+            <tr><td><hr /></td><td> <hr /></td><td> <hr /></td></tr>
+
+            <tr>
+                <td>Lördag</td>
+                <td> {{ form.sat }} </td>
+                <td> {{ form.sat_closed }} </td>     
+            </tr> 
+
+            <tr>
+                <td>Lunch</td>
+                <td> {{ form.sat_lunch }} </td>
+                <td> {{ form.sat_lunch_closed }} </td>  
+            </tr>
+
+            <tr><td><hr /></td><td> <hr /></td><td> <hr /></td></tr>
+
+            <tr>
+                <td>Söndag</td>
+                <td> {{ form.sun }} </td>
+                <td> {{ form.sun_closed }} </td>     
+            </tr> 
+            <tr>
+                <td>Lunch</td>
+                <td> {{ form.sun_lunch }} </td>
+                <td> {{ form.sun_lunch_closed }} </td>     
+            
+            </tr>
+
+    </tbody>
+</table>
+     <div class="form-actions">
+       <input type="submit" value="Spara ändringar" class="btn-large btn-info" />
+     </div>
+    
+  </form>
+</div>
+</div>
+</div>
+</div>
+{% endblock %}
+
+
+

@@ -40,6 +40,7 @@ urlpatterns = patterns(
     (r'^about-us/', AboutPageView.as_view(),{}, 'about_page'),
     (r'^betapage', BetaPageView.as_view(),{}, 'beta_page'),
     (r'^features/', FeaturesPageView.as_view(),{}, 'features_page'),
+    url(r"^su/", include("django_su.urls")),
    
     (r'^google66ca7050dfade3e4.html', TemplateView.as_view(template_name="google66ca7050dfade3e4.html")), #tracking-code so google apps know we own the domain.
     

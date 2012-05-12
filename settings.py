@@ -168,6 +168,7 @@ INSTALLED_APPS = (
     'accounts',
     'storages',
     'defaultsite',
+    'django_su',
 )
 
 ### S3 storage - production

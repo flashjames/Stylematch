@@ -47,6 +47,9 @@ SITE_DOMAIN: The domain to use to replace 'example.com'. Defaults to your machin
 SITE_NAME: The sites name. Defaults to 'defaultsite'.
 
 To settings.py
+###Django-su
+Adds possibility to login as another user on admin interface.
+https://github.com/continuous/django-su
 
 ##Dev tools - Server Side
 ###South

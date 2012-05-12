@@ -26,10 +26,6 @@ def create_user_profile(sender, instance, created, **kwargs):
         UserProfile.objects.create(user=instance,
                                    temporary_profile_url= uuid.uuid4().hex,
                                    display_on_first_page = True,
-                                   salon_name = 'Namn på salongen',
-                                   salon_city = 'Stad',
-                                   salon_adress = 'Adress till salongen',
-                                   profile_text = 'Det här är en beskrivande text av vad salongen är och står för, samt annan intressant information',
                                    number_on_profile = True,
                                    )
 
@@ -81,9 +77,9 @@ class Service(models.Model):
     TIME_CHOICES = tuple(buffer)
 
 
-    length = models.IntegerField("Tidsåtgång", choices=TIME_CHOICES,max_length=3)
-    name = models.CharField("Namn (ex. Klippning kort hår)", max_length=20)
-    price = models.IntegerField("Pris i kronor", max_length=6)
+    length = models.IntegerField("Tidsåtgång *", choices=TIME_CHOICES,max_length=3)
+    name = models.CharField("Namn (ex. Klippning kort hår) *", max_length=20)
+    price = models.IntegerField("Pris i kronor *", max_length=6)
     
     # TODO: längd på desc? 
     description = models.CharField("Beskrivning (ex. Klippning inkl tvätt & fön)", max_length=200, validators=[MaxLengthValidator(200)], blank=True)

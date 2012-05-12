@@ -12,6 +12,10 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from registration.backends.default import DefaultBackend
 
+from accounts.views import OpenHoursView, ServicesView, PicturesView, get_unique_filename
+
+from index.models import BetaEmail
+
 class SignupViewForm(ModelForm):
     """
     Form used in registration step 1, used to filter out wanted fields
@@ -33,11 +37,95 @@ class SignupView(UpdateView):
         
     def __init__(self, *args, **kwargs):
         super(SignupView, self).__init__(*args, **kwargs)
-        self.success_url=reverse('profile_display_redirect')
+        self.success_url=reverse('signupstep2_page')
         
     def get_object(self, queryset=None):
         obj = UserProfile.objects.get(user__exact=self.request.user.id)
         return obj     
+    
+    def get_context_data(self, **kwargs):
+		context = super(SignupView, self).get_context_data(**kwargs)
+		
+		context['progress_salon_info'] = "reached-progress"
+		context['progress_width'] = "32%"
+		
+		return context
+        
+class SignupStep2View(OpenHoursView):
+	template_name = "accounts/signup_step2.html"
+	def __init__(self, *args, **kwargs):
+		super(OpenHoursView, self).__init__(*args, **kwargs)
+		# written here in init since it will give reverse url error
+		# if just written in class definition. because urls.py isnt loaded
+		# when this class is defined
+		self.success_url=reverse('signupstep3_page')
+		
+	def get_context_data(self, **kwargs):
+		context = super(SignupStep2View, self).get_context_data(**kwargs)
+		
+		context['progress_salon_info'] = "reached-progress"
+		context['progress_salon_hours'] = "reached-progress" 
+		context['progress_width'] = "49%"
+
+		return context
+		
+        
+class SignupStep3View(ServicesView):
+	template_name = "accounts/signup_step3.html"
+	def __init__(self, *args, **kwargs):
+		super(SignupStep3View, self).__init__(*args, **kwargs)
+		# written here in init since it will give reverse url error
+		# if just written in class definition. because urls.py isnt loaded
+		# when this class is defined
+		self.success_url=reverse('signupstep4_page')
+		
+	def get_context_data(self, **kwargs):
+		context = super(SignupStep3View, self).get_context_data(**kwargs)
+		
+		context['progress_salon_info'] = "reached-progress"
+		context['progress_salon_hours'] = "reached-progress" 
+		context['progress_salon_price'] = "reached-progress" 
+		context['progress_width'] = "66%"
+
+		return context
+
+class SignupStep4View(PicturesView):
+	template_name = "accounts/signup_step4.html"
+	def __init__(self, *args, **kwargs):
+		super(SignupStep4View, self).__init__(*args, **kwargs)
+		# written here in init since it will give reverse url error
+		# if just written in class definition. because urls.py isnt loaded
+		# when this class is defined
+		self.success_url=reverse('signupstep4_page')
+		
+	def get_context_data(self, **kwargs):
+		context = super(SignupStep4View, self).get_context_data(**kwargs)
+		
+		context['progress_salon_info'] = "reached-progress"
+		context['progress_salon_hours'] = "reached-progress" 
+		context['progress_salon_price'] = "reached-progress" 
+		context['progress_profile_pic'] = "reached-progress"
+		context['progress_width'] = "83%"
+
+		return context
+		
+	# Called when we're sure all fields in the form are valid
+	def form_valid(self, form):
+
+		f = self.request.FILES.get('file')
+
+		filename=get_unique_filename(f.name)
+
+		# add data to form fields that will be saved to db
+		self.object = form.save(commit=False)
+		self.object.user = self.request.user
+		self.object.filename = filename
+
+		# default image type, Gallery
+		self.object.image_type = 'C'
+		self.object.save()
+		form.save_m2m()
+		return super(PicturesView, self).form_valid(form)
 
 class RegisterCustomBackend(DefaultBackend):
     """
@@ -66,7 +154,9 @@ class RegisterCustomBackend(DefaultBackend):
 class UserRegistrationForm(RegistrationForm):
     """
     Custom user registration form. Used as the main registration form.
+    
     """
+    
     email = forms.CharField(required = False)
     first_name = forms.CharField(label = "Förnamn")
     last_name = forms.CharField(label = "Efternamn")

@@ -3,22 +3,27 @@
 
 {% block content %}
 
-{% include "profiles/edit_profile_menu.html" with edit_openhours="active" %}
+{% block edit-profile-menu %}
+	{% include "profiles/edit_profile_menu.html" with edit_openhours="active" %}
+{% endblock %}
 
 <div class="container">
 
 
 
 <div class="row" >
+{% block title-add-hours-signup %}
+{% endblock %}
 <div id="edit-profile-large" class="span12" >
-<br><br>
+
 
 <!-- Detta ovan borde flyttas ut (dvs det tillhör inte content) -->
 
 <div class="edit-hours-form">
-
-<h2>Vänligen fyll i er salongs öppettider.</h2> 
-<h3>Ifall ni har lunchstängt vissa tider, fyll i dessa. Annars lämna fältet lunch tomt.</h3><br><br>
+{% block title-add-hours %}
+	<h2>Vänligen fyll i er salongs öppettider.</h2> 
+	<h3>Ifall ni har lunchstängt vissa tider, fyll i dessa. Annars lämna fältet lunch tomt.</h3><br><br>
+{% endblock %}
   <form method="post" action="">
     {% csrf_token %}
   
@@ -130,7 +135,9 @@
     </tbody>
 </table>
      <div class="form-actions">
-       <input type="submit" value="Spara ändringar" class="btn-large btn-info" />
+    	{% block button-signup-step2 %}
+      	 <input type="submit" value="Spara ändringar" class="btn-large btn-info btn-hours-style" />
+       {% endblock %}
      </div>
     
   </form>

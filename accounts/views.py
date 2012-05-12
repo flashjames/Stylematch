@@ -341,7 +341,7 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
 class ServiceForm(ModelForm):
     class Meta:
         model = Service
-        fields = ('name','length','price', 'description','display_on_profile')
+        fields = ('name','description','length','price', 'display_on_profile')
         exclude = ('order')
         
 
@@ -376,6 +376,8 @@ class OpenHoursView(LoginRequiredMixin, UpdateView):
         obj = OpenHours.objects.get(user__exact=self.request.user.id)
         return obj
 
+
+	
 
 
 def get_unique_filename(filename):

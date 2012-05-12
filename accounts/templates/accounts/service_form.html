@@ -16,12 +16,11 @@
 {% endblock %}
 
 {% block content %}
-
+{% block edit-profile-menu %}
 {% include "profiles/edit_profile_menu.html" with edit_services="active" %}
-
+{% endblock %}
 <div class="row" >
   <div id="edit-profile-large" class="span12" >
-    <br><br>
 
 <script type="text/template" id="tpl-service-list-item">
   <div class="unique-list-item">
@@ -69,10 +68,12 @@
 
 <div class="container">
   <div class="row">
+  {% block title-add-service-signup %}
   <div class="span8 offset1">
     <h2>Vänligen fyll i er salongs prislista.</h2> 
 <h3>Börja med att fylla i formuläret för varje behandling. Detta är för att kunderna skall kunna se vilka tjänster ni erbjuder och till vilket pris.</h3><br><br>
   </div>
+  {% endblock %}
     <br>
     <div class="span5">
     <div class="edit-service-form-left">
@@ -87,9 +88,11 @@
     <h5>Drag på behandlingarna för att ändra ordningen.</h5>
     <br>
     <div id="service-list" ></div></div>
+	
 
 
-  </div>
+  </div>	{% block signupstep3-next-button %}
+	{% endblock %}
 </div>
 </div>
 </div>

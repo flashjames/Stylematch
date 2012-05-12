@@ -1,0 +1,22 @@
+{% extends "accounts/service_form.html" %}
+{% load url from future %}
+
+{% block title %}Prislista{% endblock %}
+
+{% block edit-profile-menu %}
+{% endblock %}
+
+{% block title-add-service-signup %}
+{% include "accounts/signup_progress_bar.html" %}
+  <div class="span12">
+    <h2>Vänligen fyll i salongens prislista.</h2> 
+<h3 style="margin-bottom:30px">Börja med att fylla i formuläret för varje behandling. Detta är för att kunderna skall kunna se vilka tjänster ni erbjuder och till vilket pris.</h3>
+  </div>
+  {% endblock %}
+  
+  	{% block signupstep3-next-button %}
+  	<div class="form-actions">
+  	<a class="btn btn-info btn-large btn-signup-step3" href="{% url 'signupstep4_page' %}" >Spara och gå vidare</a>
+  	</div>
+  	
+	{% endblock %}

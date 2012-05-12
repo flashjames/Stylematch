@@ -22,9 +22,15 @@
 {% endblock %}
 
 {% block content %}
+{% block title-add-picture-signup-1 %}
+{% endblock %}
+{% block edit-profile-menu %}
+	{% include "profiles/edit_profile_menu.html" with edit_images="active" %}
+{% endblock %}
 
-{% include "profiles/edit_profile_menu.html" with edit_images="active" %}
 
+
+{% block add-picture-signup-block %}
 <div class="row" style="margin-top:25px">
   <h3>Ladda upp bilder</h3>
     <form method="post" enctype="multipart/form-data" action="">
@@ -40,7 +46,10 @@
       <input type="submit" value="Ladda upp bilden"  class="btn btn-primary" />
     </form>
   </div>
+{% endblock %}
 
+
+{% block show-pictures-block %}
 <div class="row" >
   <div id="edit-profile-large" class="span12" >
 
@@ -72,16 +81,20 @@
         <% } %>
         <br />
         <button class="btn delete">Delete</button>
-</divs>
+</divs> 
 </script>
 
 <div class="main-content edit-images">
   <div class="row">
+  {% block title-add-picture-signup-2 %}
     <div class="span4">
       <h2>Galleri bilder</h2>
       <p>Dra i bilden för att ändra ordning i galleriet</p>
     </div>
+	{% endblock %}
   </div>
+ 
+  
   <div class="row">
 
 
@@ -91,6 +104,10 @@
 
   </div>
 
+{% endblock %} 
+
+
+
   <!-- the code that does the magic on the page -->
   <script src="{{ STATIC_URL }}js/picture.js"></script>
 
@@ -98,5 +115,8 @@
 
 </div>
 </div>
-
+ {% block signupstep4-next-button %}
+  {% endblock %}	
 {% endblock %}
+
+

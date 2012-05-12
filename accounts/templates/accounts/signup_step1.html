@@ -7,15 +7,18 @@
 
 
 <div class="row signup-step1">
+
+	{% include "accounts/signup_progress_bar.html" %}
   <div id="edit-profile-large" class="span8">
-    <h2>Skapa din profilsida - Salongs information</h2>
+  
+    <h2>Först, börja med att fylla i information om din salong</h2>
     <form action="" method="post" class="form-horizontal">{% csrf_token %}
       <fieldset>
         {% for field in form %}
         {% include "accounts/form_snippet.html" with field=field %}
         {% endfor %}
 
-        <div class="span12 signup-label-button">
+        <div class="form-actions">
           <button type="submit" class="btn-large btn-info">Fortsätt vidare</button>
         </div>
 

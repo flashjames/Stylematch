@@ -9,7 +9,7 @@
  
  <h3>Vi skickar ut inbjudningskoder löpande, så fyll i din emailadress för att ställa dig på väntelistan.</h3>
  
- <form action="" method="post">{% csrf_token %}
+ <form action="/betapage" method="post">{% csrf_token %}
             <input style="height:25px;width:35%;margin: 0px 30px 0px 0px;" name="email" id="id_email" type="text" placeholder="E-postadress">
 	      
               <button type="submit" class="btn-large btn-info">Ans&ouml;k om inbjudan</button>

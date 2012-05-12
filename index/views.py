@@ -29,7 +29,7 @@ class BetaPageView(CreateView):
         # written here in init since it will give reverse url error
         # if just written in class definition. because urls.py isnt loaded
         # when this class is defined
-        self.success_url=reverse('beta_page')
+        self.success_url=reverse('index_page')
 
     def get(self, request):
         #redirect_to("http://www.google.se", )

@@ -40,7 +40,7 @@ urlpatterns = patterns(
     (r'^accounts/edit-settings/', TemplateView.as_view(template_name="edit-account-settings.html"),{},'edit-account-settings'),
    
     (r'^about-us/', AboutPageView.as_view(),{}, 'about_page'),
-    (r'^betapage', BetaPageView.as_view(),{}, 'beta_page'),
+    (r'^get_invite', BetaPageView.as_view(),{}, 'get_invite'),
     (r'^features/', FeaturesPageView.as_view(),{}, 'features_page'),
     url(r"^su/", include("django_su.urls")),
    

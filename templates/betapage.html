@@ -1,55 +1,49 @@
-{# load google_analytics #}
-{% load bootstrap %}
+{% extends "base2.html" %}
 {% load url from future %}
 {% load index_extras %}
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <script type="text/javascript" src="/static/jquery-ui-1.8.18.custom.min.js"></script>
-    <script type="text/javascript" src="{{ JQUERY_SCRIPT }}"></script>
-    <script type="text/javascript">
-      $('#loginmodal').modal();
-    </script>
-	<script type="text/javascript">
-      $('#invitemodal').modal();
-    </script>
+{% block title %}Registrera konto{% endblock %}
+{% block content %}
 
-    {% bootstrap_js all %}
-    {% bootstrap_less %}
+<div class="container">
 
-    {# Used to load js that's specific to a page #}
-    {% block html-head %}
+  <div class="row">
+
+
+    <div style="margin-top:190px;" class="span6">
+
+      <h3>Vi skickar ut inbjudningskoder löpande, så fyll i din emailadress för att ställa dig på väntelistan.</h3>
+
+      <form action="" style="margin-top:20px;" method="post">{% csrf_token %}
+        {% csrf_token %}
+        <input style="height:25px;width:35%;margin: 0px 30px 0px 0px;" name="email" id="id_email" type="text" placeholder="E-postadress">
+
+        <button type="submit" class="btn-large btn-info">Ans&ouml;k om inbjudan</button>
+        {{ form.email.errors }}
+      </form>
+    </div>
+      <div class="span5 offset1 account-register-info">
+	<h2>MED STYLEMATCH FÅR DU...</h2>
+	
+	<h3>- En personlig hemsida (www.stylematch.se/dittnamn)<br>
+	- Vara med i StyleMatch exklusiva sökmotor
+	</h3>
+	
+	<h2>DÄR DU KAN...</h2>
+	<h3>
+	- Lyfta fram din stil<br>
+	- Få nya kunder som passar dig<br>
+	- Sprida din hemsida via sociala medier<br>
+	</h3>
+	
+	
+	
+	
+      </div>
+
+  </div>
+</div>
+
+
 
     {% endblock %}
-
-
-    <title>{% block title %}Stylematch - Framtidens marknadsf&ouml;ringsverktyg{% endblock %}</title>
-  </head>
-  <body class="body-padding-zero body-beta-background">
-
-    <div class="container">
-
-      <div class="beta-header">
-        {% include "login_modal_snippet.html" %}
-        <div class="login start"><a href="#loginmodal" data-toggle="modal" class="btn btn-large btn-info"><i class="icon-user"></i><span> Logga in</span></a></div>
-      </div>
-      <section id="gridSystem">
-        {% block content %}
-        <div class="beta-banner shadow-beta well"><center><h1 class="beta-banner">Framtidens marknadsf&ouml;ringsverktyg <br><span class="beta-banner">f&ouml;r utbildade fris&ouml;rer</span></h1></center>
-          
-           {% include "invite_modal_snippet.html" %}
-         <br> <center><a href="#invitemodal" data-toggle="modal" class="btn btn-large btn-info">G&aring; med h&auml;r!</button></a></center></h3>
-         <br>
-          <h2 class="beta-banner"><a class="beta-banner" href="/features">L&auml;s mer om Stylematch</a></h3>
-
-</div>
-
-{% endblock %}
-</section>
-{% block footer %} {% endblock %}
-</div>
-{% google_analytics %}
-</body>
-</html>

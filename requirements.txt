@@ -11,6 +11,7 @@ django-extensions==0.8
 django-galleria==0.1
 django-registration==0.8
 django-social-auth==0.6.6
+django-su==0.2
 django-tastypie==0.9.11
 httplib2==0.7.2
 ipdb==0.6.1

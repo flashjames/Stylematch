@@ -30,7 +30,21 @@ label, input, button, select, textarea, {
 }
 
 .beta-header{
-    height:100px;
+    x-webkit-box-shadow: 8px 0px 6px 5px white;
+    x-moz-box-shadow: 8px 0px 6px 5px white;
+    xbox-shadow: 8px 0px 6px 5px white;
+    height:38px;
+    background-color:#343029;
+    z-index:5;
+    xmargin-bottom:20px;    
+    display:none;
+}
+
+.beta-header p {
+    padding-top:10px;
+    text-align:center;
+    color:white;
+    font-size:18px;
 }
 
 .masthead {
@@ -151,24 +165,6 @@ hr.soften {
     text-decoration:none;
 }
 
-.absolut-position-betasign{
-    position:absolute;
-    top:0px;
-    left:46%;
-    width:50px;
-    background-color:grey;
-    height:35px;
-    padding:0px;
-}
-
-.absolut-position-betasign h1{
-    font-size:20px;
-    text-align:center;
-    margin-top:0px;
-    padding-top:0px;
-
-}
-
 .vem-ar{
     padding-top:30px;
 }
@@ -181,6 +177,7 @@ hr.soften {
     xbackground: url('../img/Flow-Background.jpg');
     background-color: #E8E4E1;
     background-size:cover;
+    position:relative;
 }
 
 .logo-account-pages{
@@ -206,7 +203,7 @@ hr.soften {
 
 .absolut-position-searchfield{
     position:absolute;
-    top:140px;
+    top:-200px;
     width:970px;
 }
 
@@ -584,16 +581,6 @@ h3.beta-banner{
 
 
 
-.bigpage{
-    min-height:70%;
-    xposition: relative;
-    xmargin-bottom: -200px;
-    xpadding-bottom: 200px;
-}
-
-*html bigpage{
-    height:100%;
-}
 
 .testar-footer{
     min-height:100%;

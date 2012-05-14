@@ -132,13 +132,28 @@
   </div>
 
 <div id="fb-root"></div>
-<script>(function(d, s, id) {
+
+<script type="text/javascript">
+      /* 
+      SlideDown beta-header banner 
+      This should be added on every page where we want it.
+      */
+
+      setTimeout(function() {
+
+      $('.beta-header').slideDown();
+      }, 3000);
+     
+      /* Facebook widget */
+
+      (function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
   js = d.createElement(s); js.id = id;
   js.src = "//connect.facebook.net/sv_SE/all.js#xfbml=1";
   fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
+}(document, 'script', 'facebook-jssdk'));
+    </script>
 
   {% endblock %}
 

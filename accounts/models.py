@@ -185,7 +185,7 @@ class Picture(models.Model):
     order = models.PositiveIntegerField(blank=True, editable=True, null=True)
     
     # unused if it's a profile image
-    display_on_profile = models.BooleanField("Visa på profil", blank=True)
+    display_on_profile = models.BooleanField("Visa på profil", blank=True, default=True)
 
 
     def save(self, *args, **kwargs):

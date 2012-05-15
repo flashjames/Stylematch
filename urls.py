@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 from django.views.generic import TemplateView
-from index.views import AboutPageView, IndexPageView, BetaPageView, FeaturesPageView, SignupStep2PageView
+from index.views import AboutPageView, IndexPageView, BetaPageView, FeaturesPageView, SignupStep2PageView, ContactPageView
 
 from django.contrib import admin
 from django.views.generic.simple import redirect_to
@@ -40,6 +40,7 @@ urlpatterns = patterns(
     (r'^accounts/edit-settings/', TemplateView.as_view(template_name="edit-account-settings.html"),{},'edit-account-settings'),
    
     (r'^about-us/', AboutPageView.as_view(),{}, 'about_page'),
+    (r'^kontakt/', ContactPageView.as_view(),{}, 'contact_page'),
     (r'^get_invite', BetaPageView.as_view(),{}, 'get_invite'),
     (r'^features/', FeaturesPageView.as_view(),{}, 'features_page'),
     url(r"^su/", include("django_su.urls")),

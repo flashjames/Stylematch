@@ -15,6 +15,12 @@ class AboutPageView(TemplateView):
     Display about us page
     """
     template_name = "about_us.html"
+
+class ContactPageView(TemplateView):
+    """
+    Display contact us page
+    """
+    template_name = "contact_us.html"
     
 class BetaPageView(CreateView):
     """

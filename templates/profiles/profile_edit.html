@@ -19,9 +19,9 @@
 
           {% include "profiles/form_snippet.html" with field=form.first_name %}
           {% include "profiles/form_snippet.html" with field=form.last_name %}
-          {% include "profiles/form_snippet.html" with field=form.profile_text %}
+          {% include "profiles/form_snippet.html" with field=form.profile_text help_text="Här skriver du en personlig text som beskriver dig och vem du är som frisör. Det viktiga är att lyfta fram dig själv och istälet för den salong du jobbar på.  Har du varit på någon speciell utbildning som är av intresse för dina kunder? Tänk på att hålla din text kort, då är det större chans att kunderna läser den." %}
 	  
-	  {% include "profiles/form_snippet.html" with field=form.profile_url help_text="Detta blir din personliga Stylematch-adress. Det är denna du kommer kunna ge till kunder och vänner så att de direkt kan besöka din profil." %}
+	  {% include "profiles/form_snippet.html" with field=form.profile_url help_text="Detta blir din personliga Stylematch-adress. Det är denna du kommer kunna ge till kunder och vänner så att de direkt kan besöka din profil. Gör den kort så den blir lätt att komma ihåg." %}
 
           {% include "profiles/form_snippet.html" with field=form.salon_name %}
 

@@ -1,4 +1,9 @@
 (function($){
+    
+    // Need to be here, else Internet Explorer crap, will cache all ajax requests -> sad end-winblows-user 
+    $.ajaxSetup({
+	cache: false
+    });
 
     window.Service = Backbone.Model.extend({});
 
@@ -51,13 +56,12 @@
 	     * since we need to access the li's index in the <ul> list
 	     */
 	    $(this.el).children("li").each(function(index, element) {
-		console.log("asd");
 		$(element).trigger('updateOrder');
 	    });
 	},
 	saveEachModel: function() {
 	    this.model.each(function(model) {
-		console.log(model);
+
 	    });
 	}
     });
@@ -84,7 +88,7 @@
         },
 	switchDisplayOnProfile: function() {
 	    var display_on_profile = this.model.get("display_on_profile");
-	    console.log(display_on_profile, this.model);
+	    //console.log(display_on_profile, this.model);
 	    var bool;
 	    if(display_on_profile)
 		bool = false;
@@ -97,11 +101,11 @@
 	    this.model.save({}, {
                 success:function () {
 		    // TODO: Add dialog in interface
-                    console.log('Service deleted successfully');
+                    //console.log('Picture deleted successfully');
                 },
 		error:function() {
-		      // TODO: Add dialog in interface
-                    console.log('Service delete made an error!');
+		    // TODO: Add dialog in interface
+                    //console.log('Picture delete made an error!');
 		}
             });
 	},
@@ -113,11 +117,11 @@
 	    this.model.save({image_type: 'C'}, {silent:true,
             success:function () {
                 // TODO: Add dialog in interface
-                console.log('setProfileImage successfully changed');
+                //console.log('setProfileImage successfully changed');
             },
             error:function() {
                 // TODO: Add dialog in interface
-                console.log('setProfileImage saving failed!');
+                //console.log('setProfileImage saving failed!');
             }
         });
 
@@ -133,7 +137,7 @@
 	    this.model.set({order: indexInList, silent:true});
 	    this.model.save({}, {
 		 error: function(collection, error, options) {
-		     console.log("Error: Model didnt sync with server, after the order was changed");
+		     //console.log("Error: Model didnt sync with server, after the order was changed");
 		 }
 	    });
 	    //console.log("na", $(this.el).index(), this.model);
@@ -142,11 +146,11 @@
             this.model.destroy({
                 success:function () {
 		    // TODO: Add dialog in interface
-                    console.log('Service deleted successfully');
+                    //console.log('Picture deleted successfully');
                 },
 		error:function() {
 		      // TODO: Add dialog in interface
-                    console.log('Service delete made an error!');
+                    //console.log('Picture delete made an error!');
 		}
             });
             return false;
@@ -173,10 +177,11 @@
 	    
             this.serviceList.fetch({
                 success: function(collection, response) {
-                    if(!response)
+                    if(!response) {
                         //TODO: Display error message "couldnt get views"
-                        console.log("Error: Couldnt get user's services from API");
-		    console.log("fetch()",response);
+                        //console.log("Error: Couldnt get user's services from API");
+			}
+		    //console.log("fetch()",response);
                 }
             });
 	    
@@ -191,7 +196,7 @@
         close:function () {
             $(this.el).unbind();
             $(this.el).empty();
-        },
+        }
     });
 
     this.ServiceView = new ServiceView();

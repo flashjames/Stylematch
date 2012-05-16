@@ -22,27 +22,28 @@ class ContactPageView(TemplateView):
     """
     template_name = "contact_us.html"
     
-class BetaPageView(CreateView):
+class BetaEmailView(CreateView):
     """
     Display beta page
     """
-    template_name = "betapage.html"
+    template_name = "betaemailpage.html"
     model = BetaEmail
 
     def __init__(self, *args, **kwargs):
-        super(BetaPageView, self).__init__(*args, **kwargs)
+        super(BetaEmailView, self).__init__(*args, **kwargs)
 
         # written here in init since it will give reverse url error
         # if just written in class definition. because urls.py isnt loaded
         # when this class is defined
-        self.success_url=reverse('index_page')
+        
+        self.success_url=reverse('beta_index_page')
 
     def get(self, request):
         #redirect_to("http://www.google.se", )
         if request.user.is_authenticated():
             return redirect(reverse('profile_display_redirect'))
         else:
-            return super(BetaPageView, self).get(request)
+            return super(BetaEmailView, self).get(request)
 
     
 class FeaturesPageView(TemplateView):

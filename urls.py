@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 from django.views.generic import TemplateView
-from index.views import AboutPageView, IndexPageView, BetaPageView, FeaturesPageView, SignupStep2PageView, ContactPageView
+from index.views import AboutPageView, IndexPageView, BetaEmailView, FeaturesPageView, ContactPageView
 
 from django.contrib import admin
 from django.views.generic.simple import redirect_to
@@ -41,7 +41,10 @@ urlpatterns = patterns(
    
     (r'^about-us/', AboutPageView.as_view(),{}, 'about_page'),
     (r'^kontakt/', ContactPageView.as_view(),{}, 'contact_page'),
-    (r'^get_invite', BetaPageView.as_view(),{}, 'get_invite'),
+    
+    (r'^get_invite', BetaEmailView.as_view(),{}, 'get_invite'),
+    (r'^start', TemplateView.as_view(template_name="betaemail_index.html"), {}, 'beta_index_page'),
+    
     (r'^features/', FeaturesPageView.as_view(),{}, 'features_page'),
     url(r"^su/", include("django_su.urls")),
    

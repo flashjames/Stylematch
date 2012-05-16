@@ -18,6 +18,7 @@
 <script src="{{ STATIC_URL }}js/backbone.modelbinding.js"></script>
 
 <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.18.custom.min.js"></script>
+ 
 
 {% endblock %}
 
@@ -68,7 +69,6 @@
         <label for="show_image_on_profile">Visa på profil</label>
         <input type="checkbox" name="show_image_on_profile" class="show_image_on_profile">
         <% } %>
-        <% console.log( "Image type: " , image_type) %>
         <br />
 
 
@@ -103,6 +103,7 @@
 
 
   </div>
+ 
 
 {% endblock %} 
 
@@ -118,5 +119,4 @@
  {% block signupstep4-next-button %}
   {% endblock %}	
 {% endblock %}
-
 

@@ -105,13 +105,7 @@ class DisplayProfileView(DetailView):
         attr_name = day + "_closed"
         closed_time = self.get_opening_time(obj,attr_name)
 
-        attr_name = day + "_lunch"
-        lunch_start = self.get_opening_time(obj,attr_name)
-
-        attr_name = day + "_lunch_closed"
-        lunch_end = self.get_opening_time(obj,attr_name)
-
-        day = {'day': pretty_dayname, 'open': open_time, 'closed': closed_time, 'lunch_start': lunch_start, 'lunch_end': lunch_end}
+        day = {'day': pretty_dayname, 'open': open_time, 'closed': closed_time}
 
         return day
 
@@ -139,7 +133,14 @@ class DisplayProfileView(DetailView):
         # to display the parts associated to the profile,
         # we filter on the user_id of profile owner
         profile_user_id = context['profile'].user_id
+        
 
+        # used to only display edit-profile menu, if at the user's profile
+        current_user_id = self.request.user.id
+        context['logged_in_user_profile'] = False
+        if current_user_id == profile_user_id:
+            context['logged_in_user_profile'] = True
+        
         # get images displayed on profile
         context['profile_image'] = self.get_profile_image(profile_user_id)
         context['gallery_images'] = self.get_gallery_images(profile_user_id)

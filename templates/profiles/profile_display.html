@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 {% load url from future %}
 {% load index_extras %}
@@ -14,8 +15,9 @@
 
 {% block content %}
 
-{% if user.is_authenticated %}
+{% if user.is_authenticated and logged_in_user_profile %}
 {% include "profiles/edit_profile_menu.html" with display_profile="active" %}
+<!-- remove these <br> asap!! -->
 <br><br>
 {% else %}
 <br><br>

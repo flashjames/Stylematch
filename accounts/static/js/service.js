@@ -55,7 +55,7 @@
 	    this.model.each(function(model) {
 		console.log(model);
 	    });
-	},
+	}
     });
 
     window.ServiceListItemView = Backbone.View.extend({
@@ -141,13 +141,13 @@
 	    
             _.bindAll(this, "formSave", "changeModelToEdit", "displayFormErrors");
             vent.bind("changeModelToEdit", this.changeModelToEdit);
-	    	vent.bind("newForm", this.newForm);
+	    vent.bind("newForm", this.newForm);
 
             this.serviceList = new ServiceCollection();
             this.serviceListView = new ServiceListView({model:this.serviceList});
 
             this.newForm();
-	    	self = this;
+	    var self = this;
             this.serviceList.fetch({
                 success: function(collection, response) {
                 	if(collection.size() > 0) {
@@ -193,7 +193,7 @@
 	    var ServiceView = this;
 	    
 	    // a callback used on both model.save() and serviceList.create()
-	    self = this;
+	    var self = this;
 	    responseCallback = {
 		success: function(collection, error, options) {
 		    ServiceView.newForm();

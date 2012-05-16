@@ -139,7 +139,14 @@ class DisplayProfileView(DetailView):
         # to display the parts associated to the profile,
         # we filter on the user_id of profile owner
         profile_user_id = context['profile'].user_id
+        
 
+        # used to only display edit-profile menu, if at the user's profile
+        current_user_id = self.request.user.id
+        context['logged_in_user_profile'] = False
+        if current_user_id == profile_user_id:
+            context['logged_in_user_profile'] = True
+        
         # get images displayed on profile
         context['profile_image'] = self.get_profile_image(profile_user_id)
         context['gallery_images'] = self.get_gallery_images(profile_user_id)

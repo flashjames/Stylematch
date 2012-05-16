@@ -136,11 +136,6 @@ class OpenHours(models.Model):
         code = day + '_closed = models.IntegerField("", choices=time_tuple, default = ' + str(default_close_time) + ')'
         exec(code)
 
-        code = day + '_lunch = models.IntegerField("", choices=time_tuple, default = ' + str(default_lunch_open) + ')'
-        exec(code)
-
-        code = day + '_lunch_closed = models.IntegerField("", choices=time_tuple, default = ' + str(default_lunch_close) + ')'
-        exec(code)
 
 
 

@@ -1,0 +1,26 @@
+{% extends "index.html" %}
+{% block second-background %}
+
+  {# To keep the larger header on the front-page #}
+  <div class="content-background" style="margin-top:210px;">
+
+   
+
+<div class="modal" id="myModal">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal">×</button>
+    <br>
+    
+  </div>
+  <div class="modal-body">
+    <h3>Din mail är nu registrerad, vi kontaktar dig inom kort!</h3>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn btn-primary " data-dismiss="modal">Stäng</a>
+  </div>
+</div>
+<script src="{{ STATIC_URL }}js/bootstrap-modal.js" type="text/javascript"></script>
+<script type="text/javascript">
+  $('#myModal').modal({});
+</script>
+ {% endblock %}

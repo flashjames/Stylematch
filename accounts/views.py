@@ -105,13 +105,7 @@ class DisplayProfileView(DetailView):
         attr_name = day + "_closed"
         closed_time = self.get_opening_time(obj,attr_name)
 
-        attr_name = day + "_lunch"
-        lunch_start = self.get_opening_time(obj,attr_name)
-
-        attr_name = day + "_lunch_closed"
-        lunch_end = self.get_opening_time(obj,attr_name)
-
-        day = {'day': pretty_dayname, 'open': open_time, 'closed': closed_time, 'lunch_start': lunch_start, 'lunch_end': lunch_end}
+        day = {'day': pretty_dayname, 'open': open_time, 'closed': closed_time}
 
         return day
 

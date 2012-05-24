@@ -49,7 +49,7 @@ urlpatterns = patterns(
     url(r"^su/", include("django_su.urls")),
    
     (r'^google66ca7050dfade3e4.html', TemplateView.as_view(template_name="google66ca7050dfade3e4.html")), #tracking-code so google apps know we own the domain.
-    
+   (r'^test.html', TemplateView.as_view(template_name="test.html")),
      url(r'^', include('accounts.urls')), # accounts/profile, should always be at the end. since a user may set a profile url that match another url -> if it's not at the end it may overwrite it.
 )
 

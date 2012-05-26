@@ -198,13 +198,12 @@
         },
         events:{
         },
-	  initUploadDialog: function() {
-	      var current_modal = $('#image-upload-dialog');
-	      current_modal.modal({show:false});
-	      $(".empty-image-list-item").live('click', function() {
+	initUploadDialog: function() {
+	    var current_modal = $('#image-upload-dialog');
+	    current_modal.modal({show:false});
+	    $(".empty-image-list-item").live('click', function() {
                 current_modal.modal('show');
-            });
-
+            });  
         },
         render:function (eventName) {
             $(this.el).html(this.template(this.model.toJSON()));

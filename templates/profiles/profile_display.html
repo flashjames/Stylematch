@@ -69,6 +69,12 @@
     
   </div>
   <div class="span3" id="salon-information">
+     <div>
+	    
+    <img class="salong-map-profile" src="http://maps.googleapis.com/maps/api/staticmap?center={{ profile.salon_adress }}, {{ profile.salon_city }},sweden&zoom=13&size=220x220&maptype=roadmap
+&markers=color:red%7Ccolor:red%7C{{ profile.salon_adress }}, {{ profile.salon_city }},sweden&sensor=false"></img>
+	    
+    </div>
     <h2>Kontakt</h2>
     <h4>{{ profile.salon_name }}</h4>
 
@@ -81,12 +87,7 @@
     {{ profile.salon_phone_number }}
     {% endif %} </p>
     
-    <div>
-	    
-    <img class="salong-map-profile" src="http://maps.googleapis.com/maps/api/staticmap?center={{ profile.salon_adress }}, {{ profile.salon_city }},sweden&zoom=13&size=220x220&maptype=roadmap
-&markers=color:red%7Ccolor:red%7C{{ profile.salon_adress }}, {{ profile.salon_city }},sweden&sensor=false"></img>
-	    
-    </div>
+   
     
   </div>
 </div>

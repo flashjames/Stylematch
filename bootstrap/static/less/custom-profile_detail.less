@@ -821,8 +821,8 @@ div.profile-image-border {
 }
 
 .profile-image img  {
-    height:220px;
-    width:220px;
+    max-height:220px;
+    max-width:220px;
 
     /* center image in parent div */
     position: absolute;
@@ -1039,32 +1039,49 @@ ul.image-list-horizontal {
     margin: 0px;
 }
 ul.image-list-horizontal li {
-    display:inline-block;
+    xdisplay:inline-block;
     list-style-type:none;
     margin:0px 10px 10px 0px;
+    float:left;
 }
 
 ul.image-list-horizontal label {
     display:inline;
+    
 }
 
 div.edit-images-image-border {
     background-color:grey;
     width:230px;
     height:230px;
-    position:relative
+    line-height: 230px;
+    text-align: center;
+}
+
+.edit-images-image-border p {
+    padding-top:50px;
 }
 
 .image-block img  {
-    height:220px;
-    width:220px;
+    max-height:220px;
+    max-width:220px;
+    vertical-align: middle;
+}
 
-    /* center image in parent div */
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    margin-left: -110px;
-    margin-top: -110px;
+.edit-images-image-bottom {
+    padding:10px 20px 10px 20px;
+    background-color:#F2F2F2;
+    border: 1px solid grey;
+}
+
+.edit-images-button {
+    padding:3px;
+    border-bottom-color: #888;
+    background-color: #EEE;
+    -webkit-box-shadow:0 1px 0 rgba(0, 0, 0, .1);
+    border: 1px solid #999;
+    display:inline-block;
+    margin-top:-3px;
 }
 
 

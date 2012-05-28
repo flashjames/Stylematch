@@ -168,6 +168,7 @@ class Picture(models.Model):
     filename = models.CharField(max_length=50, blank=True)
     user = models.ForeignKey(User, editable=False)
     upload_date = models.DateTimeField(auto_now_add=True,editable=False)
+    comment = models.CharField(max_length=100, blank=True)
 
     # choices probably not needed, only usable for forms to get readable name
     # what i wanted was a real enum which could be used when setting the value

@@ -37,14 +37,6 @@ class BetaEmailView(CreateView):
         # when this class is defined
         
         self.success_url=reverse('beta_index_page')
-
-    def get(self, request):
-        #redirect_to("http://www.google.se", )
-        if request.user.is_authenticated():
-            return redirect(reverse('profile_display_redirect'))
-        else:
-            return super(BetaEmailView, self).get(request)
-
     
 class FeaturesPageView(TemplateView):
     """

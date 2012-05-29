@@ -36,19 +36,21 @@
             }, this);
 
             // always have six image boxes on the page
-            var empty_image_list_item = _.template($('#tpl-empty-image-list-item').html());
+            var empty_image_list_item = $('#tpl-empty-image-list-item').html();
 
 	    // number of uploaded images
 	    var uploaded_images = this.model.size();
-
-	    
-
+	   
 	    // at least six "images"
 	    if(uploaded_images < 6) {
 		for(i=uploaded_images;i<6;i++) {
-                    $(this.el).append(empty_image_list_item);
-		   
-		}
+		    // dont add padding at bottom, if no uploaded images yet
+		    if(uploaded_images == 0) {
+			$(this.el).append($(empty_image_list_item).removeClass('empty-image-fixed-height'));    
+		    } else {
+			$(this.el).append($(empty_image_list_item));    
+		    }
+		}	    
 	    }
 	    // always fill one row, and if the last row is filled, fill the next row too
 	    else {
@@ -173,8 +175,6 @@
                                                });
 
         },
-
-
         updateModelOrder: function() {
             /*
              * Update the Service objects order field according to order in the <ul> list

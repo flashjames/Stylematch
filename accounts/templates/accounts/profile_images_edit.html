@@ -105,12 +105,13 @@
         <div class="profile-image-edit span3">
           <ul class="image-list-horizontal ui-sortable" style="">
             <li class="image-block" style="">
-              <div class="edit-images-image-border">
+              <div style="position:relative;" class="edit-images-image-border">
+		<div style="position:absolute;height:230px;background-color:rgba(0,0,0,0.4);" class="edit-profile-image-overlay">
+		  <h3 style="padding-top:150px;color:white;font-weight:bold;"> Tryck här för att byta profilbild</h3>
+		</div>
                 <img src="{{ profile_image_url }}">
-		<!-- Ska visas som på profil sidan, men ska visas hela tiden
-		<div class="edit-profile-image-overlay">
-		  <h3> Tryck här för att byta profilbild</h3>
-		</div>-->
+		
+		
 		
               </div>
 

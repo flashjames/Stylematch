@@ -133,7 +133,8 @@ class PictureResource(ModelResource):
         pass_request_user_to_django = True
         authentication = DjangoBasicAuthentication()
         authorization = PerUserAuthorization()
-        queryset = Picture.objects.all()
+        queryset = Picture.objects.filter(image_type='G')
+
         excludes = ['file','user']
         limit = 50
         max_limit = 0

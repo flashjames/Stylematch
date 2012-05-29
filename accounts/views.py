@@ -416,7 +416,7 @@ class PictureForm(forms.ModelForm):
 
     class Meta:
         model = Picture
-        fields = ('file',)
+        fields = ('file','comment','image_type')
 
 class PicturesView(LoginRequiredMixin, CreateView):
     """
@@ -436,15 +436,46 @@ class PicturesView(LoginRequiredMixin, CreateView):
         # when this class is defined
         self.success_url=reverse('profiles_edit_images')
 
-
     def get_form(self, form_class):
         form = super(PicturesView, self).get_form(form_class)
         form.instance.user = self.request.user
         return form
 
+    def get_profile_image(self, user):
+        # 'C' = current profile image
+        queryset = Picture.objects.filter(user__exact=user).filter(
+            image_type='C')
+        if queryset:
+            profile_picture = queryset[0].get_image_url()
+        else:
+            profile_picture = os.path.join(settings.STATIC_URL, 'img/default_image_profile_logged_in.jpg')
+
+            
+        #import pdb;pdb.set_trace()
+        return profile_picture
+
+    def get_context_data(self, **kwargs):
+        context = super(PicturesView, self).get_context_data(**kwargs)
+        context['profile_image_url'] = self.get_profile_image(self.request.user.id)
+        return context
+
+    def remove_old_profile_image(self,user):
+        queryset = Picture.objects.filter(user__exact=user).filter(
+            image_type='C')
+        # old profile image found -> delete
+        if queryset:
+            queryset[0].delete()
+
     # Called when we're sure all fields in the form are valid
     def form_valid(self, form):
-
+        image_type = form.cleaned_data['image_type']
+        
+        # this class is used to upload both Gallery and Profile images ->
+        # only remove old profile image if it's a profile image that have
+        # been uploaded
+        if image_type == "C":
+            self.remove_old_profile_image(self.request.user)
+        
         f = self.request.FILES.get('file')
 
         filename=get_unique_filename(f.name)
@@ -455,8 +486,10 @@ class PicturesView(LoginRequiredMixin, CreateView):
         self.object.filename = filename
 
         # default image type, Gallery
-        self.object.image_type = 'G'
+        #self.object.image_type = 'G'
         self.object.save()
         form.save_m2m()
+        
+        
         return super(PicturesView, self).form_valid(form)
 

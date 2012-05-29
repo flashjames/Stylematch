@@ -448,7 +448,7 @@ class PicturesView(LoginRequiredMixin, CreateView):
         if queryset:
             profile_picture = queryset[0].get_image_url()
         else:
-            profile_picture = os.path.join(settings.STATIC_URL, 'img/default_image_profile_logged_in.jpg')
+            profile_picture = os.path.join(settings.STATIC_URL, 'img/default_image_profile_not_logged_in.jpg')
 
             
         #import pdb;pdb.set_trace()

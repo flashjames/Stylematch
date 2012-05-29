@@ -8,8 +8,6 @@
   PICTURE_API_URL = "{% url 'api_dispatch_list' api_name="profile" resource_name="picture" %}";
   <!-- used in the service.js file, to know the full image path -->
   PICTURE_PATH = "{{ user_images_path }}";
-
-
 </script>
 
 <script src="{{ STATIC_URL }}js/underscore-min.js"></script>
@@ -51,7 +49,7 @@
       </div>
       <div class="image-bottom-wrapper">
 	<div class="wrap-textarea">
-	  <textarea style="width:220px;height:55px;margin-bottom:0px;resize: none;" placeholder="Säg något om det här fotot" rows="2"><% if(comment) { %><%= comment %> <% } %></textarea>
+	  <textarea placeholder="Säg något om det här fotot" rows="2"><% if(comment) { %><%= comment %> <% } %></textarea>
 	</div>
 	<div class="edit-images-image-bottom">
           <!-- input checkbox should be checked=true if display_on_profile = true -->
@@ -67,16 +65,16 @@
           <% } %>
 	  
 
-	  <div class="delete-image" style="float:right;"><i class="icon-trash"></i><span></span></div>
-	  <button class="btn save">Spara</button>
+	  <div class="delete-image" style="display:inline-block;margin-top:7px;margin-left:10px;"><i class="icon-trash"></i><span></span></div>
+	  <button class="btn save" style="margin-left:10px;">Spara</button>
 	</div>
       </div>
 
     </script>
 
     <script type="text/template" id="tpl-empty-image-list-item">
-      <li class="image-block">
-        <div class="edit-images-image-border empty-image-list-item">
+      <li class="image-block empty-image-list-item">
+        <div class="edit-images-image-border">
           <p>Klicka för att ladda upp en bild</p>
 	</div>
 	<div class="image-bottom-wrapper">
@@ -109,6 +107,11 @@
             <li class="image-block" style="">
               <div class="edit-images-image-border">
                 <img src="{{ profile_image_url }}">
+		<!-- Ska visas som på profil sidan, men ska visas hela tiden
+		<div class="edit-profile-image-overlay">
+		  <h3> Tryck här för att byta profilbild</h3>
+		</div>-->
+		
               </div>
 
             </li>
@@ -124,17 +127,29 @@
   <div class="modal" id="image-upload-dialog-gallery" style="display:none;">
     <div class="modal-header">
       <button class="close" data-dismiss="modal">×</button>
-      <h3>Ladda upp en bild</h3>
+      <h3>Ladda upp en galleri bild</h3>
     </div>
     <div class="modal-body">
-      <form method="post" enctype="multipart/form-data" action="">
+      <form class="form-horizontal" method="post" enctype="multipart/form-data" action="">
+	<fieldset>
         {% csrf_token %}
         {{ form.file.errors }}
-        <span style="margin-right:5px">Bild</span><input type="file" name="file" id="id_file">
-	<br />
-	<span style="margin-right:5px">Kommentare</span>
-	{{ form.comment }}
-	
+	<div class="control-group  ">
+	  <label class="control-label" for="inputWarning">Bild</label>
+	  <div class="controls">
+	    <input style="padding-left:1px;border:solid 1px #CCC;color:#888;" type="file" name="file" id="id_file">
+	    <span class="help-inline"></span>
+	    <p class="help-block"></p>
+	  </div>
+	</div>
+	<div class="control-group  ">
+	  <label class="control-label" for="inputWarning">Kommentar</label>
+	  <div class="controls ">
+	    {{ form.comment }}
+	    <span class="help-inline">Valfritt</span>
+	    <p class="help-block"></p>
+	  </div>
+	</div>	
 	<!-- uploads from here should be gallery images -->
 	<select style="display:none" name="image_type" id="image_type">
 	  <option selected="selected" value="G"></option>
@@ -144,6 +159,7 @@
         {{ form.docfile.label_tag }}
         {{ form.docfile.errors }}
         {{ form.docfile }}
+	</fieldset>
     </div>
     <div class="modal-footer">
       <a href="#" data-dismiss="modal" class="btn">Stäng</a>
@@ -155,13 +171,21 @@
 <div class="modal" id="image-upload-dialog-profileimage" style="display:none;">
     <div class="modal-header">
       <button class="close" data-dismiss="modal">×</button>
-      <h3>Ladda upp en bild</h3>
+      <h3>Ladda upp en profilbild</h3>
     </div>
     <div class="modal-body">
-      <form method="post" enctype="multipart/form-data" action="">
+       <form class="form-horizontal" method="post" enctype="multipart/form-data" action="">
+	<fieldset>
         {% csrf_token %}
         {{ form.file.errors }}
-        <span style="margin-right:5px">Bild</span><input type="file" name="file" id="id_file">
+	<div class="control-group  ">
+	  <label class="control-label" for="inputWarning">Bild</label>
+	  <div class="controls ">
+	    <input style="padding-left:1px;border:solid 1px #CCC;color:#888;" type="file" name="file" id="id_file">
+	    <span class="help-inline"></span>
+	    <p class="help-block"></p>
+	  </div>
+	</div>
 	<!-- uploads from here should be profile images -->
 	<select style="display:none" name="image_type" id="image_type">
 	  <option selected="selected" value="C"></option>
@@ -180,8 +204,6 @@
   </div>
   
   {% endblock %}
-
-
 
   <!-- the code that does the magic on the page -->
   <script src="{{ STATIC_URL }}js/picture.js"></script>

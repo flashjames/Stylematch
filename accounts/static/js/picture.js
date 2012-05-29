@@ -37,9 +37,26 @@
 
             // always have six image boxes on the page
             var empty_image_list_item = _.template($('#tpl-empty-image-list-item').html());
-            for(i=this.model.size();i<6;i++) {
-                $(this.el).append(empty_image_list_item);
-            }
+
+	    // number of uploaded images
+	    var uploaded_images = this.model.size();
+
+	    
+
+	    // at least six "images"
+	    if(uploaded_images < 6) {
+		for(i=uploaded_images;i<6;i++) {
+                    $(this.el).append(empty_image_list_item);
+		   
+		}
+	    }
+	    // always fill one row, and if the last row is filled, fill the next row too
+	    else {
+		var s = uploaded_images % 3;
+		for(i=s;i<3;i++) {
+                    $(this.el).append(empty_image_list_item);
+		}
+	    }
 
             var self = this;
             // make the ul list sortable with the function sortable() from jquery ui
@@ -89,15 +106,35 @@
             return this;
         },
         events:{
-            "click .delete":"deleteService",
+            "click .delete-image":"deleteService",
             "click .show_image_on_profile":"switchDisplayOnProfile",
             "change .profile_image_radiobutton": "setProfileImage",
-	    "click": "toggleEditbar"	    
+	    "click .save": "saveComment"
         },
-	toggleEditbar: function() {
-	    $(".edit-images-image-bottom",this.el).toggle();
+	saveComment: function() {
+	    var new_comment = $(this.el).find("textarea").val();
+	    var comment = this.model.get("comment");
+	    
+	    // comment have been changed
+	    if(new_comment != comment) {
+		this.model.set({comment:new_comment, silent:true});
+
+		this.model.save({}, {
+                    success:function () {
+			// TODO: Add dialog in interface
+			//console.log('Picture deleted successfully');
+                    },
+                    error:function() {
+			// TODO: Add dialog in interface
+			//console.log('Picture delete made an error!');
+                    }
+		});
+	    } else {
+		//do nothing
+	    }
+	    
 	},
-        switchDisplayOnProfile: function() {
+	switchDisplayOnProfile: function() {
             var display_on_profile = this.model.get("display_on_profile");
             //console.log(display_on_profile, this.model);
             var bool;
@@ -105,7 +142,6 @@
                 bool = false;
             else
                 bool = true;
-
 
             this.model.set({display_on_profile: bool, silent:true});
 
@@ -194,17 +230,26 @@
                 }
             });
 	    
-	    this.initUploadDialog();
+	    this.initGalleryUploadDialog();
+	    this.initProfileImageUploadDialog();
         },
         events:{
         },
-	initUploadDialog: function() {
-	    var current_modal = $('#image-upload-dialog');
+	initGalleryUploadDialog: function() {
+	    var current_modal = $('#image-upload-dialog-gallery');
 	    current_modal.modal({show:false});
 	    $(".empty-image-list-item").live('click', function() {
                 current_modal.modal('show');
             });  
         },
+	initProfileImageUploadDialog: function() {
+	    var current_modal = $('#image-upload-dialog-profileimage');
+	    current_modal.modal({show:false});
+	    $(".profile-image-edit").live('click', function() {
+                current_modal.modal('show');
+            });  
+        },
+        
         render:function (eventName) {
             $(this.el).html(this.template(this.model.toJSON()));
             return this;

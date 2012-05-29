@@ -177,7 +177,7 @@ class Picture(models.Model):
         ('P', 'Unused Profile Image'),
         ('C', 'Current Profile Image'),
         )
-    image_type = models.CharField(max_length=1, choices=IMAGE_TYPE_CHOICES,editable=False)
+    image_type = models.CharField(max_length=1, choices=IMAGE_TYPE_CHOICES)
     order = models.PositiveIntegerField(blank=True, editable=True, null=True)
     
     # unused if it's a profile image

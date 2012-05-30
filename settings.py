@@ -183,8 +183,8 @@ if not DEBUG:
 # -> more secure.
 AWS_ACCESS_KEY_ID = 'AKIAJHCGEY6XAXXOSYXA'
 AWS_SECRET_ACCESS_KEY = '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'
-#AWS_STORAGE_BUCKET_NAME = 'stylematch'
-AWS_STORAGE_BUCKET_NAME = 'dev-jens'
+AWS_STORAGE_BUCKET_NAME = 'stylematch'
+#AWS_STORAGE_BUCKET_NAME = 'dev-jens'
 EMAIL_BACKEND = 'django_ses.SESBackend'
 # SERVER_EMAIL, default error message email.
 # DEFAULT_FROM_EMAIL, all other mails

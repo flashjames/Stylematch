@@ -7,6 +7,10 @@
 <script src="{{ GALLERIA_SCRIPT }}" type="text/javascript" />
 <script type="text/javascript"> Galleria.loadTheme('{{ GALLERIA_THEME }}'); </script>
 <meta property="og:image" content="{{ profile_image }}">
+<script src="{{ STATIC_URL }}js/bootstrap-modal.js" type="text/javascript"></script>
+<script type="text/javascript">
+	$('#bookmemodal').modal();
+</script>
 
 
 {% endblock %}
@@ -14,6 +18,15 @@
 {% block title %}{{ first_name }} {{ last_name }}{% endblock %}
 
 {% block content %}
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/sv_SE/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 
 {% if user.is_authenticated and logged_in_user_profile %}
 {% include "profiles/edit_profile_menu.html" with display_profile="active" %}
@@ -32,32 +45,50 @@
     
       <img src="{{ profile_image }}" name="profile-image">
     
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and logged_in_user_profile %}
     <a class="edit-profile-image-test-links" href="{% url 'profiles_edit_images' %}">
     <div class="edit-profile-image-test">
     <h3> Tryck här för att byta profilbild</h3>
     </div></a>
     {% endif %}
+   
+    <div class="fb-like facebook-like-on-profile-display" data-send="true" data-layout="button_count" data-width="220" data-show-faces="true" data-action="recommend"></div>
+  
     </div>
+    
   </div>
 
   <div class="span6 profile-text-block">
-    <h2>{{ first_name }} {{ last_name }}</h2>
-    <h3>{{ profile.salon_name }}</h3>
+    <h2 style="display:inline-block">{{ first_name }} {{ last_name }}</h2>
+    <div class="fb-like pull-right" data-send="false" data-layout="button_count" data-width="50" data-show-faces="true"></div>
+    <h3>{{ profile.salon_name }}   |   {{ profile.salon_city }}</h3>
     <blockquote><p>{{ profile.profile_text }}</p></blockquote>
+    
+    {% include "book_me_modal_snippet.html" %}
+    <a class="btn btn-large btn-info pull-right book-me-btn"  data-toggle="modal" href="#bookmemodal" >Boka mig!</a>
+    
   </div>
-  <div class="span2" id="salon-information">
+  <div class="span3" id="salon-information">
+     <div>
+	    
+    <img class="salong-map-profile" src="http://maps.googleapis.com/maps/api/staticmap?center={{ profile.salon_adress }}, {{ profile.salon_city }},sweden&zoom=13&size=220x220&maptype=roadmap
+&markers=color:red%7Ccolor:red%7C{{ profile.salon_adress }}, {{ profile.salon_city }},sweden&sensor=false"></img>
+	    
+    </div>
     <h2>Kontakt</h2>
-    <p>{{ profile.salon_name }}</p>
+    <h4>{{ profile.salon_name }}</h4>
 
    
     <p>{{ profile.salon_adress }}, {{ profile.salon_city }}</p>
-    </p>Telefonnummer:
+    <p>Tele:
     {% if profile.number_on_profile %}
     {{ profile.personal_phone_number }}
     {% else %}
     {{ profile.salon_phone_number }}
     {% endif %} </p>
+    
+   
+    
   </div>
 </div>
 
@@ -124,5 +155,7 @@
 </div>
 {% endif %}
 </div>
+
+
 
 {% endblock %}

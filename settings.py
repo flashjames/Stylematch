@@ -237,58 +237,77 @@ ACCOUNT_ACTIVATION_DAYS = 7
 
 # END django-registration
 
-### Logging with Sentry
+###Logging local
+if DEBUG:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'mail_admins': {
+                'level': 'ERROR',
+                'class': 'django.utils.log.AdminEmailHandler'
+                }
+            },
+        'loggers': {
+            'django.request': {
+                'handlers': ['mail_admins'],
+                'level': 'ERROR',
+                'propagate': True,
+                },
+            }
+        }
+### Logging with Sentry, production
+else:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': True,
+        'root': {
+            'level': 'WARNING',
+            'handlers': ['sentry'],
+            },
+        'formatters': {
+            'verbose': {
+                'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+                },
+            },
+        'handlers': {
+            'sentry': {
+                'level': 'ERROR',
+                'class': 'raven.contrib.django.handlers.SentryHandler',
+                },
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'formatter': 'verbose'
+                },
+            },
+        'loggers': {
+            'django.db.backends': {
+                'level': 'ERROR',
+                'handlers': ['console'],
+                'propagate': False,
+                },
+            'raven': {
+                'level': 'DEBUG',
+                'handlers': ['console'],
+                'propagate': False,
+                },
+            'sentry.errors': {
+                'level': 'DEBUG',
+                'handlers': ['console'],
+                'propagate': False,
+                },
+            },
+        }
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': True,
-    'root': {
-        'level': 'WARNING',
-        'handlers': ['sentry'],
-    },
-    'formatters': {
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-        },
-    },
-    'handlers': {
-        'sentry': {
-            'level': 'ERROR',
-            'class': 'raven.contrib.django.handlers.SentryHandler',
-        },
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose'
-        },
-    },
-    'loggers': {
-        'django.db.backends': {
-            'level': 'ERROR',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        'raven': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-        'sentry.errors': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': False,
-        },
-    },
-}
+    # Sentry (loggin) DSN value, the key used to send logs to Sentry
+    SENTRY_DSN = 'http://20195eef47244f21a845b9eaa12a3af3:68325bc8efe64aceaec134815ef41850@www.stylematch.se:9000/1'
 
-# Sentry (loggin) DSN value, the key used to send logs to Sentry
-SENTRY_DSN = 'http://20195eef47244f21a845b9eaa12a3af3:68325bc8efe64aceaec134815ef41850@www.stylematch.se:9000/1'
-
-# Add raven to the list of installed apps
-INSTALLED_APPS = INSTALLED_APPS + (
-# ...
-'raven.contrib.django',
-)
+    # Add raven to the list of installed apps (sentry logging client)
+    INSTALLED_APPS = INSTALLED_APPS + (
+        # ...
+        'raven.contrib.django',
+        )
 
 # Debug toolbar
 DEBUG_TOOLBAR_CONFIG = {

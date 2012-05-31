@@ -45,8 +45,9 @@
     <h3> Tryck här för att byta profilbild</h3>
     </div></a>
     {% endif %}
-   
-    <div class="fb-like facebook-like-on-profile-display" data-send="true" data-layout="button_count" data-width="220" data-show-faces="true" data-action="recommend"></div>
+    
+    <!-- data-href, since we want to use a permanent url for likes (so they can change their "profile url" and still keep the likes.) -->
+    <div class="fb-like facebook-like-on-profile-display" data-href="http://www.{{ site_domain }}/{{ profile.temporary_profile_url }}" data-send="true" data-layout="button_count" data-width="220" data-show-faces="true" data-action="recommend"></div>
   
     </div>
     
@@ -54,7 +55,7 @@
 
   <div class="span6 profile-text-block">
     <h2 style="display:inline-block">{{ first_name }} {{ last_name }}</h2>
-    <div class="fb-like pull-right" data-send="false" data-layout="button_count" data-width="50" data-show-faces="true"></div>
+    <div class="fb-like pull-right" data-href="http://www.{{ site_domain }}/{{ profile.temporary_profile_url }}" data-send="false" data-layout="button_count" data-width="50" data-show-faces="true"></div>
     <h3>{{ profile.salon_name }}   |   {{ profile.salon_city }}</h3>
     <blockquote><p>{{ profile.profile_text }}</p></blockquote>
     

@@ -15,9 +15,9 @@ from django.utils.translation import ugettext as _
 
 from accounts.models import weekdays_model
 from django import forms
+from django import http
 
-# TODO: import those that are used?
-from tools import *
+from tools import format_minutes_to_hhmm, format_minutes_to_pretty_format
   
 class DisplayProfileView(DetailView):
     """
@@ -140,6 +140,8 @@ class DisplayProfileView(DetailView):
         context['logged_in_user_profile'] = False
         if current_user_id == profile_user_id:
             context['logged_in_user_profile'] = True
+
+        context['site_domain'] = settings.SITE_DOMAIN
         
         # get images displayed on profile
         context['profile_image'] = self.get_profile_image(profile_user_id)
@@ -160,12 +162,19 @@ class DisplayProfileView(DetailView):
         context['weekdays'] = self.get_openinghours(profile_user_id)
         context['profile_image'] = self.get_profile_image_url(profile_user_id)
 
-
         return context
 
     def get_object(self, queryset=None):
+        """
+        Find the profile to display according to the slug field.
+        """
         queryset = self.get_queryset()
 
+        # used in the "get()" function, to determine if to redirect
+        # to profile_url. in case there exists a profile_url and user
+        # came from a temporary_profile_url
+        self.redirect_to_profile_url = False
+        
         # try find the profile with profile_url, which is a name
         slug = self.kwargs.get('slug', None)
         if slug is not None:
@@ -179,6 +188,8 @@ class DisplayProfileView(DetailView):
                 queryset = self.get_queryset()
                 slug_field = "temporary_profile_url__exact"
                 queryset = queryset.filter(**{slug_field: slug})
+            else:
+                return obj              
 
         # If none of those are defined, it's an error.
         else:
@@ -186,17 +197,29 @@ class DisplayProfileView(DetailView):
                                  u"either an object pk or a slug."
                                  % self.__class__.__name__)
 
-        try:
+        try:  
             obj = queryset.get()
         except ObjectDoesNotExist:
             raise Http404(_(u"No %(verbose_name)s found matching the query") %
                           {'verbose_name': queryset.model._meta.verbose_name})
+        else:
+            # redirect to profile_url, if a profile_url exists
+            if obj.profile_url:
+                self.redirect_to_profile_url = True
+            
         return obj
 
     def get(self, request, **kwargs):
         # used to check if user is authenticated, in get_profile_image_url()
         self.is_authenticated = request.user.is_authenticated()
-        return super(DisplayProfileView, self).get(request, **kwargs)
+        self.object = self.get_object()
+
+        # redirect to profile_url
+        if self.redirect_to_profile_url:
+            return http.HttpResponseRedirect('/' + self.object.profile_url)
+        else:
+            context = self.get_context_data(object=self.object)
+            return self.render_to_response(context)
         
 class RedirectToProfileView(RedirectView):
     """

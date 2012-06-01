@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 from django.views.generic import TemplateView
-from index.views import AboutPageView, IndexPageView, BetaEmailView, FeaturesPageView, ContactPageView, InspirationPageView
+from index.views import IndexPageView, BetaEmailView, InspirationPageView
 
 from django.contrib import admin
 from django.views.generic.simple import redirect_to
@@ -35,17 +35,14 @@ urlpatterns = patterns(
     (r'^accounts/signup-step3/', SignupStep3View.as_view(),{}, 'signupstep3_page'),
     (r'^accounts/signup-step4/', SignupStep4View.as_view(),{}, 'signupstep4_page'),
 
-   
-    
     (r'^accounts/edit-settings/', TemplateView.as_view(template_name="edit-account-settings.html"),{},'edit-account-settings'),
-   
-    (r'^about-us/', AboutPageView.as_view(),{}, 'about_page'),
-    (r'^kontakt/', ContactPageView.as_view(),{}, 'contact_page'),
+    (r'^about-us/', TemplateView.as_view(template_name="about_us.html"), {}, 'about_page'),
+    (r'^kontakt/', TemplateView.as_view(template_name="contact_us.html"),{}, 'contact_page'),
     
     (r'^get_invite', BetaEmailView.as_view(),{}, 'get_invite'),
     (r'^start', TemplateView.as_view(template_name="betaemail_index.html"), {}, 'beta_index_page'),
     
-    (r'^features/', FeaturesPageView.as_view(),{}, 'features_page'),
+    (r'^features/', TemplateView.as_view(template_name="features.html"),{}, 'features_page'),
     (r'^anvandarvillkor/', TemplateView.as_view(template_name="anvandarvillkor.html"),{}, 'anvandarvillkor'),
     url(r"^su/", include("django_su.urls")),
    

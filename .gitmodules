@@ -1,3 +1,6 @@
 [submodule "media/js/galleria"]
 	path = media/js/galleria
 	url = git://github.com/aino/galleria.git
+[submodule "media/js/lightbox"]
+	path = media/js/lightbox
+	url = https://github.com/jackmoore/colorbox.git

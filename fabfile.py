@@ -51,6 +51,9 @@ def migrate_db():
 def restart_nginx():
     sudo("/etc/init.d/nginx restart")
 
+def top():
+    sudo("top")
+    
 def restart_gunicorn():
     sudo("restart django_stylematch")
 

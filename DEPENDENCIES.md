@@ -13,6 +13,10 @@ CSS and Javscript bootstrap/framework
 ##Galleria
 Used for the image gallery on the display profile page.
 
+##Colorbox
+A lightweight customizable lightbox plugin for jQuery
+Used on the inspiration and profile_display page
+
 ###Backbone Tastypie
 A small conversion layer to make backbone.js and django-tastypie work together happily.
 https://github.com/PaulUithol/backbone-tastypie

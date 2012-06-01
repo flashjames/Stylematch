@@ -220,6 +220,7 @@ class DisplayProfileView(DetailView):
         else:
             context = self.get_context_data(object=self.object)
             return self.render_to_response(context)
+
         
 class RedirectToProfileView(RedirectView):
     """
@@ -248,6 +249,7 @@ class RedirectToProfileView(RedirectView):
     def get_user_temporary_profile_url(self):
         query = UserProfile.objects.filter(user=self.request.user).get()
         return query.temporary_profile_url
+
 
 class UserProfileForm(ModelForm):
     """
@@ -335,6 +337,7 @@ class UserProfileForm(ModelForm):
             'profile_text': Textarea(attrs={'cols': 120, 'rows': 10}),
             }
 
+
 class EditProfileView(LoginRequiredMixin, UpdateView):
     """
     Edit a stylist profile
@@ -400,9 +403,10 @@ class OpenHoursView(LoginRequiredMixin, UpdateView):
         obj = OpenHours.objects.get(user__exact=self.request.user.id)
         return obj
 
-
-	
-
+"""
+TODO: Put rest of this file, in another file?
+Since all classes/functions is part of the same functionality
+"""
 
 def get_unique_filename(filename):
     ext = filename.split('.')[-1]
@@ -427,6 +431,7 @@ def convert_bytes(bytes):
         size = '%.iB' % bytes
     return size
 
+
 class PictureForm(forms.ModelForm):
     def clean_file(self):
         file = self.cleaned_data['file']
@@ -440,6 +445,7 @@ class PictureForm(forms.ModelForm):
     class Meta:
         model = Picture
         fields = ('file','comment','image_type')
+
 
 class PicturesView(LoginRequiredMixin, CreateView):
     """
@@ -473,8 +479,6 @@ class PicturesView(LoginRequiredMixin, CreateView):
         else:
             profile_picture = os.path.join(settings.STATIC_URL, 'img/default_image_profile_not_logged_in.jpg')
 
-            
-        #import pdb;pdb.set_trace()
         return profile_picture
 
     def get_context_data(self, **kwargs):
@@ -512,7 +516,6 @@ class PicturesView(LoginRequiredMixin, CreateView):
         #self.object.image_type = 'G'
         self.object.save()
         form.save_m2m()
-        
-        
+         
         return super(PicturesView, self).form_valid(form)
 

@@ -4,7 +4,7 @@
 from django.contrib import auth
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView, ListView, CreateView
-from accounts.models import UserProfile
+from accounts.models import UserProfile, Picture
 from index.models import BetaEmail
 
 from django.core.urlresolvers import reverse
@@ -15,6 +15,19 @@ class AboutPageView(TemplateView):
     Display about us page
     """
     template_name = "about_us.html"
+
+class InspirationPageView(ListView):
+    """
+    """
+    context_object_name = "pictures"    #default is object_list
+    template_name = "index.html"
+    queryset = Picture.objects.all()
+
+    def get_context_data(self, **kwargs):   
+        context = super(InspirationPageView, self).get_context_data(**kwargs)
+        return context
+    
+    template_name = "inspiration.html"
 
 class ContactPageView(TemplateView):
     """

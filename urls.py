@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 from django.views.generic import TemplateView
-from index.views import AboutPageView, IndexPageView, BetaEmailView, FeaturesPageView, ContactPageView
+from index.views import AboutPageView, IndexPageView, BetaEmailView, FeaturesPageView, ContactPageView, InspirationPageView
 
 from django.contrib import admin
 from django.views.generic.simple import redirect_to
@@ -50,8 +50,8 @@ urlpatterns = patterns(
     url(r"^su/", include("django_su.urls")),
    
     (r'^google66ca7050dfade3e4.html', TemplateView.as_view(template_name="google66ca7050dfade3e4.html")), #tracking-code so google apps know we own the domain.
-   (r'^test.html', TemplateView.as_view(template_name="test.html")),
-     url(r'^', include('accounts.urls')), # accounts/profile, should always be at the end. since a user may set a profile url that match another url -> if it's not at the end it may overwrite it.
+   (r'^inspiration', InspirationPageView.as_view(),{},'inspiration-page'),
+    url(r'^', include('accounts.urls')), # accounts/profile, should always be at the end. since a user may set a profile url that match another url -> if it's not at the end it may overwrite it.
 )
 
 if settings.DEBUG:

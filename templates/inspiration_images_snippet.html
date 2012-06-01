@@ -1,0 +1,18 @@
+{% for image in images %}
+
+<li>
+  <img class="hype" src="http://stylematch.s3-website-eu-west-1.amazonaws.com/test/hype.png"/>
+
+<img style="display:inline-block;" src="{{ STATIC_URL }}user-imgs/{{ image }}"/>
+  <a href="http://pinterest.com/pin/create/button/" class="pin-it-button" count-layout="horizontal">
+    <img border="0" src="http://stylematch.s3-website-eu-west-1.amazonaws.com/test/PinExt.png" title="Pin It" /></a>
+  <div class="fb fb-like" data-href="http://stylematch.se" data-send="true" data-width="450" data-show-faces="true"></div><br>
+  <!--<div class="fb-send" data-href="http://stylematch.se"></div>-->
+      
+  <div class="fb fb-comments" data-href="http://stylematch.se" data-num-posts="3" data-width="470"></div>
+  <br>
+</li>
+
+
+{% endfor %}
+

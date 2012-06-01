@@ -21,7 +21,7 @@ class InspirationPageView(ListView):
     """
     context_object_name = "pictures"    #default is object_list
     template_name = "index.html"
-    queryset = Picture.objects.all()
+    queryset = Picture.objects.order_by('-upload_date')
     paginate_by = 30
 
     def get_context_data(self, **kwargs):   

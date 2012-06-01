@@ -45,6 +45,7 @@ def migrate_db():
     virtualenv("./manage.py reset south")
     virtualenv("./manage.py convert_to_south accounts")
     git_pull()
+    update_git_submodules()
     virtualenv("./manage.py schemamigration accounts --auto")
     virtualenv("./manage.py migrate")
 
@@ -53,6 +54,11 @@ def restart_nginx():
 
 def top():
     sudo("top")
+
+def update_git_submodules():
+    with cd(env.directory):
+        sudo('git submodule init', user=env.deploy_user)
+        sudo('git submodule upda', user=env.deploy_user)
     
 def restart_gunicorn():
     sudo("restart django_stylematch")
@@ -68,6 +74,7 @@ def deploy_db_change():
 def deploy_without_db_change():
     update_dependencies()
     git_pull()
+    update_git_submodules()
     compile_less()
     upload_static_files()
     restart_gunicorn()

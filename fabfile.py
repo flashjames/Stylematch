@@ -58,7 +58,7 @@ def top():
 def update_git_submodules():
     with cd(env.directory):
         sudo('git submodule init', user=env.deploy_user)
-        sudo('git submodule upda', user=env.deploy_user)
+        sudo('git submodule update', user=env.deploy_user)
     
 def restart_gunicorn():
     sudo("restart django_stylematch")

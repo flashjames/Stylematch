@@ -98,7 +98,7 @@ if DEBUG:
 else:
     STATIC_URL = 'http://stylematch.s3-website-eu-west-1.amazonaws.com/'
 
-STATIC_ROOT = os.path.join(PROJECT_DIR,"static/")
+STATIC_ROOT = os.path.join(PROJECT_DIR, "static/")
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
@@ -107,7 +107,7 @@ ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    PROJECT_DIR+"/media/",
+    PROJECT_DIR + "/media/",
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -143,8 +143,9 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
-    PROJECT_DIR+"/templates/",
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    PROJECT_DIR + "/templates/",
+    # Put strings here, like
+    # "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )
@@ -174,12 +175,13 @@ INSTALLED_APPS = (
 ### S3 storage - production
 
 if not DEBUG:
-    DEFAULT_FILE_STORAGE = STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+    DEFAULT_FILE_STORAGE = STATICFILES_STORAGE = ('storages.backends'
+                                                  '.s3boto.S3BotoStorage')
 ### END S3 storage
 
 ### Amazon credentials and mail
-
-# credentials should maybe be set as environment variables on production server?
+# credentials should maybe be set as environment variables on production
+# server?
 # -> more secure.
 AWS_ACCESS_KEY_ID = 'AKIAJHCGEY6XAXXOSYXA'
 AWS_SECRET_ACCESS_KEY = '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'
@@ -200,14 +202,12 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-
-FACEBOOK_APP_ID              = '279761435376574'
-FACEBOOK_API_SECRET          = 'c3325b623f9f09303004b77aed231a71'
+FACEBOOK_APP_ID     = '279761435376574'
+FACEBOOK_API_SECRET = 'c3325b623f9f09303004b77aed231a71'
 
 LOGIN_URL          = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGIN_ERROR_URL    = '/login-error/'
-
 
 """
 Can be used to style social_auth in templates
@@ -245,11 +245,12 @@ if DEBUG:
         'disable_existing_loggers': False,
         'root': {
             'level': 'WARNING',
-            'handlers': ['console','file_warning'],
+            'handlers': ['console', 'file_warning'],
             },
         'formatters': {
             'verbose': {
-                'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+                'format': '%(levelname)s %(asctime)s %(module)s '
+                          '%(process)d %(thread)d %(message)s'
                 },
             },
         'handlers': {
@@ -305,7 +306,8 @@ else:
             },
         'formatters': {
             'verbose': {
-                'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+                'format': '%(levelname)s %(asctime)s %(module)s '
+                          '%(process)d %(thread)d %(message)s'
                 },
             },
         'handlers': {
@@ -363,7 +365,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'index.context_processors.jquery_script',
     'index.context_processors.galleria_urls',
-    'django.core.context_processors.static', #used to access STATIC_URL in templates
+    # used to access STATIC_URL in templates
+    'django.core.context_processors.static',
     )
 
 # Paths to user uploaded images, used in fileupload app

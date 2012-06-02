@@ -4,27 +4,28 @@
 from django.contrib import auth
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView, CreateView
+from django.core.urlresolvers import reverse
 from accounts.models import UserProfile, Picture
 from index.models import BetaEmail
-
-from django.core.urlresolvers import reverse
 
 
 class InspirationPageView(ListView):
     """
+    TODO:
+    Create description of this view
     """
     context_object_name = "pictures"
     template_name = "index.html"
     queryset = Picture.objects.order_by('-upload_date')
     paginate_by = 30
 
-    def get_context_data(self, **kwargs):   
+    def get_context_data(self, **kwargs):
         context = super(InspirationPageView, self).get_context_data(**kwargs)
         return context
-    
+
     template_name = "inspiration.html"
 
-    
+
 class BetaEmailView(CreateView):
     """
     Display beta page
@@ -38,8 +39,7 @@ class BetaEmailView(CreateView):
         # written here in init since it will give reverse url error
         # if just written in class definition. because urls.py isnt loaded
         # when this class is defined
-        
-        self.success_url=reverse('beta_index_page')
+        self.success_url = reverse('beta_index_page')
 
 
 class IndexPageView(ListView):
@@ -50,10 +50,10 @@ class IndexPageView(ListView):
     template_name = "index.html"
     queryset = UserProfile.objects.all()
 
-    def get_context_data(self, **kwargs):   
+    def get_context_data(self, **kwargs):
         context = super(IndexPageView, self).get_context_data(**kwargs)
         return context
-        
+
 
 def logout_page(request):
     """

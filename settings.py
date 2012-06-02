@@ -239,22 +239,60 @@ ACCOUNT_ACTIVATION_DAYS = 7
 
 ###Logging local
 if DEBUG:
+    LOG_DIR = os.path.join(PROJECT_DIR, 'log')
     LOGGING = {
         'version': 1,
         'disable_existing_loggers': False,
+        'root': {
+            'level': 'WARNING',
+            'handlers': ['console','file_warning'],
+            },
+        'formatters': {
+            'verbose': {
+                'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+                },
+            },
         'handlers': {
-            'mail_admins': {
-                'level': 'ERROR',
-                'class': 'django.utils.log.AdminEmailHandler'
-                }
+            'file_debug': {
+                'level': 'DEBUG',
+                'class': 'logging.FileHandler',
+                'filename': '%s/debug.log' % LOG_DIR,
+                'formatter': 'verbose',
+                },
+            'file_warning': {
+                'level': 'WARNING',
+                'class': 'logging.FileHandler',
+                'filename': '%s/warning.log' % LOG_DIR,
+                'formatter': 'verbose',
+                },
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'formatter': 'verbose'
+                },
             },
         'loggers': {
-            'django.request': {
-                'handlers': ['mail_admins'],
-                'level': 'ERROR',
+            'django': {
+                'level': 'DEBUG',
+                'handlers': ['file_debug'],
                 'propagate': True,
                 },
-            }
+            'django.db.backends': {
+                'level': 'ERROR',
+                'handlers': ['console', 'file_debug'],
+                'propagate': True,
+                },
+            'raven': {
+                'level': 'DEBUG',
+                'handlers': ['file_debug'],
+                'propagate': True,
+                },
+            'sentry.errors': {
+                'level': 'DEBUG',
+                'handlers': ['file_debug'],
+                'propagate': True,
+                },
+            },
         }
 ### Logging with Sentry, production
 else:

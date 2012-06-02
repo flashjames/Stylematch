@@ -1,12 +1,12 @@
 #-*- coding:utf-8 -*-
-from accounts.models import Service
-from accounts.models import Picture
+from accounts.models import Service, Picture, get_image_url
 from django.forms import ModelForm
+from django.contrib.auth.models import User
 from tastypie.validation import FormValidation
 from tastypie.resources import ModelResource
 from tastypie.authorization import Authorization
 from tastypie.authentication import BasicAuthentication
-from django.contrib.auth.models import User
+
 
 class PerUserAuthorization(Authorization):
     """
@@ -21,9 +21,11 @@ class PerUserAuthorization(Authorization):
 
             return object_list.none()
 
+
 class DjangoBasicAuthentication(BasicAuthentication):
     """
-    First check session data if user is logged in, with the Django authentication.
+    First check session data if user is logged in, with the Django
+    authentication.
     If it doesn't find it, fall back to http auth.
     http://stackoverflow.com/questions/7363460
     /how-do-i-check-that-user-already-authenticated-from-tastypie
@@ -39,12 +41,16 @@ class DjangoBasicAuthentication(BasicAuthentication):
                 u = User.objects.get(id=s.get_decoded()['_auth_user_id'])
                 request.user = u
                 return True
-        return super(DjangoBasicAuthentication, self).is_authenticated(request, **kwargs)
+        return super(DjangoBasicAuthentication, self).is_authenticated(
+                                                         request,
+                                                         **kwargs)
+
 
 class ServiceForm(ModelForm):
     class Meta:
         model = Service
         exclude = ('order')
+
 
 class ServiceResource(ModelResource):
 
@@ -87,11 +93,11 @@ class ServiceResource(ModelResource):
         max_limit = 0
         validation = FormValidation(form_class=ServiceForm)
 
+
 class PictureForm(ModelForm):
     class Meta:
         model = Picture
 
-from accounts.models import get_image_url
 
 class PictureResource(ModelResource):
 
@@ -135,7 +141,7 @@ class PictureResource(ModelResource):
         authorization = PerUserAuthorization()
         queryset = Picture.objects.filter(image_type='G')
 
-        excludes = ['file','user']
+        excludes = ['file', 'user']
         limit = 50
         max_limit = 0
         validation = FormValidation(form_class=PictureForm)

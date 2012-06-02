@@ -1,24 +1,31 @@
 #-*- coding:utf-8 -*-
-from django.views.generic import TemplateView, UpdateView, DetailView, RedirectView, CreateView
-from accounts.models import Service, UserProfile, OpenHours, Picture
-from django.contrib.auth.models import User
-
-from django.core.urlresolvers import reverse
-from braces.views import LoginRequiredMixin
-from django.forms import ModelForm, ValidationError, Textarea
-from django.conf import settings
-import uuid, os, imp, re
-
-from django.core.exceptions import ObjectDoesNotExist
-from django.http import Http404
-from django.utils.translation import ugettext as _
-
-from accounts.models import weekdays_model
+import uuid
+import os
+import imp
+import re
 from django import forms
 from django import http
-
+from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
+from django.forms import ModelForm, ValidationError, Textarea
+from django.http import Http404
+from django.utils.translation import ugettext as _
+from django.views.generic import (TemplateView,
+                                  UpdateView,
+                                  DetailView,
+                                  RedirectView,
+                                  CreateView)
+from braces.views import LoginRequiredMixin
+from accounts.models import (Service,
+                             UserProfile,
+                             OpenHours,
+                             Picture,
+                             weekdays_model)
 from tools import format_minutes_to_hhmm, format_minutes_to_pretty_format
-  
+
+
 class DisplayProfileView(DetailView):
     """
     Display a stylist profile
@@ -44,15 +51,18 @@ class DisplayProfileView(DetailView):
         return images_lst
 
     def get_profile_image_url(self, profile_user_id):
-        
         profile_picture = ''
         try:
-            profile_picture  = self.get_profile_image(profile_user_id)[0]
+            profile_picture = self.get_profile_image(profile_user_id)[0]
         except:
             if self.is_authenticated:
-                profile_picture = os.path.join(settings.STATIC_URL, 'img/default_image_profile_logged_in.jpg')
+                profile_picture = os.path.join(
+                        settings.STATIC_URL,
+                        'img/default_image_profile_logged_in.jpg')
             else:
-                profile_picture = os.path.join(settings.STATIC_URL, 'img/default_image_profile_not_logged_in.jpg')
+                profile_picture = os.path.join(
+                        settings.STATIC_URL,
+                        'img/default_image_profile_not_logged_in.jpg')
 
         return profile_picture
 
@@ -68,8 +78,9 @@ class DisplayProfileView(DetailView):
 
         # if no gallery images uploaded, display a default image
         if not images:
-            images = [os.path.join(settings.STATIC_URL, 'img/default_image_profile_not_logged_in.jpg')]
-
+            images = [os.path.join(
+                        settings.STATIC_URL,
+                        'img/default_image_profile_not_logged_in.jpg')]
         return images
 
     def get_profile_image(self, user):
@@ -78,7 +89,6 @@ class DisplayProfileView(DetailView):
             image_type='C')
 
         return self.get_images(queryset)
-
 
     def get_opening_time(self, obj, attr_name):
         """
@@ -92,8 +102,7 @@ class DisplayProfileView(DetailView):
 
         return time
 
-
-    def weekday_factory(self, obj, day = 'mon', pretty_dayname = 'Måndag'):
+    def weekday_factory(self, obj, day='mon', pretty_dayname='Måndag'):
         """
         Helper function to create a dict with relevant day information.
         Extracts values from obj with attribute prefix DAY
@@ -103,7 +112,7 @@ class DisplayProfileView(DetailView):
         open_time = self.get_opening_time(obj, attr_name)
 
         attr_name = day + "_closed"
-        closed_time = self.get_opening_time(obj,attr_name)
+        closed_time = self.get_opening_time(obj, attr_name)
 
         day = {'day': pretty_dayname, 'open': open_time, 'closed': closed_time}
 
@@ -113,27 +122,31 @@ class DisplayProfileView(DetailView):
 
         obj = OpenHours.objects.get(user__exact=profile_user_id)
 
-        weekday_list =  ['Måndag',  'Tisdag', 'Onsdag', 'Torsdag', 'Fredag',
-                        'Lördag', 'Söndag']
+        weekday_list = ['Måndag',
+                        'Tisdag',
+                        'Onsdag',
+                        'Torsdag',
+                        'Fredag',
+                        'Lördag',
+                        'Söndag']
 
-        openinghours_list =  []
+        openinghours_list = []
         for index, day in enumerate(weekday_list):
 
-            # Important:  weekdays_model[index] must be exactly same as in OpenHours model.
-            # Should not be a problem now but this could be a future source of bugs.
+            # Important:  weekdays_model[index] must be exactly same as in
+            # OpenHours model. Should not be a problem now but this could be
+            # a future source of bugs.
 
             day_dict = self.weekday_factory(obj, weekdays_model[index], day)
             openinghours_list.append(day_dict)
-
         return openinghours_list
 
     def get_context_data(self, **kwargs):
         context = super(DisplayProfileView, self).get_context_data(**kwargs)
-        
+
         # to display the parts associated to the profile,
         # we filter on the user_id of profile owner
         profile_user_id = context['profile'].user_id
-        
 
         # used to only display edit-profile menu, if at the user's profile
         current_user_id = self.request.user.id
@@ -142,22 +155,23 @@ class DisplayProfileView(DetailView):
             context['logged_in_user_profile'] = True
 
         context['site_domain'] = settings.SITE_DOMAIN
-        
+
         # get images displayed on profile
         context['profile_image'] = self.get_profile_image(profile_user_id)
         context['gallery_images'] = self.get_gallery_images(profile_user_id)
 
         # services the displayed userprofile have
-        context['services'] = Service.objects.filter(user__exact=profile_user_id).filter(display_on_profile=True)
+        context['services'] = Service.objects.filter(
+                                    user__exact=profile_user_id).filter(
+                                    display_on_profile=True)
 
         for i in context['services']:
             i.length = format_minutes_to_pretty_format(i.length)
 
-
         profile_user = User.objects.filter(id__exact=profile_user_id)[0]
         context['first_name'] = profile_user.first_name
         context['last_name'] = profile_user.last_name
-        
+
         # opening hours the displayed userprofile have
         context['weekdays'] = self.get_openinghours(profile_user_id)
         context['profile_image'] = self.get_profile_image_url(profile_user_id)
@@ -174,7 +188,7 @@ class DisplayProfileView(DetailView):
         # to profile_url. in case there exists a profile_url and user
         # came from a temporary_profile_url
         self.redirect_to_profile_url = False
-        
+
         # try find the profile with profile_url, which is a name
         slug = self.kwargs.get('slug', None)
         if slug is not None:
@@ -189,15 +203,14 @@ class DisplayProfileView(DetailView):
                 slug_field = "temporary_profile_url__exact"
                 queryset = queryset.filter(**{slug_field: slug})
             else:
-                return obj              
+                return obj
 
         # If none of those are defined, it's an error.
         else:
             raise AttributeError(u"Generic detail view %s must be called with "
                                  u"either an object pk or a slug."
                                  % self.__class__.__name__)
-
-        try:  
+        try:
             obj = queryset.get()
         except ObjectDoesNotExist:
             raise Http404(_(u"No %(verbose_name)s found matching the query") %
@@ -206,7 +219,6 @@ class DisplayProfileView(DetailView):
             # redirect to profile_url, if a profile_url exists
             if obj.profile_url:
                 self.redirect_to_profile_url = True
-            
         return obj
 
     def get(self, request, **kwargs):
@@ -221,7 +233,7 @@ class DisplayProfileView(DetailView):
             context = self.get_context_data(object=self.object)
             return self.render_to_response(context)
 
-        
+
 class RedirectToProfileView(RedirectView):
     """
     Redirects to the logged in user's profile with the profile_url
@@ -235,12 +247,15 @@ class RedirectToProfileView(RedirectView):
     def get_redirect_url(self):
         profile_url = self.get_user_profile_url()
 
-        # if user havent set a profile_url, use the temporary_profile_url which is a uuid string
+        # if user havent set a profile_url, use the temporary_profile_url
+        # which is a uuid string
         if not profile_url:
             temporary_profile_url = self.get_user_temporary_profile_url()
-            return reverse('profile_display_with_profile_url', kwargs={'slug': temporary_profile_url})
+            return reverse('profile_display_with_profile_url',
+                           kwargs={'slug': temporary_profile_url})
 
-        return reverse('profile_display_with_profile_url', kwargs={'slug': profile_url})
+        return reverse('profile_display_with_profile_url',
+                       kwargs={'slug': profile_url})
 
     def get_user_profile_url(self):
         query = UserProfile.objects.filter(user=self.request.user).get()
@@ -255,9 +270,13 @@ class UserProfileForm(ModelForm):
     """
     Validates that profile_url is unique
     """
-    first_name = forms.CharField(label=_(u'Förnamn'), max_length=30, required = False)
-    last_name = forms.CharField(label=_(u'Efternamn'), max_length=30, required = False)
-    
+    first_name = forms.CharField(label=_(u'Förnamn'),
+                                 max_length=30,
+                                 required=False)
+    last_name = forms.CharField(label=_(u'Efternamn'),
+                                max_length=30,
+                                required=False)
+
     def __init__(self, request, *args, **kwargs):
         self.request = request
         super(UserProfileForm, self).__init__(*args, **kwargs)
@@ -271,11 +290,14 @@ class UserProfileForm(ModelForm):
         It only matters under the root, since it's there the profiles will be.
         """
         # import python file with absolute path
-        urls = imp.load_source('module.name', settings.PROJECT_DIR + "/urls.py")
+        urls = imp.load_source('module.name',
+                               settings.PROJECT_DIR + "/urls.py")
         for urlpattern in urls.urlpatterns:
             # first part of the urlpattern as it will look to the user
             # ex. '^admin/asd$' -> 'admin'
-            pattern = re.sub(r'[\^$]','',urlpattern.regex.pattern.split('/')[0])
+            pattern = re.sub(r'[\^$]',
+                             '',
+                             urlpattern.regex.pattern.split('/')[0])
             if pattern and pattern == profile_url:
                 return True
 
@@ -315,7 +337,7 @@ class UserProfileForm(ModelForm):
         Removes all characters except digits
         """
         return re.sub("[^0-9]", "", number)
-    
+
     def clean_personal_phone_number(self):
         number = self.cleaned_data.get('personal_phone_number')
         return self.strip_all_except_digits(number)
@@ -323,7 +345,7 @@ class UserProfileForm(ModelForm):
     def clean_salon_phone_number(self):
         number = self.cleaned_data.get('salon_phone_number')
         return self.strip_all_except_digits(number)
-    
+
     def save(self, *args, **kw):
         # save the fields that dont belong to UserProfile object
         self.request.user.first_name = self.cleaned_data.get('first_name')
@@ -352,7 +374,7 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         # written here in init since it will give reverse url error
         # if just written in class definition. because urls.py isnt loaded
         # when this class is defined
-        self.success_url=reverse('profile_edit')
+        self.success_url = reverse('profile_edit')
 
     def get_form(self, form_class):
         """
@@ -365,12 +387,17 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         obj = UserProfile.objects.get(user__exact=self.request.user.id)
         return obj
 
+
 class ServiceForm(ModelForm):
     class Meta:
         model = Service
-        fields = ('name','description','length','price', 'display_on_profile')
+        fields = ('name',
+                  'description',
+                  'length',
+                  'price',
+                  'display_on_profile')
         exclude = ('order')
-        
+
 
 class ServicesView(LoginRequiredMixin, TemplateView):
     """
@@ -381,11 +408,14 @@ class ServicesView(LoginRequiredMixin, TemplateView):
     template_name = "accounts/service_form.html"
 
     def get_context_data(self, **kwargs):
-        # auto_id = True  because Backbone.ModelBinding expects id's to be on the
-        # form, id="name" not id="id_name"
+        # auto_id = True  because Backbone.ModelBinding expects id's to be on
+        # the form, id="name" not id="id_name"
 
         # "Initial"-dict defaults new services to show on profile.
-        return {'form': ServiceForm(auto_id=True, initial={'display_on_profile': 1})}
+        return {'form': ServiceForm(auto_id=True,
+                                    initial={'display_on_profile': 1}
+                                    )}
+
 
 class OpenHoursView(LoginRequiredMixin, UpdateView):
     model = OpenHours
@@ -397,21 +427,24 @@ class OpenHoursView(LoginRequiredMixin, UpdateView):
         # written here in init since it will give reverse url error
         # if just written in class definition. because urls.py isnt loaded
         # when this class is defined
-        self.success_url=reverse('profile_display_redirect')
+        self.success_url = reverse('profile_display_redirect')
 
     def get_object(self, queryset=None):
         obj = OpenHours.objects.get(user__exact=self.request.user.id)
         return obj
+
 
 """
 TODO: Put rest of this file, in another file?
 Since all classes/functions is part of the same functionality
 """
 
+
 def get_unique_filename(filename):
     ext = filename.split('.')[-1]
     filename = "%s.%s" % (uuid.uuid4(), ext)
     return filename
+
 
 def convert_bytes(bytes):
     bytes = float(bytes)
@@ -437,14 +470,15 @@ class PictureForm(forms.ModelForm):
         file = self.cleaned_data['file']
         if file:
             if file._size > settings.MAX_IMAGE_SIZE:
-                raise ValidationError("Bilden är för stor ( > %s )" % convert_bytes(settings.MAX_IMAGE_SIZE))
+                raise ValidationError("Bilden är för stor ( > %s )"
+                                    % convert_bytes(settings.MAX_IMAGE_SIZE))
             return file
         else:
             raise ValidationError("Filen kunde inte läsas")
 
     class Meta:
         model = Picture
-        fields = ('file','comment','image_type')
+        fields = ('file', 'comment', 'image_type')
 
 
 class PicturesView(LoginRequiredMixin, CreateView):
@@ -463,7 +497,7 @@ class PicturesView(LoginRequiredMixin, CreateView):
         # written here in init since it will give reverse url error
         # if just written in class definition. because urls.py isnt loaded
         # when this class is defined
-        self.success_url=reverse('profiles_edit_images')
+        self.success_url = reverse('profiles_edit_images')
 
     def get_form(self, form_class):
         form = super(PicturesView, self).get_form(form_class)
@@ -477,16 +511,20 @@ class PicturesView(LoginRequiredMixin, CreateView):
         if queryset:
             profile_picture = queryset[0].get_image_url()
         else:
-            profile_picture = os.path.join(settings.STATIC_URL, 'img/default_image_profile_not_logged_in.jpg')
+            profile_picture = os.path.join(
+                                settings.STATIC_URL,
+                                'img/default_image_profile_not_logged_in.jpg')
 
         return profile_picture
 
     def get_context_data(self, **kwargs):
         context = super(PicturesView, self).get_context_data(**kwargs)
-        context['profile_image_url'] = self.get_profile_image(self.request.user.id)
+        context['profile_image_url'] = self.get_profile_image(
+                                                self.request.user.id
+                                                )
         return context
 
-    def remove_old_profile_image(self,user):
+    def remove_old_profile_image(self, user):
         queryset = Picture.objects.filter(user__exact=user).filter(
             image_type='C')
         # old profile image found -> delete
@@ -496,16 +534,16 @@ class PicturesView(LoginRequiredMixin, CreateView):
     # Called when we're sure all fields in the form are valid
     def form_valid(self, form):
         image_type = form.cleaned_data['image_type']
-        
+
         # this class is used to upload both Gallery and Profile images ->
         # only remove old profile image if it's a profile image that have
         # been uploaded
         if image_type == "C":
             self.remove_old_profile_image(self.request.user)
-        
+
         f = self.request.FILES.get('file')
 
-        filename=get_unique_filename(f.name)
+        filename = get_unique_filename(f.name)
 
         # add data to form fields that will be saved to db
         self.object = form.save(commit=False)
@@ -516,6 +554,4 @@ class PicturesView(LoginRequiredMixin, CreateView):
         #self.object.image_type = 'G'
         self.object.save()
         form.save_m2m()
-         
         return super(PicturesView, self).form_valid(form)
-

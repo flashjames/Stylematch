@@ -1,13 +1,16 @@
 #!/usr/bin/python
 #-*- coding:utf-8 -*-
+
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
 from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
+from django.core.files.storage import default_storage
 
 from tools import *
 
-weekdays_model = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun']   
+weekdays_model = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun']
 
 # used on all fields that need to have a forced max_length
 # django doesnt do this validation by itself
@@ -15,76 +18,114 @@ weekdays_model = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun']
 from django.core.validators import MaxLengthValidator
 
 import uuid
+import os
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     """
     When a a new user is created, create a corresponding UserProfile
-    TODO: Create different profiles depending on if it's a stylist or a regular user
+    TODO:
+    Create different profiles depending on if it's a stylist or a regular user
     """
     if created:
         UserProfile.objects.create(user=instance,
-                                   temporary_profile_url= uuid.uuid4().hex,
-                                   display_on_first_page = True,
-                                   number_on_profile = True,
+                                   temporary_profile_url=uuid.uuid4().hex,
+                                   display_on_first_page=True,
+                                   number_on_profile=True,
                                    )
 
         OpenHours.objects.create(user=instance)
+
 
 class UserProfile(models.Model):
     """
     TODO:
     fixa så email från huvudprofilen visas här
     fixa så twitter och facebook profil visas här, se styleseat
+    fixa description till denna modell
     """
-    
     user = models.ForeignKey(User, unique=True, editable=False)
     display_on_first_page = models.BooleanField(editable=False)
-    
+
     # max_length? less?
     profile_text = models.CharField("Om mig", max_length=500, blank=True)
 
-    profile_url = models.CharField("http://stylematch.se/", max_length=40, blank=True)
+    profile_url = models.CharField("http://stylematch.se/",
+                                   max_length=40,
+                                   blank=True)
     # used to reach profile if no profile_url set
-    temporary_profile_url = models.CharField(editable=False, unique=True, max_length=36)
+    temporary_profile_url = models.CharField(editable=False,
+                                             unique=True,
+                                             max_length=36)
 
     # select phone number to display on profile
     DISPLAY_NUMBER_CHOICES = (
         (True, 'Personligt telefonnummer'),
         (False, 'Salongens telefonnummer'),
         )
-    number_on_profile = models.BooleanField("Vilket telefonnummer ska visas på profilen?",max_length=1, choices=DISPLAY_NUMBER_CHOICES)
-    
-    personal_phone_number = models.CharField("Personligt telefonnummer", max_length=30, blank=True,null=True)
-  
-    # salong
-    salon_phone_number = models.CharField("Salongens telefonnummer", max_length=30, blank=True,null=True)
-    salon_name = models.CharField("Salongens namn", max_length=30, blank=True)
-    salon_city = models.CharField("Stad", max_length=30, blank=True)
-    salon_url = models.URLField("Salongens hemsida", blank=True)
-    salon_adress = models.CharField("Salongens adress",max_length=30, blank=True)
-    
-    zip_adress = models.CharField("Postnummer", max_length=20, blank=True, null=True)
+    number_on_profile = models.BooleanField(
+                            "Vilket telefonnummer ska visas på profilen?",
+                            max_length=1,
+                            choices=DISPLAY_NUMBER_CHOICES)
 
-    url_online_booking = models.URLField("Adress till online bokningssystem", blank=True)
-    show_booking_url = models.BooleanField("Min salong har online-bokning", blank=True)
-    
+    personal_phone_number = models.CharField(
+                            "Personligt telefonnummer",
+                            max_length=30,
+                            blank=True,
+                            null=True)
+
+    # salong
+    salon_phone_number = models.CharField("Salongens telefonnummer",
+                                          max_length=30,
+                                          blank=True,
+                                          null=True)
+    salon_name = models.CharField("Salongens namn",
+                                  max_length=30,
+                                  blank=True)
+    salon_city = models.CharField("Stad",
+                                  max_length=30,
+                                  blank=True)
+    salon_url = models.URLField("Salongens hemsida",
+                                blank=True)
+    salon_adress = models.CharField("Salongens adress",
+                                    max_length=30,
+                                    blank=True)
+
+    zip_adress = models.CharField("Postnummer",
+                                  max_length=20,
+                                  blank=True,
+                                  null=True)
+
+    url_online_booking = models.URLField("Adress till online bokningssystem",
+                                         blank=True)
+    show_booking_url = models.BooleanField("Min salong har online-bokning",
+                                           blank=True)
+
     def __unicode__(self):
         return u'%s' % (self.user)
 
+
 class Service(models.Model):
-    buffer = generate_list_of_quarters(15, 420+15, format_minutes_to_pretty_format)
+    buffer = generate_list_of_quarters(15,
+                                       420 + 15,
+                                       format_minutes_to_pretty_format)
     TIME_CHOICES = tuple(buffer)
 
-
-    length = models.IntegerField("Tidsåtgång *", choices=TIME_CHOICES,max_length=3)
-    name = models.CharField("Namn (ex. Klippning kort hår) *", max_length=20)
+    length = models.IntegerField("Tidsåtgång *",
+                                 choices=TIME_CHOICES,
+                                 max_length=3)
+    name = models.CharField("Namn (ex. Klippning kort hår) *",
+                            max_length=20)
     price = models.IntegerField("Pris i kronor *", max_length=6)
-    
-    # TODO: längd på desc? 
-    description = models.CharField("Beskrivning (ex. Inklusive styling)", max_length=200, validators=[MaxLengthValidator(200)], blank=True)
+
+    # TODO: längd på desc?
+    description = models.CharField("Beskrivning (ex. Inklusive styling)",
+                                   max_length=200,
+                                   validators=[MaxLengthValidator(200)],
+                                   blank=True)
     display_on_profile = models.BooleanField("Visa på profil", blank=True)
-    
+
     # user that has this service
     user = models.ForeignKey(User, editable=False)
     order = models.PositiveIntegerField(blank=True, editable=True, null=True)
@@ -94,16 +135,20 @@ class Service(models.Model):
         # needs to be here, or the services admin ui will break
         ordering = ['order']
 
+
 class OpenHours(models.Model):
+    """
+    TODO: Fix model description
+    """
 
     # Do not change if you dont know what you're doing!!
     closed_value = -1
 
-    
     time_list = generate_list_of_quarters(60 * 8, 60 * 22 + 15)
     time_list.insert(0, (closed_value, 'Stängt'))
 
-    # Since Python tuples are immutable we need to use a list as a temporary buffer
+    # Since Python tuples are immutable we need to use a list as
+    # a temporary buffer
     time_tuple = tuple(time_list)
 
     user = models.ForeignKey(User, editable=False)
@@ -121,37 +166,34 @@ class OpenHours(models.Model):
     # configuration in future.
     default_closed_days = ['sun']
 
-    # Instead of having duplicate code we generate the code dynamically and 
-    # execute it. FIXME: This MIGHT be unsafe, so if any problem occurs in 
+    # Instead of having duplicate code we generate the code dynamically and
+    # execute it. FIXME: This MIGHT be unsafe, so if any problem occurs in
     # this model this is probably why.
     for day in weekdays_model:
-    
-        if day in default_closed_days:            
+        if day in default_closed_days:
             default_open_time = closed_value
             default_close_time = closed_value
 
-        code = day + ' = models.IntegerField("", choices=time_tuple, default = ' + str(default_open_time) + ')'
+        code = (day + ' = models.IntegerField('
+                                    '"",'
+                                    'choices=time_tuple,'
+                                    'default=' + str(default_open_time) + ')')
         exec(code)
 
-        code = day + '_closed = models.IntegerField("", choices=time_tuple, default = ' + str(default_close_time) + ')'
+        code = (day + '_closed = models.IntegerField('
+                                    '"",'
+                                    'choices=time_tuple,'
+                                    'default=' + str(default_close_time) + ')')
         exec(code)
 
-
-
-
-from django.db import models
-from django.contrib.auth.models import User
-from django.conf import settings
-from django.db.models.signals import post_delete
-from django.core.files.storage import default_storage
-
-import os
 
 # client side url to images, without image filename
 # used in the view that edit the images on the profile
 def get_image_url(filename):
     return os.path.join(settings.STATIC_URL,
-                    settings.PATH_USER_IMGS, filename)
+                        settings.PATH_USER_IMGS,
+                        filename)
+
 
 class Picture(models.Model):
     # server-side, full path to upload image including filename
@@ -164,54 +206,64 @@ class Picture(models.Model):
     def __unicode__(self):
         return self.filename
 
-    file = models.ImageField(upload_to=get_image_path, blank = True)
-    filename = models.CharField(max_length=50, blank=True)
-    user = models.ForeignKey(User, editable=False)
-    upload_date = models.DateTimeField(auto_now_add=True,editable=False)
-    comment = models.CharField(max_length=100, blank=True)
+    file = models.ImageField(upload_to=get_image_path,
+                             blank=True)
+    filename = models.CharField(max_length=50,
+                                blank=True)
+    user = models.ForeignKey(User,
+                             editable=False)
+    upload_date = models.DateTimeField(auto_now_add=True,
+                                       editable=False)
+    comment = models.CharField(max_length=100,
+                               blank=True)
 
     # choices probably not needed, only usable for forms to get readable name
-    # what i wanted was a real enum which could be used when setting the value
+    # what I wanted was a real enum which could be used when setting the value
     IMAGE_TYPE_CHOICES = (
         ('G', 'Gallery'),
         ('P', 'Unused Profile Image'),
         ('C', 'Current Profile Image'),
         )
-    image_type = models.CharField(max_length=1, choices=IMAGE_TYPE_CHOICES)
-    order = models.PositiveIntegerField(blank=True, editable=True, null=True)
-    
-    # unused if it's a profile image
-    display_on_profile = models.BooleanField("Visa på profil", blank=True, default=True)
+    image_type = models.CharField(max_length=1,
+                                  choices=IMAGE_TYPE_CHOICES)
+    order = models.PositiveIntegerField(blank=True,
+                                        editable=True,
+                                        null=True)
 
+    # unused if it's a profile image
+    display_on_profile = models.BooleanField("Visa på profil",
+                                             blank=True,
+                                             default=True)
 
     def save(self, *args, **kwargs):
-        super(Picture, self).save(*args, **kwargs) 
+        super(Picture, self).save(*args, **kwargs)
 
         if self.image_type == 'C':
-            # The newly saved Picture object was selected as current 
-            # profile picture. Therefor we need to reset the previous profile pic.
+            # The newly saved Picture object was selected as current
+            # profile picture. Therefor we need to reset the previous
+            # profile picture.
 
-            # There should not be more than 1 previous profile picture, but rather
-            # safe than sorry. 
-            Picture.objects.filter(user__exact= self.user).filter(
-            image_type='C').exclude(id = self.id).update(image_type = 'G')
+            # There should not be more than 1 previous profile picture, but
+            # rather safe than sorry.
+            Picture.objects.filter(user__exact=self.user).filter(
+            image_type='C').exclude(id=self.id).update(image_type='G')
 
     class Meta:
         # deliver the images sorted on the order field
         # needs to be here, or the images admin ui will break
         ordering = ['order']
 
-     
+
 # Signals handler for deleting files after object record deleted
 # In Django 1.3, delete a record not remove the associated files
 def delete_filefield(sender, **kwargs):
     """Automatically deleted files when records removed.
-    
+
     On Django 1.3, removing records will not followed by deleting files.
     Should manually delete PDF using signals post_delete.
 
     This function can be done more generic
-    
+
     https://github.com/h3/django-webcore/blob/master/webcore/utils/storage.py#L8
     Explanation in comment 1 -
     http://obroll.com/automatically-delete-file-in-filefield-django-1-3-when-object-record-deleted/
@@ -226,15 +278,17 @@ def delete_filefield(sender, **kwargs):
     model.
     -> This will probably be a problem if we move to filebased storage.
     """
-    
     default_storage.delete(instance.file.name)
-
 post_delete.connect(delete_filefield, Picture)
 
+
 class InviteCode(models.Model):
-    used = models.BooleanField("Have the invite code been used?", default=False)
-    invite_code = models.CharField("The string to use as invite code", max_length=30)
-    comment = models.CharField("To who was the invitecode given? And so on..", max_length=500)
-    
+    used = models.BooleanField("Have the invite code been used?",
+                               default=False)
+    invite_code = models.CharField("The string to use as invite code",
+                                   max_length=30)
+    comment = models.CharField("To who was the invitecode given? And so on..",
+                               max_length=500)
+
     def __unicode__(self):
         return u'Invitecode: %s Used: %s' % (self.invite_code, self.used)

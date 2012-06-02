@@ -1,22 +1,43 @@
 from django.conf.urls.defaults import *
-from accounts.views import ServicesView, EditProfileView, DisplayProfileView, RedirectToProfileView, PicturesView
-
-from accounts.views import OpenHoursView
-
-from tastypie.api import Api
 from accounts.api import ServiceResource, PictureResource
+from accounts.views import (ServicesView,
+                            EditProfileView,
+                            DisplayProfileView,
+                            RedirectToProfileView,
+                            PicturesView,
+                            OpenHoursView)
+from tastypie.api import Api
+
 profile_api = Api(api_name='profile')
 profile_api.register(ServiceResource())
 profile_api.register(PictureResource())
 
 urlpatterns = patterns('',
-    (r'^profile/$', RedirectToProfileView.as_view(),{},'profile_display_redirect'), # need to be first, or redirection to profile wont work.
-    (r'^profile/edit/$', EditProfileView.as_view(),{},'profile_edit'),
-   
- 
-    (r'^profile/edit-services/$', ServicesView.as_view(),{},'profiles_edit_services'),
-    (r'^profile/edit-images/$', PicturesView.as_view(),{},'profiles_edit_images'),
-    (r'^profile/add-hours/$', OpenHoursView.as_view(),{},'profiles_add_hours'),
-    (r'^api/', include(profile_api.urls)),
-    (r'^(?P<slug>\w+)/$', DisplayProfileView.as_view(),{},'profile_display_with_profile_url'),
+    # need to be first, or redirection to profile wont work.
+    (r'^profile/$',
+            RedirectToProfileView.as_view(),
+            {},
+            'profile_display_redirect'),
+    (r'^profile/edit/$',
+            EditProfileView.as_view(),
+            {},
+            'profile_edit'),
+    (r'^profile/edit-services/$',
+            ServicesView.as_view(),
+            {},
+            'profiles_edit_services'),
+    (r'^profile/edit-images/$',
+            PicturesView.as_view(),
+            {},
+            'profiles_edit_images'),
+    (r'^profile/add-hours/$',
+            OpenHoursView.as_view(),
+            {},
+            'profiles_add_hours'),
+    (r'^api/',
+            include(profile_api.urls)),
+    (r'^(?P<slug>\w+)/$',
+            DisplayProfileView.as_view(),
+            {},
+            'profile_display_with_profile_url'),
 )

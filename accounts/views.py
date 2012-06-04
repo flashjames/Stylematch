@@ -552,8 +552,7 @@ class PicturesView(LoginRequiredMixin, CreateSelfView):
                                                 self.request.user.id
                                                 )
         context['update_success'] = "Uppladdningen lyckades!"
-        context['update_failure'] = ("Oops! Något gick galet "
-                                     "med uppladdningen!")
+        context['update_failure'] = kwargs['form']._errors['file']
         return context
 
     def remove_old_profile_image(self, user):

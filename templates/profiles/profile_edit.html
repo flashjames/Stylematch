@@ -7,7 +7,18 @@
 {% include "profiles/edit_profile_menu.html" with edit_profile="active" %}
 
 <div class="main-content row" >
-  <div id="edit-profile-large" class="span12" >
+    {% if valid %}
+    <div id="edit-profile-notifier" class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert">x</button>
+        <strong>Profilen uppdaterad!</strong>
+    </div>
+    {% endif %}
+    {% if invalid %}
+    <div id="edit-profile-notifier" class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">x</button>
+        <strong>Oops! Något gick fel. Kontrollera att alla fält är korrekt ifyllda.</strong>
+    </div>
+    {% endif %}
 
     <div id="edit-profile-forms">
       <form  action="" method="post" class="form-horizontal">

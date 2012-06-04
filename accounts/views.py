@@ -381,6 +381,14 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         # when this class is defined
         self.success_url = reverse('profile_edit')
 
+    def form_valid(self, form):
+        return self.render_to_response(self.get_context_data(form=form,
+                                                             valid=True))
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form,
+                                                             invalid=True))
+
     def get_form(self, form_class):
         """
         Returns an instance of the form to be used in this view.

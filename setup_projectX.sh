@@ -1,4 +1,3 @@
-
 if [ "$0" != "bash" ]; then
     # We need to run the setup script in same context as the terminal.
     # This is done by using 'source' and an effect of this is $0 is set to 'bash' 
@@ -25,6 +24,7 @@ echo ""
 
 #Should be an if case here, so it's easy to install on MacOSX too
 sudo apt-get install python python-dev python-pip python-virtualenv python-imaging libjpeg62-dev
+# yum install python-imaging libjpeg-devel python-devel
 
 
 #git clone git@github.com:Jenso/ProjectX.git

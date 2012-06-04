@@ -234,6 +234,19 @@ class DisplayProfileView(DetailView):
             return self.render_to_response(context)
 
 
+class UpdateSelfView(UpdateView):
+    """
+    An updateview that redirects to self and passes valid/invalid variables
+    """
+    def form_valid(self, form):
+        return self.render_to_response(self.get_context_data(form=form,
+                                                             valid=True))
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form,
+                                                             invalid=True))
+
+
 class RedirectToProfileView(RedirectView):
     """
     Redirects to the logged in user's profile with the profile_url
@@ -365,7 +378,7 @@ class UserProfileForm(ModelForm):
             }
 
 
-class EditProfileView(LoginRequiredMixin, UpdateView):
+class EditProfileView(LoginRequiredMixin, UpdateSelfView):
     """
     Edit a stylist profile
     """
@@ -375,19 +388,6 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
 
     def __init__(self, *args, **kwargs):
         super(EditProfileView, self).__init__(*args, **kwargs)
-
-        # written here in init since it will give reverse url error
-        # if just written in class definition. because urls.py isnt loaded
-        # when this class is defined
-        self.success_url = reverse('profile_edit')
-
-    def form_valid(self, form):
-        return self.render_to_response(self.get_context_data(form=form,
-                                                             valid=True))
-
-    def form_invalid(self, form):
-        return self.render_to_response(self.get_context_data(form=form,
-                                                             invalid=True))
 
     def get_form(self, form_class):
         """
@@ -430,17 +430,12 @@ class ServicesView(LoginRequiredMixin, TemplateView):
                                     )}
 
 
-class OpenHoursView(LoginRequiredMixin, UpdateView):
+class OpenHoursView(LoginRequiredMixin, UpdateSelfView):
     model = OpenHours
     template_name = "accounts/hours_form.html"
 
     def __init__(self, *args, **kwargs):
         super(OpenHoursView, self).__init__(*args, **kwargs)
-
-        # written here in init since it will give reverse url error
-        # if just written in class definition. because urls.py isnt loaded
-        # when this class is defined
-        self.success_url = reverse('profile_display_redirect')
 
     def get_object(self, queryset=None):
         obj = OpenHours.objects.get(user__exact=self.request.user.id)

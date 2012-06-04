@@ -234,6 +234,19 @@ class DisplayProfileView(DetailView):
             return self.render_to_response(context)
 
 
+class CreateSelfView(CreateView):
+    """
+    A createview that redirects to self and passes valid/invalid variables
+    """
+    def form_valid(self, form):
+        return self.render_to_response(self.get_context_data(form=form,
+                                                             valid=True))
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form,
+                                                             invalid=True))
+
+
 class UpdateSelfView(UpdateView):
     """
     An updateview that redirects to self and passes valid/invalid variables
@@ -502,7 +515,7 @@ class PictureForm(forms.ModelForm):
         fields = ('file', 'comment', 'image_type')
 
 
-class PicturesView(LoginRequiredMixin, CreateView):
+class PicturesView(LoginRequiredMixin, CreateSelfView):
     """
     Display edit pictures page
     Many javascript dependencies one this page which interacts with the
@@ -514,11 +527,6 @@ class PicturesView(LoginRequiredMixin, CreateView):
 
     def __init__(self, *args, **kwargs):
         super(PicturesView, self).__init__(*args, **kwargs)
-
-        # written here in init since it will give reverse url error
-        # if just written in class definition. because urls.py isnt loaded
-        # when this class is defined
-        self.success_url = reverse('profiles_edit_images')
 
     def get_form(self, form_class):
         form = super(PicturesView, self).get_form(form_class)
@@ -543,6 +551,9 @@ class PicturesView(LoginRequiredMixin, CreateView):
         context['profile_image_url'] = self.get_profile_image(
                                                 self.request.user.id
                                                 )
+        context['update_success'] = "Uppladdningen lyckades!"
+        context['update_failure'] = ("Oops! Något gick galet "
+                                     "med uppladdningen!")
         return context
 
     def remove_old_profile_image(self, user):

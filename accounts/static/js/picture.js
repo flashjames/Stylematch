@@ -93,7 +93,7 @@
 
     window.ServiceListItemView = Backbone.View.extend({
         tagName:"li",
-        className: "image-block",
+        className: "image-block image-list-item",
         template:_.template($('#tpl-image-list-item').html()),
 
         initialize:function () {

@@ -24,13 +24,9 @@
 
 {% if user.is_authenticated and logged_in_user_profile %}
 {% include "profiles/edit_profile_menu.html" with display_profile="active" %}
+{% endif %}
 <!-- remove these <br> asap!! -->
 <br><br>
-{% else %}
-<br><br>
-{% endif %}
-
-
 
 <div class="row masthead" >
 

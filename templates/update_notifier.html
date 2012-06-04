@@ -1,12 +1,12 @@
 {% if valid %}
 <div class="alert alert-success">
     <button type="button" class="close" data-dismiss="alert">x</button>
-    <strong>Uppdateringen lyckades!</strong>
+    <strong>{{ update_success }}</strong>
 </div>
 {% endif %}
 {% if invalid %}
 <div class="alert alert-error">
     <button type="button" class="close" data-dismiss="alert">x</button>
-    <strong>Oops! Något gick fel. Kontrollera att alla fält är korrekt ifyllda.</strong>
+    <strong>{{ update_failure }}</strong>
 </div>
 {% endif %}

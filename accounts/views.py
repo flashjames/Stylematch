@@ -400,6 +400,13 @@ class EditProfileView(LoginRequiredMixin, UpdateSelfView):
         obj = UserProfile.objects.get(user__exact=self.request.user.id)
         return obj
 
+    def get_context_data(self, **kwargs):
+        context = super(EditProfileView, self).get_context_data(**kwargs)
+        context['update_success'] = "Uppdateringen lyckades!"
+        context['update_failure'] = ("Oops! Något gick fel. Kontrollera att "
+                                     "alla fält är korrekt ifyllda.")
+        return context
+
 
 class ServiceForm(ModelForm):
     class Meta:
@@ -441,6 +448,12 @@ class OpenHoursView(LoginRequiredMixin, UpdateSelfView):
         obj = OpenHours.objects.get(user__exact=self.request.user.id)
         return obj
 
+    def get_context_data(self, **kwargs):
+        context = super(OpenHoursView, self).get_context_data(**kwargs)
+        context['update_success'] = "Uppdateringen lyckades!"
+        context['update_failure'] = ("Oops! Något gick fel. Kontrollera att "
+                                     "alla fält är korrekt ifyllda.")
+        return context
 
 """
 TODO: Put rest of this file, in another file?

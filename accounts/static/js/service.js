@@ -259,8 +259,16 @@
                 }
             }
             catch(err) {
-                // TODO: Display error message somewhere better
-                console.log("ERROR: The error message response wasnt a JSON object");
+                //TODO: Log this somewhere?
+                $('#alert').notify();
+                $('#alert').notify("create", {
+                    text: 'Det skedde ett fel och felmeddelandet var inte i korrekt JSON-format!'
+                }, {
+                    expires: false,
+                    click: function(e,instance) {
+                        instance.close();
+                    }
+                });
             }
         }
     });

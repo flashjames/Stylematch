@@ -114,7 +114,7 @@
         },
         saveComment: function() {
             var new_comment = $(this.el).find("textarea").val();
-            new_comment = new_comment.replace(/\s*$/g, ""); //remove all trailing whitespaces
+            new_comment = new_comment.replace(/\s+$/,''); //remove all trailing whitespaces
             var comment = this.model.get("comment");
 
             // comment have been changed

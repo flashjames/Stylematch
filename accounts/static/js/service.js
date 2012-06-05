@@ -32,9 +32,9 @@
             var self = this;
             // make the ul list sortable with the function sortable() from jquery ui
             $(this.el).sortable({
-                items: 'li', 
+                items: 'li',
                 //when a object have changed position, update the backbone models order field 
-                update: function() { 
+                update: function() {
                     self.updateOrder();
                 }
             });
@@ -131,7 +131,6 @@
             $(this.el).unbind();
             $(this.el).remove();
         }
-
     });
     FormView = Backbone.View.extend({
         el: "#form",
@@ -172,9 +171,9 @@
             var self = this;
             this.serviceList.fetch({
                 success: function(collection, response) {
-                        if(collection.size() > 0) {
-                                self.showPriceList();
-                        }
+                    if(collection.size() > 0) {
+                        self.showPriceList();
+                    }
 
                     if(!response) {
                         $('#alert').notify();
@@ -203,7 +202,7 @@
             $('#service-list').html(this.serviceListView.render().el);
         },
         showPriceList: function () {
-                $('.edit-service-form-right').removeClass('hide-block');
+            $('.edit-service-form-right').removeClass('hide-block');
         },
         events:{
             'click .save': 'formSave'

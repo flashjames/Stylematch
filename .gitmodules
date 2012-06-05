@@ -4,3 +4,6 @@
 [submodule "media/js/lightbox"]
 	path = media/js/lightbox
 	url = https://github.com/jackmoore/colorbox.git
+[submodule "media/js/jcrop"]
+	path = media/js/jcrop
+	url = git://github.com/tapmodo/Jcrop.git

@@ -17,6 +17,11 @@ Used for the image gallery on the display profile page.
 A lightweight customizable lightbox plugin for jQuery
 Used on the inspiration and profile_display page
 
+#Jcrop
+Jcrop is the quick and easy way to add image cropping functionality to your web application. It combines the ease-of-use of a typical jQuery plugin with a powerful cross-platform DHTML cropping engine that is faithful to familiar desktop graphics applications.
+https://github.com/tapmodo/Jcrop
+Used on edit-images page, when uploading profile image.
+
 ###Backbone Tastypie
 A small conversion layer to make backbone.js and django-tastypie work together happily.
 https://github.com/PaulUithol/backbone-tastypie

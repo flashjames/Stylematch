@@ -36,13 +36,16 @@ def format_minutes_to_pretty_format(minutes):
                 output_str += "timme"
             else:
                 output_str += "timmar"
-
             output_str += " "
 
-        if minutes_remaining != 0:
-            output_str += str(minutes_remaining) + " minuter"
+        if minutes_remaining >= 1:
+            output_str += str(minutes_remaining) + " "
+            if minutes_remaining == 1:
+                output_str += "minut"
+            else:
+                output_str += "minuter"
 
-    return output_str
+    return output_str.strip()
 
 
 def generate_list_of_quarters(min_minutes=0,

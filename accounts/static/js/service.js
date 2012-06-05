@@ -85,7 +85,15 @@
             this.model.set({order: indexInList, silent:true});
             this.model.save({}, {
                  error: function(collection, error, options) {
-                     console.log("Error: Model didnt sync with server, after the order was changed");
+                     $('#alert').notify();
+                     $('#alert').notify("create", {
+                         text: "Error: Model didnt sync with server, after the order was changed"
+                     }, {
+                         expires: false,
+                         click: function(e,instance) {
+                             instance.close();
+                         }
+                     });
                  }
             });
             //console.log("na", $(this.el).index(), this.model);
@@ -97,11 +105,25 @@
             vent.trigger("changeModelToEdit", this.model);
         },
         deleteService:function () {
-            this.model.destroy({
-                success:function () {
-                    // TODO: Add dialog in interface
-                    console.log('Service deleted successfully');
-                }
+            var service = this;
+            jConfirm('Är du säker på att du vill ta bort den här behandlingen?',
+                     'Bekräfta borttagning',
+                 function(r) {
+                    if (r === true) {
+                        service.model.destroy({
+                            error:function() {
+                                $('#alert').notify();
+                                $('#alert').notify("create", {
+                                    text: "Behandlingen kunde inte tas bort. Kontrollera anslutningen!"
+                                }, {
+                                    expires: false,
+                                    click: function(e,instance) {
+                                        instance.close();
+                                    }
+                                });
+                            }
+                        });
+                    }
             });
             return false;
         },
@@ -154,9 +176,28 @@
                                 self.showPriceList();
                         }
 
-                    if(!response)
-                        //TODO: Display error message "couldnt get views"
-                        console.log("Error: Couldnt get user's services from API");
+                    if(!response) {
+                        $('#alert').notify();
+                        $('#alert').notify("create", {
+                              text: "Error: Couldn't get users services from API"
+                        }, {
+                            expires: false,
+                            click: function(e,instance) {
+                                instance.close();
+                            }
+                        });
+                    }
+                },
+                error: function(collection, error, options) {
+                    $('#alert').notify();
+                    $('#alert').notify("create", {
+                        text: "Connection Error"
+                    }, {
+                        expires: false,
+                        click: function(e,instance) {
+                            instance.close();
+                        }
+                    });
                 }
             });
             $('#service-list').html(this.serviceListView.render().el);

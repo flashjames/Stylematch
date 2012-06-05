@@ -597,10 +597,9 @@ class PicturesView(LoginRequiredMixin, CreateSelfView):
         # Return resized image as InMemoryUploadedFile
         tempfile_io = StringIO.StringIO()
         image.save(tempfile_io, format=file_extension)
-
-        return InMemoryUploadedFile(tempfile_io, None, file._name,
-                                    file.content_type, tempfile_io.len,
-                                    None)
+        return InMemoryUploadedFile(tempfile_io, None, original_image._name,
+                                    original_image.content_type,
+                                    tempfile_io.len, None)
 
     # Called when we're sure all fields in the form are valid
     def form_valid(self, form):

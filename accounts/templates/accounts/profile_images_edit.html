@@ -19,11 +19,24 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
 <script src="{{ STATIC_URL }}js/jquery.notify.js"></script>
 <script src="{{ STATIC_URL }}js/jquery/jquery.alerts.js"></script>
+
+	<link href="{{ STATIC_URL }}js/jcrop/css/jquery.Jcrop.min.css" rel="stylesheet" type="text/css" />
+	<script src="http://deepliquid.com/Jcrop/js/jquery.Jcrop.min.js"></script>
+
 <style>
   /* remove background around twitter bootstrap modal, on this page */
   .modal-backdrop {
   opacity:0;
   }
+
+  /* 
+  Fix to make Jcrop work with Twitter Bootstrap.
+  Only needs to be here when compiling less on client side, since
+  this line of code already is in the file 'jquery.Jcrop.min.css'.
+  The less code is loaded after the css file, when compiled on client side,
+  and setting this css code here seems to fix it.
+  */
+  .jcrop-holder img,img.jcrop-preview{ max-width: none; }
 </style>
 
 
@@ -43,6 +56,33 @@
       <p>#{text}</p>
   </div>
 </div>
+		<script language="Javascript">
+
+	$(window).load(function(){
+	
+	jcrop_api = $.Jcrop('#jcrop_target');
+	jcrop_api.setOptions({ aspectRatio: 1/1 });
+	jcrop_api.focus();
+	bounds = jcrop_api.getBounds();
+	bound_width = bounds[0];
+	bound_height = bounds[1];
+	jcrop_api.setSelect([0,0,bound_width,bound_height]);
+	
+	});
+
+
+</script>
+
+<img src="http://deepliquid.com/Jcrop/demos/demo_files/pool.jpg" id="jcrop_target" />
+
+<div class="row">
+  <div class="span12">
+    
+
+  </div>
+</div>
+
+
 
 <div class="row" >
   <div id="edit-profile-large" class="span12" >
@@ -215,7 +255,7 @@
 
   <!-- the code that does the magic on the page -->
   <script src="{{ STATIC_URL }}js/picture.js"></script>
-
+  
 </div>
 
 </div>

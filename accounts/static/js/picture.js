@@ -114,6 +114,7 @@
         },
         saveComment: function() {
             var new_comment = $(this.el).find("textarea").val();
+            new_comment = new_comment.replace(/\s*$/g, ""); //remove all trailing whitespaces
             var comment = this.model.get("comment");
 
             // comment have been changed
@@ -123,11 +124,11 @@
                 this.model.save({}, {
                     success:function () {
                         // TODO: Add dialog in interface
-                        //console.log('Picture deleted successfully');
+                        //console.log('Comment updated successfully');
                     },
                     error:function() {
                         // TODO: Add dialog in interface
-                        //console.log('Picture delete made an error!');
+                        //console.log('Comment updated recievd an error!');
                     }
                 });
             } else {

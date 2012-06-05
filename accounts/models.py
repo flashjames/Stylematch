@@ -107,9 +107,11 @@ class UserProfile(models.Model):
 
 
 class Service(models.Model):
-    buffer = generate_list_of_quarters(15,
-                                       420 + 15,
-                                       format_minutes_to_pretty_format)
+    buffer = list_with_time_interval(
+                start=30,
+                stop=6*60,
+                interval=30,
+                format_function=format_minutes_to_pretty_format)
     TIME_CHOICES = tuple(buffer)
 
     length = models.IntegerField("Tidsåtgång *",
@@ -144,7 +146,10 @@ class OpenHours(models.Model):
     # Do not change if you dont know what you're doing!!
     closed_value = -1
 
-    time_list = generate_list_of_quarters(60 * 8, 60 * 22 + 15)
+    time_list = list_with_time_interval(
+                start=60 * 6,
+                stop=60 * 24,
+                interval=15)
     time_list.insert(0, (closed_value, 'Stängt'))
 
     # Since Python tuples are immutable we need to use a list as

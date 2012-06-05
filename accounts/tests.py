@@ -39,18 +39,27 @@ class TestTools(TestCase):
         self.assertEqual("23 timmar 59 minuter",
                     tools.format_minutes_to_pretty_format(1439))
 
-    def test_generate_list_of_quarters(self):
+    def test_list_with_time_interval(self):
+        self.assertEqual([(0, "00:00"),
+                          (30, "00:30"),
+                          (60, "01:00"),
+                          (90, "01:30")],
+                tools.list_with_time_interval(stop=90))
+        self.assertEqual([(30, "00:30")], 
+                tools.list_with_time_interval(
+                    start=30,
+                    stop=45,
+                    interval=30))
         self.assertEqual([(0, "00:00"),
                           (15, "00:15"),
                           (30, "00:30"),
                           (45, "00:45"),
                           (60, "01:00"),
                           (75, "01:15")],
-                tools.generate_list_of_quarters(
-                    minutes_max=75))
-        self.assertEqual([(0, ""),
-                          (15, "15 minuter"),
-                          (30, "30 minuter"),
+                tools.list_with_time_interval(
+                    stop=75,
+                    interval=15))
+        self.assertEqual([(30, "30 minuter"),
                           (45, "45 minuter"),
                           (60, "1 timme"),
                           (75, "1 timme 15 minuter"),
@@ -58,7 +67,10 @@ class TestTools(TestCase):
                           (105, "1 timme 45 minuter"),
                           (120, "2 timmar"),
                           (135, "2 timmar 15 minuter")],
-                tools.generate_list_of_quarters(
-                    minutes_max=135,
-                    output_format_func=tools.format_minutes_to_pretty_format))
+                tools.list_with_time_interval(
+                    start=30,
+                    stop=140,
+                    interval=15,
+                    format_function=tools.format_minutes_to_pretty_format))
+
 

@@ -109,7 +109,6 @@
         events:{
             "click .delete-image":"deleteService",
             "click .show_image_on_profile":"switchDisplayOnProfile",
-            "change .profile_image_radiobutton": "setProfileImage",
             "click .save": "saveComment"
         },
         saveComment: function() {
@@ -145,13 +144,10 @@
                         });
                     }
                 });
-            } else {
-                //do nothing
             }
         },
         switchDisplayOnProfile: function() {
             var display_on_profile = this.model.get("display_on_profile");
-            //console.log(display_on_profile, this.model);
             var bool;
             if(display_on_profile)
                 bool = false;
@@ -185,23 +181,6 @@
                 }
             });
         },
-        setProfileImage: function(e) {
-
-            // FIXME: radiobuttons are weird when using model.set({...}) followed by
-            // save() since they force re-rendering or something alike.
-            // Current solution is to do set and save in same operation...
-            this.model.save({image_type: 'C'}, {
-                        silent : true,
-                        success : function () {
-                            // TODO: Add dialog in interface
-                            //console.log('setProfileImage successfully changed');
-                        },
-                        error : function() {
-                            // TODO: Add dialog in interface
-                            //console.log('setProfileImage saving failed!');
-                        }
-            });
-        },
         updateModelOrder: function() {
             /*
              * Update the Service objects order field according to order in the <ul> list
@@ -223,14 +202,9 @@
                     //console.log("Error: Model didnt sync with server, after the order was changed");
                 }
             });
-            //console.log("na", $(this.el).index(), this.model);
         },
         deleteService:function () {
             this.model.destroy({
-                success:function () {
-                    // TODO: Add dialog in interface
-                    //console.log('Picture deleted successfully');
-                },
                 error:function() {
                     $('#alert').notify();
                     $('#alert').notify("create", {
@@ -257,9 +231,6 @@
         initialize:function () {
             //Glue code, that initialize's all views and models
 
-            //_.bindAll(this, "formSave", "changeModelToEdit", "displayFormErrors");
-            //vent.bind("changeModelToEdit", this.changeModelToEdit);
-
             this.serviceList = new ServiceCollection();
 
             this.serviceList.fetch({
@@ -276,7 +247,6 @@
                         });
                     }
                     $('#image-list').html(new ServiceListView({model:collection}).render().el);
-                    //console.log("fetch()",response);
                 }
             });
         this.initGalleryUploadDialog();

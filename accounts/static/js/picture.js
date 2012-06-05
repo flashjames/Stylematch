@@ -204,18 +204,25 @@
             });
         },
         deleteService:function () {
-            this.model.destroy({
-                error:function() {
-                    $('#alert').notify();
-                    $('#alert').notify("create", {
-                          text: 'Bilden kunde inte tas bort!'
-                    }, {
-                        expires: false,
-                        click: function(e,instance) {
-                            instance.close();
-                        }
-                    });
-                }
+            var image = this;
+            jConfirm('Är du säker på att du vill ta bort den här bilden?',
+                     'Bekräfta borttagning',
+                 function(r) {
+                    if (r === true) {
+                        image.model.destroy({
+                            error:function() {
+                                $('#alert').notify();
+                                $('#alert').notify("create", {
+                                      text: 'Bilden kunde inte tas bort!'
+                                }, {
+                                    expires: false,
+                                    click: function(e,instance) {
+                                        instance.close();
+                                    }
+                                });
+                            }
+                        });
+                    }
             });
             return false;
         },

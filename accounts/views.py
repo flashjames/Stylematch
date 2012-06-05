@@ -356,7 +356,8 @@ class UserProfileForm(ModelForm):
         # reverse() can't find url's with - (bindestreck) in it
         # TODO: Fix reverse() so user's can use - in their profile_url
         if '-' in data:
-            raise ValidationError("Sökvägen får inte innehålla - (bindestreck)")
+            raise ValidationError("Sökvägen får inte innehålla - "
+                                  "(bindestreck)")
 
         # is profile url used by another user or a path used by django?
         if not self.is_unique_url_name(data) or self.is_systempath(data):
@@ -472,6 +473,9 @@ class OpenHoursView(LoginRequiredMixin, UpdateSelfView):
 TODO: Put rest of this file, in another file?
 Since all classes/functions is part of the same functionality
 """
+import StringIO
+from PIL import Image
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 
 def get_unique_filename(filename):
@@ -571,27 +575,60 @@ class PicturesView(LoginRequiredMixin, CreateSelfView):
         if queryset:
             queryset[0].delete()
 
+    def resize_image(self, original_image):
+        """
+        Resize original_image, if it's larger than max_width/max_height.
+        And return a InMemoryUploadedFile of the image.
+        """
+        file_extension = original_image.content_type.split("/")[1]
+
+        image = Image.open(original_image)
+
+        max_width = max_height = 720
+        (width, height) = image.size
+
+        # Dont resize image, if it's smaller than max_width/max_height
+        if width < max_width and height < max_height:
+            return
+
+        # Resize image but keep aspect ratio
+        image.thumbnail((max_width, max_height), Image.ANTIALIAS)
+
+        # Return resized image as InMemoryUploadedFile
+        tempfile_io = StringIO.StringIO()
+        image.save(tempfile_io, format=file_extension)
+
+        return InMemoryUploadedFile(tempfile_io, None, file._name,
+                                    file.content_type, tempfile_io.len,
+                                    None)
+
     # Called when we're sure all fields in the form are valid
     def form_valid(self, form):
         image_type = form.cleaned_data['image_type']
 
-        # this class is used to upload both Gallery and Profile images ->
+        # This class is used to upload both Gallery and Profile images ->
         # only remove old profile image if it's a profile image that have
         # been uploaded
-        if image_type == "C":
+        if image_type == 'C':
             self.remove_old_profile_image(self.request.user)
 
         f = self.request.FILES.get('file')
-
         filename = get_unique_filename(f.name)
 
         # add data to form fields that will be saved to db
         self.object = form.save(commit=False)
+
+        # replace original image, with a resized version
+        resized_image = self.resize_image(f)
+
+        # Will only resize image if it's larger than maximum size
+        # -> dont replace original image if it havent been resized
+        if resized_image:
+            self.object.file._file = resized_image
+
         self.object.user = self.request.user
         self.object.filename = filename
 
-        # default image type, Gallery
-        #self.object.image_type = 'G'
         self.object.save()
         form.save_m2m()
         return super(PicturesView, self).form_valid(form)

@@ -239,12 +239,12 @@ class Picture(models.Model):
         super(Picture, self).save(*args, **kwargs)
 
         if self.image_type == 'C':
-            # The newly saved Picture object was selected as current
+            # The newly saved Picture object was seleted as current
             # profile picture. Therefor we need to reset the previous
             # profile picture.
 
             # There should not be more than 1 previous profile picture, but
-            # rather safe than sorry.
+            # better safe than sorry.
             Picture.objects.filter(user__exact=self.user).filter(
             image_type='C').exclude(id=self.id).update(image_type='G')
 

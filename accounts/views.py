@@ -502,10 +502,15 @@ def convert_bytes(bytes):
 class PictureForm(forms.ModelForm):
     def clean_file(self):
         file = self.cleaned_data['file']
+
         if file:
             if file._size > settings.MAX_IMAGE_SIZE:
                 raise ValidationError("Bilden är för stor ( > %s )"
                                     % convert_bytes(settings.MAX_IMAGE_SIZE))
+            if not file._name.endswith(('.jpg', '.gif', '.png')):
+                raise ValidationError("Endast bildfiler i formatena "
+                                      "PNG, JPG och GIF är accepterade.")
+
             return file
         else:
             raise ValidationError("Filen kunde inte läsas")

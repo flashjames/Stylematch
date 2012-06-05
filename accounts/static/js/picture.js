@@ -162,12 +162,26 @@
 
             this.model.save({}, {
                 success:function () {
-                    // TODO: Add dialog in interface
-                    //console.log('Picture deleted successfully');
+                        $('#alert').notify();
+                        $('#alert').notify("create", {
+                              text: 'Uppdateringen lyckades!'
+                        }, {
+                            expires: 2000,
+                            click: function(e,instance) {
+                                instance.close();
+                            }
+                        });
                 },
                 error:function() {
-                    // TODO: Add dialog in interface
-                    //console.log('Picture delete made an error!');
+                        $('#alert').notify();
+                        $('#alert').notify("create", {
+                              text: 'Uppdateringen kunde inte slutföras!'
+                        }, {
+                            expires: false,
+                            click: function(e,instance) {
+                                instance.close();
+                            }
+                        });
                 }
             });
         },
@@ -197,6 +211,15 @@
             this.model.set({order: indexInList, silent:true});
             this.model.save({}, {
                 error: function(collection, error, options) {
+                        $('#alert').notify();
+                        $('#alert').notify("create", {
+                              text: 'Oops, något gick galet!'
+                        }, {
+                            expires: false,
+                            click: function(e,instance) {
+                                instance.close();
+                            }
+                        });
                     //console.log("Error: Model didnt sync with server, after the order was changed");
                 }
             });
@@ -209,8 +232,15 @@
                     //console.log('Picture deleted successfully');
                 },
                 error:function() {
-                    // TODO: Add dialog in interface
-                    //console.log('Picture delete made an error!');
+                    $('#alert').notify();
+                    $('#alert').notify("create", {
+                          text: 'Bilden kunde inte tas bort!'
+                    }, {
+                        expires: false,
+                        click: function(e,instance) {
+                            instance.close();
+                        }
+                    });
                 }
             });
             return false;
@@ -235,8 +265,15 @@
             this.serviceList.fetch({
                 success: function(collection, response) {
                     if(!response) {
-                        //TODO: Display error message "couldnt get views"
-                        //console.log("Error: Couldnt get user's services from API");
+                        $('#alert').notify();
+                        $('#alert').notify("create", {
+                              text: 'Bilderna kunde inte hämtas!'
+                        }, {
+                            expires: false,
+                            click: function(e,instance) {
+                                instance.close();
+                            }
+                        });
                     }
                     $('#image-list').html(new ServiceListView({model:collection}).render().el);
                     //console.log("fetch()",response);

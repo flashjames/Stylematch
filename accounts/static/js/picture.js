@@ -38,27 +38,27 @@
             // always have six image boxes on the page
             var empty_image_list_item = $('#tpl-empty-image-list-item').html();
 
-	    // number of uploaded images
-	    var uploaded_images = this.model.size();
-	   
-	    // at least six "images"
-	    if(uploaded_images < 6) {
-		for(i=uploaded_images;i<6;i++) {
-		    // dont add padding at bottom, if no uploaded images yet
-		    if(uploaded_images == 0) {
-			$(this.el).append($(empty_image_list_item).removeClass('empty-image-fixed-height'));    
-		    } else {
-			$(this.el).append($(empty_image_list_item));    
-		    }
-		}	    
-	    }
-	    // always fill one row, and if the last row is filled, fill the next row too
-	    else {
-		var s = uploaded_images % 3;
-		for(i=s;i<3;i++) {
-                    $(this.el).append(empty_image_list_item);
-		}
-	    }
+        // number of uploaded images
+        var uploaded_images = this.model.size();
+
+        // at least six "images"
+        if(uploaded_images < 6) {
+            for(i=uploaded_images;i<6;i++) {
+                // dont add padding at bottom, if no uploaded images yet
+                if(uploaded_images == 0) {
+                    $(this.el).append($(empty_image_list_item).removeClass('empty-image-fixed-height'));
+                } else {
+                    $(this.el).append($(empty_image_list_item));
+                }
+            }
+        }
+        // always fill one row, and if the last row is filled, fill the next row too
+        else {
+            var s = uploaded_images % 3;
+            for(i=s;i<3;i++) {
+                $(this.el).append(empty_image_list_item);
+            }
+        }
 
             var self = this;
             // make the ul list sortable with the function sortable() from jquery ui
@@ -101,7 +101,6 @@
             $(this.el).bind('updateOrder', this.updateModelOrder);
             this.model.bind("change", this.render, this);
             this.model.bind("destroy", this.close, this);
-            
         },
         render:function (eventName) {
             $(this.el).html(this.template(this.model.toJSON()));
@@ -111,32 +110,31 @@
             "click .delete-image":"deleteService",
             "click .show_image_on_profile":"switchDisplayOnProfile",
             "change .profile_image_radiobutton": "setProfileImage",
-	    "click .save": "saveComment"
+            "click .save": "saveComment"
         },
-	saveComment: function() {
-	    var new_comment = $(this.el).find("textarea").val();
-	    var comment = this.model.get("comment");
-	    
-	    // comment have been changed
-	    if(new_comment != comment) {
-		this.model.set({comment:new_comment, silent:true});
+        saveComment: function() {
+            var new_comment = $(this.el).find("textarea").val();
+            var comment = this.model.get("comment");
 
-		this.model.save({}, {
+            // comment have been changed
+            if(new_comment != comment) {
+                this.model.set({comment:new_comment, silent:true});
+
+                this.model.save({}, {
                     success:function () {
-			// TODO: Add dialog in interface
-			//console.log('Picture deleted successfully');
+                        // TODO: Add dialog in interface
+                        //console.log('Picture deleted successfully');
                     },
                     error:function() {
-			// TODO: Add dialog in interface
-			//console.log('Picture delete made an error!');
+                        // TODO: Add dialog in interface
+                        //console.log('Picture delete made an error!');
                     }
-		});
-	    } else {
-		//do nothing
-	    }
-	    
-	},
-	switchDisplayOnProfile: function() {
+                });
+            } else {
+                //do nothing
+            }
+        },
+        switchDisplayOnProfile: function() {
             var display_on_profile = this.model.get("display_on_profile");
             //console.log(display_on_profile, this.model);
             var bool;
@@ -163,17 +161,17 @@
             // FIXME: radiobuttons are weird when using model.set({...}) followed by
             // save() since they force re-rendering or something alike.
             // Current solution is to do set and save in same operation...
-            this.model.save({image_type: 'C'}, {silent:true,
-                                                success:function () {
-                                                    // TODO: Add dialog in interface
-                                                    //console.log('setProfileImage successfully changed');
-                                                },
-                                                error:function() {
-                                                    // TODO: Add dialog in interface
-                                                    //console.log('setProfileImage saving failed!');
-                                                }
-                                               });
-
+            this.model.save({image_type: 'C'}, {
+                        silent : true,
+                        success : function () {
+                            // TODO: Add dialog in interface
+                            //console.log('setProfileImage successfully changed');
+                        },
+                        error : function() {
+                            // TODO: Add dialog in interface
+                            //console.log('setProfileImage saving failed!');
+                        }
+            });
         },
         updateModelOrder: function() {
             /*
@@ -229,27 +227,26 @@
                     //console.log("fetch()",response);
                 }
             });
-	    
-	    this.initGalleryUploadDialog();
-	    this.initProfileImageUploadDialog();
+        this.initGalleryUploadDialog();
+        this.initProfileImageUploadDialog();
         },
         events:{
         },
-	initGalleryUploadDialog: function() {
-	    var current_modal = $('#image-upload-dialog-gallery');
-	    current_modal.modal({show:false});
-	    $(".empty-image-list-item").live('click', function() {
+    initGalleryUploadDialog: function() {
+        var current_modal = $('#image-upload-dialog-gallery');
+        current_modal.modal({show:false});
+        $(".empty-image-list-item").live('click', function() {
                 current_modal.modal('show');
-            });  
+            });
         },
-	initProfileImageUploadDialog: function() {
-	    var current_modal = $('#image-upload-dialog-profileimage');
-	    current_modal.modal({show:false});
-	    $(".profile-image-edit").live('click', function() {
+    initProfileImageUploadDialog: function() {
+        var current_modal = $('#image-upload-dialog-profileimage');
+        current_modal.modal({show:false});
+        $(".profile-image-edit").live('click', function() {
                 current_modal.modal('show');
-            });  
+            });
         },
-        
+
         render:function (eventName) {
             $(this.el).html(this.template(this.model.toJSON()));
             return this;

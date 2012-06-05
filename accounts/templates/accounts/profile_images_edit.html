@@ -16,9 +16,8 @@
 <script src="{{ STATIC_URL }}js/backbone.modelbinding.js"></script>
 <script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
 
-
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
-
+<script src="{{ STATIC_URL }}js/jquery.notify.js"></script>
 <style>
   /* remove background around twitter bootstrap modal, on this page */
   .modal-backdrop {
@@ -38,6 +37,11 @@
 
 {% block show-pictures-block %}
 
+<div id="alert" style="display:none;">
+  <div id="basic-template">
+      <p>#{text}</p>
+  </div>
+</div>
 
 <div class="row" >
   <div id="edit-profile-large" class="span12" >

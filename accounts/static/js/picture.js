@@ -123,12 +123,26 @@
 
                 this.model.save({}, {
                     success:function () {
-                        // TODO: Add dialog in interface
-                        //console.log('Comment updated successfully');
+                        $('#alert').notify();
+                        $('#alert').notify("create", {
+                              text: 'Kommentaren uppdaterad!'
+                        }, {
+                            expires: 3000,
+                            click: function(e,instance) {
+                                instance.close();
+                            }
+                        });
                     },
                     error:function() {
-                        // TODO: Add dialog in interface
-                        //console.log('Comment updated recievd an error!');
+                        $('#alert').notify();
+                        $('#alert').notify("create", {
+                              text: 'Kommentaren kunde inte uppdateras!'
+                        }, {
+                            expires: false,
+                            click: function(e,instance) {
+                                instance.close();
+                            }
+                        });
                     }
                 });
             } else {

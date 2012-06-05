@@ -196,10 +196,28 @@
 	    var self = this;
 	    responseCallback = {
 		success: function(collection, error, options) {
+            $('#alert').notify();
+            $('#alert').notify("create", {
+                  text: 'Uppdateringen lyckades!'
+            }, {
+                expires: 3000,
+                click: function(e,instance) {
+                    instance.close();
+                }
+            });
 		    ServiceView.newForm();
 		    self.showPriceList();
 		},
 		error: function(collection, error, options) {
+            $('#alert').notify();
+            $('#alert').notify("create", {
+                  text: 'Uppdateringen misslyckades!'
+            }, {
+                expires: false,
+                click: function(e,instance) {
+                    instance.close();
+                }
+            });
 		    ServiceView.cleanForm();
 
 		    var btn = $('.save');

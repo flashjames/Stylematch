@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from django_liveserver.testcases import LiveServerTestCase
-from selenium import selenium
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
 

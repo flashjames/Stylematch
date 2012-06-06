@@ -2,6 +2,7 @@
 from django_liveserver.testcases import LiveServerTestCase
 from selenium import selenium
 from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 class AboutStyleMatchTest(LiveServerTestCase):
@@ -23,7 +24,11 @@ class AboutStyleMatchTest(LiveServerTestCase):
         # find the link "om stylematch" and click it
         about_link = self.browser.find_element_by_link_text("OM STYLEMATCH")
         about_link.click()
-        # TODO: WAIT FOR PAGE TO LOAD!
+        # IMPORTANT: after 'click()' has been called, you must wait for the
+        # page to load, otherwise NoSuchElementFound exception is likely
+        # to happen
+        WebDriverWait(self.browser, 10).until(
+                lambda driver: driver.find_element_by_tag_name('body'))
 
         # find the text "Vilka är StyleMatch?"
         body = self.browser.find_element_by_tag_name('body')

@@ -15,7 +15,7 @@ class InspirationPageView(ListView):
     Create description of this view
     """
     context_object_name = "pictures"
-    template_name = "index.html"
+    template_name = "inspiration.html"
     queryset = Picture.objects.order_by('-upload_date')
     paginate_by = 8
 
@@ -23,7 +23,6 @@ class InspirationPageView(ListView):
         context = super(InspirationPageView, self).get_context_data(**kwargs)
         return context
 
-    template_name = "inspiration.html"
 
 
 class BetaEmailView(CreateView):

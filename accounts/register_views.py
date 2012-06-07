@@ -239,15 +239,20 @@ class UserRegistrationForm(RegistrationForm):
             'password2' in self.cleaned_data):
             password1 = self.cleaned_data.get('password1')
             password2 = self.cleaned_data.get('password2')
+
+
             if password1 != password2:
-                raise ValidationError(_("The two password fields "
-                                        "didn't match."))
+                error_msg = "Lösenorden stämmer ej överens"
+                self._errors['password1'] = self.error_class([error_msg])
+                raise ValidationError(error_msg)
+            
 
-            MIN_LENGTH = 6
+            MIN_LENGTH = 5
             if len(password1) < MIN_LENGTH:
-                raise forms.ValidationError("Lösenordet är för kort, det "
-                                            "ska innehålla minst 6 tecken.")
-
+                error_msg = "Lösenordet är för kort, minst 5 tecken."
+                self._errors['password1'] = self.error_class([error_msg])
+                raise forms.ValidationError(error_msg)
+            
         return self.cleaned_data
 
     class Meta:

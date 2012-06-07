@@ -3,7 +3,11 @@ from fabric.contrib.console import confirm
 import datetime
 
 # production server, expects accepted ssh key on server
-env.hosts = ['proxz@stylematch.se']
+try:
+    from fabsettings import host
+    env.hosts = host
+except:
+    env.hosts = ['proxz@stylematch.se']
 env.directory = '/home/ubuntu/ProjectX'
 env.activate = 'source /home/ubuntu/ProjectX/projectx/bin/activate'
 env.deploy_user = 'ubuntu'

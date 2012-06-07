@@ -34,7 +34,7 @@ class SignupViewForm(ModelForm):
                   'number_on_profile')
 
 
-class SignupView(UpdateView):
+class SignupView(LoginRequiredMixin, UpdateView):
     """
     Step 1 in the user registration, after the main user registration.
     The user is asked to fill in some of the other fields.
@@ -59,7 +59,7 @@ class SignupView(UpdateView):
         return context
 
 
-class SignupStep2View(OpenHoursView):
+class SignupStep2View(LoginRequiredMixin, OpenHoursView):
     template_name = "accounts/signup_step2.html"
 
     def __init__(self, *args, **kwargs):
@@ -79,7 +79,7 @@ class SignupStep2View(OpenHoursView):
         return context
 
 
-class SignupStep3View(ServicesView):
+class SignupStep3View(LoginRequiredMixin, ServicesView):
     template_name = "accounts/signup_step3.html"
 
     def __init__(self, *args, **kwargs):
@@ -100,7 +100,7 @@ class SignupStep3View(ServicesView):
         return context
 
 
-class SignupStep4View(PicturesView):
+class SignupStep4View(LoginRequiredMixin, PicturesView):
     template_name = "accounts/signup_step4.html"
 
     def __init__(self, *args, **kwargs):

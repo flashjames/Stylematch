@@ -240,7 +240,7 @@ class UpdateSelfView(UpdateView):
     """
 
 
-class RedirectToProfileView(RedirectView):
+class RedirectToProfileView(LoginRequiredMixin, RedirectView):
     """
     Redirects to the logged in user's profile with the profile_url
     or if it's not set, with temporary_profile_url.

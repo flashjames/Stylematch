@@ -1,5 +1,6 @@
 #-*- coding:utf-8 -*-
 from accounts.models import InviteCode, UserProfile
+from braces.views import LoginRequiredMixin
 from django import forms
 from django.forms import ModelForm, ValidationError
 from django.views.generic import UpdateView
@@ -59,7 +60,7 @@ class SignupView(LoginRequiredMixin, UpdateView):
         return context
 
 
-class SignupStep2View(LoginRequiredMixin, OpenHoursView):
+class SignupStep2View(OpenHoursView):
     template_name = "accounts/signup_step2.html"
 
     def __init__(self, *args, **kwargs):
@@ -79,7 +80,7 @@ class SignupStep2View(LoginRequiredMixin, OpenHoursView):
         return context
 
 
-class SignupStep3View(LoginRequiredMixin, ServicesView):
+class SignupStep3View(ServicesView):
     template_name = "accounts/signup_step3.html"
 
     def __init__(self, *args, **kwargs):
@@ -100,7 +101,7 @@ class SignupStep3View(LoginRequiredMixin, ServicesView):
         return context
 
 
-class SignupStep4View(LoginRequiredMixin, PicturesView):
+class SignupStep4View(PicturesView):
     template_name = "accounts/signup_step4.html"
 
     def __init__(self, *args, **kwargs):

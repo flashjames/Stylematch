@@ -248,13 +248,28 @@
                     ServiceView.newForm();
                     self.showPriceList();
                 },
-                error: function(collection, error, options) {
-                    ServiceView.cleanForm();
+		error: function(collection, error, options) {
+		    //Some error in the user input
+		    if(error.status == 400) {
+			
+			ServiceView.cleanForm();
 
-                    var btn = $('.save');
-                    btn.html("Spara");
-                    ServiceView.displayFormErrors(collection, error, options);
-                }
+			var btn = $('.save');
+			btn.html("Spara");
+			ServiceView.displayFormErrors(collection, error, options);
+		    //The server probably went down 
+		    } else {
+			$('#alert').notify();
+			$('#alert').notify("create", {
+			    text: 'Uppdateringen misslyckades!'
+			}, {
+			    expires: false,
+			    click: function(e,instance) {
+				instance.close();
+			    }
+			});
+		    }
+		}
             };
 
             // if it's a model that's not synced to the server and not in the 

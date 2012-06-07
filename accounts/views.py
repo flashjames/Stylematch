@@ -234,32 +234,10 @@ class DisplayProfileView(DetailView):
             return self.render_to_response(context)
 
 
-class CreateSelfView(CreateView):
-    """
-    A createview that redirects to self and passes valid/invalid variables
-    """
-    def form_valid(self, form):
-        self.object = form.save()
-        return self.render_to_response(self.get_context_data(form=form,
-                                                             valid=True))
-
-    def form_invalid(self, form):
-        return self.render_to_response(self.get_context_data(form=form,
-                                                             invalid=True))
-
-
 class UpdateSelfView(UpdateView):
     """
     An updateview that redirects to self and passes valid/invalid variables
     """
-    def form_valid(self, form):
-        self.object = form.save()
-        return self.render_to_response(self.get_context_data(form=form,
-                                                             valid=True))
-
-    def form_invalid(self, form):
-        return self.render_to_response(self.get_context_data(form=form,
-                                                             invalid=True))
 
 
 class RedirectToProfileView(RedirectView):
@@ -394,7 +372,7 @@ class UserProfileForm(ModelForm):
             }
 
 
-class EditProfileView(LoginRequiredMixin, UpdateSelfView):
+class EditProfileView(LoginRequiredMixin, UpdateView):
     """
     Edit a stylist profile
     """
@@ -404,6 +382,22 @@ class EditProfileView(LoginRequiredMixin, UpdateSelfView):
 
     def __init__(self, *args, **kwargs):
         super(EditProfileView, self).__init__(*args, **kwargs)
+
+    def form_valid(self, form):
+        """
+        Needs to be overridden because regular form_valid returns
+        a HttpRedirectResponse() which cannot take context data
+        """
+        self.object = form.save()
+        return self.render_to_response(self.get_context_data(form=form,
+                                                             valid=True))
+
+    def form_invalid(self, form):
+        """
+        Passes 'invalid' context variable
+        """
+        return self.render_to_response(self.get_context_data(form=form,
+                                                             invalid=True))
 
     def get_form(self, form_class):
         """
@@ -453,12 +447,16 @@ class ServicesView(LoginRequiredMixin, TemplateView):
                                     )}
 
 
-class OpenHoursView(LoginRequiredMixin, UpdateSelfView):
+class OpenHoursView(LoginRequiredMixin, UpdateView):
     model = OpenHours
     template_name = "accounts/hours_form.html"
 
     def __init__(self, *args, **kwargs):
         super(OpenHoursView, self).__init__(*args, **kwargs)
+        # written here in init since it will give reverse url error
+        # if just written in class definition. because urls.py isnt loaded
+        # when this class is defined
+        self.success_url = reverse('profiles_add_hours')
 
     def get_object(self, queryset=None):
         obj = OpenHours.objects.get(user__exact=self.request.user.id)
@@ -526,7 +524,7 @@ class PictureForm(forms.ModelForm):
         fields = ('file', 'comment', 'image_type')
 
 
-class PicturesView(LoginRequiredMixin, CreateSelfView):
+class PicturesView(LoginRequiredMixin, CreateView):
     """
     Display edit pictures page
     Many javascript dependencies one this page which interacts with the
@@ -538,6 +536,25 @@ class PicturesView(LoginRequiredMixin, CreateSelfView):
 
     def __init__(self, *args, **kwargs):
         super(PicturesView, self).__init__(*args, **kwargs)
+
+    """
+    A createview that redirects to self and passes valid/invalid variables
+    """
+    def form_valid(self, form):
+        """
+        Needs to be overridden because regular form_valid returns
+        a HttpRedirectResponse() which cannot take context data
+        """
+        self.object = form.save()
+        return self.render_to_response(self.get_context_data(form=form,
+                                                             valid=True))
+
+    def form_invalid(self, form):
+        """
+        Passes 'invalid' context variable
+        """
+        return self.render_to_response(self.get_context_data(form=form,
+                                                             invalid=True))
 
     def get_form(self, form_class):
         form = super(PicturesView, self).get_form(form_class)

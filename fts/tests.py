@@ -5,17 +5,28 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 
 class RegisterTest(LiveServerTestCase):
+    """
+    Tests that a new user is able to register on the website
+    """
 
-    @classmethod
-    def setUpClass(cls):
-        cls.browser = WebDriver()
-        super(RegisterTest, cls).setUpClass()
+    def setUp(self):
+        self.browser = WebDriver()
+        super(RegisterTest, self).setUp()
 
-    @classmethod
-    def tearDownClass(cls):
-        super(RegisterTest, cls).tearDownClass()
-        cls.browser.quit()
+    def tearDown(self):
+        super(RegisterTest, self).tearDown()
+        self.browser.quit()
 
+    def get_register_form(self):
+        """returns a dict of all elements from the registration form"""
+        return {'first_name' : self.browser.find_element_by_name('first_name'),
+                'last_name' : self.browser.find_element_by_name('last_name'),
+                'username' : self.browser.find_element_by_name('username'),
+                'password1' : self.browser.find_element_by_name('password1'),
+                'password2' : self.browser.find_element_by_name('password2'),
+                'invite_code' : self.browser.find_element_by_name('invite_code'),
+                'form' : self.browser.find_element_by_tag_name('form'),
+                'button' : self.browser.find_element_by_name('register')}
 
     def test_successful_register(self):
         # open browser and navigate to stylematch
@@ -34,22 +45,16 @@ class RegisterTest(LiveServerTestCase):
                 lambda driver: driver.find_element_by_tag_name('body'))
 
         # fill in the form
-        first_name = self.browser.find_element_by_name('first_name')
-        last_name = self.browser.find_element_by_name('last_name')
-        username = self.browser.find_element_by_name('username')
-        password1 = self.browser.find_element_by_name('password1')
-        password2 = self.browser.find_element_by_name('password2')
-        invite_code = self.browser.find_element_by_name('invite_code')
-        first_name.send_keys('testuser')
-        last_name.send_keys('usertester')
-        username.send_keys('test@example.com')
-        password1.send_keys('asdf1234')
-        password2.send_keys('asdf1234')
-        invite_code.send_keys('permanent1')
+        form = self.get_register_form()
+        form['first_name'].send_keys('testuser')
+        form['last_name'].send_keys('usertester')
+        form['username'].send_keys('test@example.com')
+        form['password1'].send_keys('asdf1234')
+        form['password2'].send_keys('asdf1234')
+        form['invite_code'].send_keys('permanent1')
 
         # click the "Skapa konto" button
-        button = self.browser.find_element_by_tag_name('button')
-        button.click()
+        form['button'].click()
         WebDriverWait(self.browser, 10).until(
                 lambda driver: driver.find_element_by_tag_name('body'))
 
@@ -61,19 +66,59 @@ class RegisterTest(LiveServerTestCase):
         self.assertIn(u"Först, börja med att fylla i "
                       u"information om din salong", body.text)
 
+    def test_empty_register(self):
+        self.browser.get(self.live_server_url + '/accounts/register/')
+
+        # fill in and empty form
+        form = self.get_register_form()
+        form['form'].submit()
+        errors = self.browser.find_elements_by_class_name('error')
+        self.assertEqual(len(errors), 6)
+
+    def test_missing_fields(self):
+        self.browser.get(self.live_server_url + '/accounts/register/')
+
+        form = self.get_register_form()
+        form['first_name'].send_keys("firstname")
+        form['form'].submit()
+        errors = self.browser.find_elements_by_class_name('error')
+        self.assertEqual(len(errors), 5)
+
+        form = self.get_register_form()
+        form['last_name'].send_keys("lastname")
+        form['form'].submit()
+        errors = self.browser.find_elements_by_class_name('error')
+        self.assertEqual(len(errors), 4)
+
+        form = self.get_register_form()
+        form['username'].send_keys("test@example.com")
+        form['form'].submit()
+        errors = self.browser.find_elements_by_class_name('error')
+        self.assertEqual(len(errors), 3)
+
+        form = self.get_register_form()
+        form['password1'].send_keys("passw123")
+        form['form'].submit()
+        errors = self.browser.find_elements_by_class_name('error')
+        self.assertEqual(len(errors), 2)
+
+        form = self.get_register_form()
+        form['password1'].send_keys("passw123")
+        form['password2'].send_keys("passw123")
+        form['form'].submit()
+        errors = self.browser.find_elements_by_class_name('error')
+        self.assertEqual(len(errors), 1)
 
 
 class AboutStyleMatchTest(LiveServerTestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        cls.browser = WebDriver()
-        super(AboutStyleMatchTest, cls).setUpClass()
+    def setUp(self):
+        self.browser = WebDriver()
+        super(AboutStyleMatchTest, self).setUp()
 
-    @classmethod
-    def tearDownClass(cls):
-        super(AboutStyleMatchTest, cls).tearDownClass()
-        cls.browser.quit()
+    def tearDown(self):
+        super(AboutStyleMatchTest, self).tearDown()
+        self.browser.quit()
 
     def test_reachable(self):
         # open browser and navigate to stylematch

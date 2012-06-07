@@ -17,7 +17,7 @@ class InspirationPageView(ListView):
     context_object_name = "pictures"
     template_name = "index.html"
     queryset = Picture.objects.order_by('-upload_date')
-    paginate_by = 30
+    paginate_by = 8
 
     def get_context_data(self, **kwargs):
         context = super(InspirationPageView, self).get_context_data(**kwargs)

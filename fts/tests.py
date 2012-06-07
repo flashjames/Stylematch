@@ -19,14 +19,16 @@ class RegisterTest(LiveServerTestCase):
 
     def get_register_form(self):
         """returns a dict of all elements from the registration form"""
-        return {'first_name' : self.browser.find_element_by_name('first_name'),
-                'last_name' : self.browser.find_element_by_name('last_name'),
-                'username' : self.browser.find_element_by_name('username'),
-                'password1' : self.browser.find_element_by_name('password1'),
-                'password2' : self.browser.find_element_by_name('password2'),
-                'invite_code' : self.browser.find_element_by_name('invite_code'),
-                'form' : self.browser.find_element_by_tag_name('form'),
-                'button' : self.browser.find_element_by_name('register')}
+        return {
+            'first_name': self.browser.find_element_by_name('first_name'),
+            'last_name': self.browser.find_element_by_name('last_name'),
+            'username': self.browser.find_element_by_name('username'),
+            'password1': self.browser.find_element_by_name('password1'),
+            'password2': self.browser.find_element_by_name('password2'),
+            'invite_code': self.browser.find_element_by_name('invite_code'),
+            'form': self.browser.find_element_by_tag_name('form'),
+            'button': self.browser.find_element_by_name('register'),
+        }
 
     def test_successful_register(self):
         # open browser and navigate to stylematch
@@ -136,5 +138,3 @@ class AboutStyleMatchTest(LiveServerTestCase):
         # find the text "Vilka är StyleMatch?"
         body = self.browser.find_element_by_tag_name('body')
         self.assertIn(u"Vilka är StyleMatch?", body.text)
-
-

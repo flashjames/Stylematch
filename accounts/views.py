@@ -239,6 +239,7 @@ class CreateSelfView(CreateView):
     A createview that redirects to self and passes valid/invalid variables
     """
     def form_valid(self, form):
+        self.object = form.save()
         return self.render_to_response(self.get_context_data(form=form,
                                                              valid=True))
 
@@ -252,6 +253,7 @@ class UpdateSelfView(UpdateView):
     An updateview that redirects to self and passes valid/invalid variables
     """
     def form_valid(self, form):
+        self.object = form.save()
         return self.render_to_response(self.get_context_data(form=form,
                                                              valid=True))
 

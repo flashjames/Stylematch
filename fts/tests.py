@@ -2,6 +2,7 @@
 from django_liveserver.testcases import LiveServerTestCase
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support.ui import Select
 
 
 class RegisterTest(LiveServerTestCase):
@@ -30,7 +31,7 @@ class RegisterTest(LiveServerTestCase):
             'button': self.browser.find_element_by_name('register'),
         }
 
-    def test_successful_register(self):
+    def test_successful_register_and_signup(self):
         # open browser and navigate to stylematch
         self.browser.get(self.live_server_url)
 
@@ -67,6 +68,25 @@ class RegisterTest(LiveServerTestCase):
         # make sure we arrived at signup-step1
         self.assertIn(u"Först, börja med att fylla i "
                       u"information om din salong", body.text)
+
+        salon_name = self.browser.find_element_by_name('salon_name')
+        salon_adress = self.browser.find_element_by_name('salon_adress')
+        salon_city = self.browser.find_element_by_name('salon_city')
+        priv_phone = self.browser.find_element_by_name(
+                                    'personal_phone_number')
+        work_phone = self.browser.find_element_by_name('salon_phone_number')
+        displayed_phone = Select(self.browser.find_element_by_name(
+                                            'number_on_profile'))
+        salon_name.send_keys("TestSalong")
+        salon_adress.send_keys("Test street 27A")
+        salon_city.send_keys("TestyTown")
+        priv_phone.send_keys("+4673-0123456")
+        work_phone.send_keys("0123-12345")
+        displayed_phone.select_by_visible_text('Personligt telefonnummer')
+
+        self.fail("todo: finish test")
+
+
 
     def test_empty_register(self):
         self.browser.get(self.live_server_url + '/accounts/register/')
@@ -111,30 +131,9 @@ class RegisterTest(LiveServerTestCase):
         errors = self.browser.find_elements_by_class_name('error')
         self.assertEqual(len(errors), 1)
 
-
-class AboutStyleMatchTest(LiveServerTestCase):
-
-    def setUp(self):
-        self.browser = WebDriver()
-        super(AboutStyleMatchTest, self).setUp()
-
-    def tearDown(self):
-        super(AboutStyleMatchTest, self).tearDown()
-        self.browser.quit()
-
-    def test_reachable(self):
-        # open browser and navigate to stylematch
-        self.browser.get(self.live_server_url)
-
-        # find the link "om stylematch" and click it
-        about_link = self.browser.find_element_by_link_text("OM STYLEMATCH")
-        about_link.click()
-        # IMPORTANT: after 'click()' has been called, you must wait for the
-        # page to load, otherwise NoSuchElementFound exception is likely
-        # to happen
-        WebDriverWait(self.browser, 10).until(
-                lambda driver: driver.find_element_by_tag_name('body'))
-
-        # find the text "Vilka är StyleMatch?"
-        body = self.browser.find_element_by_tag_name('body')
-        self.assertIn(u"Vilka är StyleMatch?", body.text)
+    def test_register_taken_email(self):
+        """
+        TODO: What happens when someone tries to register with an email that
+        already exists?
+        """
+        pass

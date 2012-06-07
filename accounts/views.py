@@ -591,7 +591,10 @@ class PicturesView(LoginRequiredMixin, CreateSelfView):
 
         # Dont resize image, if it's smaller than max_width/max_height
         if width < max_width and height < max_height:
-            return
+            # fileposition indicator needs to be set to beginning of file
+            # else the saved file will be corrupt
+            original_image.seek(0)
+            return original_image
 
         # Resize image but keep aspect ratio
         image.thumbnail((max_width, max_height), Image.ANTIALIAS)
@@ -599,6 +602,11 @@ class PicturesView(LoginRequiredMixin, CreateSelfView):
         # Return resized image as InMemoryUploadedFile
         tempfile_io = StringIO.StringIO()
         image.save(tempfile_io, format=file_extension)
+
+        # fileposition indicator needs to be set to beginning of file
+        # else the saved file will be corrupt
+        tempfile_io.seek(0)
+
         return InMemoryUploadedFile(tempfile_io, None, original_image._name,
                                     original_image.content_type,
                                     tempfile_io.len, None)
@@ -620,13 +628,8 @@ class PicturesView(LoginRequiredMixin, CreateSelfView):
         self.object = form.save(commit=False)
 
         # replace original image, with a resized version
-        resized_image = self.resize_image(f)
-
-        # Will only resize image if it's larger than maximum size
-        # -> dont replace original image if it havent been resized
-        if resized_image:
-            self.object.file._file = resized_image
-
+        self.object.file._file = self.resize_image(f)
+        
         self.object.user = self.request.user
         self.object.filename = filename
 

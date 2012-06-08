@@ -536,6 +536,10 @@ class PicturesView(LoginRequiredMixin, CreateView):
 
     def __init__(self, *args, **kwargs):
         super(PicturesView, self).__init__(*args, **kwargs)
+        # written here in init since it will give reverse url error
+        # if just written in class definition. because urls.py isnt loaded
+        # when this class is defined
+        self.success_url = reverse('profiles_edit_images')
 
     """
     A createview that redirects to self and passes valid/invalid variables

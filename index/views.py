@@ -1,6 +1,7 @@
 # Create your views here.
 # from django.http import HttpResponse
-# from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 from django.contrib import auth
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView, CreateView
@@ -60,3 +61,8 @@ def logout_page(request):
     """
     auth.logout(request)
     return HttpResponseRedirect('/')
+
+
+def error500(request):
+    return render_to_response('500.html',
+            context_instance=RequestContext(request))

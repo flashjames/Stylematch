@@ -69,6 +69,7 @@ class RegisterTest(LiveServerTestCase):
         self.assertIn(u"Först, börja med att fylla i "
                       u"information om din salong", body.text)
 
+        # fill in the form
         salon_name = self.browser.find_element_by_name('salon_name')
         salon_adress = self.browser.find_element_by_name('salon_adress')
         salon_city = self.browser.find_element_by_name('salon_city')
@@ -84,9 +85,72 @@ class RegisterTest(LiveServerTestCase):
         work_phone.send_keys("0123-12345")
         displayed_phone.select_by_visible_text('Personligt telefonnummer')
 
-        self.fail("todo: finish test")
+        # continue to next step by clicking button
+        button = self.browser.find_element_by_xpath(
+                                    u"//button[contains(text(), 'Fortsätt vidare')]")
+        button.click()
+        WebDriverWait(self.browser, 10).until(
+                lambda driver: driver.find_element_by_tag_name('body'))
 
+        # make sure we arrived at signup-step2
+        body = self.browser.find_element_by_tag_name('body')
+        self.assertIn(u'öppettider', body.text)
 
+        # form is already filled in, just count the number of selects so
+        # nothing went wrong
+        selects = self.browser.find_elements_by_tag_name('select')
+        self.assertEquals(len(selects), 14)
+
+        # continue to next step by clicking button
+        button = self.browser.find_element_by_css_selector(
+                                    u"input[value='Fortsätt vidare']")
+        button.click()
+        WebDriverWait(self.browser, 10).until(
+                lambda driver: driver.find_element_by_tag_name('body'))
+
+        # make sure we arrived at signup-step3
+        body = self.browser.find_element_by_tag_name('body')
+        self.assertIn(u'prislista', body.text)
+
+        # add a new treatment
+        name = self.browser.find_element_by_name('name')
+        desc = self.browser.find_element_by_name('description')
+        time = Select(self.browser.find_element_by_name('length'))
+        price = self.browser.find_element_by_name('price')
+        add = self.browser.find_element_by_xpath(
+                                    u"//button[contains(text(), 'Lägg till')]")
+        name.send_keys(u'Klippning')
+        desc.send_keys(u'Inklusive styling')
+        time.select_by_visible_text('1 timme')
+        price.send_keys('45')
+        add.click()
+
+        # wait for the new treatment to appear in the list
+        # NOTE: div[@class] must match a FULL STRING, not individual
+        # classes
+        WebDriverWait(self.browser, 10).until(
+                lambda driver: driver.find_element_by_xpath(
+                       u"//div[@class='service-name unique-list-item-part']"
+                        "/b[contains(text(), 'Klippning')]"))
+
+        cont = self.browser.find_element_by_link_text(u'Spara och gå vidare')
+        cont.click()
+        WebDriverWait(self.browser, 10).until(
+                lambda driver: driver.find_element_by_tag_name('body'))
+
+        # make sure we arrived at signup-step4
+        body = self.browser.find_element_by_tag_name('body')
+        self.assertIn(u'profilbild', body.text)
+        # FIXME: TEST UPLOAD OF PROFILE IMAGE
+
+        cont = self.browser.find_element_by_link_text(u'Spara och gå vidare')
+        cont.click()
+        WebDriverWait(self.browser, 10).until(
+                lambda driver: driver.find_element_by_tag_name('body'))
+
+        # make sure we arrived at the profile
+        # 'testuser' comes from firstname
+        toplink = self.browser.find_element_by_link_text(u'Hej testuser')
 
     def test_empty_register(self):
         self.browser.get(self.live_server_url + '/accounts/register/')

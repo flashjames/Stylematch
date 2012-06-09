@@ -244,7 +244,7 @@ class UserRegistrationForm(RegistrationForm):
 
             MIN_LENGTH = 6
             if len(password1) < MIN_LENGTH:
-                raise forms.ValidationError("Lösenordet är för kort, det "
+                raise ValidationError("Lösenordet är för kort, det "
                                             "ska innehålla minst 6 tecken.")
 
         return self.cleaned_data

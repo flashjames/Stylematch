@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 from index.views import (IndexPageView,
                          BetaEmailView,
                          InspirationPageView,
@@ -38,6 +38,11 @@ if settings.DEBUG:
     )
 urlpatterns += patterns(
     '',
+
+    # favicon
+    url(r'^favicon\.ico$',
+            RedirectView.as_view(url=settings.STATIC_URL + "img/favicon.ico")),
+
     # redirects to main-page
     (r'^logout/$',
             'index.views.logout_page',

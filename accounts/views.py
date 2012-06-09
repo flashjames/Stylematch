@@ -512,7 +512,7 @@ class PictureForm(forms.ModelForm):
                 raise ValidationError("Bilden är för stor ( > %s )"
                                     % convert_bytes(settings.MAX_IMAGE_SIZE))
             if not file._name.endswith(('.jpg', '.gif', '.png')):
-                raise ValidationError("Endast bildfiler i formatena "
+                raise ValidationError("Endast bildfiler i formaten "
                                       "PNG, JPG och GIF är accepterade.")
 
             return file

@@ -12,6 +12,8 @@
 <script src="{{ STATIC_URL }}js/backbone.modelbinding.js"></script>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+<script src="{{ STATIC_URL }}js/jquery.notify.js"></script>
+<script src="{{ STATIC_URL }}js/jquery/jquery.alerts.js"></script>
     
 
 {% endblock %}
@@ -25,7 +27,7 @@
 
 <script type="text/template" id="tpl-service-list-item">
   <div class="unique-list-item">
-  <div class="service-name unique-list-item-part"><b> <%= name %></b></div>
+  <div class="service-name unique-list-item-part"><b><%= name %></b></div>
   <div class="service-length unique-list-item-part pull-right"><% if(length != "") 
   { %>
   för <%= length %> minuter
@@ -66,6 +68,11 @@
 
 </script>
 
+<div id="alert" style="display:none;">
+  <div id="basic-template">
+      <p>#{text}</p>
+  </div>
+</div>
 
 <div class="container">
   <div class="row">
@@ -79,6 +86,7 @@
     <div class="span5">
     <div class="edit-service-form-left">
     <h3>Lägg till en ny behandling</h3>
+    <p style="font-size:80%;">Fält med * måste vara ifyllda</p>
     <br>
       <div id="form" ></div>
     </div>

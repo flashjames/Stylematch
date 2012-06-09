@@ -1,7 +1,10 @@
-from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls.defaults import *
 from django.conf import settings
 from django.views.generic import TemplateView
-from index.views import IndexPageView, BetaEmailView, InspirationPageView
+from index.views import (IndexPageView,
+                         BetaEmailView,
+                         InspirationPageView,
+                         error500)
 
 from django.contrib import admin
 from django.views.generic.simple import redirect_to
@@ -23,8 +26,17 @@ Django have a setting called APPEND_SLASH, if Django doesnt find for example
 -> Always set urls with slash at the end.
 """
 
+handler500 = 'index.views.error500'
 
-urlpatterns = patterns(
+urlpatterns = patterns('',)
+if settings.DEBUG:
+    urlpatterns = patterns('',
+        url(r'^404/$',
+                handler404),
+        url(r'^500/$',
+                handler500)
+    )
+urlpatterns += patterns(
     '',
     # redirects to main-page
     (r'^logout/$',

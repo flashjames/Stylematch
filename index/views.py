@@ -1,6 +1,7 @@
 # Create your views here.
 # from django.http import HttpResponse
-# from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 from django.contrib import auth
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView, CreateView
@@ -15,15 +16,14 @@ class InspirationPageView(ListView):
     Create description of this view
     """
     context_object_name = "pictures"
-    template_name = "index.html"
+    template_name = "inspiration.html"
     queryset = Picture.objects.order_by('-upload_date')
-    paginate_by = 30
+    paginate_by = 8
 
     def get_context_data(self, **kwargs):
         context = super(InspirationPageView, self).get_context_data(**kwargs)
         return context
 
-    template_name = "inspiration.html"
 
 
 class BetaEmailView(CreateView):
@@ -61,3 +61,8 @@ def logout_page(request):
     """
     auth.logout(request)
     return HttpResponseRedirect('/')
+
+
+def error500(request):
+    return render_to_response('500.html',
+            context_instance=RequestContext(request))

@@ -235,33 +235,13 @@ class DisplayProfileView(DetailView):
             return self.render_to_response(context)
 
 
-class CreateSelfView(CreateView):
-    """
-    A createview that redirects to self and passes valid/invalid variables
-    """
-    def form_valid(self, form):
-        return self.render_to_response(self.get_context_data(form=form,
-                                                             valid=True))
-
-    def form_invalid(self, form):
-        return self.render_to_response(self.get_context_data(form=form,
-                                                             invalid=True))
-
-
 class UpdateSelfView(UpdateView):
     """
     An updateview that redirects to self and passes valid/invalid variables
     """
-    def form_valid(self, form):
-        return self.render_to_response(self.get_context_data(form=form,
-                                                             valid=True))
-
-    def form_invalid(self, form):
-        return self.render_to_response(self.get_context_data(form=form,
-                                                             invalid=True))
 
 
-class RedirectToProfileView(RedirectView):
+class RedirectToProfileView(LoginRequiredMixin, RedirectView):
     """
     Redirects to the logged in user's profile with the profile_url
     or if it's not set, with temporary_profile_url.
@@ -393,7 +373,7 @@ class UserProfileForm(ModelForm):
             }
 
 
-class EditProfileView(LoginRequiredMixin, UpdateSelfView):
+class EditProfileView(LoginRequiredMixin, UpdateView):
     """
     Edit a stylist profile
     """
@@ -403,6 +383,22 @@ class EditProfileView(LoginRequiredMixin, UpdateSelfView):
 
     def __init__(self, *args, **kwargs):
         super(EditProfileView, self).__init__(*args, **kwargs)
+
+    def form_valid(self, form):
+        """
+        Needs to be overridden because regular form_valid returns
+        a HttpRedirectResponse() which cannot take context data
+        """
+        self.object = form.save()
+        return self.render_to_response(self.get_context_data(form=form,
+                                                             valid=True))
+
+    def form_invalid(self, form):
+        """
+        Passes 'invalid' context variable
+        """
+        return self.render_to_response(self.get_context_data(form=form,
+                                                             invalid=True))
 
     def get_form(self, form_class):
         """
@@ -452,12 +448,16 @@ class ServicesView(LoginRequiredMixin, TemplateView):
                                     )}
 
 
-class OpenHoursView(LoginRequiredMixin, UpdateSelfView):
+class OpenHoursView(LoginRequiredMixin, UpdateView):
     model = OpenHours
     template_name = "accounts/hours_form.html"
 
     def __init__(self, *args, **kwargs):
         super(OpenHoursView, self).__init__(*args, **kwargs)
+        # written here in init since it will give reverse url error
+        # if just written in class definition. because urls.py isnt loaded
+        # when this class is defined
+        self.success_url = reverse('profiles_add_hours')
 
     def get_object(self, queryset=None):
         obj = OpenHours.objects.get(user__exact=self.request.user.id)
@@ -531,7 +531,7 @@ class CropCoordsForm(forms.Form):
     width = forms.IntegerField(widget=forms.HiddenInput())
     height = forms.IntegerField(widget=forms.HiddenInput())
 
-class PicturesView(LoginRequiredMixin, CreateSelfView):
+class PicturesView(LoginRequiredMixin, CreateView):
     """
     Display edit pictures page
     Many javascript dependencies one this page which interacts with the
@@ -543,6 +543,17 @@ class PicturesView(LoginRequiredMixin, CreateSelfView):
 
     def __init__(self, *args, **kwargs):
         super(PicturesView, self).__init__(*args, **kwargs)
+        # written here in init since it will give reverse url error
+        # if just written in class definition. because urls.py isnt loaded
+        # when this class is defined
+        self.success_url = reverse('profiles_edit_images')
+
+    def form_invalid(self, form):
+        """
+        Passes 'invalid' context variable
+        """
+        return self.render_to_response(self.get_context_data(form=form,
+                                                             invalid=True))
 
     def get_form(self, form_class):
         form = super(PicturesView, self).get_form(form_class)
@@ -592,7 +603,10 @@ class PicturesView(LoginRequiredMixin, CreateSelfView):
 
         # Dont resize image, if it's smaller than max_width/max_height
         if width < max_width and height < max_height:
-            return
+            # fileposition indicator needs to be set to beginning of file
+            # else the saved file will be corrupt
+            original_image.seek(0)
+            return original_image
 
         # Resize image but keep aspect ratio
         image.thumbnail((max_width, max_height), Image.ANTIALIAS)
@@ -600,6 +614,10 @@ class PicturesView(LoginRequiredMixin, CreateSelfView):
         # Return resized image as InMemoryUploadedFile
         tempfile_io = StringIO.StringIO()
         image.save(tempfile_io, format=file_extension)
+
+        # fileposition indicator needs to be set to beginning of file
+        # else the saved file will be corrupt
+        tempfile_io.seek(0)
         return InMemoryUploadedFile(tempfile_io, None, original_image._name,
                                     original_image.content_type,
                                     tempfile_io.len, None)
@@ -613,20 +631,19 @@ class PicturesView(LoginRequiredMixin, CreateSelfView):
         self.object = form.save(commit=False)
 
         # replace original image, with a resized version
-        resized_image = self.resize_image(image)
+        self.object.file._file = self.resize_image(image)
         
-        # Will only resize image if it's larger than maximum size
-        # -> dont replace original image if it havent been resized
-        if resized_image:
-            self.object.file._file = resized_image
-
         self.object.user = self.request.user
         self.object.filename = filename
 
         self.object.save()
         form.save_m2m()
-        return super(PicturesView, self).form_valid(form)
 
+        # Can't user super().form_valid(**kwargs) since form_valid returns
+        # a HttpRedirectResponse() which cannot take context data
+        self.object = form.save()
+        return self.render_to_response(self.get_context_data(form=form,
+                                                             valid=True))
 
 class CropPictureView(FormView):
     form_class = CropCoordsForm

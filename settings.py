@@ -31,6 +31,7 @@ if DEBUG:
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': PROJECT_DIR + '/database/test.db',
+            'TEST_NAME': PROJECT_DIR + '/database/testest.db',
             }
         }
 else:
@@ -170,6 +171,7 @@ INSTALLED_APPS = (
     'storages',
     'defaultsite',
     'django_su',
+    'fts',
 )
 
 ### S3 storage - production

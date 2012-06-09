@@ -36,30 +36,36 @@ def format_minutes_to_pretty_format(minutes):
                 output_str += "timme"
             else:
                 output_str += "timmar"
-
             output_str += " "
 
-        if minutes_remaining != 0:
-            output_str += str(minutes_remaining) + " minuter"
+        if minutes_remaining >= 1:
+            output_str += str(minutes_remaining) + " "
+            if minutes_remaining == 1:
+                output_str += "minut"
+            else:
+                output_str += "minuter"
 
-    return output_str
+    return output_str.strip()
 
 
-def generate_list_of_quarters(min_minutes=0,
-                              minutes_max=60 * 24,
-                              output_format_func=format_minutes_to_hhmm):
+def list_with_time_interval(start=0, stop=60* 24, interval=30,
+                            format_function=format_minutes_to_hhmm):
     """
-    Generates a list of tuples with very fifteen minutes occuring
-    between min_minutes and minutes_max and a string generated from
-    output_format_func.
+    Generate a list of tuples with minutes occuring between start and
+    stop with correct interval and a string generated from
+    format_function.
     """
-    time_list = []
-    minutes = min_minutes
-    while minutes < minutes_max:
+    # basic error checks
+    if interval <= 0 or start > stop:
+        return []
 
-        output_str = output_format_func(minutes)
-        time_list.append((minutes, output_str))
+    times = []
+    minutes = start
+    while minutes <= stop:
 
-        minutes += 15
+        output = format_function(minutes)
+        times.append((minutes, output))
 
-    return time_list
+        minutes += interval
+    return times
+

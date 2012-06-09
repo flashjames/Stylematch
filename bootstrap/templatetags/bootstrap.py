@@ -54,7 +54,7 @@ def bootstrap_css():
 
 @register.simple_tag
 def bootstrap_less():
-    if settings.DEBUG:
+    if settings.DEBUG or settings.TEMPLATE_DEBUG:
         LESS_TAG = '<link rel="stylesheet/less" type="text/css" href="%sless/%s">'
 
         output = [LESS_TAG % (settings.STATIC_URL, "bootstrap.less"),
@@ -63,7 +63,7 @@ def bootstrap_less():
         output = '\n'.join(output)
 
     else:
-        output = '<link charset="utf-8" rel="stylesheet" type="text/css" href="%scss/stylees.css">' % (settings.STATIC_URL)
+        output = '<link charset="utf-8" rel="stylesheet" type="text/css" href="%scss/style.css">' % (settings.STATIC_URL)
 
     return output
 

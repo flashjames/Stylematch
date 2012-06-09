@@ -38,72 +38,6 @@ def create_user_profile(sender, instance, created, **kwargs):
         OpenHours.objects.create(user=instance)
 
 
-class UserProfile(models.Model):
-    """
-    TODO:
-    fixa så email från huvudprofilen visas här
-    fixa så twitter och facebook profil visas här, se styleseat
-    fixa description till denna modell
-    """
-    user = models.ForeignKey(User, unique=True, editable=False)
-    display_on_first_page = models.BooleanField(editable=False)
-
-    # max_length? less?
-    profile_text = models.CharField("Om mig", max_length=500, blank=True)
-
-    profile_url = models.CharField("http://stylematch.se/",
-                                   max_length=40,
-                                   blank=True)
-    # used to reach profile if no profile_url set
-    temporary_profile_url = models.CharField(editable=False,
-                                             unique=True,
-                                             max_length=36)
-
-    # select phone number to display on profile
-    DISPLAY_NUMBER_CHOICES = (
-        (True, 'Personligt telefonnummer'),
-        (False, 'Salongens telefonnummer'),
-        )
-    number_on_profile = models.BooleanField(
-                            "Vilket telefonnummer ska visas på profilen?",
-                            max_length=1,
-                            choices=DISPLAY_NUMBER_CHOICES)
-
-    personal_phone_number = models.CharField(
-                            "Personligt telefonnummer",
-                            max_length=30,
-                            blank=True,
-                            null=True)
-
-    # salong
-    salon_phone_number = models.CharField("Salongens telefonnummer",
-                                          max_length=30,
-                                          blank=True,
-                                          null=True)
-    salon_name = models.CharField("Salongens namn",
-                                  max_length=30,
-                                  blank=True)
-    salon_city = models.CharField("Stad",
-                                  max_length=30,
-                                  blank=True)
-    salon_url = models.URLField("Salongens hemsida",
-                                blank=True)
-    salon_adress = models.CharField("Salongens adress",
-                                    max_length=30,
-                                    blank=True)
-
-    zip_adress = models.CharField("Postnummer",
-                                  max_length=20,
-                                  blank=True,
-                                  null=True)
-
-    url_online_booking = models.URLField("Adress till online bokningssystem",
-                                         blank=True)
-    show_booking_url = models.BooleanField("Min salong har online-bokning",
-                                           blank=True)
-
-    def __unicode__(self):
-        return u'%s' % (self.user)
 
 
 class Service(models.Model):
@@ -200,7 +134,7 @@ def get_image_url(filename):
                         filename)
 
 
-class Picture(models.Model):
+class BaseImage(models.Model):
     # server-side, full path to upload image including filename
     def get_image_path(instance, filename):
         return os.path.join(settings.UPLOAD_PATH_USER_IMGS, instance.filename)
@@ -219,46 +153,99 @@ class Picture(models.Model):
                              editable=False)
     upload_date = models.DateTimeField(auto_now_add=True,
                                        editable=False)
+
+    class Meta:
+        abstract = True
+
+class ProfileImage(BaseImage):
+    cropped = models.BooleanField(default=False)
+
+class GalleryImage(BaseImage):
     comment = models.CharField(max_length=100,
                                blank=True)
-
-    # choices probably not needed, only usable for forms to get readable name
-    # what I wanted was a real enum which could be used when setting the value
-    IMAGE_TYPE_CHOICES = (
-        ('G', 'Gallery'),
-        ('P', 'Unused Profile Image'),
-        ('C', 'Current Profile Image'),
-        )
-    image_type = models.CharField(max_length=1,
-                                  choices=IMAGE_TYPE_CHOICES)
     order = models.PositiveIntegerField(blank=True,
                                         editable=True,
                                         null=True)
-
-    # unused if it's a profile image
     display_on_profile = models.BooleanField("Visa på profil",
                                              blank=True,
                                              default=True)
-
-    def save(self, *args, **kwargs):
-        super(Picture, self).save(*args, **kwargs)
-
-        if self.image_type == 'C':
-            # The newly saved Picture object was seleted as current
-            # profile picture. Therefor we need to reset the previous
-            # profile picture.
-
-            # There should not be more than 1 previous profile picture, but
-            # better safe than sorry.
-            Picture.objects.filter(user__exact=self.user).filter(
-            image_type='C').exclude(id=self.id).update(image_type='G')
-
     class Meta:
         # deliver the images sorted on the order field
-        # needs to be here, or the images admin ui will break
+        # needs to be here, or the edit_images ui will break
         ordering = ['order']
 
 
+class UserProfile(models.Model):
+    """
+    TODO:
+    fixa så email från huvudprofilen visas här
+    fixa så twitter och facebook profil visas här, se styleseat
+    fixa description till denna modell
+    """
+    user = models.ForeignKey(User, unique=True, editable=False)
+    display_on_first_page = models.BooleanField(editable=False)
+
+    # max_length? less?
+    profile_text = models.CharField("Om mig", max_length=500, blank=True)
+
+    profile_url = models.CharField("http://stylematch.se/",
+                                   max_length=40,
+                                   blank=True)
+    # used to reach profile if no profile_url set
+    temporary_profile_url = models.CharField(editable=False,
+                                             unique=True,
+                                             max_length=36)
+
+    # select phone number to display on profile
+    DISPLAY_NUMBER_CHOICES = (
+        (True, 'Personligt telefonnummer'),
+        (False, 'Salongens telefonnummer'),
+        )
+    number_on_profile = models.BooleanField(
+                            "Vilket telefonnummer ska visas på profilen?",
+                            max_length=1,
+                            choices=DISPLAY_NUMBER_CHOICES)
+
+    personal_phone_number = models.CharField(
+                            "Personligt telefonnummer",
+                            max_length=30,
+                            blank=True,
+                            null=True)
+
+    # salong
+    salon_phone_number = models.CharField("Salongens telefonnummer",
+                                          max_length=30,
+                                          blank=True,
+                                          null=True)
+    salon_name = models.CharField("Salongens namn",
+                                  max_length=30,
+                                  blank=True)
+    salon_city = models.CharField("Stad",
+                                  max_length=30,
+                                  blank=True)
+    salon_url = models.URLField("Salongens hemsida",
+                                blank=True)
+    salon_adress = models.CharField("Salongens adress",
+                                    max_length=30,
+                                    blank=True)
+
+    zip_adress = models.CharField("Postnummer",
+                                  max_length=20,
+                                  blank=True,
+                                  null=True)
+
+    url_online_booking = models.URLField("Adress till online bokningssystem",
+                                         blank=True)
+    show_booking_url = models.BooleanField("Min salong har online-bokning",
+                                           blank=True)
+
+    profile_image_cropped = models.ForeignKey(ProfileImage, unique=True, editable=False, null=True, blank=True, related_name='profile_image_cropped')
+    profile_image_uncropped = models.ForeignKey(ProfileImage, unique=True, editable=False, null=True, blank=True, related_name='profile_image_uncropped')
+
+    def __unicode__(self):
+        return u'%s' % (self.user)
+
+    
 # Signals handler for deleting files after object record deleted
 # In Django 1.3, delete a record not remove the associated files
 def delete_filefield(sender, **kwargs):
@@ -284,8 +271,8 @@ def delete_filefield(sender, **kwargs):
     -> This will probably be a problem if we move to filebased storage.
     """
     default_storage.delete(instance.file.name)
-post_delete.connect(delete_filefield, Picture)
-
+post_delete.connect(delete_filefield, ProfileImage)
+post_delete.connect(delete_filefield, GalleryImage)
 
 class InviteCode(models.Model):
     used = models.BooleanField("Have the invite code been used?",

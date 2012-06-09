@@ -21,7 +21,8 @@ from braces.views import LoginRequiredMixin
 from accounts.models import (Service,
                              UserProfile,
                              OpenHours,
-                             Picture,
+                             GalleryImage,
+                             ProfileImage,
                              weekdays_model)
 from tools import format_minutes_to_hhmm, format_minutes_to_pretty_format
 
@@ -53,7 +54,7 @@ class DisplayProfileView(DetailView):
     def get_profile_image_url(self, profile_user_id):
         profile_picture = ''
         try:
-            profile_picture = self.get_profile_image(profile_user_id)[0]
+            profile_picture = self.get_profile_image(profile_user_id)
         except:
             if self.is_authenticated:
                 profile_picture = os.path.join(
@@ -69,10 +70,8 @@ class DisplayProfileView(DetailView):
     def get_gallery_images(self, user, limit=0):
         """
         TODO: should have limit on number of imgs to display
-        'G' = gallery images
         """
-        queryset = Picture.objects.filter(user__exact=user).filter(
-            image_type='G').filter(display_on_profile=True)
+        queryset = GalleryImage.objects.filter(user__exact=user).filter(display_on_profile=True)
 
         images = self.get_images(queryset)
 
@@ -84,11 +83,9 @@ class DisplayProfileView(DetailView):
         return images
 
     def get_profile_image(self, user):
-        # 'C' = current profile image
-        queryset = Picture.objects.filter(user__exact=user).filter(
-            image_type='C')
-
-        return self.get_images(queryset)
+        userprofile = UserProfile.objects.get(user=user)
+        profile_image = userprofile.profile_image_cropped
+        return self.get_image_url(profile_image)
 
     def get_opening_time(self, obj, attr_name):
         """
@@ -157,7 +154,7 @@ class DisplayProfileView(DetailView):
         context['site_domain'] = settings.SITE_DOMAIN
 
         # get images displayed on profile
-        context['profile_image'] = self.get_profile_image(profile_user_id)
+        context['profile_image'] = self.get_profile_image_url(profile_user_id)
         context['gallery_images'] = self.get_gallery_images(profile_user_id)
 
         # services the displayed userprofile have
@@ -174,7 +171,7 @@ class DisplayProfileView(DetailView):
 
         # opening hours the displayed userprofile have
         context['weekdays'] = self.get_openinghours(profile_user_id)
-        context['profile_image'] = self.get_profile_image_url(profile_user_id)
+
 
         return context
 
@@ -286,7 +283,7 @@ class UserProfileForm(ModelForm):
     def __init__(self, request, *args, **kwargs):
         self.request = request
         super(UserProfileForm, self).__init__(*args, **kwargs)
-        #import pdb;pdb.set_trace()
+
         self.fields['first_name'].initial = self.instance.user.first_name
         self.fields['last_name'].initial = self.instance.user.last_name
 
@@ -520,8 +517,8 @@ class PictureForm(forms.ModelForm):
             raise ValidationError("Filen kunde inte läsas")
 
     class Meta:
-        model = Picture
-        fields = ('file', 'comment', 'image_type')
+        model = GalleryImage
+        fields = ('file', 'comment')
 
 
 class PicturesView(LoginRequiredMixin, CreateView):
@@ -531,7 +528,7 @@ class PicturesView(LoginRequiredMixin, CreateView):
     REST API specified in class PictureResource
     """
     template_name = "accounts/profile_images_edit.html"
-    model = Picture
+    model = GalleryImage
     form_class = PictureForm
 
     def __init__(self, *args, **kwargs):
@@ -566,18 +563,16 @@ class PicturesView(LoginRequiredMixin, CreateView):
         return form
 
     def get_profile_image(self, user):
-        # 'C' = current profile image
-        queryset = Picture.objects.filter(user__exact=user).filter(
-            image_type='C')
-        if queryset:
-            profile_picture = queryset[0].get_image_url()
-        else:
-            profile_picture = os.path.join(
+        try:
+            userprofile = UserProfile.objects.get(user__exact=user)
+            profile_image = userprofile.profile_image_cropped.get_image_url()
+        except:
+            profile_image = os.path.join(
                                 settings.STATIC_URL,
                                 'img/default_image_profile_not_logged_in.jpg')
-
-        return profile_picture
-
+                
+        return profile_image
+ 
     def get_context_data(self, **kwargs):
         context = super(PicturesView, self).get_context_data(**kwargs)
         context['profile_image_url'] = self.get_profile_image(
@@ -590,13 +585,6 @@ class PicturesView(LoginRequiredMixin, CreateView):
             context['update_failure'] = ""
 
         return context
-
-    def remove_old_profile_image(self, user):
-        queryset = Picture.objects.filter(user__exact=user).filter(
-            image_type='C')
-        # old profile image found -> delete
-        if queryset:
-            queryset[0].delete()
 
     def resize_image(self, original_image):
         """
@@ -634,14 +622,6 @@ class PicturesView(LoginRequiredMixin, CreateView):
 
     # Called when we're sure all fields in the form are valid
     def form_valid(self, form):
-        image_type = form.cleaned_data['image_type']
-
-        # This class is used to upload both Gallery and Profile images ->
-        # only remove old profile image if it's a profile image that have
-        # been uploaded
-        if image_type == 'C':
-            self.remove_old_profile_image(self.request.user)
-
         f = self.request.FILES.get('file')
         filename = get_unique_filename(f.name)
 

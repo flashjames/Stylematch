@@ -6,7 +6,7 @@ from django.contrib import auth
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView, CreateView
 from django.core.urlresolvers import reverse
-from accounts.models import UserProfile, Picture
+from accounts.models import UserProfile, GalleryImage
 from index.models import BetaEmail
 
 
@@ -17,7 +17,7 @@ class InspirationPageView(ListView):
     """
     context_object_name = "pictures"
     template_name = "inspiration.html"
-    queryset = Picture.objects.order_by('-upload_date')
+    queryset = GalleryImage.objects.order_by('-upload_date')
     paginate_by = 8
 
     def get_context_data(self, **kwargs):

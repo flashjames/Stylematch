@@ -1,5 +1,5 @@
 #-*- coding:utf-8 -*-
-from accounts.models import Service, Picture, get_image_url
+from accounts.models import Service, GalleryImage, get_image_url
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 from tastypie.validation import FormValidation
@@ -96,7 +96,7 @@ class ServiceResource(ModelResource):
 
 class PictureForm(ModelForm):
     class Meta:
-        model = Picture
+        model = GalleryImage
 
 
 class PictureResource(ModelResource):
@@ -139,7 +139,7 @@ class PictureResource(ModelResource):
         pass_request_user_to_django = True
         authentication = DjangoBasicAuthentication()
         authorization = PerUserAuthorization()
-        queryset = Picture.objects.filter(image_type='G')
+        queryset = GalleryImage.objects.all()
 
         excludes = ['file', 'user']
         limit = 50

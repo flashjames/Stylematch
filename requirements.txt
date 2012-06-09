@@ -27,3 +27,5 @@ django-storages==1.1.4
 boto==2.3.0
 raven==1.7.5
 django-ses==0.4.1
+selenium==2.23.0
+django-liveserver==0.1a-2

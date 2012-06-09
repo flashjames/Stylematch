@@ -1,0 +1,59 @@
+.salongs_test_salongsnamn{
+	padding-top: 15px;
+	padding-bottom: 15px;
+	
+}
+
+
+.salongs_test_kontaktblock{
+	background-color: grey;
+    color:#999;
+    padding-top: 5px;
+    xpadding-bottom: 15px;
+    height:550px;
+    -webkit-box-shadow: 4px 4px 6px -2px #000;
+    -moz-box-shadow: 4px 4px 6px -2px #000;
+    box-shadow: 4px 4px 6px -2px #000;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+
+.salongs_test_bildblock{
+	background-color: grey;
+    color:#999;
+	-webkit-box-shadow: 4px 4px 6px -2px #000;
+    -moz-box-shadow: 4px 4px 6px -2px #000;
+    box-shadow: 4px 4px 6px -2px #000;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    xheight:320px;
+	
+}
+
+.salongs_test_galleribilder{
+	width:82px;
+	height:60px;
+	margin-right:10px;
+	margin-bottom:10px;
+	border:1px solid white;
+}
+
+.salongs_test_frisorbilder{
+	width:110px;
+	background-color:grey;
+	display:inline-block;
+	margin-bottom: 10px;
+}
+
+.salongs_test_frisorbilder img{
+	margin-left:3px;
+	margin-top:3px;
+	width:94%;
+}
+
+.salongs_test_frisorbilder h4{
+	margin-left:5px;
+	margin-bottom:3px;
+}

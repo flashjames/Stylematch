@@ -112,6 +112,10 @@ urlpatterns += patterns(
             TemplateView.as_view(template_name="anvandarvillkor.html"),
             {},
             'anvandarvillkor'),
+    (r'^salongsprofil/',
+            TemplateView.as_view(template_name="salongsprofil.html"),
+            {},
+            'salongsprofil'),
     url(r"^su/",
             include("django_su.urls")),
 

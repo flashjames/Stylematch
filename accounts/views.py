@@ -16,7 +16,8 @@ from django.views.generic import (TemplateView,
                                   UpdateView,
                                   DetailView,
                                   RedirectView,
-                                  CreateView)
+                                  CreateView,
+                                  FormView)
 from braces.views import LoginRequiredMixin
 from accounts.models import (Service,
                              UserProfile,
@@ -476,7 +477,8 @@ Since all classes/functions is part of the same functionality
 import StringIO
 from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile
-
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 
 def get_unique_filename(filename):
     ext = filename.split('.')[-1]
@@ -523,6 +525,11 @@ class PictureForm(forms.ModelForm):
         model = Picture
         fields = ('file', 'comment', 'image_type')
 
+class CropCoordsForm(forms.Form):
+    start_x_coordinate = forms.IntegerField(widget=forms.HiddenInput())
+    start_y_coordinate = forms.IntegerField(widget=forms.HiddenInput())
+    width = forms.IntegerField(widget=forms.HiddenInput())
+    height = forms.IntegerField(widget=forms.HiddenInput())
 
 class PicturesView(LoginRequiredMixin, CreateSelfView):
     """
@@ -560,20 +567,16 @@ class PicturesView(LoginRequiredMixin, CreateSelfView):
         context['profile_image_url'] = self.get_profile_image(
                                                 self.request.user.id
                                                 )
+
+        context['crop_coords_form'] = CropCoordsForm()
+        
         context['update_success'] = "Uppladdningen lyckades!"
         try:
             context['update_failure'] = kwargs['form']._errors['file']
         except:
             context['update_failure'] = ""
-
+            
         return context
-
-    def remove_old_profile_image(self, user):
-        queryset = Picture.objects.filter(user__exact=user).filter(
-            image_type='C')
-        # old profile image found -> delete
-        if queryset:
-            queryset[0].delete()
 
     def resize_image(self, original_image):
         """
@@ -603,23 +606,15 @@ class PicturesView(LoginRequiredMixin, CreateSelfView):
 
     # Called when we're sure all fields in the form are valid
     def form_valid(self, form):
-        image_type = form.cleaned_data['image_type']
-
-        # This class is used to upload both Gallery and Profile images ->
-        # only remove old profile image if it's a profile image that have
-        # been uploaded
-        if image_type == 'C':
-            self.remove_old_profile_image(self.request.user)
-
-        f = self.request.FILES.get('file')
-        filename = get_unique_filename(f.name)
+        image = self.request.FILES.get('file')
+        filename = get_unique_filename(image.name)
 
         # add data to form fields that will be saved to db
         self.object = form.save(commit=False)
 
         # replace original image, with a resized version
-        resized_image = self.resize_image(f)
-
+        resized_image = self.resize_image(image)
+        
         # Will only resize image if it's larger than maximum size
         # -> dont replace original image if it havent been resized
         if resized_image:
@@ -631,3 +626,86 @@ class PicturesView(LoginRequiredMixin, CreateSelfView):
         self.object.save()
         form.save_m2m()
         return super(PicturesView, self).form_valid(form)
+
+
+class CropPictureView(FormView):
+    form_class = CropCoordsForm
+    
+    def __init__(self, *args, **kwargs):
+        super(CropPictureView, self).__init__(*args, **kwargs)
+        # written here in init since it will give reverse url error
+        # if just written in class definition. because urls.py isnt loaded
+        # when this class is defined
+        self.success_url = reverse('profiles_edit_images')
+    
+    def crop(self, original_image, image_filename, start_x_coordinate,
+             start_y_coordinate, width, height):
+        import imghdr
+        file_extension = imghdr.what("", original_image.read(2048))
+        original_image.seek(0)
+        
+        image = Image.open(original_image)
+        # TODO: use function arguments
+        #import pdb;pdb.set_trace()
+        image = image.crop((start_x_coordinate, start_y_coordinate,
+                           start_x_coordinate+width, start_y_coordinate+height))
+        
+        # Return cropped image as InMemoryUploadedFile
+        tempfile_io = StringIO.StringIO()
+        image.save(tempfile_io, format=file_extension)
+
+        # 
+        tempfile_io.seek(0)
+
+        return InMemoryUploadedFile(tempfile_io, None, image_filename,
+                                    file_extension,
+                                    tempfile_io.len, None)
+
+    def remove_old_profile_image(self, user):
+        queryset = Picture.objects.filter(user__exact=user).filter(
+            image_type='C')
+        # old profile image found -> delete
+        if queryset:
+            queryset[0].delete()
+
+    # Called when we're sure all fields in the form are valid
+    def form_valid(self, form):
+        # TODO: should return error if this doesnt exist
+        image_filename = self.request.session.get('temporary_profile_image',
+                                                  False)
+
+        # TODO: should check if it found the image
+        image = default_storage.open(image_filename)
+        
+        start_x_coordinate = form.cleaned_data['start_x_coordinate']
+        start_y_coordinate = form.cleaned_data['start_y_coordinate']
+        width = form.cleaned_data['width']
+        height = form.cleaned_data['height']
+        
+        cropped_image = self.crop(image,
+                  image_filename,
+                  start_x_coordinate,
+                  start_y_coordinate,
+                  width,
+                  height)
+        
+        self.remove_old_profile_image(self.request.user)
+        picture = Picture(file=cropped_image, filename=image_filename,
+                          user=self.request.user, image_type='C')
+        picture.save()
+        
+        return super(CropPictureView, self).form_valid(form)
+
+
+class SendBackPictureView(PicturesView):        
+    def form_valid(self, form):
+        image = form.cleaned_data['file']
+        
+        filename = get_unique_filename(image.name)
+        file_path = os.path.join("media/temp-imgs/", filename)
+        default_storage.save(file_path, ContentFile(image.read()))
+        self.request.session['temporary_profile_image'] = file_path
+
+        image_url = os.path.join("/static/temp-imgs/", filename)
+        context = self.get_context_data(form=form, image_url=image_url)
+        return self.render_to_response(context)

@@ -5,7 +5,9 @@ from accounts.views import (ServicesView,
                             DisplayProfileView,
                             RedirectToProfileView,
                             PicturesView,
-                            OpenHoursView)
+                            OpenHoursView,
+                            SendBackPictureView,
+                            CropPictureView)
 from tastypie.api import Api
 
 profile_api = Api(api_name='profile')
@@ -30,6 +32,14 @@ urlpatterns = patterns('',
             PicturesView.as_view(),
             {},
             'profiles_edit_images'),
+    (r'^profile/send-back-image/$',
+            SendBackPictureView.as_view(),
+            {},
+            'send_back_image'),
+    (r'^profile/crop-image/$',
+            CropPictureView.as_view(),
+            {},
+            'crop_image'),
     (r'^profile/add-hours/$',
             OpenHoursView.as_view(),
             {},

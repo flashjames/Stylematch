@@ -1,4 +1,9 @@
-from django.conf.urls.defaults import *
+# coding:utf-8
+from django.conf.urls.defaults import (patterns,
+                                       include,
+                                       url,
+                                       handler404,
+                                       handler500)
 from django.conf import settings
 from django.views.generic import TemplateView, RedirectView
 from index.views import (IndexPageView,

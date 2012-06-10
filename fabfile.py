@@ -48,7 +48,7 @@ def compile_less():
 def backup_database():
     now = datetime.datetime.now()
     filename = ("/home/ubuntu/database_backup/stylematchdb_"
-                + now.strftime("%y%m%d-%H-%M"))
+                + now.strftime("%y%m%d-%H-%M") + ".sql")
     sudo("mysqldump -u root -p django_stylematch > " + filename)
 
 

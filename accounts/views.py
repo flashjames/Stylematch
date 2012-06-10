@@ -72,7 +72,8 @@ class DisplayProfileView(DetailView):
         """
         TODO: should have limit on number of imgs to display
         """
-        queryset = GalleryImage.objects.filter(user__exact=user).filter(display_on_profile=True)
+        queryset = GalleryImage.objects.filter(
+            user__exact=user).filter(display_on_profile=True)
 
         images = self.get_images(queryset)
 
@@ -172,7 +173,6 @@ class DisplayProfileView(DetailView):
 
         # opening hours the displayed userprofile have
         context['weekdays'] = self.get_openinghours(profile_user_id)
-
 
         return context
 
@@ -475,7 +475,7 @@ import StringIO
 from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
+
 
 def get_unique_filename(filename):
     ext = filename.split('.')[-1]
@@ -528,7 +528,7 @@ class ProfileImageForm(GalleryImageForm):
         model = ProfileImage
         fields = ('file',)
 
-        
+
 class CropCoordsForm(forms.Form):
     start_x_coordinate = forms.IntegerField(widget=forms.HiddenInput())
     start_y_coordinate = forms.IntegerField(widget=forms.HiddenInput())
@@ -574,9 +574,9 @@ class EditImagesView(LoginRequiredMixin, CreateView):
             profile_image = os.path.join(
                                 settings.STATIC_URL,
                                 'img/default_image_profile_not_logged_in.jpg')
-                
+
         return profile_image
- 
+
     def get_context_data(self, **kwargs):
         context = super(EditImagesView, self).get_context_data(**kwargs)
         context['profile_image_url'] = self.get_profile_image(
@@ -584,13 +584,13 @@ class EditImagesView(LoginRequiredMixin, CreateView):
                                                 )
 
         context['crop_coords_form'] = CropCoordsForm()
-        
+
         context['update_success'] = "Uppladdningen lyckades!"
         try:
             context['update_failure'] = kwargs['form']._errors['file']
         except:
             context['update_failure'] = ""
-            
+
         return context
 
     def resize_image(self, original_image):
@@ -636,17 +636,18 @@ class EditImagesView(LoginRequiredMixin, CreateView):
 
         # replace original image, with a resized version
         self.object.file._file = self.resize_image(image)
-        
+
         self.object.user = self.request.user
         self.object.filename = filename
 
         self.object.save()
         form.save_m2m()
-        
+
         # Can't user super().form_valid(**kwargs) since form_valid returns
         # a HttpRedirectResponse() which cannot take context data
         return self.render_to_response(self.get_context_data(form=form,
                                                              valid=True))
+
 
 class SaveProfileImageView(EditImagesView):
     form_class = ProfileImageForm
@@ -656,28 +657,29 @@ class SaveProfileImageView(EditImagesView):
         image = self.request.FILES.get('file')
         filename = get_unique_filename(image.name)
 
-        current_userprofile = UserProfile.objects.get(user=self.request.user)        
+        current_userprofile = UserProfile.objects.get(user=self.request.user)
+
         # remove old uncropped profile image
         if current_userprofile.profile_image_uncropped:
             current_userprofile.profile_image_uncropped.delete()
 
         # add data to form fields that will be saved to db
         self.object = form.save(commit=False)
-          
+
         # replace original image, with a resized version
         self.object.file._file = self.resize_image(image)
-        
+
         self.object.user = self.request.user
         self.object.filename = filename
 
         self.object.save()
         form.save_m2m()
 
-        
-        # update UserProfile foreign key, to point at new uncropped profile image
+        # update UserProfile foreign key,
+        #to point at new uncropped profile image
         current_userprofile.profile_image_uncropped = self.object
         current_userprofile.save()
-        
+
         # Can't user super().form_valid(**kwargs) since form_valid returns
         # a HttpRedirectResponse() which cannot take context data
         return self.render_to_response(self.get_context_data(form=form,
@@ -686,31 +688,30 @@ class SaveProfileImageView(EditImagesView):
 
 class CropPictureView(FormView):
     form_class = CropCoordsForm
-    
+
     def __init__(self, *args, **kwargs):
         super(CropPictureView, self).__init__(*args, **kwargs)
         # written here in init since it will give reverse url error
         # if just written in class definition. because urls.py isnt loaded
         # when this class is defined
         self.success_url = reverse('profiles_edit_images')
-    
+
     def crop(self, original_image, image_filename, start_x_coordinate,
              start_y_coordinate, width, height):
         import imghdr
         file_extension = imghdr.what("", original_image.read(2048))
         original_image.seek(0)
-        
+
         image = Image.open(original_image)
-        # TODO: use function arguments
-        #import pdb;pdb.set_trace()
-        image = image.crop((start_x_coordinate, start_y_coordinate,
-                           start_x_coordinate+width, start_y_coordinate+height))
-        
+        image = image.crop((start_x_coordinate,
+                            start_y_coordinate,
+                            start_x_coordinate + width,
+                            start_y_coordinate + height))
+
         # Return cropped image as InMemoryUploadedFile
         tempfile_io = StringIO.StringIO()
         image.save(tempfile_io, format=file_extension)
 
-        # 
         tempfile_io.seek(0)
 
         return InMemoryUploadedFile(tempfile_io, None, image_filename,
@@ -725,25 +726,24 @@ class CropPictureView(FormView):
 
         # TODO: should check if it found the image
         image = default_storage.open(image_filename)
-        
+
         start_x_coordinate = form.cleaned_data['start_x_coordinate']
         start_y_coordinate = form.cleaned_data['start_y_coordinate']
         width = form.cleaned_data['width']
         height = form.cleaned_data['height']
-        
+
         cropped_image = self.crop(image,
                   image_filename,
                   start_x_coordinate,
                   start_y_coordinate,
                   width,
                   height)
-        
+
         self.remove_old_profile_image(self.request.user)
-        picture = Picture(file=cropped_image, filename=image_filename,
-                          user=self.request.user, image_type='C')
+
+        picture = ProfileImage(file=cropped_image, filename=image_filename,
+                          user=self.request.user)
         picture.save()
-        
+        # TODO: save to UserProfile
+
         return super(CropPictureView, self).form_valid(form)
-
-
-

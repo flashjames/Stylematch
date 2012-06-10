@@ -8,7 +8,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 from django.core.files.storage import default_storage
 
-from tools import *
+from tools import list_with_time_interval, format_minutes_to_pretty_format
 
 weekdays_model = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun']
 
@@ -38,12 +38,10 @@ def create_user_profile(sender, instance, created, **kwargs):
         OpenHours.objects.create(user=instance)
 
 
-
-
 class Service(models.Model):
     buffer = list_with_time_interval(
                 start=30,
-                stop=6*60,
+                stop=6 * 60,
                 interval=30,
                 format_function=format_minutes_to_pretty_format)
     TIME_CHOICES = tuple(buffer)
@@ -157,8 +155,10 @@ class BaseImage(models.Model):
     class Meta:
         abstract = True
 
+
 class ProfileImage(BaseImage):
     cropped = models.BooleanField(default=False)
+
 
 class GalleryImage(BaseImage):
     comment = models.CharField(max_length=100,
@@ -169,6 +169,7 @@ class GalleryImage(BaseImage):
     display_on_profile = models.BooleanField("Visa på profil",
                                              blank=True,
                                              default=True)
+    
     class Meta:
         # deliver the images sorted on the order field
         # needs to be here, or the edit_images ui will break
@@ -241,13 +242,25 @@ class UserProfile(models.Model):
 
     # on_delete=models.SET_NULL, since we dont want to delete UserProfile
     # when profile_image is deleted
-    profile_image_cropped = models.ForeignKey(ProfileImage, unique=True, editable=False, null=True, blank=True, on_delete=models.SET_NULL, related_name='profile_image_cropped')
-    profile_image_uncropped = models.ForeignKey(ProfileImage, unique=True, editable=False, null=True, blank=True, on_delete=models.SET_NULL, related_name='profile_image_uncropped')
+    profile_image_cropped = models.ForeignKey(ProfileImage,
+                                              unique=True,
+                                              editable=False,
+                                              null=True,
+                                              blank=True,
+                                              on_delete=models.SET_NULL,
+                                              related_name='profile_image_cropped')
+    profile_image_uncropped = models.ForeignKey(ProfileImage,
+                                                unique=True,
+                                                editable=False,
+                                                null=True,
+                                                blank=True,
+                                                on_delete=models.SET_NULL,
+                                                related_name='profile_image_uncropped')
 
     def __unicode__(self):
         return u'%s' % (self.user)
 
-    
+
 # Signals handler for deleting files after object record deleted
 # In Django 1.3, delete a record not remove the associated files
 def delete_filefield(sender, **kwargs):
@@ -275,6 +288,7 @@ def delete_filefield(sender, **kwargs):
     default_storage.delete(instance.file.name)
 post_delete.connect(delete_filefield, ProfileImage)
 post_delete.connect(delete_filefield, GalleryImage)
+
 
 class InviteCode(models.Model):
     used = models.BooleanField("Have the invite code been used?",

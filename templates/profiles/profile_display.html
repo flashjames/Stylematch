@@ -71,7 +71,7 @@
     <blockquote><p>{{ profile.profile_text }}</p></blockquote>
     
     {% include "book_me_modal_snippet.html" %}
-    <a class="btn btn-large btn-info pull-right book-me-btn"  data-toggle="modal" href="#bookmemodal" >Boka mig!</a>
+    <a class="btn btn-large btn-info pull-right book-me-btn"  data-toggle="modal" href="#bookmemodal" onclick="_gaq.push(['_trackEvent', 'Privatperson - Profil', 'Boka frisör', '{{ first_name }} {{ last_name }}'])">Boka mig!</a>
     
   </div>
   <div class="span3" id="salon-information">

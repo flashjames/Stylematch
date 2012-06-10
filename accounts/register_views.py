@@ -88,6 +88,8 @@ class SignupStep3View(ServicesView):
         # written here in init since it will give reverse url error
         # if just written in class definition. because urls.py isnt loaded
         # when this class is defined
+
+        # not used
         self.success_url = reverse('signupstep4_page')
 
     def get_context_data(self, **kwargs):
@@ -137,7 +139,7 @@ class SignupStep4View(EditImagesView):
         self.object.image_type = 'C'
         self.object.save()
         form.save_m2m()
-        return super(PicturesView, self).form_valid(form)
+        return super(EditImagesView, self).form_valid(form)
 
 
 class RegisterCustomBackend(DefaultBackend):

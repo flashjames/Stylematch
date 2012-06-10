@@ -239,8 +239,10 @@ class UserProfile(models.Model):
     show_booking_url = models.BooleanField("Min salong har online-bokning",
                                            blank=True)
 
-    profile_image_cropped = models.ForeignKey(ProfileImage, unique=True, editable=False, null=True, blank=True, related_name='profile_image_cropped')
-    profile_image_uncropped = models.ForeignKey(ProfileImage, unique=True, editable=False, null=True, blank=True, related_name='profile_image_uncropped')
+    # on_delete=models.SET_NULL, since we dont want to delete UserProfile
+    # when profile_image is deleted
+    profile_image_cropped = models.ForeignKey(ProfileImage, unique=True, editable=False, null=True, blank=True, on_delete=models.SET_NULL, related_name='profile_image_cropped')
+    profile_image_uncropped = models.ForeignKey(ProfileImage, unique=True, editable=False, null=True, blank=True, on_delete=models.SET_NULL, related_name='profile_image_uncropped')
 
     def __unicode__(self):
         return u'%s' % (self.user)

@@ -85,7 +85,7 @@ class DisplayProfileView(DetailView):
 
     def get_profile_image(self, user):
         userprofile = UserProfile.objects.get(user=user)
-        profile_image = userprofile.profile_image_cropped
+        profile_image = userprofile.profile_image_uncropped
         return self.get_image_url(profile_image)
 
     def get_opening_time(self, obj, attr_name):

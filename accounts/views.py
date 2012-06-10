@@ -656,6 +656,11 @@ class SaveProfileImageView(EditImagesView):
         image = self.request.FILES.get('file')
         filename = get_unique_filename(image.name)
 
+        current_userprofile = UserProfile.objects.get(user=self.request.user)        
+        # remove old uncropped profile image
+        if current_userprofile.profile_image_uncropped:
+            current_userprofile.profile_image_uncropped.delete()
+
         # add data to form fields that will be saved to db
         self.object = form.save(commit=False)
           
@@ -668,10 +673,6 @@ class SaveProfileImageView(EditImagesView):
         self.object.save()
         form.save_m2m()
 
-        current_userprofile = UserProfile.objects.get(user=self.request.user)        
-        # remove old uncropped profile image
-        if current_userprofile.profile_image_uncropped:
-            current_userprofile.profile_image_uncropped.delete()
         
         # update UserProfile foreign key, to point at new uncropped profile image
         current_userprofile.profile_image_uncropped = self.object

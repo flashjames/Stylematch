@@ -12,7 +12,7 @@ from registration.forms import RegistrationForm
 
 from accounts.views import (OpenHoursView,
                             ServicesView,
-                            PicturesView,
+                            EditImagesView,
                             get_unique_filename)
 
 from index.models import BetaEmail
@@ -101,7 +101,7 @@ class SignupStep3View(ServicesView):
         return context
 
 
-class SignupStep4View(PicturesView):
+class SignupStep4View(EditImagesView):
     template_name = "accounts/signup_step4.html"
 
     def __init__(self, *args, **kwargs):

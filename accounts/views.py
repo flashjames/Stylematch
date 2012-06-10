@@ -528,22 +528,22 @@ class CropCoordsForm(forms.Form):
     width = forms.IntegerField(widget=forms.HiddenInput())
     height = forms.IntegerField(widget=forms.HiddenInput())
 
-class PicturesView(LoginRequiredMixin, CreateView):
+
+class EditImagesView(LoginRequiredMixin, CreateView):
     """
     Display edit pictures page
     Many javascript dependencies one this page which interacts with the
     REST API specified in class PictureResource
     """
-    template_name = "accounts/profile_images_edit.html"
-    model = GalleryImage
-    form_class = PictureForm
+    template_name = "accounts/edit_images.html"
+    form_class = GalleryImageForm
 
     def __init__(self, *args, **kwargs):
-        super(PicturesView, self).__init__(*args, **kwargs)
+        super(EditImagesView, self).__init__(*args, **kwargs)
         # written here in init since it will give reverse url error
         # if just written in class definition. because urls.py isnt loaded
         # when this class is defined
-        self.success_url = reverse('profiles_edit_images')
+        self.success_url = reverse('edit_images')
 
     def form_invalid(self, form):
         """
@@ -569,7 +569,7 @@ class PicturesView(LoginRequiredMixin, CreateView):
         return profile_image
  
     def get_context_data(self, **kwargs):
-        context = super(PicturesView, self).get_context_data(**kwargs)
+        context = super(EditImagesView, self).get_context_data(**kwargs)
         context['profile_image_url'] = self.get_profile_image(
                                                 self.request.user.id
                                                 )

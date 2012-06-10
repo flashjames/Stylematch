@@ -502,7 +502,7 @@ def convert_bytes(bytes):
     return size
 
 
-class PictureForm(forms.ModelForm):
+class GalleryImageForm(forms.ModelForm):
     def clean_file(self):
         file = self.cleaned_data['file']
 
@@ -522,6 +522,13 @@ class PictureForm(forms.ModelForm):
         model = GalleryImage
         fields = ('file', 'comment')
 
+
+class ProfileImageForm(GalleryImageForm):
+    class Meta:
+        model = ProfileImage
+        fields = ('file',)
+
+        
 class CropCoordsForm(forms.Form):
     start_x_coordinate = forms.IntegerField(widget=forms.HiddenInput())
     start_y_coordinate = forms.IntegerField(widget=forms.HiddenInput())
@@ -531,7 +538,9 @@ class CropCoordsForm(forms.Form):
 
 class EditImagesView(LoginRequiredMixin, CreateView):
     """
-    Display edit pictures page
+    Display edit images page
+    The view handle upload of GalleryImage, but not upload of ProfileImage
+    even if ProfileImage is displayed on this page.
     Many javascript dependencies one this page which interacts with the
     REST API specified in class PictureResource
     """
@@ -553,14 +562,14 @@ class EditImagesView(LoginRequiredMixin, CreateView):
                                                              invalid=True))
 
     def get_form(self, form_class):
-        form = super(PicturesView, self).get_form(form_class)
+        form = super(EditImagesView, self).get_form(form_class)
         form.instance.user = self.request.user
         return form
 
     def get_profile_image(self, user):
         try:
             userprofile = UserProfile.objects.get(user__exact=user)
-            profile_image = userprofile.profile_image_cropped.get_image_url()
+            profile_image = userprofile.profile_image_uncropped.get_image_url()
         except:
             profile_image = os.path.join(
                                 settings.STATIC_URL,
@@ -633,12 +642,46 @@ class EditImagesView(LoginRequiredMixin, CreateView):
 
         self.object.save()
         form.save_m2m()
-
+        
         # Can't user super().form_valid(**kwargs) since form_valid returns
         # a HttpRedirectResponse() which cannot take context data
-        self.object = form.save()
         return self.render_to_response(self.get_context_data(form=form,
                                                              valid=True))
+
+class SaveProfileImageView(EditImagesView):
+    form_class = ProfileImageForm
+
+    # Called when we're sure all fields in the form are valid
+    def form_valid(self, form):
+        image = self.request.FILES.get('file')
+        filename = get_unique_filename(image.name)
+
+        # add data to form fields that will be saved to db
+        self.object = form.save(commit=False)
+          
+        # replace original image, with a resized version
+        self.object.file._file = self.resize_image(image)
+        
+        self.object.user = self.request.user
+        self.object.filename = filename
+
+        self.object.save()
+        form.save_m2m()
+
+        current_userprofile = UserProfile.objects.get(user=self.request.user)        
+        # remove old uncropped profile image
+        if current_userprofile.profile_image_uncropped:
+            current_userprofile.profile_image_uncropped.delete()
+        
+        # update UserProfile foreign key, to point at new uncropped profile image
+        current_userprofile.profile_image_uncropped = self.object
+        current_userprofile.save()
+        
+        # Can't user super().form_valid(**kwargs) since form_valid returns
+        # a HttpRedirectResponse() which cannot take context data
+        return self.render_to_response(self.get_context_data(form=form,
+                                                             valid=True))
+
 
 class CropPictureView(FormView):
     form_class = CropCoordsForm
@@ -702,15 +745,4 @@ class CropPictureView(FormView):
         return super(CropPictureView, self).form_valid(form)
 
 
-class SendBackPictureView(PicturesView):        
-    def form_valid(self, form):
-        image = form.cleaned_data['file']
-        
-        filename = get_unique_filename(image.name)
-        file_path = os.path.join("media/temp-imgs/", filename)
-        default_storage.save(file_path, ContentFile(image.read()))
-        self.request.session['temporary_profile_image'] = file_path
 
-        image_url = os.path.join("/static/temp-imgs/", filename)
-        context = self.get_context_data(form=form, image_url=image_url)
-        return self.render_to_response(context)

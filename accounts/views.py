@@ -643,7 +643,41 @@ class EditImagesView(LoginRequiredMixin, CreateView):
 
         self.object.save()
         form.save_m2m()
+        
+        # Can't user super().form_valid(**kwargs) since form_valid returns
+        # a HttpRedirectResponse() which cannot take context data
+        return self.render_to_response(self.get_context_data(form=form,
+                                                             valid=True))
 
+class SaveProfileImageView(EditImagesView):
+    form_class = ProfileImageForm
+
+    # Called when we're sure all fields in the form are valid
+    def form_valid(self, form):
+        image = self.request.FILES.get('file')
+        filename = get_unique_filename(image.name)
+
+        # add data to form fields that will be saved to db
+        self.object = form.save(commit=False)
+          
+        # replace original image, with a resized version
+        self.object.file._file = self.resize_image(image)
+        
+        self.object.user = self.request.user
+        self.object.filename = filename
+
+        self.object.save()
+        form.save_m2m()
+
+        current_userprofile = UserProfile.objects.get(user=self.request.user)        
+        # remove old uncropped profile image
+        if current_userprofile.profile_image_uncropped:
+            current_userprofile.profile_image_uncropped.delete()
+        
+        # update UserProfile foreign key, to point at new uncropped profile image
+        current_userprofile.profile_image_uncropped = self.object
+        current_userprofile.save()
+        
         # Can't user super().form_valid(**kwargs) since form_valid returns
         # a HttpRedirectResponse() which cannot take context data
         return self.render_to_response(self.get_context_data(form=form,

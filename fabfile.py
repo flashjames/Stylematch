@@ -53,15 +53,7 @@ def backup_database():
 
 
 def migrate_db():
-    backup_database()
-    virtualenv("rm -rf accounts/migrations/")
-    virtualenv("./manage.py reset south")
-    virtualenv("./manage.py convert_to_south accounts")
-    git_pull()
-    update_git_submodules()
-    virtualenv("./manage.py schemamigration accounts --auto")
-    virtualenv("./manage.py migrate")
-
+    virtualenv("./manage.py migrate accounts")
 
 def restart_nginx():
     sudo("/etc/init.d/nginx restart")
@@ -82,8 +74,10 @@ def restart_gunicorn():
 
 
 def deploy_db_change():
-    #if confirm("Continue?"):
     update_dependencies()
+    backup_database()
+    git_pull()
+    update_git_submodules()
     migrate_db()
     compile_less()
     upload_static_files()

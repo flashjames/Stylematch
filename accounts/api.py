@@ -190,6 +190,13 @@ class ProfileResource(ModelResource):
             bundle.data['profile_image'] is not None and
             'file' in bundle.data['profile_image'].data):
                 bundle.data['profile_image'] = bundle.data['profile_image'].data['file']
+
+        # if profile_url isn't set, use temporary_profile_url
+        # temporary_profile_url isn't needed
+        if ('profile_url' in bundle.data and
+                not bundle.data['profile_url']):
+            bundle.data['profile_url'] = bundle.data['temporary_profile_url']
+        del bundle.data['temporary_profile_url']
         return bundle
 
     class Meta:

@@ -30,13 +30,8 @@
 
     <!-- Underscore.js Templates -->
     <script type="text/template" id="tpl-profile-list-item">
-        <% if (profile_url == "") { %>
-        <a href="/<%= temporary_profile_url %>">Profilimg
-        </a>
-        <% } else { %>
         <a href="/<%= profile_url %>">Profilimg
         </a>
-        <% } %>
 
        <div style="max-width:300px;">
            <span class="resultNumber"><%= id %></span>

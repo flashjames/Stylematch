@@ -1,0 +1,48 @@
+[
+  {
+    "pk": 1,
+    "model": "accounts.userprofile",
+    "fields": {
+      "zip_adress": "12345",
+      "show_booking_url": true,
+      "profile_text": "test tuptup",
+      "salon_phone_number": "1337",
+      "profile_image_uncropped": null,
+      "personal_phone_number": "95856384",
+      "url_online_booking": "",
+      "profile_image_cropped": null,
+      "display_on_first_page": true,
+      "user": 1,
+      "salon_adress": "Andromeda",
+      "temporary_profile_url": "0d2f8484582949808ec7576a54f09b9c",
+      "salon_city": "Dudetown",
+      "number_on_profile": false,
+      "salon_url": "",
+      "profile_url": "tester",
+      "salon_name": "hipstyle"
+    }
+  },
+  {
+    "pk": 2,
+    "model": "accounts.userprofile",
+    "fields": {
+      "zip_adress": "23456",
+      "show_booking_url": true,
+      "profile_text": "test tuptup",
+      "salon_phone_number": "2448",
+      "profile_image_uncropped": null,
+      "personal_phone_number": "12346456",
+      "url_online_booking": "",
+      "profile_image_cropped": null,
+      "display_on_first_page": true,
+      "user": 2,
+      "salon_adress": "Galazy",
+      "temporary_profile_url": "1d2f8484582949808ec7576a54f09b9c",
+      "salon_city": "New York",
+      "number_on_profile": false,
+      "salon_url": "",
+      "profile_url": "usausa",
+      "salon_name": "coffee"
+    }
+  }
+]

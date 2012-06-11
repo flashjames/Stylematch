@@ -1,11 +1,6 @@
-"""
-This file demonstrates writing tests using the unittest module. These will pass
-when you run "manage.py test".
-
-Replace this with more appropriate tests for your application.
-"""
-
 from django.test import TestCase
+from tastypie.serializers import Serializer
+from accounts.models import UserProfile, ProfileImage
 import tools
 
 
@@ -74,3 +69,30 @@ class TestTools(TestCase):
                     format_function=tools.format_minutes_to_pretty_format))
 
 
+class ProfileResourceTest(TestCase):
+    """
+    Testcases for ProfileResource
+
+    NOTE:
+    Tastypie has a new testing infrastructure since April. Might want
+    to use that:
+    http://django-tastypie.readthedocs.org/en/latest/testing.html
+    """
+    fixtures = ['test_userprofiles.json']
+
+    def setUp(self):
+        super(ProfileResourceTest, self).setUp()
+        self.serializer = Serializer()
+
+    def test_get_profiles(self):
+        resp = self.client.get('/api/profile/profiles/', format='json')
+
+        # for now:
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(resp['Content-Type'].startswith('application/json'))
+        self.serializer.from_json(resp.content)
+        # when using tastypies new testing infrastructure:
+        # self.assertValidJSON(resp)
+
+        val = self.serializer.deserialize(resp.content, format=resp['Content-Type'])
+        self.assertEqual(len(val['objects']), 2) # two users in fixture

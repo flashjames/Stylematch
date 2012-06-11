@@ -177,7 +177,8 @@ class ProfileResource(ModelResource):
     """
     profile_image = fields.ForeignKey(ProfileImageResource,
                                       'profile_image_uncropped',
-                                      full=True)
+                                      full=True,
+                                      null=True)
 
     def dehydrate(self, bundle):
         """
@@ -185,8 +186,9 @@ class ProfileResource(ModelResource):
         ProfileImageResource, and this is extracting that to make the
         data structure more logical
         """
-        if 'profile_image' in bundle.data:
-            if 'file' in bundle.data['profile_image'].data:
+        if ('profile_image' in bundle.data and
+            bundle.data['profile_image'] is not None and
+            'file' in bundle.data['profile_image'].data):
                 bundle.data['profile_image'] = bundle.data['profile_image'].data['file']
         return bundle
 

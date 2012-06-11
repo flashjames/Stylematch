@@ -154,8 +154,20 @@ class PictureResource(ModelResource):
 
 
 class ProfileImageResource(ModelResource):
+
+    def dehydrate(self, bundle):
+        """
+        Return the real URL instead of the local machine place
+        """
+        if 'file' in bundle.data:
+            bundle.data['file'] = get_image_url(bundle.data['file'])
+        return bundle
+
     class Meta:
+        include_resource_uri = False
+        allowed_methods = []
         resource_name = 'profile_image'
+        fields = ['file']
         queryset = ProfileImage.objects.all()
 
 
@@ -164,9 +176,22 @@ class ProfileResource(ModelResource):
     Resource to access a profile
     """
     profile_image = fields.ForeignKey(ProfileImageResource,
-                                      'profile_image_uncropped')
+                                      'profile_image_uncropped',
+                                      full=True)
+
+    def dehydrate(self, bundle):
+        """
+        'profile_image' is in a second level bundle, from
+        ProfileImageResource, and this is extracting that to make the
+        data structure more logical
+        """
+        if 'profile_image' in bundle.data:
+            if 'file' in bundle.data['profile_image'].data:
+                bundle.data['profile_image'] = bundle.data['profile_image'].data['file']
+        return bundle
 
     class Meta:
+        include_resource_uri = False
         resource_name = "profiles"
         model = UserProfile
         queryset = UserProfile.objects.all()

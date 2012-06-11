@@ -159,15 +159,15 @@ class ProfileImageResource(ModelResource):
         """
         Return the real URL instead of the local machine place
         """
-        if 'file' in bundle.data:
-            bundle.data['file'] = get_image_url(bundle.data['file'])
+        if 'filename' in bundle.data:
+            bundle.data['filename'] = get_image_url(bundle.data['filename'])
         return bundle
 
     class Meta:
         include_resource_uri = False
         allowed_methods = []
         resource_name = 'profile_image'
-        fields = ['file']
+        fields = ['filename']
         queryset = ProfileImage.objects.all()
 
 
@@ -176,7 +176,7 @@ class ProfileResource(ModelResource):
     Resource to access a profile
     """
     profile_image = fields.ForeignKey(ProfileImageResource,
-                                      'profile_image_uncropped',
+                                      'profile_image_cropped',
                                       full=True,
                                       null=True)
 
@@ -188,8 +188,8 @@ class ProfileResource(ModelResource):
         """
         if ('profile_image' in bundle.data and
             bundle.data['profile_image'] is not None and
-            'file' in bundle.data['profile_image'].data):
-                bundle.data['profile_image'] = bundle.data['profile_image'].data['file']
+            'filename' in bundle.data['profile_image'].data):
+                bundle.data['profile_image'] = bundle.data['profile_image'].data['filename']
 
         # if profile_url isn't set, use temporary_profile_url
         # temporary_profile_url isn't needed

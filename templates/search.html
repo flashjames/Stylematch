@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load url from future %}
+
+{% block html-head %}
+<script>
+    PROFILE_API_URL = "{% url 'api_dispatch_list' api_name="profile" resource_name="profiles" %}";
+</script>
+
+<script src="{{ STATIC_URL }}js/underscore-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+<script src="{{ STATIC_URL }}js/jquery.notify.js"></script>
+<script src="{{ STATIC_URL }}js/jquery/jquery.alerts.js"></script>
+
+<style>
+  /* remove background around twitter bootstrap modal, on this page */
+  .modal-backdrop {
+  opacity:0;
+  }
+</style>
+
+{% endblock %}
+
+{% block title %}Hitta frisör{% endblock %}
+
+  {% block content %}
+
+
+    <!-- Underscore.js Templates -->
+    <script type="text/template" id="tpl-profile-list-item">
+        <% if (profile_url == "") { %>
+        <a href="/<%= temporary_profile_url %>">Profilimg
+        </a>
+        <% } else { %>
+        <a href="/<%= profile_url %>">Profilimg
+        </a>
+        <% } %>
+
+       <div style="max-width:300px;">
+           <span class="resultNumber"><%= id %></span>
+              <h3 class="resultTitle">
+                  <a href="/{{ profile_url }}"><%= profile_text %></a>
+              </h3>
+              <p class="stylistAddress"><%= salon_adress %></p>
+       </div>
+    </script>
+
+    <div id="profile-list"></div>
+
+    <div id="fb-root"></div>
+
+  <!-- the code that does the magic on the page -->
+  <script src="{{ STATIC_URL }}js/search.js"></script>
+
+
+  {% endblock %}
+
+

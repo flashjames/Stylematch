@@ -7,6 +7,7 @@ from django.conf.urls.defaults import (patterns,
 from django.conf import settings
 from django.views.generic import TemplateView, RedirectView
 from index.views import (IndexPageView,
+                         SearchView,
                          BetaEmailView,
                          InspirationPageView,
                          error500)
@@ -136,6 +137,17 @@ urlpatterns += patterns(
             InspirationPageView.as_view(),
             {},
             'inspiration-page'),
+
+    # search-related URLs
+    (r'^linkoping',
+            SearchView.as_view(),
+            {'city':'linkoping'},
+            'search-linkoping'),
+    (r'^search',
+            SearchView.as_view(),
+            {},
+            'search'),
+
     # accounts/profile, should always be at the end. since a user may set a
     # profile url that match another url -> if it's not at the end it may
     # overwrite it.

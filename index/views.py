@@ -4,7 +4,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib import auth
 from django.http import HttpResponseRedirect
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, TemplateView
 from django.core.urlresolvers import reverse
 from accounts.models import UserProfile, GalleryImage
 from index.models import BetaEmail
@@ -24,6 +24,12 @@ class InspirationPageView(ListView):
         context = super(InspirationPageView, self).get_context_data(**kwargs)
         return context
 
+
+class SearchView(ListView):
+    """
+    """
+    template_name = "search.html"
+    queryset = UserProfile.objects.all()
 
 
 class BetaEmailView(CreateView):

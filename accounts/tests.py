@@ -1,4 +1,5 @@
 from django.test import TestCase
+from accounts.tastypie_test import ResourceTestCase
 from tastypie.serializers import Serializer
 from accounts.models import UserProfile, ProfileImage
 import tools
@@ -69,7 +70,7 @@ class TestTools(TestCase):
                     format_function=tools.format_minutes_to_pretty_format))
 
 
-class ProfileResourceTest(TestCase):
+class ProfileResourceTest(ResourceTestCase):
     """
     Testcases for ProfileResource
 
@@ -82,17 +83,9 @@ class ProfileResourceTest(TestCase):
 
     def setUp(self):
         super(ProfileResourceTest, self).setUp()
-        self.serializer = Serializer()
 
     def test_get_profiles(self):
         resp = self.client.get('/api/profile/profiles/', format='json')
+        self.assertValidJSONResponse(resp)
 
-        # for now:
-        self.assertEqual(resp.status_code, 200)
-        self.assertTrue(resp['Content-Type'].startswith('application/json'))
-        self.serializer.from_json(resp.content)
-        # when using tastypies new testing infrastructure:
-        # self.assertValidJSON(resp)
-
-        val = self.serializer.deserialize(resp.content, format=resp['Content-Type'])
-        self.assertEqual(len(val['objects']), 2) # two users in fixture
+        self.assertEqual(len(self.deserialize(resp)['objects']), 6) # two users in fixture

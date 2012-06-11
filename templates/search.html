@@ -30,13 +30,14 @@
 
     <!-- Underscore.js Templates -->
     <script type="text/template" id="tpl-profile-list-item">
-        <a href="/<%= profile_url %>">Profilimg
+        <a href="/<%= profile_url %>">
+            <img src="<%= profile_image %>" height="180" width="180" />
         </a>
 
        <div style="max-width:300px;">
            <span class="resultNumber"><%= id %></span>
               <h3 class="resultTitle">
-                  <a href="/{{ profile_url }}"><%= profile_text %></a>
+                  <a href="/<%= profile_url %>"><%= profile_text %></a>
               </h3>
               <p class="stylistAddress"><%= salon_adress %></p>
        </div>

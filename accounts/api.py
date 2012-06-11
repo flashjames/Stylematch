@@ -1,7 +1,12 @@
 #-*- coding:utf-8 -*-
-from accounts.models import Service, GalleryImage, get_image_url
+from accounts.models import (Service,
+                             GalleryImage,
+                             ProfileImage,
+                             UserProfile,
+                             get_image_url)
 from django.forms import ModelForm
 from django.contrib.auth.models import User
+from tastypie import fields
 from tastypie.validation import FormValidation
 from tastypie.resources import ModelResource
 from tastypie.authorization import Authorization
@@ -145,3 +150,22 @@ class PictureResource(ModelResource):
         limit = 50
         max_limit = 0
         validation = FormValidation(form_class=PictureForm)
+
+
+class ProfileImageResource(ModelResource):
+    class Meta:
+        resource_name = 'profile_image'
+        queryset = ProfileImage.objects.all()
+
+
+class ProfileResource(ModelResource):
+    """
+    Resource to access a profile
+    """
+    profile_image = fields.ForeignKey(ProfileImageResource,
+                                      'profile_image_uncropped')
+
+    class Meta:
+        resource_name = "profiles"
+        model = UserProfile
+        queryset = UserProfile.objects.all()

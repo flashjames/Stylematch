@@ -1,4 +1,5 @@
 #-*- coding:utf-8 -*-
+from django.conf import settings
 from accounts.models import (Service,
                              GalleryImage,
                              ProfileImage,
@@ -11,6 +12,7 @@ from tastypie.validation import FormValidation
 from tastypie.resources import ModelResource
 from tastypie.authorization import Authorization
 from tastypie.authentication import BasicAuthentication
+import os
 
 
 class PerUserAuthorization(Authorization):
@@ -189,7 +191,12 @@ class ProfileResource(ModelResource):
         if ('profile_image' in bundle.data and
             bundle.data['profile_image'] is not None and
             'filename' in bundle.data['profile_image'].data):
-                bundle.data['profile_image'] = bundle.data['profile_image'].data['filename']
+                bundle.data['profile_image'] = bundle.data['profile_image'].\
+                                                      data['filename']
+        else: #use standard image
+            bundle.data['profile_image'] = os.path.join(
+                                settings.STATIC_URL, 'img',
+                                'default_image_profile_not_logged_in.jpg')
 
         # if profile_url isn't set, use temporary_profile_url
         # temporary_profile_url isn't needed

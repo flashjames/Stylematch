@@ -141,6 +141,7 @@ class PictureResource(ModelResource):
         return bundle
 
     class Meta:
+        resource_name = 'picture'
         pass_request_user_to_django = True
         authentication = DjangoBasicAuthentication()
         authorization = PerUserAuthorization()

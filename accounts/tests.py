@@ -74,9 +74,8 @@ class ProfileResourceTest(ResourceTestCase):
     """
     Testcases for ProfileResource
 
-    NOTE:
-    Tastypie has a new testing infrastructure since April. Might want
-    to use that:
+    Tastypie has a new testing infrastructure since April. We're using
+    that:
     http://django-tastypie.readthedocs.org/en/latest/testing.html
     """
     fixtures = ['test_userprofiles.json']
@@ -132,6 +131,7 @@ class ProfileResourceTest(ResourceTestCase):
         resp = self.api_client.get(self.detail_url, format='json')
         self.assertValidJSONResponse(resp)
 
+        # make sure all keys are there
         self.assertKeys(self.deserialize(resp), self.keys)
         self.assertEqual(self.deserialize(resp)['salon_name'], 'Testsalon2')
 

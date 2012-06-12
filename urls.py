@@ -138,15 +138,14 @@ urlpatterns += patterns(
             {},
             'inspiration-page'),
 
-    # search-related URLs
-    (r'^linkoping',
-            SearchView.as_view(),
-            {'city':'linkoping'},
-            'search-linkoping'),
     (r'^search',
             SearchView.as_view(),
             {},
             'search'),
+
+    url(r'^',
+            include('cities_urls')),
+
 
     # accounts/profile, should always be at the end. since a user may set a
     # profile url that match another url -> if it's not at the end it may

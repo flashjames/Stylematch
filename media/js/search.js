@@ -63,6 +63,35 @@
                 }
             });
         },
+        events:{
+            "click .submit":"filter"
+        },
+        filter: function() {
+            this.profileList = new ProfileCollection();
+
+            data = {};
+            city = $('#city option:selected').val();
+            if (city !== 'Alla') {
+                data = { 'salon_city__iexact' : $('#city option:selected').val() };
+            }
+            this.profileList.fetch({
+                data: data,
+                success: function(collection, response) {
+                    if(!response) {
+                        $('#alert').notify();
+                        $('#alert').notify("create", {
+                              text: 'Profilerna kunde inte hämtas!'
+                        }, {
+                            expires: false,
+                            click: function(e,instance) {
+                                instance.close();
+                            }
+                        });
+                    }
+                    $('#profile-list').html(new ProfileListView({model:collection}).render().el);
+                }
+            });
+        }
     });
 
     this.ProfileView = new ProfileView();

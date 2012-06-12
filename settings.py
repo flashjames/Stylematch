@@ -4,10 +4,17 @@ import iptools
 
 import socket
 
+PRODUCTION = STAGING = DEVELOPMENT = False
+
 if socket.gethostname() == 'avizera-deploy':
-    DEBUG = TEMPLATE_DEBUG = False
+    PRODUCTION = True
 else:
-    DEBUG = TEMPLATE_DEBUG = True
+    DEVELOPMENT = True
+
+if PRODUCTION:
+    DEBUG = TEMPLATE_DEBUG = THUMBNAIL_DEBUG = False
+if DEVELOPMENT:
+    DEBUG = TEMPLATE_DEBUG = THUMBNAIL_DEBUG = True
 
 INTERNAL_IPS = iptools.IpRangeList(
     '127.0.0.1',                # single ip
@@ -26,15 +33,7 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': PROJECT_DIR + '/database/test.db',
-            'TEST_NAME': PROJECT_DIR + '/database/testest.db',
-            }
-        }
-else:
+if PRODUCTION:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -48,7 +47,14 @@ else:
                 },
             }
         }
-
+if DEVELOPMENT:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': PROJECT_DIR + '/database/test.db',
+            'TEST_NAME': PROJECT_DIR + '/database/testest.db',
+            }
+        }
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -90,14 +96,15 @@ MEDIA_URL = ''
 # Example: "/home/media/media.lawrence.com/static/"
 STATIC_DOC_ROOT = os.path.join(PROJECT_DIR, "static/")
 
-
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
 
-if DEBUG:
-    STATIC_URL = '/static/'
-else:
+if PRODUCTION:
     STATIC_URL = 'http://stylematch.s3-website-eu-west-1.amazonaws.com/'
+if DEVELOPMENT:
+    STATIC_URL = '/static/'
+if STAGING:
+    STATIC_URL = 'http://dev-jens.s3-website-eu-west-1.amazonaws.com/'
 
 STATIC_ROOT = os.path.join(PROJECT_DIR, "static/")
 
@@ -172,27 +179,28 @@ INSTALLED_APPS = (
     'defaultsite',
     'django_su',
     'fts',
+    'sorl.thumbnail',
 )
 
-### S3 storage - production
+### S3 storage, mail and credentials
 
-if not DEBUG:
+if PRODUCTION or STAGING:
     DEFAULT_FILE_STORAGE = STATICFILES_STORAGE = ('storages.backends'
                                                   '.s3boto.S3BotoStorage')
-### END S3 storage
-
-### Amazon credentials and mail
-# credentials should maybe be set as environment variables on production
-# server?
-# -> more secure.
 AWS_ACCESS_KEY_ID = 'AKIAJHCGEY6XAXXOSYXA'
 AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'stylematch'
-#AWS_STORAGE_BUCKET_NAME = 'dev-jens'
+
 EMAIL_BACKEND = 'django_ses.SESBackend'
-# SERVER_EMAIL, default error message email.
-# DEFAULT_FROM_EMAIL, all other mails
 DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'hampus.bergqvist@stylematch.se'
+"""
+SERVER_EMAIL, default error message email.
+DEFAULT_FROM_EMAIL, all other mails
+"""
+
+if PRODUCTION:
+    AWS_STORAGE_BUCKET_NAME = 'stylematch'
+if STAGING:
+    AWS_STORAGE_BUCKET_NAME = 'dev-jens'
 
 ### END Amazon credentials
 
@@ -211,16 +219,6 @@ LOGIN_URL          = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGIN_ERROR_URL    = '/login-error/'
 
-"""
-Can be used to style social_auth in templates
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'social_auth.context_processors.social_auth_by_name_backends',
-    'social_auth.context_processors.social_auth_backends',
-    'social_auth.context_processors.social_auth_by_type_backends',
-    'django.contrib.auth.context_processors.auth',
-)
-"""
 SOCIAL_AUTH_DEFAULT_USERNAME = 'new_social_auth_user'
 SOCIAL_AUTH_EXTRA_DATA = False
 SOCIAL_AUTH_EXPIRATION = 'expires'
@@ -232,15 +230,7 @@ SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
 # inform where user profile model is defined
 AUTH_PROFILE_MODULE = "accounts.UserProfile"
 
-### django-registration
-
-# number of days users will have to activate their accounts after registering
-ACCOUNT_ACTIVATION_DAYS = 7
-
-# END django-registration
-
-###Logging local
-if DEBUG:
+if DEVELOPMENT or STAGING:
     LOG_DIR = os.path.join(PROJECT_DIR, 'log')
     LOGGING = {
         'version': 1,
@@ -297,8 +287,7 @@ if DEBUG:
                 },
             },
         }
-### Logging with Sentry, production
-else:
+if PRODUCTION:
     LOGGING = {
         'version': 1,
         'disable_existing_loggers': True,
@@ -341,7 +330,8 @@ else:
                 },
             },
         }
-
+    
+if PRODUCTION:
     # Sentry (loggin) DSN value, the key used to send logs to Sentry
     SENTRY_DSN = 'http://20195eef47244f21a845b9eaa12a3af3:68325bc8efe64aceaec134815ef41850@www.stylematch.se:9000/1'
 
@@ -356,11 +346,8 @@ DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
     }
 
-# Galleria, jquery
-
-# should use some cdn in production
+# Galleria, jquery - should use some cdn in production
 JQUERY_SCRIPT = STATIC_URL + "js/jquery/jquery-1.7.1.js"
-
 GALLERIA_URL = STATIC_URL + "js/galleria/src/"
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -372,21 +359,12 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     )
 
 # Paths to user uploaded images, used in fileupload app
-
 PATH_USER_IMGS = "user-imgs/"
-if DEBUG:
-    UPLOAD_PATH_USER_IMGS = "media/" + PATH_USER_IMGS
-else:
-    UPLOAD_PATH_USER_IMGS = PATH_USER_IMGS
 
+if PRODUCTION:
+    UPLOAD_PATH_USER_IMGS = PATH_USER_IMGS
+if DEVELOPMENT:
+    UPLOAD_PATH_USER_IMGS = "media/" + PATH_USER_IMGS
+    
 MAX_IMAGE_SIZE = 20 * 1024 * 1024
 FULL_PATH_USER_IMGS = os.path.join(STATIC_URL, PATH_USER_IMGS)
-
-# use gmail as smtp server, should use own smtp server for this later?
-"""
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'hello@stylematch.se'
-EMAIL_HOST_PASSWORD = 'kj234kjklJKLj324lk1jKlkj231'
-EMAIL_PORT = 587
-"""

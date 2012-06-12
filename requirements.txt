@@ -28,3 +28,4 @@ raven==1.7.5
 django-ses==0.4.1
 selenium==2.23.0
 django-liveserver==0.1a-2
+sorl-thumbnail==11.12

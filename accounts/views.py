@@ -618,6 +618,7 @@ class CropPictureView(FormView):
         context = super(CropPictureView, self).get_context_data(**kwargs)
         current_userprofile = UserProfile.objects.get(user__exact=self.request.user)
         context['profile_image_uncropped'] = current_userprofile.profile_image_uncropped.get_image_url()
+        context['test'] = current_userprofile.profile_image_uncropped
         return context
     
     # Called when we're sure all fields in the form are valid

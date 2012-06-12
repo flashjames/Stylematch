@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load index_extras %}
 {% load url from future %}
+{% load thumbnail %}
 
 {% block html-head %}
 
@@ -68,6 +69,9 @@
 </script>
 <img src="{{ profile_image_uncropped }}" id="jcrop_target" />
 
+
+
+
 <div class="row">
   <div class="span12">
     <form method="post">
@@ -77,6 +81,14 @@
     </form>
     
 
+  </div>
+  <div class="span12">
+    <p>sne</p>
+    {{ test}}
+    {% thumbnail test.file "100x100" crop="center" as im %}
+    <p>js</p>
+    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+    {% endthumbnail %}
   </div>
 </div>
 

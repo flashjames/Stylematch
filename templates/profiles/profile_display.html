@@ -40,6 +40,9 @@
 {% if user.is_authenticated and logged_in_user_profile %}
 {% include "profiles/edit_profile_menu.html" with display_profile="active" %}
 {% endif %}
+{% if user.is_superuser %}
+{% include "profiles/admin_profile.html" %}
+{% endif %}
 <!-- remove these <br> asap!! -->
 <br><br>
 

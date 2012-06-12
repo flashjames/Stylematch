@@ -1,3 +1,4 @@
+# coding: utf-8
 from django.test import TestCase
 from accounts.tastypie_test import ResourceTestCase
 from tastypie.serializers import Serializer
@@ -83,10 +84,9 @@ class ProfileResourceTest(ResourceTestCase):
     def setUp(self):
         super(ProfileResourceTest, self).setUp()
 
-        self.detail_url = '/api/profile/profiles/2/'
+        self.api_url = '/api/profile/profiles/'
 
         self.keys = ['zip_adress',
-                     'visible',
                      'show_booking_url',
                      'profile_text',
                      'salon_phone_number',
@@ -106,34 +106,40 @@ class ProfileResourceTest(ResourceTestCase):
         self.assertValidJSONResponse(resp)
 
         # make sure all values are there
-        self.assertEqual(len(self.deserialize(resp)['objects']), 6)
-
-        # test first object
-        self.assertEqual(self.deserialize(resp)['objects'][0], {
-          "zip_adress": "11111",
-          "show_booking_url": True,
-          "profile_text": "Testuser1",
-          "salon_phone_number": "111",
-          "personal_phone_number": "111",
-          "url_online_booking": "",
-          "profile_image": "/static/img/default_image_profile_not_logged_in.jpg",
-          "visible": False,
-          "salon_name": "Testsalon1",
-          "salon_city": "",
-          "salon_adress": "",
-          "number_on_profile": False,
-          "salon_url": "",
-          "id": "1",
-          "profile_url": "testuser1"
-        })
+        # fixture has 6 values, where 1 has visible=False
+        self.assertEqual(len(self.deserialize(resp)['objects']), 5)
 
     def test_get_detail_json(self):
-        resp = self.api_client.get(self.detail_url, format='json')
+        resp = self.api_client.get(self.api_url + "2/", format='json')
         self.assertValidJSONResponse(resp)
 
         # make sure all keys are there
         self.assertKeys(self.deserialize(resp), self.keys)
         self.assertEqual(self.deserialize(resp)['salon_name'], 'Testsalon2')
 
-    def test_filter(self):
-        pass
+    def test_filter_by_city(self):
+        resp = self.api_client.get(self.api_url,
+                data={'salon_city__iexact': 'linköping', 'format': 'json'})
+        self.assertValidJSONResponse(resp)
+        # 2 visible profiles are from linköping
+        self.assertEqual(len(self.deserialize(resp)['objects']), 2)
+
+        resp = self.api_client.get(self.api_url,
+                data={'salon_city__iexact': 'stockholm', 'format': 'json'})
+        self.assertValidJSONResponse(resp)
+        # 1 visible profile are from Stockholm
+        self.assertEqual(len(self.deserialize(resp)['objects']), 2)
+
+#    def test_filter_by_city_startswith(self):
+#        resp = self.api_client.get(self.api_url,
+#                data={'salon_city__startswith': 'link', 'format': 'json'})
+#        self.assertValidJSONResponse(resp)
+#        # 2 visible profiles are from linköping
+#        self.assertEqual(len(self.deserialize(resp)['objects']), 2)
+#
+#    def test_filter_by_city_endswith(self):
+#        resp = self.api_client.get(self.api_url,
+#                data={'salon_city__endswith': 'köping', 'format': 'json'})
+#        self.assertValidJSONResponse(resp)
+#        # 2 visible profiles are from linköping and one from norrköping
+#        self.assertEqual(len(self.deserialize(resp)['objects']), 3)

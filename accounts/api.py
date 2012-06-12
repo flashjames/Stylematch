@@ -208,6 +208,28 @@ class ProfileResource(ModelResource):
 
     class Meta:
         include_resource_uri = False
+        # temporary_profile_url is not passed to the user, it's only there
+        # because it is needed in 'dehydrate'
+        fields = ['zip_adress',
+                  'show_booking_url',
+                  'profile_text',
+                  'salon_phone_number',
+                  'personal_phone_number',
+                  'url_online_booking',
+                  'profile_image',
+                  'salon_name',
+                  'salon_city',
+                  'salon_adress',
+                  'number_on_profile',
+                  'salon_url',
+                  'id',
+                  'profile_url',
+                  'temporary_profile_url']
+        filtering = {
+                'salon_city' : ['iexact','startswith','endswith'],
+                }
         resource_name = "profiles"
         model = UserProfile
-        queryset = UserProfile.objects.all()
+        # NOTE: Ordering by random is slow
+        # https://docs.djangoproject.com/en/dev/ref/models/querysets/#order-by
+        queryset = UserProfile.objects.filter(visible=True).order_by('?')

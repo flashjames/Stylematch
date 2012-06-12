@@ -87,13 +87,13 @@ class ProfileResourceTest(ResourceTestCase):
         self.detail_url = '/api/profile/profiles/2/'
 
         self.keys = ['zip_adress',
+                     'visible',
                      'show_booking_url',
                      'profile_text',
                      'salon_phone_number',
                      'personal_phone_number',
                      'url_online_booking',
                      'profile_image',
-                     'display_on_first_page',
                      'salon_name',
                      'salon_city',
                      'salon_adress',
@@ -118,7 +118,7 @@ class ProfileResourceTest(ResourceTestCase):
           "personal_phone_number": "111",
           "url_online_booking": "",
           "profile_image": "/static/img/default_image_profile_not_logged_in.jpg",
-          "display_on_first_page": True,
+          "visible": False,
           "salon_name": "Testsalon1",
           "salon_city": "",
           "salon_adress": "",

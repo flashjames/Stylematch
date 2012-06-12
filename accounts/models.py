@@ -31,7 +31,6 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance,
                                    temporary_profile_url=uuid.uuid4().hex,
-                                   display_on_first_page=True,
                                    number_on_profile=True,
                                    )
 
@@ -184,7 +183,8 @@ class UserProfile(models.Model):
     fixa description till denna modell
     """
     user = models.ForeignKey(User, unique=True, editable=False)
-    display_on_first_page = models.BooleanField(editable=False)
+
+    visible = models.BooleanField("Visa i sökresultat och visa användarens bilder", default=False)
 
     # max_length? less?
     profile_text = models.CharField("Om mig", max_length=500, blank=True)

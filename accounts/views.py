@@ -512,7 +512,18 @@ class SaveProfileImageView(EditImagesView):
 
 
 class SaveProfileImageView(EditImagesView):
+    """
+    Saves the supplied image as Uncropped Profile Image and deletes
+    old Uncropped Profile image.
+    """
     form_class = ProfileImageForm
+
+    def __init__(self, *args, **kwargs):
+        super(SaveProfileImageView, self).__init__(*args, **kwargs)
+        # written here in init since it will give reverse url error
+        # if just written in class definition. because urls.py isnt loaded
+        # when this class is defined      
+        self.success_url = reverse('crop_image')
 
     # Called when we're sure all fields in the form are valid
     def form_valid(self, form):
@@ -538,28 +549,40 @@ class SaveProfileImageView(EditImagesView):
         form.save_m2m()
 
         # update UserProfile foreign key,
-        #to point at new uncropped profile image
+        # to point at new uncropped profile image
         current_userprofile.profile_image_uncropped = self.object
         current_userprofile.save()
 
-        # Can't user super().form_valid(**kwargs) since form_valid returns
-        # a HttpRedirectResponse() which cannot take context data
-        return self.render_to_response(self.get_context_data(form=form,
-                                                             valid=True))
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class CropPictureView(FormView):
+    """
+    Crops the file referenced at profile_image_uncropped with user supplied
+    coordinates and saves it to filesystem.
+    This file becomes the new profile_image_cropped. 
+
+    TODO: The operation crop -> save to filesystem/database, is probably
+    very inefficient.
+    Since it converts from PIL.Image -> StringIO
+    -> ContentFile and then default_storage.save() probably does some stuff.
+    """
     form_class = CropCoordsForm
+    template_name = "accounts/crop_image.html"
 
     def __init__(self, *args, **kwargs):
         super(CropPictureView, self).__init__(*args, **kwargs)
         # written here in init since it will give reverse url error
         # if just written in class definition. because urls.py isnt loaded
         # when this class is defined
-        self.success_url = reverse('profiles_edit_images')
+        self.success_url = reverse('edit_images')
 
     def crop(self, original_image, image_filename, start_x_coordinate,
              start_y_coordinate, width, height):
+        """
+        Returns cropped image.
+        The image is cropped with the supplied coordinates
+        """
         import imghdr
         file_extension = imghdr.what("", original_image.read(2048))
         original_image.seek(0)
@@ -570,42 +593,57 @@ class CropPictureView(FormView):
                             start_x_coordinate + width,
                             start_y_coordinate + height))
 
-        # Return cropped image as InMemoryUploadedFile
+        # Return cropped image as ContentFile
         tempfile_io = StringIO.StringIO()
         image.save(tempfile_io, format=file_extension)
 
         tempfile_io.seek(0)
 
-        return InMemoryUploadedFile(tempfile_io, None, image_filename,
-                                    file_extension,
-                                    tempfile_io.len, None)
+        return ContentFile(tempfile_io.read())
 
+    def get_context_data(self, **kwargs):
+        context = super(CropPictureView, self).get_context_data(**kwargs)
+        current_userprofile = UserProfile.objects.get(user__exact=self.request.user)
+        context['profile_image_uncropped'] = current_userprofile.profile_image_uncropped.get_image_url()
+        return context
+    
     # Called when we're sure all fields in the form are valid
     def form_valid(self, form):
-        # TODO: should return error if this doesnt exist
-        image_filename = self.request.session.get('temporary_profile_image',
-                                                  False)
+        current_userprofile = UserProfile.objects.get(user__exact=self.request.user)
 
-        # TODO: should check if it found the image
-        image = default_storage.open(image_filename)
-
+        if not current_userprofile.profile_image_uncropped:
+            raise ObjectDoesNotExist("No uncropped profile image found")
+        
+        image_uncropped = current_userprofile.profile_image_uncropped.file
+ 
+        # remove old cropped profile image
+        if current_userprofile.profile_image_cropped:
+            current_userprofile.profile_image_cropped.delete()
+            
+        image = default_storage.open(image_uncropped)
+        filename = get_unique_filename(image.name)
+        
         start_x_coordinate = form.cleaned_data['start_x_coordinate']
         start_y_coordinate = form.cleaned_data['start_y_coordinate']
         width = form.cleaned_data['width']
         height = form.cleaned_data['height']
 
         cropped_image = self.crop(image,
-                  image_filename,
+                  filename,
                   start_x_coordinate,
                   start_y_coordinate,
                   width,
                   height)
 
-        self.remove_old_profile_image(self.request.user)
-
-        picture = ProfileImage(file=cropped_image, filename=image_filename,
-                          user=self.request.user)
+        # save the cropped image
+        picture = ProfileImage(filename=filename,
+                          user=self.request.user, cropped=True)
+        picture.file.save(filename, cropped_image, True)
         picture.save()
-        # TODO: save to UserProfile
 
-        return super(CropPictureView, self).form_valid(form)
+        # update UserProfile foreign key,
+        # to point at new cropped profile image
+        current_userprofile.profile_image_cropped = picture
+        current_userprofile.save()
+
+        return HttpResponseRedirect(self.get_success_url())

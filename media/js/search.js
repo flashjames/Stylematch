@@ -47,7 +47,6 @@
 
             this.profileList.fetch({
                 success: function(collection, response) {
-                    console.log(collection);
                     if(!response) {
                         $('#alert').notify();
                         $('#alert').notify("create", {

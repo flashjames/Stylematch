@@ -99,7 +99,13 @@ class DisplayProfileView(DetailView):
 
     def get_profile_image(self, user):
         userprofile = UserProfile.objects.get(user=user)
-        profile_image = userprofile.profile_image_uncropped
+
+        # display cropped profile image if there's any
+        if userprofile.profile_image_cropped:
+            profile_image = userprofile.profile_image_cropped
+        else:
+            profile_image = userprofile.profile_image_uncropped
+            
         return self.get_image_url(profile_image)
 
     def get_opening_time(self, obj, attr_name):
@@ -397,7 +403,14 @@ class EditImagesView(LoginRequiredMixin, CreateView):
     def get_profile_image(self, user):
         try:
             userprofile = UserProfile.objects.get(user__exact=user)
-            profile_image = userprofile.profile_image_uncropped.get_image_url()
+            
+            # display cropped profile image if there's any
+            if userprofile.profile_image_cropped:
+                profile_image = userprofile.profile_image_cropped
+            else:
+                profile_image = userprofile.profile_image_uncropped
+                
+            profile_image = profile_image.get_image_url()
         except:
             profile_image = os.path.join(
                                 settings.STATIC_URL,

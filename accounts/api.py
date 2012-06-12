@@ -226,7 +226,7 @@ class ProfileResource(ModelResource):
                   'profile_url',
                   'temporary_profile_url']
         filtering = {
-                'salon_city' : ['iexact','startswith','endswith'],
+                'salon_city' : ['iexact',], # 'startswith','endswith'],
                 }
         resource_name = "profiles"
         model = UserProfile

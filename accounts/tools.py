@@ -1,4 +1,4 @@
-
+import uuid
 
 def format_minutes_to_hhmm(minutes):
     """
@@ -69,3 +69,25 @@ def list_with_time_interval(start=0, stop=60* 24, interval=30,
         minutes += interval
     return times
 
+def get_unique_filename(filename):
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    return filename
+
+def convert_bytes(bytes):
+    bytes = float(bytes)
+    if bytes >= 1099511627776:
+        terabytes = bytes / 1099511627776
+        size = '%.2iT' % terabytes
+    elif bytes >= 1073741824:
+        gigabytes = bytes / 1073741824
+        size = '%.2iG' % gigabytes
+    elif bytes >= 1048576:
+        megabytes = bytes / 1048576
+        size = '%.1fMB' % megabytes
+    elif bytes >= 1024:
+        kilobytes = bytes / 1024
+        size = '%.iKB' % kilobytes
+    else:
+        size = '%.iB' % bytes
+    return size

@@ -3,6 +3,8 @@ import uuid
 import os
 import imp
 import re
+import StringIO
+from PIL import Image
 from django import forms
 from django import http
 from django.conf import settings
@@ -12,6 +14,10 @@ from django.contrib.auth.models import User
 from django.forms import ModelForm, ValidationError, Textarea
 from django.http import Http404
 from django.utils.translation import ugettext as _
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
+from django.http import HttpResponseRedirect
 from django.views.generic import (TemplateView,
                                   UpdateView,
                                   DetailView,
@@ -25,8 +31,15 @@ from accounts.models import (Service,
                              GalleryImage,
                              ProfileImage,
                              weekdays_model)
-from tools import format_minutes_to_hhmm, format_minutes_to_pretty_format
-
+from tools import (format_minutes_to_hhmm,
+                   format_minutes_to_pretty_format,
+                   get_unique_filename,
+                   convert_bytes)
+from accounts.forms import (UserProfileForm,
+                            ServiceForm,
+                            GalleryImageForm,
+                            ProfileImageForm,
+                            CropCoordsForm)
 
 class DisplayProfileView(DetailView):
     """
@@ -232,12 +245,6 @@ class DisplayProfileView(DetailView):
             return self.render_to_response(context)
 
 
-class UpdateSelfView(UpdateView):
-    """
-    An updateview that redirects to self and passes valid/invalid variables
-    """
-
-
 class RedirectToProfileView(LoginRequiredMixin, RedirectView):
     """
     Redirects to the logged in user's profile with the profile_url
@@ -268,107 +275,6 @@ class RedirectToProfileView(LoginRequiredMixin, RedirectView):
     def get_user_temporary_profile_url(self):
         query = UserProfile.objects.filter(user=self.request.user).get()
         return query.temporary_profile_url
-
-
-class UserProfileForm(ModelForm):
-    """
-    Validates that profile_url is unique
-    """
-    first_name = forms.CharField(label=_(u'Förnamn'),
-                                 max_length=30,
-                                 required=False)
-    last_name = forms.CharField(label=_(u'Efternamn'),
-                                max_length=30,
-                                required=False)
-
-    def __init__(self, request, *args, **kwargs):
-        self.request = request
-        super(UserProfileForm, self).__init__(*args, **kwargs)
-
-        self.fields['first_name'].initial = self.instance.user.first_name
-        self.fields['last_name'].initial = self.instance.user.last_name
-
-    def is_systempath(self, profile_url):
-        """
-        Is the url used by the system, ie. defined in urls.py.
-        It only matters under the root, since it's there the profiles will be.
-        """
-        # import python file with absolute path
-        urls = imp.load_source('module.name',
-                               settings.PROJECT_DIR + "/urls.py")
-        for urlpattern in urls.urlpatterns:
-            # first part of the urlpattern as it will look to the user
-            # ex. '^admin/asd$' -> 'admin'
-            pattern = re.sub(r'[\^$]',
-                             '',
-                             urlpattern.regex.pattern.split('/')[0])
-            if pattern and pattern == profile_url:
-                return True
-
-        return False
-
-    def is_unique_url_name(self, profile_url):
-        """
-        Is url used by another user?
-        """
-        # should be ok to not have any profile_url set
-        if not profile_url:
-            return True
-
-        # find profiles that have the specific profile_url
-        query = UserProfile.objects.filter(profile_url__iexact=profile_url)
-
-        # the current profile shouldn't be in the result
-        query = query.exclude(user=self.request.user)
-        if query:
-            return False
-
-        return True
-
-    def clean_profile_url(self):
-        """
-        Check if the url is unique ie. it's not in use
-        """
-        data = self.cleaned_data['profile_url']
-
-        # reverse() can't find url's with - (bindestreck) in it
-        # TODO: Fix reverse() so user's can use - in their profile_url
-        if '-' in data:
-            raise ValidationError("Sökvägen får inte innehålla - "
-                                  "(bindestreck)")
-
-        # is profile url used by another user or a path used by django?
-        if not self.is_unique_url_name(data) or self.is_systempath(data):
-            raise ValidationError("Den här sökvägen är redan tagen")
-        return data
-
-    def strip_all_except_digits(self, number):
-        """
-        Removes all characters except digits
-        """
-        return re.sub("[^0-9]", "", number)
-
-    def clean_personal_phone_number(self):
-        number = self.cleaned_data.get('personal_phone_number')
-        return self.strip_all_except_digits(number)
-
-    def clean_salon_phone_number(self):
-        number = self.cleaned_data.get('salon_phone_number')
-        return self.strip_all_except_digits(number)
-
-    def save(self, *args, **kw):
-        # save the fields that dont belong to UserProfile object
-        self.request.user.first_name = self.cleaned_data.get('first_name')
-        self.request.user.last_name = self.cleaned_data.get('last_name')
-        self.request.user.save()
-        return super(UserProfileForm, self).save(*args, **kw)
-
-    class Meta:
-        model = UserProfile
-        exclude = ('visible',)
-        widgets = {
-            'profile_text': Textarea(attrs={'cols': 120, 'rows': 10}),
-            }
 
 
 class EditProfileView(LoginRequiredMixin, UpdateView):
@@ -417,17 +323,6 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         return context
 
 
-class ServiceForm(ModelForm):
-    class Meta:
-        model = Service
-        fields = ('name',
-                  'description',
-                  'length',
-                  'price',
-                  'display_on_profile')
-        exclude = ('order')
-
-
 class ServicesView(LoginRequiredMixin, TemplateView):
     """
     Display edit services page
@@ -467,74 +362,6 @@ class OpenHoursView(LoginRequiredMixin, UpdateView):
         context['update_failure'] = ("Oops! Något gick fel. Kontrollera att "
                                      "alla fält är korrekt ifyllda.")
         return context
-
-"""
-TODO: Put rest of this file, in another file?
-Since all classes/functions is part of the same functionality
-"""
-import StringIO
-from PIL import Image
-from django.core.files.uploadedfile import InMemoryUploadedFile
-from django.core.files.storage import default_storage
-
-
-def get_unique_filename(filename):
-    ext = filename.split('.')[-1]
-    filename = "%s.%s" % (uuid.uuid4(), ext)
-    return filename
-
-
-def convert_bytes(bytes):
-    bytes = float(bytes)
-    if bytes >= 1099511627776:
-        terabytes = bytes / 1099511627776
-        size = '%.2iT' % terabytes
-    elif bytes >= 1073741824:
-        gigabytes = bytes / 1073741824
-        size = '%.2iG' % gigabytes
-    elif bytes >= 1048576:
-        megabytes = bytes / 1048576
-        size = '%.1fMB' % megabytes
-    elif bytes >= 1024:
-        kilobytes = bytes / 1024
-        size = '%.iKB' % kilobytes
-    else:
-        size = '%.iB' % bytes
-    return size
-
-
-class GalleryImageForm(forms.ModelForm):
-    def clean_file(self):
-        file = self.cleaned_data['file']
-
-        if file:
-            if file._size > settings.MAX_IMAGE_SIZE:
-                raise ValidationError("Bilden är för stor ( > %s )"
-                                    % convert_bytes(settings.MAX_IMAGE_SIZE))
-            if not file._name.endswith(('.jpg', '.gif', '.png')):
-                raise ValidationError("Endast bildfiler i formaten "
-                                      "PNG, JPG och GIF är accepterade.")
-
-            return file
-        else:
-            raise ValidationError("Filen kunde inte läsas")
-
-    class Meta:
-        model = GalleryImage
-        fields = ('file', 'comment')
-
-
-class ProfileImageForm(GalleryImageForm):
-    class Meta:
-        model = ProfileImage
-        fields = ('file',)
-
-
-class CropCoordsForm(forms.Form):
-    start_x_coordinate = forms.IntegerField(widget=forms.HiddenInput())
-    start_y_coordinate = forms.IntegerField(widget=forms.HiddenInput())
-    width = forms.IntegerField(widget=forms.HiddenInput())
-    height = forms.IntegerField(widget=forms.HiddenInput())
 
 
 class EditImagesView(LoginRequiredMixin, CreateView):

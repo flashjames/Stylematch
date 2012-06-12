@@ -84,8 +84,56 @@ class ProfileResourceTest(ResourceTestCase):
     def setUp(self):
         super(ProfileResourceTest, self).setUp()
 
-    def test_get_profiles(self):
-        resp = self.client.get('/api/profile/profiles/', format='json')
+        self.detail_url = '/api/profile/profiles/2/'
+
+        self.keys = ['zip_adress',
+                     'show_booking_url',
+                     'profile_text',
+                     'salon_phone_number',
+                     'personal_phone_number',
+                     'url_online_booking',
+                     'profile_image',
+                     'display_on_first_page',
+                     'salon_name',
+                     'salon_city',
+                     'salon_adress',
+                     'number_on_profile',
+                     'salon_url',
+                     'id',
+                     'profile_url']
+
+    def test_get_list_json(self):
+        resp = self.api_client.get('/api/profile/profiles/', format='json')
         self.assertValidJSONResponse(resp)
 
-        self.assertEqual(len(self.deserialize(resp)['objects']), 6) # two users in fixture
+        # make sure all values are there
+        self.assertEqual(len(self.deserialize(resp)['objects']), 6)
+
+        # test first object
+        self.assertEqual(self.deserialize(resp)['objects'][0], {
+          "zip_adress": "11111",
+          "show_booking_url": True,
+          "profile_text": "Testuser1",
+          "salon_phone_number": "111",
+          "personal_phone_number": "111",
+          "url_online_booking": "",
+          "profile_image": "/static/img/default_image_profile_not_logged_in.jpg",
+          "display_on_first_page": True,
+          "salon_name": "Testsalon1",
+          "salon_city": "",
+          "salon_adress": "",
+          "number_on_profile": False,
+          "salon_url": "",
+          "id": "1",
+          "profile_url": "testuser1"
+        })
+
+    def test_get_detail_json(self):
+        resp = self.api_client.get(self.detail_url, format='json')
+        self.assertValidJSONResponse(resp)
+
+        self.assertKeys(self.deserialize(resp), self.keys)
+        self.assertEqual(self.deserialize(resp)['salon_name'], 'Testsalon2')
+
+    def test_filter(self):
+        pass

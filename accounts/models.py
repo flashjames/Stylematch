@@ -168,7 +168,7 @@ class GalleryImage(BaseImage):
     display_on_profile = models.BooleanField("Visa på profil",
                                              blank=True,
                                              default=True)
-    
+
     class Meta:
         # deliver the images sorted on the order field
         # needs to be here, or the edit_images ui will break
@@ -184,7 +184,8 @@ class UserProfile(models.Model):
     """
     user = models.ForeignKey(User, unique=True, editable=False)
 
-    visible = models.BooleanField("Visa i sökresultat och visa användarens bilder", default=False)
+    visible = models.BooleanField(
+        "Visa i sökresultat och visa användarens bilder", default=False)
 
     # max_length? less?
     profile_text = models.CharField("Om mig", max_length=500, blank=True)

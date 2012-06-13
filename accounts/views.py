@@ -1,17 +1,12 @@
 #-*- coding:utf-8 -*-
-import uuid
 import os
-import imp
-import re
 import StringIO
 from PIL import Image
-from django import forms
 from django import http
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from django.forms import ModelForm, ValidationError, Textarea
 from django.http import Http404
 from django.utils.translation import ugettext as _
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -33,13 +28,13 @@ from accounts.models import (Service,
                              weekdays_model)
 from tools import (format_minutes_to_hhmm,
                    format_minutes_to_pretty_format,
-                   get_unique_filename,
-                   convert_bytes)
+                   get_unique_filename)
 from accounts.forms import (UserProfileForm,
                             ServiceForm,
                             GalleryImageForm,
                             ProfileImageForm,
                             CropCoordsForm)
+
 
 class DisplayProfileView(DetailView):
     """
@@ -105,7 +100,7 @@ class DisplayProfileView(DetailView):
             profile_image = userprofile.profile_image_cropped
         else:
             profile_image = userprofile.profile_image_uncropped
-            
+
         return self.get_image_url(profile_image)
 
     def get_opening_time(self, obj, attr_name):
@@ -403,13 +398,13 @@ class EditImagesView(LoginRequiredMixin, CreateView):
     def get_profile_image(self, user):
         try:
             userprofile = UserProfile.objects.get(user__exact=user)
-            
+
             # display cropped profile image if there's any
             if userprofile.profile_image_cropped:
                 profile_image = userprofile.profile_image_cropped
             else:
                 profile_image = userprofile.profile_image_uncropped
-                
+
             profile_image = profile_image.get_image_url()
         except:
             profile_image = os.path.join(
@@ -535,7 +530,7 @@ class SaveProfileImageView(EditImagesView):
         super(SaveProfileImageView, self).__init__(*args, **kwargs)
         # written here in init since it will give reverse url error
         # if just written in class definition. because urls.py isnt loaded
-        # when this class is defined      
+        # when this class is defined
         self.success_url = reverse('crop_image')
 
     # Called when we're sure all fields in the form are valid
@@ -573,7 +568,7 @@ class CropPictureView(FormView):
     """
     Crops the file referenced at profile_image_uncropped with user supplied
     coordinates and saves it to filesystem.
-    This file becomes the new profile_image_cropped. 
+    This file becomes the new profile_image_cropped.
 
     TODO: The operation crop -> save to filesystem/database, is probably
     very inefficient.
@@ -616,28 +611,31 @@ class CropPictureView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(CropPictureView, self).get_context_data(**kwargs)
-        current_userprofile = UserProfile.objects.get(user__exact=self.request.user)
-        context['profile_image_uncropped'] = current_userprofile.profile_image_uncropped
+        current_userprofile = UserProfile.objects.get(
+            user__exact=self.request.user)
+        context['profile_image_uncropped'] = (
+            current_userprofile.profile_image_uncropped)
         return context
-    
+
     # Called when we're sure all fields in the form are valid
     def form_valid(self, form):
-        current_userprofile = UserProfile.objects.get(user__exact=self.request.user)
+        current_userprofile = UserProfile.objects.get(
+            user__exact=self.request.user)
 
         if not current_userprofile.profile_image_uncropped:
             raise ObjectDoesNotExist("No uncropped profile image found")
-        
+
         image_uncropped = current_userprofile.profile_image_uncropped.file
- 
+
         #import pdb;pdb.set_trace()
         image = default_storage.open(image_uncropped.name)
         filename = get_unique_filename(image.name)
-        
+
         start_x_coordinate = form.cleaned_data['start_x_coordinate']
         start_y_coordinate = form.cleaned_data['start_y_coordinate']
         width = form.cleaned_data['width']
         height = form.cleaned_data['height']
-        
+
         cropped_image = self.crop(image,
                   filename,
                   start_x_coordinate,
@@ -648,7 +646,7 @@ class CropPictureView(FormView):
         # remove old cropped profile image
         if current_userprofile.profile_image_cropped:
             current_userprofile.profile_image_cropped.delete()
-        
+
         # save the cropped image
         picture = ProfileImage(filename=filename,
                           user=self.request.user, cropped=True)

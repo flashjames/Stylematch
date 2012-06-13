@@ -29,7 +29,8 @@ class InspirationPageView(ListView):
 
     def get_queryset(self):
         users = UserProfile.objects.filter(visible=True)
-        images = GalleryImage.objects.filter(user__in=[i.pk for i in users])
+        images = GalleryImage.objects.filter(user__in=[i.pk for i in users],
+                                             display_on_profile=True)
         return images.order_by('-upload_date')
 
 

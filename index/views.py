@@ -21,12 +21,16 @@ class InspirationPageView(ListView):
     """
     context_object_name = "pictures"
     template_name = "inspiration.html"
-    queryset = GalleryImage.objects.order_by('-upload_date')
     paginate_by = 8
 
     def get_context_data(self, **kwargs):
         context = super(InspirationPageView, self).get_context_data(**kwargs)
         return context
+
+    def get_queryset(self):
+        users = UserProfile.objects.filter(visible=True)
+        images = GalleryImage.objects.filter(user__in=[i.pk for i in users])
+        return images.order_by('-upload_date')
 
 
 class SearchCityView(TemplateView):

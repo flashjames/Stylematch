@@ -336,7 +336,7 @@ if PRODUCTION:
                 },
             },
         }
-    
+
 if PRODUCTION:
     # Sentry (loggin) DSN value, the key used to send logs to Sentry
     SENTRY_DSN = 'http://20195eef47244f21a845b9eaa12a3af3:68325bc8efe64aceaec134815ef41850@www.stylematch.se:9000/1'
@@ -351,6 +351,9 @@ if PRODUCTION:
 DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
     }
+
+# django-registration - dont remove or stuff will break
+ACCOUNT_ACTIVATION_DAYS = 7
 
 # Galleria, jquery - should use some cdn in production
 JQUERY_SCRIPT = STATIC_URL + "js/jquery/jquery-1.7.1.js"
@@ -371,7 +374,7 @@ if PRODUCTION or STAGING:
     UPLOAD_PATH_USER_IMGS = PATH_USER_IMGS
 if DEVELOPMENT:
     UPLOAD_PATH_USER_IMGS = "media/" + PATH_USER_IMGS
-    
+
 MAX_IMAGE_SIZE = 20 * 1024 * 1024
 FULL_PATH_USER_IMGS = os.path.join(STATIC_URL, PATH_USER_IMGS)
 

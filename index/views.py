@@ -1,3 +1,4 @@
+# coding:utf-8
 # Create your views here.
 # from django.http import HttpResponse
 from django.shortcuts import render_to_response
@@ -37,13 +38,14 @@ class SearchCityView(TemplateView):
         from copy import copy
         context = super(SearchCityView, self).get_context_data(**kwargs)
         # .title() capitalizes first letter in each word
+        city = self.kwargs['city']
         context['city'] = self.kwargs['city'].title()
 
         json_request = copy(self.request)
         json_request.GET._mutable = True
         json_request.GET['format'] = 'json'
 
-        resp = self.pr.get_list(json_request, salon_city__iexact=context['city']).content
+        resp = self.pr.get_list(json_request, salon_city__iexact=city).content
         vals = json.loads(resp)
         context.update({
             'profiles': vals['objects']

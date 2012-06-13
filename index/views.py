@@ -8,6 +8,7 @@ from django.views.generic import ListView, CreateView, TemplateView
 from django.core.urlresolvers import reverse
 from accounts.models import UserProfile, GalleryImage
 from index.models import BetaEmail
+from accounts.api import ProfileResource
 
 
 class InspirationPageView(ListView):
@@ -25,11 +26,31 @@ class InspirationPageView(ListView):
         return context
 
 
-class SearchView(ListView):
+class SearchCityView(ListView):
     """
     """
-    template_name = "search.html"
-    queryset = UserProfile.objects.all()
+    context_object_name = "profiles"
+    template_name = "city_search.html"
+
+    def render_to_response(self, request):
+        pr = ProfileResource()
+        pr_bundle = pr.build_bundle(request=request)
+
+        import pdb; pdb.set_trace()
+
+        templateview = super(SearchCityView, self).render_to_response(request)
+
+        return templateview
+
+    def get_context_data(self, **kwargs):
+        context = super(SearchCityView, self).get_context_data(**kwargs)
+        # .title() capitalizes first letter in each word
+        context['city'] = self.kwargs['city'].title()
+        return context
+
+    def get_queryset(self):
+        queryset = UserProfile.objects.filter(visible=True).order_by('?')
+        return queryset
 
 
 class BetaEmailView(CreateView):

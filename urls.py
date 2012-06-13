@@ -7,7 +7,6 @@ from django.conf.urls.defaults import (patterns,
 from django.conf import settings
 from django.views.generic import TemplateView, RedirectView
 from index.views import (IndexPageView,
-                         SearchView,
                          BetaEmailView,
                          InspirationPageView,
                          error500)
@@ -139,7 +138,7 @@ urlpatterns += patterns(
             'inspiration-page'),
 
     (r'^search',
-            SearchView.as_view(),
+            TemplateView.as_view(template_name="search.html"),
             {},
             'search'),
 

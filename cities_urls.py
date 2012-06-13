@@ -6,7 +6,7 @@ from index.views import SearchCityView
 import unicodedata
 import urllib as ul
 
-cities = [u'linköping','stockholm']
+cities = [u'linköping', u'norrköping', 'stockholm']
 
 urlpatterns = patterns('',)
 for city in cities:

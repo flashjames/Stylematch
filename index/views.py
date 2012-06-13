@@ -26,31 +26,29 @@ class InspirationPageView(ListView):
         return context
 
 
-class SearchCityView(ListView):
+class SearchCityView(TemplateView):
     """
     """
-    context_object_name = "profiles"
     template_name = "city_search.html"
-
-    def render_to_response(self, request):
-        pr = ProfileResource()
-        pr_bundle = pr.build_bundle(request=request)
-
-        import pdb; pdb.set_trace()
-
-        templateview = super(SearchCityView, self).render_to_response(request)
-
-        return templateview
+    pr = ProfileResource()
 
     def get_context_data(self, **kwargs):
+        import simplejson as json
+        from copy import copy
         context = super(SearchCityView, self).get_context_data(**kwargs)
         # .title() capitalizes first letter in each word
         context['city'] = self.kwargs['city'].title()
-        return context
 
-    def get_queryset(self):
-        queryset = UserProfile.objects.filter(visible=True).order_by('?')
-        return queryset
+        json_request = copy(self.request)
+        json_request.GET._mutable = True
+        json_request.GET['format'] = 'json'
+
+        resp = self.pr.get_list(json_request, salon_city__iexact=context['city']).content
+        vals = json.loads(resp)
+        context.update({
+            'profiles': vals['objects']
+        })
+        return context
 
 
 class BetaEmailView(CreateView):

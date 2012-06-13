@@ -170,39 +170,9 @@
     </div>
     </form>
   </div>
-
-<div class="modal" id="image-upload-dialog-profileimage" style="display:none;">
-      <!-- uploads from here should be profile images -->
-    <div class="modal-header">
-      <button class="close" data-dismiss="modal">×</button>
-      <h3>Ladda upp en profilbild</h3>
-    </div>
-    <div class="modal-body">
-       <form class="form-horizontal" method="post" enctype="multipart/form-data" action="{% url 'save_profile_image' %}">
-	<fieldset>
-        {% csrf_token %}
-        {{ form.file.errors }}
-	<div class="control-group  ">
-	  <label class="control-label" for="inputWarning">Bild</label>
-	  <div class="controls ">
-	    <input style="padding-left:1px;border:solid 1px #CCC;color:#888;" type="file" name="file" id="id_file">
-	    <span class="help-inline"></span>
-	    <p class="help-block"></p>
-	  </div>
-	</div>
-        {{ form.non_field_errors }}
-        {{ form.docfile.help_text }}
-        {{ form.docfile.label_tag }}
-        {{ form.docfile.errors }}
-        {{ form.docfile }}
-    </div>
-    <div class="modal-footer">
-      <a href="#" data-dismiss="modal" class="btn">Stäng</a>
-      <input type="submit" value="Spara" class="btn btn-primary" />
-    </div>
-    </form>
-  </div>
   
+  {% include "accounts/upload_profile_image_modal.html" %}
+
   <!-- the code that does the magic on the page -->
   <script src="{{ STATIC_URL }}js/picture.js"></script>
   

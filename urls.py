@@ -34,7 +34,7 @@ Django have a setting called APPEND_SLASH, if Django doesnt find for example
 handler500 = 'index.views.error500'
 
 urlpatterns = patterns('',)
-if settings.DEBUG:
+if settings.DEVELOPMENT or settings.STAGING:
     urlpatterns = patterns('',
         url(r'^404/$',
                 handler404),
@@ -153,7 +153,11 @@ urlpatterns += patterns(
             include('accounts.urls')),
 )
 
-if settings.DEBUG:
+if settings.DEVELOPMENT:
     urlpatterns += patterns('django.contrib.staticfiles.views',
-                url(r'^static/(?P<path>.*)$', 'serve'),
-                        )
+                            url(r'^static/(?P<path>.*)$', 'serve'),
+                            url(r'^media/(?P<path>.*)$',
+                                'serve', {
+                                    'document_root': settings.PROJECT_DIR + '/media/cache/',
+                                    }),
+                            )

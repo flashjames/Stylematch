@@ -5,90 +5,32 @@
 
 {% block html-head %}
 
-
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
-<script src="{{ STATIC_URL }}js/jquery.notify.js"></script>
-<script src="{{ STATIC_URL }}js/jquery/jquery.alerts.js"></script>
-
+<!-- css and javascript for image cropping with Jcrop -->
 <link href="{{ STATIC_URL }}js/jcrop/css/jquery.Jcrop.min.css" rel="stylesheet" type="text/css" />
-<script src="http://deepliquid.com/Jcrop/js/jquery.Jcrop.min.js"></script>
-
-<style>
-  /* remove background around twitter bootstrap modal, on this page */
-  .modal-backdrop {
-  opacity:0;
-  }
-
-  /* 
-  Fix to make Jcrop work with Twitter Bootstrap.
-  Only needs to be here when compiling less on client side, since
-  this line of code already is in the file 'jquery.Jcrop.min.css'.
-  The less code is loaded after the css file, when compiled on client side,
-  and setting this css code here seems to fix it.
-  */
-  .jcrop-holder img,img.jcrop-preview{ max-width: none; }
-</style>
-
-
+<script src="{{ STATIC_URL }}js/jcrop/js/jquery.Jcrop.min.js"></script>
+<script src="{{ STATIC_URL }}js/crop_image.js"></script>
+<script type="text/javascript">
+  IMAGE_REAL_WIDTH = "{{profile_image_uncropped.file.width}}";
+  IMAGE_REAL_HEIGHT = "{{profile_image_uncropped.file.height}}";
+</script>
+<!-- END Jcrop -->
 {% endblock %}
 
 {% block content %}
-{% include "profiles/edit_profile_menu.html" with edit_images="active" %}
 
-
-<div id="alert" style="display:none;">
-  <div id="basic-template">
-      <p>#{text}</p>
-  </div>
-</div>
-
-<script language="Javascript">
- 
-  $(window).load(function(){
-  function updateCoords(c)
-  {
-  console.log("heje",c);
-  jQuery('#id_start_x_coordinate').val(c.x);
-  jQuery('#id_start_y_coordinate').val(c.y);
-  jQuery('#id_width').val(c.w);
-  jQuery('#id_height').val(c.h);
-  };
-  
-
-  jcrop_api = $.Jcrop('#jcrop_target') //, {trueSize: [3761, 4833]});
-  jcrop_api.setOptions({ aspectRatio: 1/1, onSelect: updateCoords});
-  jcrop_api.focus();
-  bounds = jcrop_api.getBounds();
-  bound_width = bounds[0];
-  bound_height = bounds[1];
-  jcrop_api.setSelect([0,0,bound_width,bound_height]);
-	
-  });
-
-
-</script>
-<img src="{{ profile_image_uncropped }}" id="jcrop_target" />
-
-
-
-
-<div class="row">
-  <div class="span12">
+<div class="row main-content crop-image">
+  <div class="span6 offset3">
+    <h1>Skapa profilbild</h1>
+    <h3>Välj ut det område som du vill visa som profilbild</h3>
+    {% thumbnail profile_image_uncropped.file "500x500" upscale=False as im %}
+    <img id="jcrop_target" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+    {% endthumbnail %}
     <form method="post">
       {% csrf_token %}
       {{ form }}
-      <input type="submit" value="Send message" />
+      <input type="submit" class="btn-large btn-info" value="Spara profilbild" />
     </form>
-    
-
-  </div>
-  <div class="span12">
-    <p>sne</p>
-    {{ test}}
-    {% thumbnail test.file "100x100" crop="center" as im %}
-    <p>js</p>
-    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
-    {% endthumbnail %}
+     <span id="warning-small-picture" class="label label-warning" style="display:none;">Din bild är väldigt liten, det finns risk att den inte ser så bra ut på profilen.</span>
   </div>
 </div>
 

@@ -588,7 +588,7 @@ class CropPictureView(FormView):
         # written here in init since it will give reverse url error
         # if just written in class definition. because urls.py isnt loaded
         # when this class is defined
-        self.success_url = reverse('edit_images')
+        self.success_url = reverse('profile_display_redirect')
 
     def crop(self, original_image, image_filename, start_x_coordinate,
              start_y_coordinate, width, height):
@@ -617,8 +617,7 @@ class CropPictureView(FormView):
     def get_context_data(self, **kwargs):
         context = super(CropPictureView, self).get_context_data(**kwargs)
         current_userprofile = UserProfile.objects.get(user__exact=self.request.user)
-        context['profile_image_uncropped'] = current_userprofile.profile_image_uncropped.get_image_url()
-        context['test'] = current_userprofile.profile_image_uncropped
+        context['profile_image_uncropped'] = current_userprofile.profile_image_uncropped
         return context
     
     # Called when we're sure all fields in the form are valid
@@ -630,18 +629,15 @@ class CropPictureView(FormView):
         
         image_uncropped = current_userprofile.profile_image_uncropped.file
  
-        # remove old cropped profile image
-        if current_userprofile.profile_image_cropped:
-            current_userprofile.profile_image_cropped.delete()
-            
-        image = default_storage.open(image_uncropped)
+        #import pdb;pdb.set_trace()
+        image = default_storage.open(image_uncropped.name)
         filename = get_unique_filename(image.name)
         
         start_x_coordinate = form.cleaned_data['start_x_coordinate']
         start_y_coordinate = form.cleaned_data['start_y_coordinate']
         width = form.cleaned_data['width']
         height = form.cleaned_data['height']
-
+        
         cropped_image = self.crop(image,
                   filename,
                   start_x_coordinate,
@@ -649,6 +645,10 @@ class CropPictureView(FormView):
                   width,
                   height)
 
+        # remove old cropped profile image
+        if current_userprofile.profile_image_cropped:
+            current_userprofile.profile_image_cropped.delete()
+        
         # save the cropped image
         picture = ProfileImage(filename=filename,
                           user=self.request.user, cropped=True)

@@ -19,6 +19,14 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
 <script src="{{ STATIC_URL }}js/jquery.notify.js"></script>
 <script src="{{ STATIC_URL }}js/jquery/jquery.alerts.js"></script>
+
+<style>
+  /* remove background around twitter bootstrap modal, on this page */
+  .modal-backdrop {
+  opacity:0;
+  }
+</style>
+
 {% endblock %}
 
 {% block content %}

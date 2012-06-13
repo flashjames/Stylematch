@@ -83,15 +83,6 @@ class SignupStep2View(OpenHoursView):
 class SignupStep3View(ServicesView):
     template_name = "accounts/signup_step3.html"
 
-    def __init__(self, *args, **kwargs):
-        super(SignupStep3View, self).__init__(*args, **kwargs)
-        # written here in init since it will give reverse url error
-        # if just written in class definition. because urls.py isnt loaded
-        # when this class is defined
-
-        # not used
-        self.success_url = reverse('signupstep4_page')
-
     def get_context_data(self, **kwargs):
         context = super(SignupStep3View, self).get_context_data(**kwargs)
 

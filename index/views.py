@@ -10,6 +10,8 @@ from django.core.urlresolvers import reverse
 from accounts.models import UserProfile, GalleryImage
 from index.models import BetaEmail
 from accounts.api import ProfileResource
+import simplejson as json
+from copy import copy
 
 
 class InspirationPageView(ListView):
@@ -34,8 +36,6 @@ class SearchCityView(TemplateView):
     pr = ProfileResource()
 
     def get_context_data(self, **kwargs):
-        import simplejson as json
-        from copy import copy
         context = super(SearchCityView, self).get_context_data(**kwargs)
         # .title() capitalizes first letter in each word
         city = self.kwargs['city']

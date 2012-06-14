@@ -1,4 +1,4 @@
-from accounts.models import UserProfile, GalleryImage, ProfileImage, InviteCode
+from accounts.models import UserProfile, GalleryImage, ProfileImage, InviteCode, Featured
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
@@ -15,7 +15,12 @@ class UserProfileAdmin(admin.ModelAdmin):
 
     user_link.short_description = 'User'
 
+
+class FeaturedAdmin(admin.ModelAdmin):
+    list_filter = ('city',)
+
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(ProfileImage)
 admin.site.register(GalleryImage)
 admin.site.register(InviteCode)
+admin.site.register(Featured, FeaturedAdmin)

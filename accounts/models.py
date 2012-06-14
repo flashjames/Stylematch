@@ -264,7 +264,7 @@ class UserProfile(models.Model):
         return super(UserProfile, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return u'%s' % (self.user)
+        return u'%s, %s' % (self.user, self.salon_city)
 
 
 # Signals handler for deleting files after object record deleted
@@ -306,3 +306,15 @@ class InviteCode(models.Model):
 
     def __unicode__(self):
         return u'Invitecode: %s Used: %s' % (self.invite_code, self.used)
+
+
+class Featured(models.Model):
+    user = models.ForeignKey(UserProfile, null=False, blank=False)
+    city = models.CharField("City", max_length=30, null=False, blank=False)
+
+    def __unicode__(self):
+        return "%s in %s" % (self.user.user.username, self.city)
+
+    class Meta:
+        unique_together = ('user', 'city')
+        verbose_name_plural = "Featured profiles"

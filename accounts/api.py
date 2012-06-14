@@ -4,6 +4,7 @@ from accounts.models import (Service,
                              GalleryImage,
                              ProfileImage,
                              UserProfile,
+                             Featured,
                              get_image_url)
 from django.forms import ModelForm
 from django.contrib.auth.models import User
@@ -226,3 +227,24 @@ class ProfileResource(ModelResource):
         # NOTE: Ordering by random is slow
         # https://docs.djangoproject.com/en/dev/ref/models/querysets/#order-by
         queryset = UserProfile.objects.filter(visible=True).order_by('?')
+
+
+class FeaturedProfileResource(ProfileResource):
+
+    def build_filters(self, filters=None):
+        if filters is None:
+            filters = QueryDict('')
+
+        # get all featured profile objects
+        featured = Featured.objects.all()
+        # create a filter for those profiles based on pk
+        filter = {'pk__in' : [i.user.pk for i in featured]}
+
+        # build the rest of the filters
+        orm = super(FeaturedProfileResource, self).build_filters(filters)
+        # update the filter with our featured profiles
+        orm.update(filter)
+        return orm
+
+    class Meta(ProfileResource.Meta):
+        resource_name = "featured_profiles"

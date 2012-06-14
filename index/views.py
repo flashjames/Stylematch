@@ -7,7 +7,7 @@ from django.contrib import auth
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView, CreateView, TemplateView
 from django.core.urlresolvers import reverse
-from accounts.models import UserProfile, GalleryImage
+from accounts.models import UserProfile, GalleryImage, Featured
 from index.models import BetaEmail
 from accounts.api import ProfileResource
 import simplejson as json
@@ -74,13 +74,11 @@ class BetaEmailView(CreateView):
         self.success_url = reverse('beta_index_page')
 
 
-class IndexPageView(ListView):
+class IndexPageView(TemplateView):
     """
     Display about us page
     """
-    context_object_name = "profiles"
     template_name = "index.html"
-    queryset = UserProfile.objects.all()
 
     def get_context_data(self, **kwargs):
         context = super(IndexPageView, self).get_context_data(**kwargs)

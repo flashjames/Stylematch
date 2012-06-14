@@ -10,6 +10,17 @@
 <meta name="description" content="Hitta en frisör som passar just dig. Låt dig inspireras av frisyrer och uppsättningar frisörer gjort."/>
 <!--Lägg till sen "Vi har frisörer i Sveriges alla städer.-->
 
+<script>
+    FEATURED_PROFILE_API_URL = "{% url 'api_dispatch_list' api_name="profile" resource_name="featured_profiles" %}";
+</script>
+
+<script src="{{ STATIC_URL }}js/underscore-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+<script src="{{ STATIC_URL }}js/jquery.notify.js"></script>
+<script src="{{ STATIC_URL }}js/jquery/jquery.alerts.js"></script>
 
 {% endblock %}
 
@@ -39,178 +50,32 @@
 
   </div>
 
+  <!-- Underscore.js Templates -->
+  <script type="text/template" id="tpl-featured-profile-list-item">
+      <a href="/<%= profile_url %>">
+      <div class="span3 profile-image-front" style="margin-left:0px">
+        <div class="profile-image-border-front pictures-front-page">
+            <div style="height:230px">
+                <img src="<%= profile_image %>" name="profile-image">
+            </div>
+        <h3>Full name</h3>
+        <h5><%= salon_name %>, <%= salon_city %></h5>
+        </div>
+      </div>
+      </a>
+  </script>
+
   <div class="row profile-images-front-page-div" style="margin-top:100px;padding:0px;" >
-  
-  		<div class="span9">
-	  <div class="span1" style="margin-left:0px"><h2>Frisörer</h2></div>
-	  <div class="span8"><hr style="width:100%;"></div>
-	  <br>
-	  
-       <a href="/caroline/"> 
-      <div class="span3 profile-image-front" style="margin-left:0px">
-        <div class="profile-image-border-front pictures-front-page">
-         	<div style="height:230px">
-         		<img src="{{STATIC_URL}}img/frisor11-frontpage.jpg" name="profile-image">
-        	</div>
-        <h3>Caroline Olofsson</h3>
-        <h5>Hairstudio Unique, Linköping</h5>
-        </div>
-      </div>
-      </a>	  
-	  
-	  
-    <a href="/ivonneberlinda/">
-      <div class="span3 profile-image-front">
-        <div id="test" class="profile-image-border-front pictures-front-page">
-        	<div style="height:230px">
-         		 <img src="{{STATIC_URL}}img/frisor10-frontpage.jpg" name="profile-image">
-        	</div>
-        <h3>Ivonne Berlinda</h3>
-        <h5>Hårdoktorn, Linköping</h5>
-      </div></div>
-      </a>
-      
-
-       <a href="/jannie/"> 
-      <div class="span3 profile-image-front">
-        <div class="profile-image-border-front pictures-front-page">
-         	<div style="height:230px">
-         		<img src="{{STATIC_URL}}img/frisor12-frontpage.jpg" name="profile-image">
-        	</div>
-        <h3>Jannie Olofsson</h3>
-        <h5>Hairstudio Unique, Linköping</h5>
-        </div>
-      </div>
-      </a>
-      
-      <a href="/malinavetun/"> 
-      <div class="span3 profile-image-front" style="margin-left:0px">
-        <div class="profile-image-border-front profile-front-second-row">
-         	<div style="height:230px">
-         		<img src="{{STATIC_URL}}img/frisor1-frontpage.jpg" name="profile-image">
-        	</div>
-        <h3>Malin Avetun</h3>
-        <h5>Hårvårdsbaren, Norrköping</h5>
-        </div>
-      </div>
-      </a>
-      
-      <a href="/carolinebergholm/"> 
-      <div class="span3 profile-image-front">
-        <div class="profile-image-border-front profile-front-second-row">
-         	<div style="height:230px">
-         		<img src="{{STATIC_URL}}img/frisor2-frontpage.jpg" name="profile-image">
-        	</div>
-      	      <h3>Caroline Bergholm</h3>
-        <h5>Proffs & Lärling City, Linköping</h5>
-        </div>
-      </div>
-      </a>
-      
-    
-      
-      
-      <a href="/5c7665ff88854fccb3093f913b631f56/">
-      <div class="span3 profile-image-front profile-front-second-row">
-        <div class="profile-image-border-front pictures-front-page">
-        	<div style="height:230px">
-         		<img src="{{STATIC_URL}}img/frisor6-frontpage.jpg" name="profile-image">
-         	</div>   
-         	<h3>Cajsa Olheden</h3>
-        <h5>C2 Hårteam, Linköping</h5>
-        </div>
-      </div>
-      </a>
-      
-      
-      <a href="/winnie/">
-      <div class="span3 profile-image-front profile-front-second-row" style="margin-left:0px">
-        <div class="profile-image-border-front pictures-front-page">
-        	<div style="height:230px">
-         		<img src="{{STATIC_URL}}img/frisor3-frontpage.jpg" name="profile-image">
-         	</div>   
-         	<h3>Winnie Lynbech</h3>
-        <h5>Atti&Winnie, Linköping</h5>
-        </div>
-      </div></a>
-      
-      
-      <a href="/SandraAndersson/">
-      <div class="span3 profile-image-front profile-front-second-row">
-        <div class="profile-image-border-front pictures-front-page">
-        	<div style="height:230px">
-         		<img src="{{STATIC_URL}}img/frisor5-frontpage.jpg" name="profile-image">
-         	</div>   
-         	<h3>Sandra Andersson</h3>
-        <h5>Proffs & Lärling City, Linköping</h5>
-        </div>
-      </div>
-      </a>
-      
-      <a href="/ingela/">
-      <div class="span3 profile-image-front profile-front-second-row">
-        <div class="profile-image-border-front pictures-front-page">
-        	<div style="height:230px">
-         		<img src="{{STATIC_URL}}img/frisor7-frontpage.jpg" name="profile-image">
-         	</div>   
-         	<h3>Ingela Leander</h3>
-        <h5>Studio Leander, Linköping</h5>
-        </div>
-      </div>
-      </a>
-      
-      
-      <a href="/a85931744f0e4d7294093ba082c5a92e/">
-      <div class="span3 profile-image-front profile-front-second-row"  style="margin-left:0px">
-        <div class="profile-image-border-front pictures-front-page">
-        	<div style="height:230px">
-         		<img src="{{STATIC_URL}}img/frisor8-frontpage.jpg" name="profile-image">
-         	</div>   
-         	<h3>Emelie Nilsson</h3>
-        <h5>Studio Leander, Linköping</h5>
-        </div>
-      </div></a>
-      
-      <a href="/bea/">
-      <div class="span3 profile-image-front profile-front-second-row">
-        <div class="profile-image-border-front pictures-front-page">
-        	<div style="height:230px">
-         		<img src="{{STATIC_URL}}img/frisor9-frontpage.jpg" name="profile-image">
-         	</div>   
-         	<h3>Beatrice Johansson</h3>
-        <h5>C2 Hårteam, Linköping</h5>
-        </div>
-      </div></a>
-      
-        <a href="/sara/">
-      <div class="span3 profile-image-front profile-front-second-row">
-        <div class="profile-image-border-front pictures-front-page">
-        	<div style="height:230px">
-         		<img src="{{STATIC_URL}}img/frisor4-frontpage.jpg" name="profile-image">
-         	</div>   
-         	<h3>Sara Bolgert</h3>
-        <h5>C2 Hårteam, Linköping</h5>
-        </div>
-      </div>
-      </a>
-      
-      </div>
-
-      <div class="span3 join-now-block-frontpage">
-      <h1>Är du frisör?</h1>
-      <a href="accounts/register/" class="btn btn-large btn-info">Skapa din profil här!</a>
-      </div>
-      
-      <div class="fb-like-box fb-like-box-edited" data-href="http://www.facebook.com/StyleMatch.SE" data-width="232" data-height="280" data-show-faces="true" data-stream="false" data-header="true"></div>
-      
-      <!--
-         Facebook block
-         <div class="span3">
-           <div class="fb-like-box" data-href="http://www.facebook.com/stylematch.se" data-width="240" data-show-faces="true" data-border-color="white" data-stream="false" data-header="false"></div>
-         </div>
-         -->
-
-    
+    <div class="span9">
+      <div class="span1" style="margin-left:0px"><h2>Frisörer</h2></div>
+      <div class="span8"><hr style="width:100%;"></div>
+      <div id="featured-profile-list"><br /></div>
+    </div>
+    <div class="span3 join-now-block-frontpage">
+        <h1>Är du frisör?</h1>
+        <a href="accounts/register/" class="btn btn-large btn-info">Skapa din profil här!</a>
+    </div>
+    <div class="pull-right fb-like-box fb-like-box-edited" data-href="http://www.facebook.com/StyleMatch.SE" data-width="232" data-height="280" data-show-faces="true" data-stream="false" data-header="true"></div>
   </div>
 
 <div id="fb-root"></div>
@@ -236,6 +101,9 @@
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
     </script>
+
+  <!-- the code that does the magic on the page -->
+  <script src="{{ STATIC_URL }}js/featured.js"></script>
 
   {% endblock %}
 

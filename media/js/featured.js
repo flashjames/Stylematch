@@ -45,7 +45,9 @@
 
             this.profileList = new ProfileCollection();
 
+            data = { 'salon_city__iexact' : $('#city').val() };
             this.profileList.fetch({
+                data: data,
                 success: function(collection, response) {
                     if(!response) {
                         $('#alert').notify();
@@ -63,16 +65,12 @@
             });
         },
         events:{
-            "click .submit":"filter"
+            "change #city":"filter"
         },
         filter: function() {
             this.profileList = new ProfileCollection();
 
-            data = {};
-            city = $('#city option:selected').val();
-            if (city !== 'Alla') {
-                data = { 'salon_city__iexact' : $('#city option:selected').val() };
-            }
+            data = { 'salon_city__iexact' : $('#city').val() };
             this.profileList.fetch({
                 data: data,
                 success: function(collection, response) {

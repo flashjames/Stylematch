@@ -99,7 +99,10 @@ class ProfileResourceTest(ResourceTestCase):
                      'number_on_profile',
                      'salon_url',
                      'id',
-                     'profile_url']
+                     'profile_url',
+                     'first_name',
+                     'last_name']
+
 
     def test_get_list_json(self):
         resp = self.api_client.get('/api/profile/profiles/', format='json')

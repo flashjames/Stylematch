@@ -155,45 +155,24 @@ class PictureResource(ModelResource):
         validation = FormValidation(form_class=PictureForm)
 
 
-class ProfileImageResource(ModelResource):
-
-    def dehydrate(self, bundle):
-        """
-        Return the real URL instead of the local machine place
-        """
-        if 'filename' in bundle.data:
-            bundle.data['filename'] = get_image_url(bundle.data['filename'])
-        return bundle
-
-    class Meta:
-        include_resource_uri = False
-        allowed_methods = []
-        resource_name = 'profile_image'
-        fields = ['filename']
-        queryset = ProfileImage.objects.all()
-
-
 class ProfileResource(ModelResource):
     """
     Resource to access a profile
     """
-    profile_image = fields.ForeignKey(ProfileImageResource,
-                                      'profile_image_cropped',
-                                      full=True,
-                                      null=True)
 
     def dehydrate(self, bundle):
         """
-        'profile_image' is in a second level bundle, from
-        ProfileImageResource, and this is extracting that to make the
-        data structure more logical
+        Some additional fields needs to be added:
+         - ``profile_image``
+         - ``profile_url`` (which is either ``profile_url`` or ``temporary_profile_url``
+         - ``first_name`` (retrieved from django.auth)
+         - ``last_name`` (same as ``first_name``)
         """
-        if ('profile_image' in bundle.data and
-            bundle.data['profile_image'] is not None and
-            'filename' in bundle.data['profile_image'].data):
-                bundle.data['profile_image'] = bundle.data['profile_image'].\
-                                                      data['filename']
-        else: #use standard image
+
+        try:
+            img = ProfileImage.objects.get(user=bundle.data['id'])
+            bundle.data['profile_image'] = get_image_url(img.filename)
+        except:
             bundle.data['profile_image'] = os.path.join(
                                 settings.STATIC_URL, 'img',
                                 'default_image_profile_not_logged_in.jpg')

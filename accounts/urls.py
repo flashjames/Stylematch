@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-from accounts.api import ServiceResource, PictureResource, ProfileImageResource, ProfileResource
+from accounts.api import ServiceResource, PictureResource, ProfileResource
 from accounts.views import (ServicesView,
                             EditProfileView,
                             DisplayProfileView,
@@ -13,7 +13,6 @@ from tastypie.api import Api
 profile_api = Api(api_name='profile')
 profile_api.register(ServiceResource())
 profile_api.register(PictureResource())
-profile_api.register(ProfileImageResource())
 profile_api.register(ProfileResource())
 
 urlpatterns = patterns('',

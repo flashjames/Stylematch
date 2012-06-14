@@ -200,6 +200,7 @@ class ProfileResource(ModelResource):
         return bundle
 
     class Meta:
+        allowed_methods = ['get']
         include_resource_uri = False
         # temporary_profile_url is not passed to the user, it's only there
         # because it is needed in 'dehydrate'

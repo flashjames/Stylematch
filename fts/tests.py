@@ -87,7 +87,7 @@ class RegisterTest(LiveServerTestCase):
 
         # continue to next step by clicking button
         button = self.browser.find_element_by_xpath(
-                                    u"//button[contains(text(), 'Fortsätt vidare')]")
+                                    u"//button[contains(text(), 'Spara och gå vidare')]")
         button.click()
         WebDriverWait(self.browser, 10).until(
                 lambda driver: driver.find_element_by_tag_name('body'))
@@ -103,7 +103,7 @@ class RegisterTest(LiveServerTestCase):
 
         # continue to next step by clicking button
         button = self.browser.find_element_by_css_selector(
-                                    u"input[value='Fortsätt vidare']")
+                                    u"input[value='Spara och gå vidare']")
         button.click()
         WebDriverWait(self.browser, 10).until(
                 lambda driver: driver.find_element_by_tag_name('body'))
@@ -140,11 +140,17 @@ class RegisterTest(LiveServerTestCase):
 
         # make sure we arrived at signup-step4
         body = self.browser.find_element_by_tag_name('body')
-        self.assertIn(u'profilbild', body.text)
-        # FIXME: TEST UPLOAD OF PROFILE IMAGE
-
-        cont = self.browser.find_element_by_link_text(u'Spara och gå vidare')
-        cont.click()
+        self.assertIn(u'Sista steget', body.text)
+        # NOTE:
+        # We should test actual upload of an image but that is currently not
+        # possible in selenium if we use an <input type='file'> field.
+        # Skip this test for now
+        #
+        # doupload = self.browser.find_element_by_link_text('Ladda upp profilbild')
+        # doupload.click()
+        skipupload = self.browser.find_element_by_link_text(u"Gå vidare utan "
+                                            "att ladda upp profilbild")
+        skipupload.click()
         WebDriverWait(self.browser, 10).until(
                 lambda driver: driver.find_element_by_tag_name('body'))
 

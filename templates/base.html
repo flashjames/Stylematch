@@ -5,8 +5,9 @@
 <!DOCTYPE html>
 <html lang="en" style="height:100%;">
   <head>
-    
+    <title>{% block title %}{% endblock %} | StyleMatch</title>
     <meta charset="utf-8" />
+    <meta name="robots" content="NOODP">
     {% facebook %}
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script src="{{ STATIC_URL }}js/bootstrap-alert.js" type="text/javascript"></script>
@@ -38,7 +39,7 @@
     {% block html-head %}{% endblock %}
 
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <title>StyleMatch | {% block title %}{% endblock %}</title>
+    
   </head>
 
 

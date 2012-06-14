@@ -2,6 +2,11 @@
 {% load url from future %}
 
 {% block html-head %}
+{% comment %}
+<meta name="keywords" content="frisör {{ profile.salon_city }},hitta frisör {{ profile.salon_city }},boka frisör,boka frisör {{ profile.salon_city }},frisör">
+<meta name="description" content="{{ first_name }} {{ last_name }} i {{ profile.salon_city }}. Se bilder på tidigare klippningar, för att bilda dig en uppfattning om det är rätt frisör för DIG.">
+{% endcomment %}
+
 <script>
     PROFILE_API_URL = "{% url 'api_dispatch_list' api_name="profile" resource_name="profiles" %}";
 </script>

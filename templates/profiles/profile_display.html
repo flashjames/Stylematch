@@ -10,7 +10,10 @@
 <script type="text/javascript">
 	$('#bookmemodal').modal();
 </script>
-	
+
+<meta name="keywords" content="frisör {{ profile.salon_city }},hitta frisör {{ profile.salon_city }},boka frisör,boka frisör {{ profile.salon_city }},frisör">
+<meta name="description" content="{{ first_name }} {{ last_name }} i {{ profile.salon_city }}. Se bilder på tidigare klippningar, för att bilda dig en uppfattning om det är rätt frisör för DIG.">
+
 <meta property="og:site_name" content="StyleMatch">
 <meta property="og:type" content="company">
 <meta property="og:image" content="{{ profile_image }}">
@@ -25,13 +28,12 @@
 <meta property="og:postal-code" content="{{ zip_adress }}">
 <meta property="og:country-name" content="SWEDEN">
 <meta property="og:title" content="{{ first_name }} {{ last_name }}">
-
 </script>
 
 
 {% endblock %}
 
-{% block title %}{{ first_name }} {{ last_name }}{% endblock %}
+{% block title %}{{ first_name }} {{ last_name }}{% if profile.salon_city %}, frisör i {{ profile.salon_city }} {% endif %}{% endblock %}
 
 {% block content %}
 

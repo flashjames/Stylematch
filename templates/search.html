@@ -41,24 +41,54 @@
 
        <div style="max-width:300px;">
            <span class="resultNumber"><%= id %></span>
-              <h3 class="resultTitle">
-                  <a href="/<%= profile_url %>"><%= profile_text %></a>
-              </h3>
-              <p class="stylistAddress"><%= salon_adress %></p>
+           <h3 class="resultTitle">
+               <a href="/<%= profile_url %>"><%= profile_text %></a>
+           </h3>
+           <p class="stylistAddress"><%= salon_adress %></p>
        </div>
     </script>
 
-    <div id="filters">
-        <select id="city">
-            <option value="Alla">Alla</option>
+    <div class="row">
+      <div class="span12" id="filters">
+        <div id="location-container">
+          <span class="search-text">Hitta frisör i</span>
+          <select id="city">
+            <option value="Alla">Alla städer</option>
             <option value="linköping">Linköping</option>
             <option value="stockholm">Stockholm</option>
             <option value="norrköping">Norrköping</option>
-        </select>
-        <button class="submit">Filtrera!</button>
+          </select>
+          {% comment %}
+          <input type="text" name="city" id="city" value="Linköping">
+          {% endcomment %}
+          <button id="search-button" class="btn btn-primary submit">Sök frisör</button>
+        </div>
+        <div id="filter-container">
+          {% comment %}
+          <span class="filter-text">Prisklass:</span>
+          <select id="price">
+            <option value="any">Alla
+            <option value="1">$
+            <option value="2">$$
+            <option value="3">$$$
+            <option value="4">$$$$
+          </select>
+          {% endcomment %}
+          <label class="checkbox filter-text">
+              <input type="checkbox" name="online-booking" id="online-booking">
+              Har online-bokning
+          </label>
+          {% comment %}
+          <input type="checkbox" name="available" id="available">
+          <span class="filter-text">Har öppet nu</span>
+          {% endcomment %}
+        </div>
+      </div>
     </div>
 
-    <div id="profile-list"></div>
+    <div class="row">
+      <div class="span12" id="profile-list"></div>
+    </div>
 
     <div id="fb-root"></div>
 

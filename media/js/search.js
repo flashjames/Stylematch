@@ -63,15 +63,20 @@
             });
         },
         events:{
-            "click .submit":"filter"
+            "click .submit":"filter"/*,
+            "change #city":"filter"*/
         },
         filter: function() {
             this.profileList = new ProfileCollection();
 
             data = {};
-            city = $('#city option:selected').val();
+            city = $('#city').val();
             if (city !== 'Alla') {
-                data = { 'salon_city__iexact' : $('#city option:selected').val() };
+                data = { 'salon_city__iexact' : $('#city').val() };
+            }
+            online_booking = $('#online-booking').prop("checked");
+            if (online_booking === true) {
+                data['show_booking_url'] = true;
             }
             this.profileList.fetch({
                 data: data,

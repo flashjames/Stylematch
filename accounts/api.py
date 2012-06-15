@@ -170,8 +170,9 @@ class ProfileResource(ModelResource):
         """
 
         try:
-            img = ProfileImage.objects.get(user=bundle.data['id'])
-            bundle.data['profile_image'] = get_image_url(img.filename)
+            img = ProfileImage.objects.filter(user=bundle.data['id'],
+                                cropped=True)
+            bundle.data['profile_image'] = get_image_url(img[0].filename)
         except:
             bundle.data['profile_image'] = os.path.join(
                                 settings.STATIC_URL, 'img',

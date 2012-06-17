@@ -215,6 +215,7 @@ class ProfileResource(ModelResource):
                   'temporary_profile_url']
         filtering = {
                 'salon_city' : ['iexact',], # 'startswith','endswith'],
+                'show_booking_url' : ['exact',],
                 }
         resource_name = "profiles"
         model = UserProfile

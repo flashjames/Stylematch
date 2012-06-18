@@ -15,7 +15,7 @@ def pdb(element):
 
 @register.simple_tag
 def google_analytics():
-    if not settings.PRODUCTION:
+    if settings.PRODUCTION:
         return '<script src="%sjs/google_analytics.js" type="text/javascript"></script>' % settings.STATIC_URL
 
     return ""

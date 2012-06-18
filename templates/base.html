@@ -13,6 +13,16 @@
     <script src="{{ STATIC_URL }}js/bootstrap-alert.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}js/bootstrap-tooltip.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}js/bootstrap-dropdown.js" type="text/javascript"></script>
+    {% intercom_analytics %}
+    <script id="IntercomSettingsScriptTag">
+      {% comment %} Intercom.io settings {% endcomment %}
+      var intercomSettings = {
+      app_id: 'k27ag4y',
+      email: '{{ user.email }}',
+      created_at: {{ user.date_joined }}
+      };
+    </script>
+    
     <script type="text/javascript">
 
       $('.dropdown-toggle').dropdown({trigger:'hover'});

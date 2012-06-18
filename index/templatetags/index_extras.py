@@ -21,5 +21,12 @@ def google_analytics():
     return ""
 
 @register.simple_tag
+def intercom_analytics():
+    if settings.PRODUCTION:
+        return '<script src="%sjs/intercom_analytics.js" type="text/javascript"></script>' % settings.STATIC_URL
+
+    return ""
+
+@register.simple_tag
 def facebook():
         return '<script src="%sjs/facebook.js" type="text/javascript"></script>' % settings.STATIC_URL

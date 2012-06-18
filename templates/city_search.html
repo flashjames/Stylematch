@@ -18,6 +18,27 @@
   }
 </style>
 
+
+<script type="text/javascript">
+
+function moveScroller() {
+  var a = function() {
+    var b = $(window).scrollTop();
+    var d = $("#scroller-anchor").offset().top;
+    var c=$("#scroller");
+    if (b>d) {
+      c.css({position:"fixed",top:"0px"})
+    } else {
+      if (b<=d) {
+        c.css({position:"relative",top:""})
+      }
+    }
+  };
+  $(window).scroll(a);a()
+}
+
+</script>
+
 {% endblock %}
 
 {% block title %}Frisör i {{ city }}{% endblock %}
@@ -60,24 +81,32 @@
            </div>
            
            
-           <div class="span4" style="">
-	           <div style="background-color:green;width:296px;height:250px;margin:10px;">
+           <div class="span4 city-search-information-span" style="">
+	           
 		           
-		           <h3> Denna ruta ska visa kartan </h3>
+		           <div id="sidebar" style="width:270px;"> 
+			           <div id="scroller-anchor"></div> 
+			           <div id="scroller" style="margin-top:10px; width:270px"> 
+			           		<div style="background-color:green;width:296px;height:250px;margin:10px;">
 		           
-	           </div>
+			           			<h3 style=""> Denna ruta ska visa kartan </h3>
+			           		</div>
+			           		
+			           			<div style="background-color:blue;width:296px;height:250px;margin:10px;">
+		           
+			           			<h3 style=""> Denna ruta ska visa SEO </h3>
+			           		</div>
+			           		
+			           </div>
+			           <script type="text/javascript"> 
+				           $(function() {
+					           moveScroller();
+					           });
+					   </script> 
+		           </div>
 	           
 	           
-	           <div style="background-color:grey;width:296px;height:250px;margin:10px;">
-		           <h4> Om StyleMatch</h4>
-		           <h1>Frisör i {{ city }}</h1>
-		           
-		           <h4><br><br> Här ska all vår SEO stå</h4>
-		           
-		           
-		           
-	           </div>
-	           
+	           	           
            </div>
            
            

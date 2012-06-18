@@ -15,8 +15,15 @@ def pdb(element):
 
 @register.simple_tag
 def google_analytics():
-    if not settings.PRODUCTION:
+    if settings.PRODUCTION:
         return '<script src="%sjs/google_analytics.js" type="text/javascript"></script>' % settings.STATIC_URL
+
+    return ""
+
+@register.simple_tag
+def intercom_analytics():
+    if settings.PRODUCTION:
+        return '<script src="%sjs/intercom_analytics.js" type="text/javascript"></script>' % settings.STATIC_URL
 
     return ""
 

@@ -19,7 +19,7 @@
       var intercomSettings = {
       app_id: 'k27ag4y',
       email: '{{ user.email }}',
-      created_at: {{ user.date_joined }}
+      created_at: '{{ user.date_joined }}',
       };
     </script>
     
@@ -28,7 +28,7 @@
       $('.dropdown-toggle').dropdown({trigger:'hover'});
 
       /* Function to trigger tooltip when clicked and hide after a delay*/
-      $(document).ready(function() {
+/*      $(document).ready(function() {
       var defaultOption={trigger:'manual', delay: {hide: 500 }};
       function showAndHidePopover() {
       $(this).tooltip('toggle');
@@ -40,8 +40,26 @@
 
       $('.popover1').tooltip(defaultOption).click(showAndHidePopover);
 
-      });
+      });*/
     </script>
+    <script type="text/javascript">
+/*  $(document).ready(function () {
+  $(‘#the submit button/ or an I have the form id’).click(function (evt) {
+  //}
+  goToByScroll("test");
+
+
+
+});*/
+  function goToByScroll(id){
+  $('html,body').animate({scrollTop: $("#"+id).offset().top},'slow');
+  
+  }
+
+
+</script>
+
+
 
     {% bootstrap_less %}
 
@@ -117,8 +135,8 @@
 
           <div class="span7 main-menu">
 
-            <a href="#"  class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart">Hitta frisör</a>
-            <a href="#"  class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart">Bli inspirerad </a>
+            <a href="#"  class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart" onclick="goToByScroll('test')">Hitta frisör</a>
+            <a href="#"  class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart" onclick="goToByScroll('test')">Bli inspirerad </a>
             <a href="{% url 'about_page' %}">Om Stylematch</a>
 
           </div>

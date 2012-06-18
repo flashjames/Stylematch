@@ -4,9 +4,12 @@
 {% block title %}Hitta frisör{% endblock %}
 
 {% block html-head %}
-<meta name="keywords" content="frisör,hitta frisör,boka frisör,hårmode,frisyr,styling">
-<meta name="description" content="Hitta en frisör som passar just dig. Låt dig inspireras av frisyrer och uppsättningar frisörer gjort.">
-{% comment %} Lägg till sen "Vi har frisörer i Sveriges alla städer.{% endcomment %}
+
+<meta name="keywords" content="frisör,hitta frisör,boka frisör,hårmode,frisyr,styling"/>
+<meta name="description" content="Hitta en frisör som passar just dig. Låt dig inspireras av frisyrer och uppsättningar frisörer gjort."/>
+<!--Lägg till sen "Vi har frisörer i Sveriges alla städer.-->
+
+
 {% endblock %}
 
 {% block background-top %}
@@ -28,7 +31,7 @@
         <form class="form-search search-form">
           <input type="text" style="height:25pt;font-size:15px;" class="input-medium span4" placeholder=" Linköping">
 
-          <a href="#" style="margin-left:10px"class="btn btn-primary btn-large popover1" rel="tooltip" data-content="" data-original-title="Kommer snart">Hitta!</a>
+          <a href="#" style="margin-left:10px"class="btn btn-primary btn-large popover1" rel="tooltip" data-content="" data-original-title="Kommer snart" onclick="goToByScroll('test')">Hitta!</a>
         </form>
       </div>
     </div>
@@ -57,7 +60,7 @@
 	  
     <a href="/ivonneberlinda/">
       <div class="span3 profile-image-front">
-        <div class="profile-image-border-front pictures-front-page">
+        <div id="test" class="profile-image-border-front pictures-front-page">
         	<div style="height:230px">
          		 <img src="{{STATIC_URL}}img/frisor10-frontpage.jpg" name="profile-image">
         	</div>
@@ -191,7 +194,7 @@
       </a>
       
       </div>
-      
+      <button type="Button" onclick="goToByScroll('test')">Click me</button>
       <div class="span3 join-now-block-frontpage">
       <h1>Är du frisör?</h1>
       <a href="accounts/register/" class="btn btn-large btn-info">Skapa din profil här!</a>

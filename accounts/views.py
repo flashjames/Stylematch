@@ -564,7 +564,7 @@ class SaveProfileImageView(EditImagesView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class CropPictureView(FormView):
+class CropPictureView(LoginRequiredMixin, FormView):
     """
     Crops the file referenced at profile_image_uncropped with user supplied
     coordinates and saves it to filesystem.

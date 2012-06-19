@@ -29,7 +29,7 @@
 
     window.ProfileListItemView = Backbone.View.extend({
         tagName:"li",
-        className: "profile-list-item",
+        className: "profile-list-item-city",
         template:_.template($('#tpl-profile-list-item').html()),
 
         render:function (eventName) {

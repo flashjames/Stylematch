@@ -7,3 +7,6 @@
 [submodule "media/js/jcrop"]
 	path = media/js/jcrop
 	url = git://github.com/tapmodo/Jcrop.git
+[submodule "media/js/chosen"]
+	path = media/js/chosen
+	url = https://github.com/harvesthq/chosen.git

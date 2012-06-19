@@ -26,9 +26,9 @@
     <script type="text/javascript">
 
       $('.dropdown-toggle').dropdown({trigger:'hover'});
-
+      
       /* Function to trigger tooltip when clicked and hide after a delay*/
-/*      $(document).ready(function() {
+      $(document).ready(function() {
       var defaultOption={trigger:'manual', delay: {hide: 500 }};
       function showAndHidePopover() {
       $(this).tooltip('toggle');
@@ -40,21 +40,14 @@
 
       $('.popover1').tooltip(defaultOption).click(showAndHidePopover);
 
-      });*/
+      });
     </script>
     <script type="text/javascript">
-/*  $(document).ready(function () {
-  $(‘#the submit button/ or an I have the form id’).click(function (evt) {
-  //}
-  goToByScroll("test");
 
-
-
-});*/
-  function goToByScroll(id){
-  $('html,body').animate({scrollTop: $("#"+id).offset().top},'slow');
-  
-  }
+      function goToByScroll(id){
+      $('html,body').delay(1500).animate({scrollTop: $("#"+id).offset().top},'slow');
+      
+      }
 
 
 </script>

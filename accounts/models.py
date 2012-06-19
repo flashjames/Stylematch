@@ -31,7 +31,6 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance,
                                    temporary_profile_url=uuid.uuid4().hex,
-                                   number_on_profile=True,
                                    )
 
         OpenHours.objects.create(user=instance)
@@ -204,15 +203,15 @@ class UserProfile(models.Model):
         (False, 'Salongens telefonnummer'),
         )
     number_on_profile = models.BooleanField(
-                            "Vilket telefonnummer ska visas på profilen?",
-                            max_length=1,
-                            choices=DISPLAY_NUMBER_CHOICES)
-
-    personal_phone_number = models.CharField(
-                            "Personligt telefonnummer",
-                            max_length=30,
-                            blank=True,
-                            null=True)
+        "Vilket telefonnummer ska visas på profilen?",
+        max_length=1,
+        default=False,
+        choices=DISPLAY_NUMBER_CHOICES)
+    
+    personal_phone_number = models.CharField("Personligt telefonnummer",
+                                             max_length=30,
+                                             blank=True,
+                                             null=True)
 
     # salong
     salon_phone_number = models.CharField("Salongens telefonnummer",

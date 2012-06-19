@@ -22,6 +22,8 @@ class SignupViewForm(ModelForm):
     """
     Form used in registration step 1, used to filter out wanted fields
     """
+    salon_phone_number = forms.CharField(label='Telefonnummer för bokning')
+    
     def __init__(self, *args, **kwargs):
         super(SignupViewForm, self).__init__(*args, **kwargs)
 
@@ -30,9 +32,7 @@ class SignupViewForm(ModelForm):
         fields = ('salon_name',
                   'salon_adress',
                   'salon_city',
-                  'personal_phone_number',
-                  'salon_phone_number',
-                  'number_on_profile')
+                  'salon_phone_number')
 
 
 class SignupView(LoginRequiredMixin, UpdateView):
@@ -130,7 +130,7 @@ class SignupStep4View(EditImagesView):
         self.object.image_type = 'C'
         self.object.save()
         form.save_m2m()
-        return super(EditImagesView, self).form_valid(form)
+        return super(SignupStep4View, self).form_valid(form)
 
 
 class RegisterCustomBackend(DefaultBackend):

@@ -365,6 +365,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'index.context_processors.galleria_urls',
     # used to access STATIC_URL in templates
     'django.core.context_processors.static',
+    'django.core.context_processors.request',
     )
 
 # Paths to user uploaded images, used in fileupload app

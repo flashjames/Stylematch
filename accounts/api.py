@@ -169,14 +169,18 @@ class ProfileResource(ModelResource):
          - ``last_name`` (same as ``first_name``)
         """
 
-        try:
-            img = ProfileImage.objects.filter(user=bundle.data['id'],
-                                cropped=True)
-            bundle.data['profile_image'] = get_image_url(img[0].filename)
-        except:
+        img = ProfileImage.objects.filter(user=bundle.data['id'])
+        chosen_img = None
+        if len(img) > 0:
+            if img[0].cropped or len(img) < 2:
+                chosen_img = img[0]
+            else:
+                chosen_img = img[1]
+            bundle.data['profile_image'] = get_image_url(chosen_img.filename)
+        else:
             bundle.data['profile_image'] = os.path.join(
-                                settings.STATIC_URL, 'img',
-                                'default_image_profile_not_logged_in.jpg')
+                            settings.STATIC_URL, 'img',
+                            'default_image_profile_not_logged_in.jpg')
 
         # if profile_url isn't set, use temporary_profile_url
         # temporary_profile_url isn't needed

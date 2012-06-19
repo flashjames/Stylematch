@@ -642,10 +642,27 @@ class CropPictureView(FormView):
                   start_y_coordinate,
                   width,
                   height)
-
+        
         # remove old cropped profile image
         if current_userprofile.profile_image_cropped:
-            current_userprofile.profile_image_cropped.delete()
+            """
+            When we added the possibiltiy to crop images,
+            we added a profile_image_cropped and profile_image_uncropped
+            foreign key reference to the cropped and uncropped image.
+            When we did the data migration, we set profile_image_cropped and
+            profile_image_uncropped to point at the uncropped ProfileImage object,
+            so all users that havent uploaded a new image and cropped it have this
+            right now.
+
+            -> Dont delete the 'old' cropped_profile_image, which in the reality isnt cropped.
+            If we delete profile_image_cropped, we'll get a database error since
+            profile_image_uncropped foreign key now will point at a deleted object
+
+            This if-case can be removed when all users have a cropped profile image!
+            """
+            if (current_userprofile.profile_image_cropped !=
+                current_userprofile.profile_image_uncropped):
+                current_userprofile.profile_image_cropped.delete()
 
         # save the cropped image
         picture = ProfileImage(filename=filename,

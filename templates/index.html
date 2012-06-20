@@ -4,12 +4,16 @@
 
 {% block title %}Hitta frisör{% endblock %}
 
+{% block pre-bootstrap-less %}
+<link rel="stylesheet" href="{{ STATIC_URL }}js/chosen/chosen/chosen.css">
+{% endblock %}
+
 {% block html-head %}
 
 <meta name="keywords" content="frisör,hitta frisör,boka frisör,hårmode,frisyr,styling"/>
 <meta name="description" content="Hitta en frisör som passar just dig. Låt dig inspireras av frisyrer och uppsättningar frisörer gjort."/>
 <!--Lägg till sen "Vi har frisörer i Sveriges alla städer.-->
-<link rel="stylesheet" href="{{ STATIC_URL }}js/chosen/chosen/chosen.css">
+
 
 {% endblock %}
 
@@ -30,12 +34,12 @@
 
       <div class="span5 align-center-search-form offset5 pull-right">
         <form class="form-search search-form">
-          <select data-placeholder="Välj stad..." class="chzn-select" style="width:250px;height:40px;" tabindex="2">
+          <select data-placeholder="Välj stad..." class="chzn-select" style="width:250px;" tabindex="2">
           {% include "list_of_city_snippet.html" %}        </select>
 
 
 
-          <a href="#" style="margin-left:10px"class="btn btn-primary btn-large popover1" rel="tooltip" data-content="" data-original-title="Kommer snart" onclick="goToByScroll('test')">Hitta!</a>
+          <a href="#" style="margin-left:10px;margin-top:-3px;"class="btn btn-primary btn-large popover1" rel="tooltip" data-content="" data-original-title="Kommer snart" onclick="goToByScroll('test')">Hitta!</a>
         </form>
       </div>
     </div>
@@ -45,7 +49,7 @@
   <div class="row profile-images-front-page-div" style="margin-top:100px;padding:0px;" >
   
   		<div class="span9">
-	  <div class="span1" style="margin-left:0px"><h2>Frisörer</h2></div>
+	  <div id="test" class="span1" style="margin-left:0px"><h2>Frisörer</h2></div>
 	  <div class="span8"><hr style="width:100%;"></div>
 	  <br>
 	  
@@ -64,7 +68,7 @@
 	  
     <a href="/ivonneberlinda/">
       <div class="span3 profile-image-front">
-        <div id="test" class="profile-image-border-front pictures-front-page">
+        <div  class="profile-image-border-front pictures-front-page">
         	<div style="height:230px">
          		 <img src="{{STATIC_URL}}img/frisor10-frontpage.jpg" name="profile-image">
         	</div>

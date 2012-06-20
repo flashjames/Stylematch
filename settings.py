@@ -186,6 +186,7 @@ INSTALLED_APPS = (
     'django_su',
     'fts',
     'sorl.thumbnail',
+    'statistics',
 )
 
 ### S3 storage, mail and credentials

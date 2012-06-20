@@ -4,6 +4,10 @@
 
 {% block title %}Hitta frisör{% endblock %}
 
+{% block pre-bootstrap-less %}
+<link rel="stylesheet" href="{{ STATIC_URL }}js/chosen/chosen/chosen.css">
+{% endblock %}
+
 {% block html-head %}
 
 <meta name="keywords" content="frisör,hitta frisör,boka frisör,hårmode,frisyr,styling"/>
@@ -41,18 +45,23 @@
 
       <div class="span5 align-center-search-form offset5 pull-right">
         <form class="form-search search-form">
-          <input type="text" style="height:25pt;font-size:15px;" class="input-medium span4" placeholder=" Linköping">
+          <select data-placeholder="Välj stad..." class="chzn-select" style="width:250px;" tabindex="2">
+          {% include "list_of_city_snippet.html" %}        </select>
 
-          <a href="#" style="margin-left:10px"class="btn btn-primary btn-large popover1" rel="tooltip" data-content="" data-original-title="Kommer snart" onclick="goToByScroll('test')">Hitta!</a>
+
+
+          <a href="#" style="margin-left:10px;margin-top:-3px;"class="btn btn-primary btn-large popover1" rel="tooltip" data-content="" data-original-title="Kommer snart" onclick="goToByScroll('test')">Hitta!</a>
         </form>
       </div>
     </div>
 
   </div>
 
+
   <!-- Underscore.js Templates -->
   <script type="text/template" id="tpl-featured-profile-list-item">
       <a href="/<%= profile_url %>">
+
       <div class="span3 profile-image-front" style="margin-left:0px">
         <div class="profile-image-border-front pictures-front-page">
             <div style="height:230px">
@@ -88,8 +97,16 @@
   </div>
 
 <div id="fb-root"></div>
+<script src="{{ STATIC_URL }}js/chosen/chosen/chosen.jquery.js"></script>
+
+<script type="text/javascript"> 
+	$(".chzn-select").chosen(); 
+	$(".chzn-select-deselect").chosen({allow_single_deselect:true}); 
+	</script>
 
 <script type="text/javascript">
+
+
       /* 
       SlideDown beta-header banner 
       This should be added on every page where we want it.

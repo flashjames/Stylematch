@@ -168,7 +168,7 @@ class ProfileResource(ModelResource):
                 if i < 6 and len(data['objects']) > 6:
                     obj = data['objects'].pop(i)
                     import random
-                    pos = random.randint(i, len(data['objects']) - 1)
+                    pos = random.randint(6, len(data['objects']) - 1)
                     data['objects'].insert(pos, obj)
         return data
 

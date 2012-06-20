@@ -257,6 +257,11 @@ class UserProfile(models.Model):
                                                 on_delete=models.SET_NULL,
                                                 related_name='profile_image_uncropped')
 
+    def save(self, *args, **kwargs):
+        # remove accidental whitespaces from city
+        self.salon_city = self.salon_city.strip()
+
+        return super(UserProfile, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return u'%s' % (self.user)

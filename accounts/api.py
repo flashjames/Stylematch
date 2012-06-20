@@ -161,6 +161,24 @@ class ProfileResource(ModelResource):
     Resource to access a profile
     """
 
+    def winnie_filter(self, data):
+        """ apply winnie filter algorithm """
+        for i in range(len(data['objects'])):
+            if int(data['objects'][i].data['id']) == 15:
+                if i < 6 and len(data['objects']) > 6:
+                    obj = data['objects'].pop(i)
+                    import random
+                    pos = random.randint(6, len(data['objects']) - 1)
+                    data['objects'].insert(pos, obj)
+        return data
+
+    def serialize(self, request, data, format, options=None):
+        data = self.winnie_filter(data)
+        return super(ProfileResource, self).serialize(request,
+                                                      data,
+                                                      format,
+                                                      options)
+
     def dehydrate(self, bundle):
         """
         Some additional fields needs to be added:

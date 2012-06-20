@@ -547,7 +547,7 @@ class SaveProfileImageView(EditImagesView):
             if (current_userprofile.profile_image_cropped !=
                 current_userprofile.profile_image_uncropped):
 
-            current_userprofile.profile_image_uncropped.delete()
+                current_userprofile.profile_image_uncropped.delete()
 
         # add data to form fields that will be saved to db
         self.object = form.save(commit=False)

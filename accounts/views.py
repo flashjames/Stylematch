@@ -542,6 +542,11 @@ class SaveProfileImageView(EditImagesView):
 
         # remove old uncropped profile image
         if current_userprofile.profile_image_uncropped:
+            # for explanation why this is here, check same if case
+            # in CropPictureView
+            if (current_userprofile.profile_image_cropped !=
+                current_userprofile.profile_image_uncropped):
+
             current_userprofile.profile_image_uncropped.delete()
 
         # add data to form fields that will be saved to db
@@ -659,6 +664,7 @@ class CropPictureView(LoginRequiredMixin, FormView):
             profile_image_uncropped foreign key now will point at a deleted object
 
             This if-case can be removed when all users have a cropped profile image!
+            Dont forget to remove same if-case in SaveProfileImageView.
             """
             if (current_userprofile.profile_image_cropped !=
                 current_userprofile.profile_image_uncropped):

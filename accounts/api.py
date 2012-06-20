@@ -184,6 +184,7 @@ class ProfileResource(ModelResource):
     def serialize(self, request, data, format, options=None):
         data = self.move_down(15, data)
         data = self.move_up(57, data)
+        data = self.move_up(38, data)
         return super(ProfileResource, self).serialize(request,
                                                       data,
                                                       format,

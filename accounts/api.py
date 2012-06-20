@@ -161,10 +161,19 @@ class ProfileResource(ModelResource):
     Resource to access a profile
     """
 
-    def winnie_filter(self, data):
-        """ apply winnie filter algorithm """
+    def move_up(self, id, data):
         for i in range(len(data['objects'])):
-            if int(data['objects'][i].data['id']) == 15:
+            if int(data['objects'][i].data['id']) == id:
+                if i > 5:
+                    obj = data['objects'].pop(i)
+                    import random
+                    pos = random.randint(0, 5)
+                    data['objects'].insert(pos, obj)
+        return data
+
+    def move_down(self, id, data):
+        for i in range(len(data['objects'])):
+            if int(data['objects'][i].data['id']) == id:
                 if i < 6 and len(data['objects']) > 6:
                     obj = data['objects'].pop(i)
                     import random
@@ -173,7 +182,8 @@ class ProfileResource(ModelResource):
         return data
 
     def serialize(self, request, data, format, options=None):
-        data = self.winnie_filter(data)
+        data = self.move_down(15, data)
+        data = self.move_up(57, data)
         return super(ProfileResource, self).serialize(request,
                                                       data,
                                                       format,

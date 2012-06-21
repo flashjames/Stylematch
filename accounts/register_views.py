@@ -60,52 +60,18 @@ class SignupView(LoginRequiredMixin, UpdateView):
         return context
 
 
-class SignupStep2View(OpenHoursView):
+class SignupStep2View(EditImagesView):
     template_name = "accounts/signup_step2.html"
 
     def __init__(self, *args, **kwargs):
-        super(OpenHoursView, self).__init__(*args, **kwargs)
+        super(SignupStep2View, self).__init__(*args, **kwargs)
         # written here in init since it will give reverse url error
         # if just written in class definition. because urls.py isnt loaded
         # when this class is defined
-        self.success_url = reverse('signupstep3_page')
+        self.success_url = reverse('signupstep2_page')
 
     def get_context_data(self, **kwargs):
         context = super(SignupStep2View, self).get_context_data(**kwargs)
-
-        context['progress_salon_info'] = "reached-progress"
-        context['progress_salon_hours'] = "reached-progress"
-        context['progress_width'] = "49%"
-
-        return context
-
-
-class SignupStep3View(ServicesView):
-    template_name = "accounts/signup_step3.html"
-
-    def get_context_data(self, **kwargs):
-        context = super(SignupStep3View, self).get_context_data(**kwargs)
-
-        context['progress_salon_info'] = "reached-progress"
-        context['progress_salon_hours'] = "reached-progress"
-        context['progress_salon_price'] = "reached-progress"
-        context['progress_width'] = "66%"
-
-        return context
-
-
-class SignupStep4View(EditImagesView):
-    template_name = "accounts/signup_step4.html"
-
-    def __init__(self, *args, **kwargs):
-        super(SignupStep4View, self).__init__(*args, **kwargs)
-        # written here in init since it will give reverse url error
-        # if just written in class definition. because urls.py isnt loaded
-        # when this class is defined
-        self.success_url = reverse('signupstep4_page')
-
-    def get_context_data(self, **kwargs):
-        context = super(SignupStep4View, self).get_context_data(**kwargs)
 
         context['progress_salon_info'] = "reached-progress"
         context['progress_salon_hours'] = "reached-progress"
@@ -130,7 +96,7 @@ class SignupStep4View(EditImagesView):
         self.object.image_type = 'C'
         self.object.save()
         form.save_m2m()
-        return super(SignupStep4View, self).form_valid(form)
+        return super(SignupStep2View, self).form_valid(form)
 
 
 class RegisterCustomBackend(DefaultBackend):

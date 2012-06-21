@@ -16,9 +16,7 @@ from django.views.generic.simple import redirect_to
 from registration.views import register
 from accounts.register_views import (UserRegistrationForm,
                                      SignupView,
-                                     SignupStep2View,
-                                     SignupStep3View,
-                                     SignupStep4View)
+                                     SignupStep2View)
 admin.autodiscover()
 
 """
@@ -83,14 +81,6 @@ urlpatterns += patterns(
             SignupStep2View.as_view(),
             {},
             'signupstep2_page'),
-    (r'^accounts/signup-step3/',
-            SignupStep3View.as_view(),
-            {},
-            'signupstep3_page'),
-    (r'^accounts/signup-step4/',
-            SignupStep4View.as_view(),
-            {},
-            'signupstep4_page'),
 
     (r'^accounts/edit-settings/',
             TemplateView.as_view(template_name="edit-account-settings.html"),
@@ -104,6 +94,10 @@ urlpatterns += patterns(
       TemplateView.as_view(template_name="test_chart.html"),
       {},
       'statistics'),
+    (r'^sta',
+     TemplateView.as_view(template_name="analyticsCharts.html"),
+      {},
+     'statistics2'),
     (r'^about-us/',
      TemplateView.as_view(template_name="about_us.html"),
      {},

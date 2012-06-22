@@ -35,15 +35,19 @@ function moveScroller() {
     var b = $(window).scrollTop();
     var d = $("#scroller-anchor").offset().top;
     var c=$("#scroller");
-    if (b>d) {
-      c.css({position:"fixed",top:"0px"})
+    var height = $(window).height();
+    var profile_list_height = $('#profile-list').height();
+    if (b>d && profile_list_height > 510) {
+      pos = height-b;
+      if (pos > 0) pos = 0;
+      c.css({position:"fixed",top:pos+"px"})
     } else {
       if (b<=d) {
         c.css({position:"relative",top:""})
       }
     }
   };
-  $(window).scroll(a);a()
+  $(window).scroll(a);a();
 }
 
 </script>
@@ -66,6 +70,8 @@ function moveScroller() {
 			           <div id="scroller-anchor"></div> 
 			           <div id="scroller" style="margin-top:10px; width:270px"> 
 			           
+<div class="search-city-map" id="map_canvas">
+</div>
 			           			<!-- Detta är info om stylematch -->
 			           			
 			           			<div class="search-city-about-stylematch">
@@ -95,8 +101,6 @@ function moveScroller() {
 				          <!-- Slut på info om stylematch -->
 				          
 				          
-<div class="search-city-map" id="map_canvas">
-</div>
 			           	
 			           			
 			           		

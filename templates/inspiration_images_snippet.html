@@ -19,6 +19,13 @@
     </div>
 
     <div class="rightSidebar">
+      <div class="fb fb-like"
+                data-href="{{ STATIC_URL }}user-imgs/{{ image }}"
+                data-send="false"
+                data-layout="button_count"
+                data-width="100"
+                data-show-faces="true">
+      </div>
       <a href="http://pinterest.com/pin/create/button/"
                 class="pin-it-button"
                 count-layout="horizontal">
@@ -33,15 +40,8 @@
       Se kommentarer
     </a>
   </div>
-  <div id="fb-wrapper-{{ forloop.counter0 }}" style="display:none;">
-    <div class="fb fb-like"
-              data-href="http://stylematch.se"
-              data-href="{{ STATIC_URL }}user-imgs/{{ image }}"
-              data-send="true"
-              data-width="450"
-              data-show-faces="true">
-    </div>
-    <div class="fb fb-comments"
+  <div id="fb-wrapper-{{ forloop.counter0 }}" class="fb" style="display:none;">
+    <div class="fb-comments"
               data-href="{{ STATIC_URL }}user-imgs/{{ image }}"
               data-num-posts="3"
               data-width="470">

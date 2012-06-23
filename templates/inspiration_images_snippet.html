@@ -1,9 +1,14 @@
+{% load index_extras %}
 {% for image in images %}
+
+{% with image.user|get_userprofile as userprofile %}
 
 <li>
   <div class="mainImageContent">
     <div class="leftSidebar">
-      <img class="profile-image" src="{{ STATIC_URL }}img/default_image_profile_not_logged_in.jpg">
+      <a href="{{ userprofile.profile_url }}">
+        <img class="profile-image" src="{{ userprofile|profile_image }}">
+      </a>
       <img class="hype" src="http://stylematch.s3-website-eu-west-1.amazonaws.com/test/hype.png"/>
     </div>
 
@@ -44,4 +49,5 @@
   </div>
 </li>
 
+{% endwith %}
 {% endfor %}

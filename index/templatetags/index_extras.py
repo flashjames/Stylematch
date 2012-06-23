@@ -44,3 +44,28 @@ def intercom_analytics():
 @register.simple_tag
 def facebook():
         return '<script src="%sjs/facebook.js" type="text/javascript"></script>' % settings.STATIC_URL
+
+@register.filter
+def get_userprofile(user):
+    from accounts.models import UserProfile
+    try:
+        userprofile = UserProfile.objects.get(user__exact=user)
+    except:
+        userprofile = None
+    return userprofile
+
+@register.filter
+def profile_image(userprofile):
+    try:
+        # display cropped profile image if there's any
+        if userprofile.profile_image_cropped:
+            profile_image = userprofile.profile_image_cropped
+        else:
+            profile_image = userprofile.profile_image_uncropped
+
+        profile_image = profile_image.get_image_url()
+    except:
+        profile_image = os.path.join(
+                            settings.STATIC_URL,
+                            'img/default_image_profile_not_logged_in.jpg')
+    return profile_image

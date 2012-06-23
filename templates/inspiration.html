@@ -1,66 +1,86 @@
 <html>
 
-<script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/sv_SE/all.js#xfbml=1&appId=309825002426259";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<link rel="stylesheet" href="{{ STATIC_URL}}js/lightbox/example3/colorbox.css" />
-<script type="text/javascript" src="{{ STATIC_URL}}js/lightbox/colorbox/jquery.colorbox.js"></script>
 <head>
+  <script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
+  <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/sv_SE/all.js#xfbml=1&appId=309825002426259";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));</script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
+  <link rel="stylesheet" href="{{ STATIC_URL}}js/lightbox/example3/colorbox.css" />
+  <script type="text/javascript" src="{{ STATIC_URL}}js/lightbox/colorbox/jquery.colorbox.js"></script>
 
-</head>
-<body>
   <style>
-    body {
-    }
-    img {
-    max-width:400px;
-    margin:0px 5px 50px 0px;
-    xfloat:left;
+    .inspiration-images {
+      margin: 0 auto;
+      max-width:400px;
     }
     ul {
-    list-style-type:none;
+      padding: 0;
+      list-style-type:none;
     }
     li {
-    width:1100px
-    background-color:grey;
+      margin-bottom: 50px;
     }
-    .hype {
-    display:inline-block;
-    margin-right:30px;
-    position:relative;
-    top:-300px;
+
+    .mainImageContent {
+    }
+    .leftSidebar {
+      float: left;
+      margin-right: 30px;
+    }
+    .leftSidebar .profile-image {
+      width: 80px;
+      height: 80px;
+      display: block;
+    }
+    .image {
+      margin: 0 auto;
+      width: 400px;
+      display: inline-block;
+    }
+    .rightSidebar {
+      display: inline-block;
+    }
+    .comment-div {
+      text-align: center;
+      width: 100%;
+    }
+    .comment {
+      font-family: Helvetica, tahoma, verdana;
+      font-size: 14px;
+      cursor: pointer;
+      color: #cc2222;
+      margin: 10px 30px 0 0;
+    }
+    .comment:hover {
+      color: #ff0000;
     }
     .fb {
-    margin-left:128px;
-    margin-top:-20px;
     }
     .fb-comments {
-    margin-top:10px;
-    padding-bottom:25px;
-    border-bottom:1px solid black;
     }
    </style>
 
-   
-  <img style="margin-left:470px;margin-top:30px;width:250px;" src="http://stylematch.s3-website-eu-west-1.amazonaws.com/img/logo.png">
-  <div style="margin-left:300px;margin-top:-50px;width:700px;background-color:white">
+</head>
+<body>
+
+  <div style="text-align:center;">
+    <img style="margin: 0 auto; width:250px;" src="http://stylematch.s3-website-eu-west-1.amazonaws.com/img/logo.png">
+  </div>
+  <div style="margin: 0 auto; width:700px;">
     <ul>
       {% include "inspiration_images_snippet.html" with images=pictures %}
-      
     </ul>
   </div>
   <script>
     $('a.inspiration-images').colorbox({rel:'group2', transition:"none", width:"75%", height:"75%"}); 
-
   </script>
 
+  <div id="fb-root"></div>
 </body>
-</html>	
+</html> 

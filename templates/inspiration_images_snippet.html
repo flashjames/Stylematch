@@ -1,17 +1,47 @@
 {% for image in images %}
 
 <li>
-  <img class="hype" src="http://stylematch.s3-website-eu-west-1.amazonaws.com/test/hype.png"/>
+  <div class="mainImageContent">
+    <div class="leftSidebar">
+      <img class="profile-image" src="{{ STATIC_URL }}img/default_image_profile_not_logged_in.jpg">
+      <img class="hype" src="http://stylematch.s3-website-eu-west-1.amazonaws.com/test/hype.png"/>
+    </div>
 
-<a href="{{ STATIC_URL }}user-imgs/{{ image }}" class="inspiration-images"><img class="inspiration-images" style="display:inline-block;" src="{{ STATIC_URL }}user-imgs/{{ image }}"/></a>
-  <a href="http://pinterest.com/pin/create/button/" class="pin-it-button" count-layout="horizontal">
-    <img border="0" src="http://stylematch.s3-website-eu-west-1.amazonaws.com/test/PinExt.png" title="Pin It" />
-  </a>
-  <div class="fb fb-like" data-href="http://stylematch.se" data-href="{{ STATIC_URL }}user-imgs/{{ image }}" data-send="true" data-width="450" data-show-faces="true"></div><br>
-  <div class="fb fb-comments" data-href="{{ STATIC_URL }}user-imgs/{{ image }}" data-num-posts="3" data-width="470"></div>
-  <br>
+    <div class="image">
+      <a href="{{ STATIC_URL }}user-imgs/{{ image }}" class="inspiration-images">
+        <img class="inspiration-images" src="{{ STATIC_URL }}user-imgs/{{ image }}"/>
+      </a>
+    </div>
+
+    <div class="rightSidebar">
+      <a href="http://pinterest.com/pin/create/button/"
+                class="pin-it-button"
+                count-layout="horizontal">
+        <img src="http://stylematch.s3-website-eu-west-1.amazonaws.com/test/PinExt.png"
+                 title="Pin It" />
+      </a>
+    </div>
+
+  </div>
+  <div style="clear:both;" class="comment-div">
+    <a class="comment" onclick="$('#fb-wrapper-{{ forloop.counter0 }}').slideToggle();">
+      Se kommentarer
+    </a>
+  </div>
+  <div id="fb-wrapper-{{ forloop.counter0 }}" style="display:none;">
+    <div class="fb fb-like"
+              data-href="http://stylematch.se"
+              data-href="{{ STATIC_URL }}user-imgs/{{ image }}"
+              data-send="true"
+              data-width="450"
+              data-show-faces="true">
+    </div>
+    <div class="fb fb-comments"
+              data-href="{{ STATIC_URL }}user-imgs/{{ image }}"
+              data-num-posts="3"
+              data-width="470">
+    </div>
+  </div>
 </li>
 
-
 {% endfor %}
-

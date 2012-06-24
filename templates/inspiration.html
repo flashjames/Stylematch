@@ -1,6 +1,14 @@
-<html>
+{% extends "base.html" %}
+{% load url from future %}
+{% load index_extras %}
 
-<head>
+{% block title %}Hitta frisör{% endblock %}
+
+{% block pre-bootstrap-less %}
+<link rel="stylesheet" href="{{ STATIC_URL }}js/chosen/chosen/chosen.css">
+{% endblock %}
+
+{% block html-head %}
   <script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
   <script>(function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
@@ -71,22 +79,20 @@
       display:block;
     }
    </style>
-
-</head>
-<body>
-
-  <div style="text-align:center;">
-    <img style="margin: 0 auto; width:250px;" src="http://stylematch.s3-website-eu-west-1.amazonaws.com/img/logo.png">
-  </div>
-  <div style="margin: 0 auto; width:700px;">
-    <ul>
-      {% include "inspiration_images_snippet.html" with images=pictures %}
-    </ul>
-  </div>
-  <script>
-    $('a.inspiration-images').colorbox({rel:'group2', transition:"none", width:"75%", height:"75%"}); 
-  </script>
-
-  <div id="fb-root"></div>
-</body>
-</html> 
+{% endblock %}
+{% block content %}
+ <div class="row main-content">
+   <div class="span8 offset2">
+     <div style="margin: 0 auto; width:700px;">
+       <ul>
+	 {% include "inspiration_images_snippet.html" with images=pictures %}
+       </ul>
+     </div>
+     <script>
+       $('a.inspiration-images').colorbox({rel:'group2', transition:"none", width:"75%", height:"75%"}); 
+     </script>
+     
+     <div id="fb-root"></div>
+   </div>
+ </div>
+{% endblock %}

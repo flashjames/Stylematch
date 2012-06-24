@@ -47,12 +47,7 @@ def facebook():
 
 @register.filter
 def get_userprofile(user):
-    from accounts.models import UserProfile
-    try:
-        userprofile = UserProfile.objects.get(user__exact=user)
-    except:
-        userprofile = None
-    return userprofile
+    return user.get_profile()
 
 @register.filter
 def profile_image(userprofile):

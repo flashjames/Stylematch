@@ -82,16 +82,8 @@ class DisplayProfileView(DetailView):
         """
         queryset = GalleryImage.objects.filter(
             user__exact=user).filter(display_on_profile=True)
-
-        images = self.get_images(queryset)
-
-        # if no gallery images uploaded, display a default image
-        if not images:
-            images = [os.path.join(
-                        settings.STATIC_URL,
-                        'img/default_image_profile_not_logged_in.jpg')]
-        return images
-
+        return queryset
+    
     def get_profile_image(self, user):
         userprofile = UserProfile.objects.get(user=user)
 

@@ -50,18 +50,17 @@ def get_userprofile(user):
     return user.get_profile()
 
 @register.filter
-def profile_image(userprofile):
+def profile_image_thumbnail(userprofile):
+    """ Return a thumbnail to use with sorl.thumbnail """
     try:
         # display cropped profile image if there's any
         if userprofile.profile_image_cropped:
-            profile_image = userprofile.profile_image_cropped
+            return userprofile.profile_image_cropped.file
         else:
-            profile_image = userprofile.profile_image_uncropped
-
-        profile_image = profile_image.get_image_url()
+            return userprofile.profile_image_uncropped.file
     except:
         import os
-        profile_image = os.path.join(
-                            settings.STATIC_URL,
-                            'img/default_image_profile_not_logged_in.jpg')
-    return profile_image
+        default_img = os.path.join(settings.PROJECT_DIR, 'media/img',
+                                "default_image_profile_not_logged_in.jpg")
+        from sorl.thumbnail import get_thumbnail
+        return get_thumbnail(open(default_img), "80x80")

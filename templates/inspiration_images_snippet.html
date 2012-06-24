@@ -1,4 +1,5 @@
 {% load index_extras %}
+{% load thumbnail %}
 {% for image in images %}
 
 {% with image.user|get_userprofile as userprofile %}
@@ -7,8 +8,10 @@
   <div class="mainImageContent">
     <div class="leftSidebar">
       <a href="{{ userprofile.profile_url }}">
-        <img class="profile-image" src="{{ userprofile|profile_image }}"
+        {% thumbnail userprofile|profile_image "80x80" crop="center" as im %}
+        <img class="profile-image" src="{{ im.url }}"
              title="{{ image.user.first_name }} {{ image.user.last_name }}" />
+        {% endthumbnail %}
       </a>
       <img class="hype" src="http://stylematch.s3-website-eu-west-1.amazonaws.com/test/hype.png"/>
     </div>

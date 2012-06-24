@@ -35,10 +35,10 @@ function moveScroller() {
     var b = $(window).scrollTop();
     var d = $("#scroller-anchor").offset().top;
     var c=$("#scroller");
-    var height = $(window).height();
+    var footer = $('.base-footer-div').offset().top;
     var profile_list_height = $('#profile-list').height();
     if (b>d && profile_list_height > 510) {
-      pos = height-b;
+      pos = footer - (b+600);
       if (pos > 0) pos = 0;
       c.css({position:"fixed",top:pos+"px"})
     } else {

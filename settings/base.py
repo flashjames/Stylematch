@@ -290,6 +290,7 @@ JQUERY_SCRIPT = STATIC_URL + "js/jquery/jquery-1.7.1.js"
 GALLERIA_URL = STATIC_URL + "js/galleria/src/"
 
 TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.messages.context_processors.messages',
     'django.contrib.auth.context_processors.auth',
     'index.context_processors.jquery_script',
     'index.context_processors.galleria_urls',

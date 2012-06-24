@@ -6,22 +6,6 @@ import socket
 
 PRODUCTION = STAGING = DEVELOPMENT = False
 
-
-if socket.gethostname() == 'avizera-deploy':
-    PRODUCTION = True
-else:
-    DEVELOPMENT = True
-
-# temporary way to set to STAGING environment
-if False:
-    STAGING = True
-    DEVELOPMENT = PRODUCTION = False
-
-if PRODUCTION:
-    DEBUG = TEMPLATE_DEBUG = THUMBNAIL_DEBUG = False
-if DEVELOPMENT:
-    DEBUG = TEMPLATE_DEBUG = THUMBNAIL_DEBUG = True
-
 INTERNAL_IPS = iptools.IpRangeList(
     '127.0.0.1',                # single ip
     '192.168/16',               # CIDR network block
@@ -30,37 +14,15 @@ INTERNAL_IPS = iptools.IpRangeList(
 
 # Absolute path to project directory.
 # If you rename/remove this you will break things
-PROJECT_DIR = os.path.dirname(__file__)
+PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
     ('Jenso', 'jenso1988@gmail.com'),
 )
 
 MANAGERS = ADMINS
 
-if PRODUCTION:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'django_stylematch',
-            'USER': 'djangostylematch',
-            'PASSWORD': 'KALSl23lKL31skk1',
-            'HOST': 'localhost',
-            'PORT': '3306',
-            'OPTIONS': {
-                'init_command': 'SET storage_engine=INNODB',
-                },
-            }
-        }
-if DEVELOPMENT or STAGING:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': PROJECT_DIR + '/database/test.db',
-            'TEST_NAME': PROJECT_DIR + '/database/testest.db',
-            }
-        }
+STATIC_URL = '/static/'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -105,13 +67,6 @@ STATIC_DOC_ROOT = os.path.join(PROJECT_DIR, "static/")
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
 
-if PRODUCTION:
-    STATIC_URL = 'http://stylematch.s3-website-eu-west-1.amazonaws.com/'
-if DEVELOPMENT:
-    STATIC_URL = '/static/'
-if STAGING:
-    STATIC_URL = 'http://dev-jens.s3-website-eu-west-1.amazonaws.com/'
-
 STATIC_ROOT = os.path.join(PROJECT_DIR, "static/")
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
@@ -137,6 +92,9 @@ STATICFILES_FINDERS = (
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '11ju*buxq(sqnmg%!^za&&v_+0=j#p2)iuhu+o6sw+lcdyfytl'
+if not SECRET_KEY:
+    from logging import warn
+    warn('Please set a unique SECRET_KEY in ' + __file__)
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -151,7 +109,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -172,7 +129,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
-    'debug_toolbar',
     'social_auth',
     'registration',
     'django_extensions',
@@ -189,11 +145,6 @@ INSTALLED_APPS = (
     'statistics',
 )
 
-### S3 storage, mail and credentials
-
-if PRODUCTION or STAGING:
-    DEFAULT_FILE_STORAGE = STATICFILES_STORAGE = ('storages.backends'
-                                                  '.s3boto.S3BotoStorage')
 AWS_ACCESS_KEY_ID = 'AKIAJHCGEY6XAXXOSYXA'
 AWS_SECRET_ACCESS_KEY = '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'
 
@@ -203,11 +154,6 @@ DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'hampus.bergqvist@stylematch.se'
 SERVER_EMAIL, default error message email.
 DEFAULT_FROM_EMAIL, all other mails
 """
-
-if PRODUCTION:
-    AWS_STORAGE_BUCKET_NAME = 'stylematch'
-if STAGING:
-    AWS_STORAGE_BUCKET_NAME = 'dev-jens'
 
 ### END Amazon credentials
 
@@ -237,122 +183,105 @@ SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
 # inform where user profile model is defined
 AUTH_PROFILE_MODULE = "accounts.UserProfile"
 
-if DEVELOPMENT or STAGING:
-    LOG_DIR = os.path.join(PROJECT_DIR, 'log')
-    LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': False,
-        'root': {
+LOG_DIR = os.path.join(PROJECT_DIR, 'log')
+BASE_LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'root': {
+        'level': 'WARNING',
+        'handlers': ['console', 'file_warning'],
+    },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s '
+                      '%(process)d %(thread)d %(message)s'
+        },
+    },
+    'handlers': {
+        'file_debug': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '%s/debug.log' % LOG_DIR,
+            'formatter': 'verbose',
+        },
+        'file_warning': {
             'level': 'WARNING',
-            'handlers': ['console', 'file_warning'],
-            },
-        'formatters': {
-            'verbose': {
-                'format': '%(levelname)s %(asctime)s %(module)s '
-                          '%(process)d %(thread)d %(message)s'
-                },
-            },
-        'handlers': {
-            'file_debug': {
-                'level': 'DEBUG',
-                'class': 'logging.FileHandler',
-                'filename': '%s/debug.log' % LOG_DIR,
-                'formatter': 'verbose',
-                },
-            'file_warning': {
-                'level': 'WARNING',
-                'class': 'logging.FileHandler',
-                'filename': '%s/warning.log' % LOG_DIR,
-                'formatter': 'verbose',
-                },
-            'console': {
-                'level': 'DEBUG',
-                'class': 'logging.StreamHandler',
-                'formatter': 'verbose'
-                },
-            },
-        'loggers': {
-            'django': {
-                'level': 'DEBUG',
-                'handlers': ['file_debug'],
-                'propagate': True,
-                },
-            'django.db.backends': {
-                'level': 'ERROR',
-                'handlers': ['console', 'file_debug'],
-                'propagate': True,
-                },
-            'raven': {
-                'level': 'DEBUG',
-                'handlers': ['file_debug'],
-                'propagate': True,
-                },
-            'sentry.errors': {
-                'level': 'DEBUG',
-                'handlers': ['file_debug'],
-                'propagate': True,
-                },
-            },
-        }
-if PRODUCTION:
-    LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': True,
-        'root': {
-            'level': 'WARNING',
-            'handlers': ['sentry'],
-            },
-        'formatters': {
-            'verbose': {
-                'format': '%(levelname)s %(asctime)s %(module)s '
-                          '%(process)d %(thread)d %(message)s'
-                },
-            },
-        'handlers': {
-            'sentry': {
-                'level': 'ERROR',
-                'class': 'raven.contrib.django.handlers.SentryHandler',
-                },
-            'console': {
-                'level': 'DEBUG',
-                'class': 'logging.StreamHandler',
-                'formatter': 'verbose'
-                },
-            },
-        'loggers': {
-            'django.db.backends': {
-                'level': 'ERROR',
-                'handlers': ['console'],
-                'propagate': False,
-                },
-            'raven': {
-                'level': 'DEBUG',
-                'handlers': ['console'],
-                'propagate': False,
-                },
-            'sentry.errors': {
-                'level': 'DEBUG',
-                'handlers': ['console'],
-                'propagate': False,
-                },
-            },
-        }
+            'class': 'logging.FileHandler',
+            'filename': '%s/warning.log' % LOG_DIR,
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'django': {
+            'level': 'DEBUG',
+            'handlers': ['file_debug'],
+            'propagate': True,
+        },
+        'django.db.backends': {
+            'level': 'ERROR',
+            'handlers': ['console', 'file_debug'],
+            'propagate': True,
+        },
+        'raven': {
+            'level': 'DEBUG',
+            'handlers': ['file_debug'],
+            'propagate': True,
+        },
+        'sentry.errors': {
+            'level': 'DEBUG',
+            'handlers': ['file_debug'],
+            'propagate': True,
+        },
+    },
+}
 
-if PRODUCTION:
-    # Sentry (loggin) DSN value, the key used to send logs to Sentry
-    SENTRY_DSN = 'http://20195eef47244f21a845b9eaa12a3af3:68325bc8efe64aceaec134815ef41850@www.stylematch.se:9000/1'
-
-    # Add raven to the list of installed apps (sentry logging client)
-    INSTALLED_APPS = INSTALLED_APPS + (
-        # ...
-        'raven.contrib.django',
-        )
-
-# Debug toolbar
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False,
-    }
-
+SENTRY_LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'root': {
+        'level': 'WARNING',
+        'handlers': ['sentry'],
+    },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s '
+                      '%(process)d %(thread)d %(message)s'
+        },
+    },
+    'handlers': {
+        'sentry': {
+            'level': 'ERROR',
+            'class': 'raven.contrib.django.handlers.SentryHandler',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'ERROR',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'raven': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'sentry.errors': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+    },
+}
 # django-registration - dont remove or stuff will break
 ACCOUNT_ACTIVATION_DAYS = 7
 
@@ -372,15 +301,5 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 # Paths to user uploaded images, used in fileupload app
 PATH_USER_IMGS = "user-imgs/"
 
-if PRODUCTION or STAGING:
-    UPLOAD_PATH_USER_IMGS = PATH_USER_IMGS
-if DEVELOPMENT:
-    UPLOAD_PATH_USER_IMGS = "media/" + PATH_USER_IMGS
-
 MAX_IMAGE_SIZE = 20 * 1024 * 1024
 FULL_PATH_USER_IMGS = os.path.join(STATIC_URL, PATH_USER_IMGS)
-
-# store sorl-thumbnail cache under /media dir
-if DEVELOPMENT:
-    THUMBNAIL_PREFIX = 'media/cache/'
-    MEDIA_URL = '/'

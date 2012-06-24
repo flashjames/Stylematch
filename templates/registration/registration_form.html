@@ -80,7 +80,7 @@
       <p style="clear: left;" />
       <center>
         <button type="submit" name="register" class="btn-large btn-info">Skapa konto</button>
-	<p style="margin-top:28px;font-size:10px;">Genom att klicka på "Skapa konto" bekräftar du också att du läst och accepterat våra <a target="_blank" href="{% url 'anvandarvillkor' %}">användarvillkor</a></p>
+    <p style="margin-top:28px;font-size:10px;">Genom att klicka på "Skapa konto" bekräftar du också att du läst och accepterat våra <a target="_blank" href="{% url 'anvandarvillkor' as av %}{{ av }}">användarvillkor</a></p>
       </center>
         </fieldset>
   </form>
@@ -103,7 +103,7 @@
 	
 	
 	{% include "invite_modal_snippet.html" %}
-         <a href="{% url 'get_invite' %}" class="btn btn-large btn-info">Jag vill ha en inbjudningskod!</button></a></h3>
+         <a href="{% url 'get_invite' as gi %}{{ gi }}" class="btn btn-large btn-info">Jag vill ha en inbjudningskod!</button></a></h3>
 	
 	
 </div>

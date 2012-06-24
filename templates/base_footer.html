@@ -6,8 +6,8 @@
   <div class="container row">
     <div class="span7 footer-menu">
     <p style="display:inline-block; margin-right:30px;">© Copyright Avizera AB</p>
-      <a href="{% url 'features_page' %}">Synas på StyleMatch</a>
-      <a href="{% url 'about_page' %}">Kontakt</a>
+      <a href="{% url 'features_page' as features %}{{ features }}">Synas på StyleMatch</a>
+      <a href="{% url 'about_page' as about %}{{ about }}">Kontakt</a>
       
     </div>
     <div class="span2">

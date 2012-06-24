@@ -84,7 +84,7 @@ def deploy_db_change():
     restart_gunicorn()
 
 
-def deploy_without_db_change():
+def deploy():
     update_dependencies()
     git_pull()
     update_git_submodules()

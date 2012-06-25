@@ -5,13 +5,44 @@
 {% block title %}Information om din salong{% endblock %}
 {% block content %}
 
+<style>
+.sell-block li, .sell-block h3 {
+color: white;
+margin-top:20px;
+padding-right:10px;
+padding-left:14px;
 
+}
+
+.sell-block h3 {
+padding-right:10px;
+padding-left:14px;
+}
+
+.sell-block li {
+margin-bottom:5px;
+}
+
+.sell-block ul {
+margin-bottom:30px;
+}
+
+.sell-block {
+margin-top:50px;
+/* from block on first page */
+background: -webkit-gradient(linear, left top, left bottom, from(#3a352e), to(#534c42));
+-moz-box-shadow: 3px 3px 5px 6px #ccc;
+-webkit-box-shadow: 3px 3px 5px 6px #ccc;
+box-shadow: 3px 3px 5px 6px #ccc;
+
+}
+</style>
 <div class="row signup-step1">
 
 	{% include "accounts/signup_progress_bar.html" %}
-  <div id="edit-profile-large" class="span8 offset1">
+  <div id="edit-profile-large" class="span6 offset2">
   
-    <h2>Hej, vart jobbar du?</h2>
+    <h2 style="margin-left:45px;margin-bottom:-10px;">Hej, vart jobbar du?</h2>
     <form action="" method="post" class="form-horizontal">{% csrf_token %}
       <fieldset>
         {% for field in form %}
@@ -25,5 +56,12 @@
       </fieldset>
     </form>
   </div>
+  <div class="span3 sell-block">
+    <ul>
+      <h3>Salongsinformationen hjälper dina kunder</h3>
+      <li>Hitta till din salong</li>
+      <li>Ringa och boka dig</li>
+    </ul>
+    </div>
 </div>
 {% endblock %}

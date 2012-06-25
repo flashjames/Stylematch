@@ -6,16 +6,11 @@
 {% block content %}
 {% include "accounts/signup_progress_bar.html" %}
 <div class="row signup-step1-main" style="margin-bottom:40px;padding-top:60px;">
-  <div class="span3 profile-image offset1">
-    <h3 style="margin-bottom:6px">Nuvarande profilbild</h3>
-    <div class="profile-image-border">    
-      <img src="{{ STATIC_URL }}img/default_image_profile_logged_in.jpg"/>
-      <a class="edit-profile-image-test-links" data-toggle="modal" href="#image-upload-dialog-profileimage">
-	<div class="edit-profile-image-test">
-	  <h3> Tryck här för att byta profilbild</h3>
-	</div>
-      </a>
-    </div>
+  <div class="span3">
+      <h3 style="margin-bottom:6px">Nuvarande profilbild</h3>
+      <div style="background-color:grey;">
+	<img style="max-width:none;padding-left:5px;padding-top:5px;" width="220" src="{{ STATIC_URL }}img/default_image_profile_logged_in.jpg"/>
+      </div>
   </div>
 
   <div class="span6 offset1">

@@ -60,6 +60,7 @@ def profile_image(userprofile):
 
         profile_image = profile_image.get_image_url()
     except:
+        import os
         profile_image = os.path.join(
                             settings.STATIC_URL,
                             'img/default_image_profile_not_logged_in.jpg')

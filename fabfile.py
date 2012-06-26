@@ -108,6 +108,7 @@ def deploy_db_change():
     compile_less()
     collectstatic()
     restart_gunicorn()
+    test()
 
 
 def deploy():
@@ -117,3 +118,4 @@ def deploy():
     compile_less()
     collectstatic()
     restart_gunicorn()
+    test()

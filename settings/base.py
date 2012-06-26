@@ -143,6 +143,7 @@ INSTALLED_APPS = (
     'fts',
     'sorl.thumbnail',
     'statistics',
+    'gunicorn',
 )
 
 AWS_ACCESS_KEY_ID = 'AKIAJHCGEY6XAXXOSYXA'

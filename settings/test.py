@@ -10,8 +10,7 @@ DEBUG = TEMPLATE_DEBUG = THUMBNAIL_DEBUG = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': PROJECT_DIR + '/database/test.db',
-        'TEST_NAME': PROJECT_DIR + '/database/testest.db',
+        'NAME': ':memory:',
     }
 }
 

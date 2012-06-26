@@ -24,3 +24,4 @@ production/*
 django-galleria/
 bootstrap/static/css/style.css
 fabsettings.py
+settings/local.py

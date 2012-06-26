@@ -18,45 +18,75 @@ instead of current bash script.
 """
 
 
+def _cd_project_root():
+    return cd(env.directory)
+
+
+def _activate():
+    return sudo(env.activate, user=env.deploy_user)
+
+
+# Base commands
+
 def virtualenv(command):
     """
     Execute commands in virtualenv, as env.deploy_user
     """
-    with cd(env.directory):
+    with _cd_project_root():
         sudo(env.activate + '&&' + command, user=env.deploy_user)
 
 
-def git_pull():
+def manage(cmd):
+    with _cd_project_root():
+        virtualenv('python manage.py ' + cmd)
+
+
+def git_pull(remote='origin'):
     'Updates the repository.'
-    with cd(env.directory):
-        sudo('git pull', user=env.deploy_user)
+    with _cd_project_root():
+        sudo('git pull ' + remote, user=env.deploy_user)
 
 
-def update_dependencies():
+# High-level commands
+
+def install_requirements():
     virtualenv("pip install -r requirements.txt")
 
 
-def upload_static_files():
+def test():
+    manage('test --settings=settings.test')
+
+
+def collectstatic():
     virtualenv("./manage.py collectstatic --noinput")
 
 
 def compile_less():
+    """ TODO: Compile all files in a folder instead """
     virtualenv("lessc bootstrap/static/less/bootstrap.less "
                      "bootstrap/static/css/style.css")
 
 
 def backup_database():
+    """ TODO: Do not require password to backup the db """
     now = datetime.datetime.now()
     filename = ("/home/ubuntu/database_backup/stylematchdb_"
                 + now.strftime("%y%m%d-%H-%M") + ".sql")
     sudo("mysqldump -u root -p django_stylematch > " + filename)
 
 
-def migrate_db():
-    virtualenv("./manage.py migrate accounts")
+def migrate(app='accounts'):
+    manage('migrate ' + app)
+
+
+# Server commands
 
 def restart_nginx():
     sudo("/etc/init.d/nginx restart")
+
+
+def restart_gunicorn():
+    sudo("restart django_stylematch")
 
 
 def top():
@@ -64,30 +94,26 @@ def top():
 
 
 def update_git_submodules():
-    with cd(env.directory):
+    with _cd_project_root():
         sudo('git submodule init', user=env.deploy_user)
         sudo('git submodule update', user=env.deploy_user)
 
 
-def restart_gunicorn():
-    sudo("restart django_stylematch")
-
-
 def deploy_db_change():
-    update_dependencies()
+    install_requirements()
     backup_database()
     git_pull()
     update_git_submodules()
-    migrate_db()
+    migrate('accounts')
     compile_less()
-    upload_static_files()
+    collectstatic()
     restart_gunicorn()
 
 
 def deploy():
-    update_dependencies()
+    install_requirements()
     git_pull()
     update_git_submodules()
     compile_less()
-    upload_static_files()
+    collectstatic()
     restart_gunicorn()

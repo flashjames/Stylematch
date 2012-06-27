@@ -111,6 +111,9 @@
                  function(r) {
                     if (r === true) {
                         service.model.destroy({
+                            success:function() {
+                                vent.trigger('changeModelToEdit', new Service());
+                            },
                             error:function() {
                                 $('#alert').notify();
                                 $('#alert').notify("create", {

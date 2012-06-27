@@ -53,7 +53,7 @@
         {% url 'index_page' as index %}
         {% if request.path != index %}
         window.setTimeout(function() {
-          window.location = '{% url 'index_page' %}';
+          window.location = '{% url 'index_page' as index %}{{index}}';
         }, 1500);
         {% endif %}
       };

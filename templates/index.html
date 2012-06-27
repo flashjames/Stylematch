@@ -44,13 +44,11 @@
 
 
       <div class="span5 align-center-search-form offset5 pull-right">
-        <form class="form-search search-form">
-          <select data-placeholder="Välj stad..." class="chzn-select" style="width:250px;" tabindex="2">
-          {% include "list_of_city_snippet.html" %}        </select>
-
-
-
-          <a href="#" id="find-button" class="btn btn-primary btn-large popover1" rel="tooltip" data-content="" data-original-title="Kommer snart" onclick="goToByScroll('test')">Sök</a>
+        <form class="form-search search-form" id="find-stylist">
+          <select id="city-select" data-placeholder="Välj stad..." class="chzn-select" style="width:250px;" tabindex="2">
+            {% include "list_of_city_snippet.html" with popular=popular_cities other=other_cities %}
+          </select>
+          <a class="btn btn-primary btn-large" id="find-button" onclick="$('#find-stylist').submit()">Sök</a>
         </form>
       </div>
     </div>
@@ -128,6 +126,14 @@
 }(document, 'script', 'facebook-jssdk'));
     </script>
 
+  <script type="text/javascript">
+    $('#find-stylist').submit(function() {
+      if ($('#city-select').val()) {
+        window.location = '/' + $('#city-select').val().toLowerCase();
+      }
+      return false;
+    });
+  </script>
   <!-- the code that does the magic on the page -->
   <script src="{{ STATIC_URL }}js/featured.js"></script>
 

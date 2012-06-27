@@ -186,19 +186,6 @@ function moveScroller() {
 
 
         {% endfor %}
-
-        geocoder.geocode( { 'address': address}, function(results, status) {
-            map.setCenter(results[0].geometry.location);
-            var marker = new google.maps.Marker({
-                map: map,
-                position: results[0].geometry.location
-            });
-            if (status == google.maps.GeocoderStatus.OK) {
-                latlng = results[0].geometry.location;
-            } else {
-                console.log("FAIL: "+status);
-            }
-        });
     }
 
     $(document).ready(function() {

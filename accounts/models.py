@@ -7,6 +7,7 @@ from django.conf import settings
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 from django.core.files.storage import default_storage
+from registration.signals import user_registered
 
 from tools import list_with_time_interval, format_minutes_to_pretty_format
 
@@ -21,6 +22,32 @@ import uuid
 import os
 
 
+def create_temporary_profile_url(sender, user, request, **kwargs):
+    """
+    Create a standard profile url at signup step using first name and
+    last name. Add number if the url is already taken.
+
+    John Nelson       -> /john-nelson
+    John Nelson again -> /john-nelson2
+
+    If, for some reason, first name isn't in POST data, bail out.
+    """
+
+    if 'first_name' not in request.POST:
+        return
+    first_name = request.POST['first_name']
+    last_name = request.POST['last_name']
+    users = User.objects.filter(first_name=first_name,
+                                last_name=last_name)
+    tmp_url = first_name + last_name
+    if len(users) > 1:
+        tmp_url += "%d" % (len(users))
+    userprofile = UserProfile.objects.get(user=user)
+    userprofile.profile_url = tmp_url.lower()
+    userprofile.save()
+user_registered.connect(create_temporary_profile_url)
+
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     """
@@ -29,10 +56,10 @@ def create_user_profile(sender, instance, created, **kwargs):
     Create different profiles depending on if it's a stylist or a regular user
     """
     if created:
-        UserProfile.objects.create(user=instance,
-                                   temporary_profile_url=uuid.uuid4().hex,
+        UserProfile.objects.create(
+                user=instance,
+                temporary_profile_url=uuid.uuid4().hex,
                                    )
-
         OpenHours.objects.create(user=instance)
 
 

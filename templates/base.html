@@ -49,6 +49,11 @@
       
       }
 
+      function indexredirect() {
+        window.setTimeout(function() {
+          window.location = '{% url 'index_page' %}';
+        }, 1500);
+      };
  
 </script>
 
@@ -119,7 +124,14 @@
                 <li class="{{ edit_images }}"><a href="{% url 'edit_images' %}">Förändra bilder</a></li>
               </ul>
             </ul>
-            <a href="#" class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart! Använd sökblocket på första sidan tills vidare">Sök frisörer</a>
+            <a href="#"
+               class="popover1"
+               rel="tooltip"
+               data-content=""
+               data-original-title="Kommer snart! Använd sökblocket på förstasidan tills vidare"
+               onclick="indexredirect()">
+                 Sök frisörer
+            </a>
             <a href="/about-us">Kontakta Oss</a>
             <a href="#"  class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart">Bjud in vän</a>
           </div>
@@ -129,7 +141,14 @@
 
           <div class="span7 main-menu">
 
-            <a href="#" class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart! Använd sökblocket på första sidan tills vidare">Hitta frisör</a>
+            <a href="#"
+               class="popover1"
+               rel="tooltip"
+               data-content=""
+               data-original-title="Kommer snart! Använd sökblocket på förstasidan tills vidare"
+               onclick="indexredirect()">
+                 Hitta frisör
+            </a>
             <a href="#"  class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart" onclick="goToByScroll('test')">Bli inspirerad </a>
             <a href="{% url 'about_page' as about %}{{ about }}">Om Stylematch</a>
 

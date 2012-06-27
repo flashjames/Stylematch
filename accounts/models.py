@@ -20,6 +20,7 @@ from django.core.validators import MaxLengthValidator
 
 import uuid
 import os
+import re
 
 
 def create_temporary_profile_url(sender, user, request, **kwargs):
@@ -40,6 +41,7 @@ def create_temporary_profile_url(sender, user, request, **kwargs):
     users = User.objects.filter(first_name=first_name,
                                 last_name=last_name)
     tmp_url = first_name + last_name
+    tmp_url = re.sub(r'\s', '', tmp_url)
     if len(users) > 1:
         tmp_url += "%d" % (len(users))
     userprofile = UserProfile.objects.get(user=user)

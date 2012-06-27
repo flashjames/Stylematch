@@ -193,13 +193,18 @@ class _MockRequestClient(Client):
         return request
 
 
-def _mock_request():
+def _mock_request(first_name, last_name):
     """
     Construct and return a mock ``HttpRequest`` object; this is used
     in testing backend methods which expect an ``HttpRequest`` but
     which are not being called from views.
     """
-    return _MockRequestClient().request()
+    request = _MockRequestClient().request()
+    request.POST._mutable = True
+    request.POST['first_name'] = first_name
+    request.POST['last_name'] = last_name
+    request.POST._mutable = False
+    return request
 
 
 class TestModels(TestCase):
@@ -224,13 +229,16 @@ class TestModels(TestCase):
         John Nelson again -> /john-nelson2
 
         """
-        request = _mock_request()
-        request.POST._mutable = True
-        request.POST['first_name'] = 'alice'
-        request.POST['last_name'] = 'wonder'
-        request.POST._mutable = False
+        request = _mock_request('alice', 'wonder')
         new_user = self.backend.register(request,
                                          username='alice',
                                          **self.user_info)
         up = UserProfile.objects.get(user=new_user)
         self.assertEqual(up.profile_url, 'alicewonder')
+
+        request = _mock_request('alice', 'wonder land')
+        new_user = self.backend.register(request,
+                                         username='alice1',
+                                         **self.user_info)
+        up = UserProfile.objects.get(user=new_user)
+        self.assertEqual(up.profile_url, 'alicewonderland')

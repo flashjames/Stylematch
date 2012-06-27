@@ -107,9 +107,15 @@
             return this;
         },
         events:{
+            "change .comment-area" : "updateComment",
             "click .delete-image":"deleteService",
             "click .show_image_on_profile":"switchDisplayOnProfile",
             "click .save": "saveComment"
+        },
+        updateComment: function() {
+            var new_comment = $(this.el).find("textarea").val();
+            var comment = this.model.get("comment");
+            this.model.set({comment:new_comment, silent:true});
         },
         saveComment: function() {
             var new_comment = $(this.el).find("textarea").val();
@@ -148,11 +154,7 @@
         },
         switchDisplayOnProfile: function() {
             var display_on_profile = this.model.get("display_on_profile");
-            var bool;
-            if(display_on_profile)
-                bool = false;
-            else
-                bool = true;
+            var bool = !display_on_profile;
 
             this.model.set({display_on_profile: bool, silent:true});
 

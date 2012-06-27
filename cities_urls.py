@@ -4,7 +4,12 @@ from django.core.urlresolvers import reverse
 from django.views.generic import RedirectView
 from index.views import SearchCityView
 
-cities = [u'linköping', u'norrköping', 'stockholm']
+from index.cities import *
+
+cities = []
+for city in popular + other:
+    if city not in cities:
+        cities += [city.lower()]
 
 urlpatterns = patterns('',)
 for city in cities:

@@ -133,6 +133,9 @@
       }
       return false;
     });
+    $('#city-select').change(function() {
+      $('#find-stylist').submit();
+    });
   </script>
   <!-- the code that does the magic on the page -->
   <script src="{{ STATIC_URL }}js/featured.js"></script>

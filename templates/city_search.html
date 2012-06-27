@@ -106,7 +106,9 @@
       });
     </script>
   </div> <!-- .city-search-information-span -->
+
   <div class="span8" id="profile-list">
+    {% if profiles|length > 0 %}
     <ul class="profile-list profile-list-margin-zero">
     {% for profile in profiles %}
       <li class="profile-list-item-city" >
@@ -136,6 +138,29 @@
       </li>
     {% endfor %}
     </ul>
+    {% else %} {# we have no stylists in this city #}
+    <div style="text-align:center;">
+      <h2 style="margin: 30px;">
+        Vi har tyvärr inga frisörer i {{ city }} än.
+      </h2>
+      <div class="well">
+        <span>
+          <h3>Är du frisör?</h3>
+        </span>
+        <a href="{% url 'registration_register' %}" class="btn btn-primary btn-large">Skapa din profil!</a>
+      </div>
+      <div class="well">
+        <span>
+          <h3>
+            Vill du boka frisör i {{ city }}?
+          </h3>
+        </span>
+        <a href="#" rel="tooltip" data-original-title="Kommer snart"
+           class="btn btn-primary btn-large popover1">Tipsa din frisör!</a>
+      </div>
+    </div>
+    <div style="text-align:center;">
+    {% endif %}
   </div> <!-- #profile-list -->
 </div>
 

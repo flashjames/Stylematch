@@ -16,7 +16,9 @@
 
 <meta property="og:site_name" content="StyleMatch">
 <meta property="og:type" content="company">
+{% block meta-tag-image %}
 <meta property="og:image" content="{{ profile_image }}">
+{% endblock %}
 <meta property="og:street-address" content="{{ profile.salon_adress }}">
 <meta property="og:locality" content="{{ profile.salon_city }}">
 <meta property="og:phone_number" content="{% if profile.number_on_profile %}

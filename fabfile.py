@@ -41,10 +41,10 @@ def manage(cmd):
         virtualenv('python manage.py ' + cmd)
 
 
-def git_pull(remote='origin'):
+def git_pull(remote='origin', branch='master'):
     'Updates the repository.'
     with _cd_project_root():
-        sudo('git pull ' + remote, user=env.deploy_user)
+        sudo('git pull %s %s' %(remote, branch), user=env.deploy_user)
 
 
 # High-level commands
@@ -111,9 +111,9 @@ def deploy_db_change():
     test()
 
 
-def deploy():
+def deploy(branch='master'):
     install_requirements()
-    git_pull()
+    git_pull(branch=branch)
     update_git_submodules()
     compile_less()
     collectstatic()

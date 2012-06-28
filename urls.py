@@ -162,6 +162,6 @@ if settings.DEVELOPMENT:
                             url(r'^static/(?P<path>.*)$', 'serve'),
                             url(r'^media/(?P<path>.*)$',
                                 'serve', {
-                                    'document_root': settings.PROJECT_DIR + '/media/cache/',
+                                    'document_root': settings.MEDIA_ROOT,
                                     }),
                             )

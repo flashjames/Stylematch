@@ -1,12 +1,12 @@
-[submodule "media/js/galleria"]
-	path = media/js/galleria
+[submodule "staticfiles/js/galleria"]
+	path = staticfiles/js/galleria
 	url = git://github.com/aino/galleria.git
-[submodule "media/js/lightbox"]
-	path = media/js/lightbox
+[submodule "staticfiles/js/lightbox"]
+	path = staticfiles/js/lightbox
 	url = https://github.com/jackmoore/colorbox.git
-[submodule "media/js/jcrop"]
-	path = media/js/jcrop
+[submodule "staticfiles/js/jcrop"]
+	path = staticfiles/js/jcrop
 	url = git://github.com/tapmodo/Jcrop.git
-[submodule "media/js/chosen"]
-	path = media/js/chosen
+[submodule "staticfiles/js/chosen"]
+	path = staticfiles/js/chosen
 	url = https://github.com/harvesthq/chosen.git

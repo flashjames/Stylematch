@@ -1,8 +1,14 @@
 # coding: utf-8
-from django.test import TestCase
+from django.test import TestCase, Client
+from django.contrib.auth.models import User
+from django.contrib.sessions.middleware import SessionMiddleware
+from django.core.handlers.wsgi import WSGIRequest
 from accounts.tastypie_test import ResourceTestCase
 from tastypie.serializers import Serializer
 from accounts.models import UserProfile, ProfileImage
+from accounts.register_views import RegisterCustomBackend
+from registration.models import RegistrationProfile
+from registration.backends.default import DefaultBackend
 import tools
 
 
@@ -42,7 +48,7 @@ class TestTools(TestCase):
                           (60, "01:00"),
                           (90, "01:30")],
                 tools.list_with_time_interval(stop=90))
-        self.assertEqual([(30, "00:30")], 
+        self.assertEqual([(30, "00:30")],
                 tools.list_with_time_interval(
                     start=30,
                     stop=45,
@@ -103,7 +109,6 @@ class ProfileResourceTest(ResourceTestCase):
                      'first_name',
                      'last_name']
 
-
     def test_get_list_json(self):
         resp = self.api_client.get('/api/profile/profiles/', format='json')
         self.assertValidJSONResponse(resp)
@@ -146,3 +151,104 @@ class ProfileResourceTest(ResourceTestCase):
 #        self.assertValidJSONResponse(resp)
 #        # 2 visible profiles are from linköping and one from norrköping
 #        self.assertEqual(len(self.deserialize(resp)['objects']), 3)
+
+
+class _MockRequestClient(Client):
+    """
+    A ``django.test.Client`` subclass which can return mock
+    ``HttpRequest`` objects.
+    """
+
+    def request(self, **request):
+        """
+        Rather than issuing a request and returning the response, this
+        simply constructs an ``HttpRequest`` object and returns it.
+        """
+        environ = {
+            'HTTP_COOKIE': self.cookies,
+            'PATH_INFO': '/',
+            'QUERY_STRING': '',
+            'REMOTE_ADDR': '127.0.0.1',
+            'REQUEST_METHOD': 'GET',
+            'SCRIPT_NAME': '',
+            'SERVER_NAME': 'testserver',
+            'SERVER_PORT': '80',
+            'SERVER_PROTOCOL': 'HTTP/1.1',
+            'wsgi.version': (1, 0),
+            'wsgi.url_scheme': 'http',
+            'wsgi.errors': self.errors,
+            'wsgi.multiprocess': True,
+            'wsgi.multithread': False,
+            'wsgi.run_once': False,
+            'wsgi.input': None,
+            }
+        environ.update(self.defaults)
+        environ.update(request)
+        request = WSGIRequest(environ)
+
+        # We have to manually add a session since we'll be bypassing
+        # the middleware chain.
+        session_middleware = SessionMiddleware()
+        session_middleware.process_request(request)
+        return request
+
+
+def _mock_request(first_name, last_name):
+    """
+    Construct and return a mock ``HttpRequest`` object; this is used
+    in testing backend methods which expect an ``HttpRequest`` but
+    which are not being called from views.
+    """
+    request = _MockRequestClient().request()
+    request.POST._mutable = True
+    request.POST['first_name'] = first_name
+    request.POST['last_name'] = last_name
+    request.POST._mutable = False
+    return request
+
+
+class TestModels(TestCase):
+
+    user_info = {'password1': 'swordfish',
+                 'email': 'alice@example.com'}
+
+    backend = DefaultBackend()
+
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    def test_create_temporary_profile(self):
+        """
+        Create a standard profile url at signup step using first name and
+        last name. Add number if the url is already taken.
+
+        John Nelson       -> /john-nelson
+        John Nelson again -> /john-nelson2
+
+        """
+        # alice wonder -> 'alice-wonder'
+        request = _mock_request('alice', 'wonder')
+        new_user = self.backend.register(request,
+                                         username='alice',
+                                         **self.user_info)
+        up = UserProfile.objects.get(user=new_user)
+        self.assertEqual(up.profile_url, 'alice-wonder')
+
+        # alice wonder land -> 'alice-wonder-land'
+        request = _mock_request('alice', 'wonder land')
+        new_user = self.backend.register(request,
+                                         username='alice1',
+                                         **self.user_info)
+        up = UserProfile.objects.get(user=new_user)
+        self.assertEqual(up.profile_url, 'alice-wonder-land')
+
+        # alice-yun wonderland -> 'alice-yun-wonderland'
+        request = _mock_request('alice-yun', 'wonderland')
+        new_user = self.backend.register(request,
+                                         username='alice2',
+                                         **self.user_info)
+        up = UserProfile.objects.get(user=new_user)
+        self.assertEqual(up.profile_url, 'alice-yun-wonderland')

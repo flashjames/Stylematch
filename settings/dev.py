@@ -34,4 +34,3 @@ except ImportError:
 
 # store sorl-thumbnail cache under /media dir
 UPLOAD_PATH_USER_IMGS = PATH_USER_IMGS
-THUMBNAIL_PREFIX = 'cache'

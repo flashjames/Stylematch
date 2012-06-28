@@ -51,12 +51,12 @@ USE_L10N = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = os.path.join(PROJECT_DIR, 'media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = ''
+MEDIA_URL = '/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
@@ -76,7 +76,7 @@ ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    PROJECT_DIR + "/media/",
+    os.path.join(PROJECT_DIR, 'staticfiles'),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -296,6 +296,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'index.context_processors.jquery_script',
     'index.context_processors.galleria_urls',
     # used to access STATIC_URL in templates
+    'django.core.context_processors.media',
     'django.core.context_processors.static',
     'django.core.context_processors.request',
     )
@@ -304,4 +305,4 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 PATH_USER_IMGS = "user-imgs/"
 
 MAX_IMAGE_SIZE = 20 * 1024 * 1024
-FULL_PATH_USER_IMGS = os.path.join(STATIC_URL, PATH_USER_IMGS)
+FULL_PATH_USER_IMGS = os.path.join(MEDIA_URL, PATH_USER_IMGS)

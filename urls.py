@@ -39,6 +39,7 @@ if settings.DEVELOPMENT or settings.STAGING:
         url(r'^500/$',
                 handler500)
     )
+
 urlpatterns += patterns(
     '',
 

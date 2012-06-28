@@ -1,4 +1,5 @@
 from .base import *
+import os
 
 DEVELOPMENT = True
 DEBUG = TEMPLATE_DEBUG = THUMBNAIL_DEBUG = True
@@ -31,8 +32,5 @@ try:
 except ImportError:
     pass
 
-UPLOAD_PATH_USER_IMGS = "media/" + PATH_USER_IMGS
-
 # store sorl-thumbnail cache under /media dir
-THUMBNAIL_PREFIX = 'media/cache/'
-MEDIA_URL = '/'
+THUMBNAIL_PREFIX = os.path.join(MEDIA_URL, 'cache')

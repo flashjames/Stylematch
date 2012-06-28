@@ -155,7 +155,7 @@ class OpenHours(models.Model):
 # client side url to images, without image filename
 # used in the view that edit the images on the profile
 def get_image_url(filename):
-    return os.path.join(settings.STATIC_URL,
+    return os.path.join(settings.MEDIA_URL,
                         settings.PATH_USER_IMGS,
                         filename)
 

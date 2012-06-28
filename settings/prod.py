@@ -28,6 +28,7 @@ INSTALLED_APPS = INSTALLED_APPS + (
     )
 
 STATIC_URL = 'http://stylematch.s3-website-eu-west-1.amazonaws.com/'
+MEDIA_URL = 'http://stylematch.s3-website-eu-west-1.amazonaws.com/'
 
 # reset, STATIC_URL has changed
 ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
@@ -41,6 +42,5 @@ AWS_STORAGE_BUCKET_NAME = 'stylematch'
 
 UPLOAD_PATH_USER_IMGS = PATH_USER_IMGS
 
-
-# reset, STATIC_URL has changed
-FULL_PATH_USER_IMGS = os.path.join(STATIC_URL, PATH_USER_IMGS)
+# reset, MEDIA_URL has changed
+FULL_PATH_USER_IMGS = os.path.join(MEDIA_URL, PATH_USER_IMGS)

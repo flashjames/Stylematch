@@ -17,6 +17,7 @@ DEFAULT_FILE_STORAGE = STATICFILES_STORAGE = ('storages.backends'
                                               '.s3boto.S3BotoStorage')
 
 STATIC_URL = 'http://dev-jens.s3-website-eu-west-1.amazonaws.com/'
+MEDIA_URL = 'http://dev-jens.s3-website-eu-west-1.amazonaws.com/'
 
 # reset, STATIC_URL has changed
 ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
@@ -30,6 +31,5 @@ AWS_STORAGE_BUCKET_NAME = 'dev-jens'
 
 UPLOAD_PATH_USER_IMGS = PATH_USER_IMGS
 
-
-# reset, STATIC_URL has changed
-FULL_PATH_USER_IMGS = os.path.join(STATIC_URL, PATH_USER_IMGS)
+# reset, MEDIA_URL has changed
+FULL_PATH_USER_IMGS = os.path.join(MEDIA_URL, PATH_USER_IMGS)

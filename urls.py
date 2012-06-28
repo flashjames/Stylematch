@@ -86,6 +86,16 @@ urlpatterns += patterns(
             TemplateView.as_view(template_name="edit-account-settings.html"),
             {},
             'edit-account-settings'),
+
+    (r'^get_invite',
+            BetaEmailView.as_view(),
+            {},
+            'get_invite'),
+    (r'^start',
+            TemplateView.as_view(template_name="betaemail_index.html"),
+            {},
+            'beta_index_page'),
+
     (r'^dash',
      TemplateView.as_view(template_name="dashboard.html"),
      {},
@@ -106,15 +116,6 @@ urlpatterns += patterns(
             TemplateView.as_view(template_name="contact_us.html"),
             {},
             'contact_page'),
-
-    (r'^get_invite',
-            BetaEmailView.as_view(),
-            {},
-            'get_invite'),
-    (r'^start',
-            TemplateView.as_view(template_name="betaemail_index.html"),
-            {},
-            'beta_index_page'),
 
     (r'^features/',
             TemplateView.as_view(template_name="features.html"),

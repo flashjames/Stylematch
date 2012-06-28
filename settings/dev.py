@@ -33,4 +33,5 @@ except ImportError:
     pass
 
 # store sorl-thumbnail cache under /media dir
-THUMBNAIL_PREFIX = os.path.join(MEDIA_URL, 'cache')
+UPLOAD_PATH_USER_IMGS = PATH_USER_IMGS
+THUMBNAIL_PREFIX = 'cache'

@@ -2,6 +2,7 @@
 {% extends "base.html" %}
 {% load url from future %}
 {% load index_extras %}
+{% load thumbnail %}
 
 {% block html-head %}
 <script src="{{ GALLERIA_SCRIPT }}" type="text/javascript" />
@@ -56,7 +57,9 @@
   <div class="span3 profile-image ">
     <div class="profile-image-border">
     
-      <img src="{{ profile_image }}" name="profile-image">
+      {% thumbnail profile|profile_image_thumbnail "220x220" cropped="center" as im %}
+      <img src="{{ im.url }}" name="profile-image">
+      {% endthumbnail %}
     
     {% if user.is_authenticated and logged_in_user_profile %}
     <a class="edit-profile-image-test-links" href="{% url 'edit_images' %}">

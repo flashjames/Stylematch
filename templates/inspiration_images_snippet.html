@@ -8,7 +8,7 @@
   <div class="mainImageContent">
     <div class="leftSidebar">
       <a href="{{ userprofile.profile_url }}">
-        {% thumbnail userprofile|profile_image "80x80" crop="center" as im %}
+        {% thumbnail userprofile|profile_image_thumbnail "80x80" crop="center" as im %}
         <img class="profile-image" src="{{ im.url }}"
              title="{{ image.user.first_name }} {{ image.user.last_name }}" />
         {% endthumbnail %}
@@ -17,15 +17,15 @@
     </div>
 
     <div class="image">
-      <a href="{{ STATIC_URL }}user-imgs/{{ image }}" class="inspiration-images">
-        <img class="inspiration-images" src="{{ STATIC_URL }}user-imgs/{{ image }}"
+      <a href="{{ image.get_image_url }}" class="inspiration-images">
+        <img class="inspiration-images" src="{{ image.get_image_url }}"
              title="{{ image.comment }}" />
       </a>
     </div>
 
     <div class="rightSidebar">
       <div class="fb fb-like"
-                data-href="{{ STATIC_URL }}user-imgs/{{ image }}"
+                data-href="{{ image.get_image_url }}"
                 data-send="false"
                 data-layout="button_count"
                 data-width="100"
@@ -47,7 +47,7 @@
   </div>
   <div id="fb-wrapper-{{ forloop.counter0 }}" class="fb" style="display:none;">
     <div class="fb-comments"
-              data-href="{{ STATIC_URL }}user-imgs/{{ image }}"
+              data-href="{{ image.get_image_url }}"
               data-num-posts="3"
               data-width="470">
     </div>

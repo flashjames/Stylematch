@@ -160,6 +160,7 @@ class ProfileResource(ModelResource):
     """
     Resource to access a profile
     """
+    profile_image_size = ""
 
     def move_up(self, id, data):
         for i in range(len(data['objects'])):
@@ -190,6 +191,18 @@ class ProfileResource(ModelResource):
                                                       format,
                                                       options)
 
+    def build_filters(self, filters=None):
+        if filters is None:
+            filters = QueryDict('')
+
+        if 'profile_image_size' in filters:
+            self.profile_image_size = filters['profile_image_size']
+            filters._mutable = True
+            del filters['profile_image_size']
+            filters._mutable = False
+
+        return super(ProfileResource, self).build_filters(filters)
+
     def dehydrate(self, bundle):
         """
         Some additional fields needs to be added:
@@ -206,7 +219,17 @@ class ProfileResource(ModelResource):
                 chosen_img = img[0]
             else:
                 chosen_img = img[1]
-            bundle.data['profile_image'] = get_image_url(chosen_img.filename)
+
+            # Use a thumbnail version if image size has been set in request
+            # See build_filters()
+            if self.profile_image_size:
+                from sorl.thumbnail import get_thumbnail
+                tn = get_thumbnail(chosen_img.file,
+                                   self.profile_image_size,
+                                   cropped="center")
+                bundle.data['profile_image'] = tn.url
+            else:
+                bundle.data['profile_image'] = get_image_url(chosen_img.filename)
         else:
             bundle.data['profile_image'] = os.path.join(
                             settings.STATIC_URL, 'img',
@@ -251,6 +274,7 @@ class ProfileResource(ModelResource):
         filtering = {
                 'salon_city' : ['iexact',], # 'startswith','endswith'],
                 'show_booking_url' : ['exact',],
+                'profile_image_size': ['exact',],
                 }
         resource_name = "profiles"
         model = UserProfile

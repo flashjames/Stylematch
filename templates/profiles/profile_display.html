@@ -56,11 +56,16 @@
 
   <div class="span3 profile-image ">
     <div class="profile-image-border">
-    
-      {% thumbnail profile|profile_image_thumbnail "220x220" cropped="center" as im %}
+      {% with profile|profile_image_thumbnail as pit %}
+      {% if pit|get_class != 'ImageFieldFile' %}
+      <img src="{{ pit }}" name="profile-image">
+      {% else %}
+      {% thumbnail pit "220x220" cropped="center" as im %}
       <img src="{{ im.url }}" name="profile-image">
       {% endthumbnail %}
-    
+      {% endif %}
+      {% endwith %}
+
     {% if user.is_authenticated and logged_in_user_profile %}
     <a class="edit-profile-image-test-links" href="{% url 'edit_images' %}">
     <div class="edit-profile-image-test">

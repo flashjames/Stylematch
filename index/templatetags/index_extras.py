@@ -27,12 +27,14 @@ def active(request, pattern):
         return 'active'
     return ''
 
+
 @register.simple_tag
 def google_analytics():
     if settings.PRODUCTION:
         return '<script src="%sjs/google_analytics.js" type="text/javascript"></script>' % settings.STATIC_URL
 
     return ""
+
 
 @register.simple_tag
 def intercom_analytics():
@@ -41,17 +43,38 @@ def intercom_analytics():
 
     return ""
 
+
 @register.simple_tag
 def facebook():
         return '<script src="%sjs/facebook.js" type="text/javascript"></script>' % settings.STATIC_URL
+
 
 @register.filter
 def get_userprofile(user):
     return user.get_profile()
 
+
+@register.filter
+def get_class(self):
+    return self.__class__.__name__
+
+
 @register.filter
 def profile_image_thumbnail(userprofile):
-    """ Return a thumbnail to use with sorl.thumbnail """
+    """
+    Return a thumbnail to use with sorl.thumbnail
+    Example usage in template:
+
+        {% if image|get_class != 'ImageFieldFile' %}
+          <img src="{{ image }}">
+        {% else %}
+        {% thumbnail image "100x100 as im %}
+          <img src="{{ im.url }}">
+        {% endthumbnail %}
+        {% endif %}
+
+    """
+
     try:
         # display cropped profile image if there's any
         if userprofile.profile_image_cropped:
@@ -60,7 +83,9 @@ def profile_image_thumbnail(userprofile):
             return userprofile.profile_image_uncropped.file
     except:
         import os
-        default_img = os.path.join(settings.PROJECT_DIR, 'media/img',
-                                "default_image_profile_not_logged_in.jpg")
-        from sorl.thumbnail import get_thumbnail
-        return get_thumbnail(open(default_img), "80x80")
+        if userprofile.user.is_authenticated():
+            return os.path.join(settings.STATIC_URL, 'img',
+                    'default_image_profile_logged_in.jpg')
+        else:
+            return os.path.join(settings.STATIC_URL, 'img',
+                    'default_image_profile_not_logged_in.jpg')

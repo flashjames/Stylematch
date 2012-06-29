@@ -42,16 +42,25 @@ class SearchCityView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(SearchCityView, self).get_context_data(**kwargs)
+
         # .title() capitalizes first letter in each word
         city = self.kwargs['city']
         context['city'] = self.kwargs['city'].title()
 
+        # create an artificial request to our API
         json_request = copy(self.request)
         json_request.GET._mutable = True
         json_request.GET['format'] = 'json'
 
-        resp = self.pr.get_list(json_request, salon_city__iexact=city).content
+        # execute the request
+        resp = self.pr.get_list(json_request,
+                                salon_city__iexact=city,
+                                profile_image_size="100x100").content
+
+        # get the response
         vals = json.loads(resp)
+
+        # update our context data with the response
         context.update({
             'profiles': vals['objects']
         })

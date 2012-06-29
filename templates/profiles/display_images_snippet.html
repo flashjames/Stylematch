@@ -1,6 +1,12 @@
+{% load index_extras %}
 {% load thumbnail %}
 {% for image in images %}
+{% if image|get_class != 'GalleryImage' %}
+<img src="{{ image }}" class="{{ css_class }}">
+{% else %}
 {% thumbnail image.file "780x500" as im %}
 <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
 {% endthumbnail %}<
+{% endif %}
+
 {% endfor %}

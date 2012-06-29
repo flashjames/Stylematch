@@ -1,16 +1,22 @@
 from django.core.management.base import BaseCommand
-from accounts.models import GalleryImage
+from accounts.models import GalleryImage, ProfileImage
 import re
 
 
 class Command(BaseCommand):
-    help = "A one time solution to migrate gallery images"
+    help = "A one time solution to migrate images"
 
     def handle(self, *args, **options):
         gallery_images = GalleryImage.objects.all()
-
-        for gi in gallery_images:
-            new_file = re.sub('^media/', '', gi.file.name)
+        for img in gallery_images:
+            new_file = re.sub('^media/', '', img.file.name)
             if new_file.startswith('user-imgs'):
-                gi.file = new_file
-                gi.save()
+                img.file = new_file
+                img.save()
+
+        profile_images = ProfileImage.objects.all()
+        for img in profile_images:
+            new_file = re.sub('^media/', '', img.file.name)
+            if new_file.startswith('user-imgs'):
+                img.file = new_file
+                img.save()

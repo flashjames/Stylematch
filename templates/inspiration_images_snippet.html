@@ -8,7 +8,7 @@
   <div class="mainImageContent">
     <div class="leftSidebar">
       <a href="{{ userprofile.profile_url }}">
-        {% thumbnail userprofile|profile_image_thumbnail "80x80" crop="center" as im %}
+        {% thumbnail userprofile|profile_image_thumbnail "50x50" crop="center" as im %}
         <img class="profile-image" src="{{ im.url }}"
              title="{{ image.user.first_name }} {{ image.user.last_name }}" />
         {% endthumbnail %}

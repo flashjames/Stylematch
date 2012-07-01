@@ -8,16 +8,15 @@ from sorl.thumbnail import get_thumbnail
 import os
 
 
-def thumbnail(img_path):
+def thumbnail(img):
     try:
         # try creating a thumbnail
-        img = open(os.path.join(settings.MEDIA_ROOT,img_path))
         im = get_thumbnail(img, "300x300")
-        return u'<img src="%s" alt="%s" />' % (im.url, img_path)
+        return u'<img src="%s" />' % (im.url)
     except:
         # else link to real image
-        absolute_url = os.path.join(settings.MEDIA_URL, image_path)
-        return u'<img src="%s" alt="%s" />' % (absolute_url, image_path)
+        absolute_url = os.path.join(settings.MEDIA_URL, img)
+        return u'<img src="%s" />' % (absolute_url)
 
 
 class AdminImageWidget(AdminFileWidget):
@@ -27,11 +26,14 @@ class AdminImageWidget(AdminFileWidget):
     """
     def render(self, name, value, attrs=None):
         output = []
-        file_name = str(value)
-        if file_name:
-            file_path = '%s%s' % (settings.MEDIA_URL, file_name)
+        try:
+            tn = thumbnail(value.file)
+        except:
+            tn = None
+        if tn is not None:
+            file_path = '%s%s' % (settings.MEDIA_URL, str(value))
             output.append('<a target="_blank" href="%s">%s</a>' % \
-                (file_path,thumbnail(file_name)),
+                (file_path,tn),
             )
         output.append(super(AdminFileWidget, self).render(name, value, attrs))
         return mark_safe(u''.join(output))

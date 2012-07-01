@@ -3,7 +3,7 @@
 # from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.contrib import auth
+from django.contrib import auth, messages
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView, CreateView, TemplateView
 from django.core.urlresolvers import reverse
@@ -80,7 +80,12 @@ class BetaEmailView(CreateView):
         # written here in init since it will give reverse url error
         # if just written in class definition. because urls.py isnt loaded
         # when this class is defined
-        self.success_url = reverse('beta_index_page')
+        self.success_url = reverse('index_page')
+
+    def form_valid(self, form):
+        messages.success(self.request, "Din mail är nu registrerad, "
+                                       "vi kontaktar dig inom kort!")
+        return super(BetaEmailView, self).form_valid(form)
 
 
 class IndexPageView(TemplateView):

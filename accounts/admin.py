@@ -60,8 +60,12 @@ class ImageAdmin(admin.ModelAdmin):
     readonly_fields = ('user_link',)
 
     def user_link(self, obj):
-        change_url = reverse('admin:auth_user_change', args=(obj.user.id,))
-        return mark_safe('<a href="%s">%s</a>' % (change_url, obj.user.email))
+        try:
+            up = UserProfile.objects.get(user=obj.user)
+            change_url = reverse('admin:accounts_userprofile_change', args=(up.id,))
+            return mark_safe('<a href="%s">%s</a>' % (change_url, obj.user.email))
+        except:
+            return "Error occured getting this field value"
     user_link.short_description = 'Owner'
 
 

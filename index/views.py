@@ -8,7 +8,8 @@ from django.http import HttpResponseRedirect
 from django.views.generic import ListView, CreateView, TemplateView
 from django.core.urlresolvers import reverse
 from accounts.models import UserProfile, GalleryImage, Featured
-from index.models import BetaEmail
+from index.models import BetaEmail, Tip
+from index.forms import TipForm
 from accounts.api import ProfileResource
 import simplejson as json
 from copy import copy
@@ -86,6 +87,27 @@ class BetaEmailView(CreateView):
         messages.success(self.request, "Din mail är nu registrerad, "
                                        "vi kontaktar dig inom kort!")
         return super(BetaEmailView, self).form_valid(form)
+
+
+class TipView(CreateView):
+    """
+    Tip your stylist about us!
+    """
+    form_class = TipForm
+    template_name = "tip.html"
+
+    def __init__(self, *args, **kwargs):
+        super(TipView, self).__init__(*args, **kwargs)
+
+        # written here in init since it will give reverse url error
+        # if just written in class definition. because urls.py isnt loaded
+        # when this class is defined
+        self.success_url = reverse('index_page')
+
+    def form_valid(self, form):
+        messages.success(self.request, "Du är nu anmäld och vi kommer skicka "
+                                "biobiljetten så fort din frisör skapar sin profil!")
+        return super(TipView, self).form_valid(form)
 
 
 class IndexPageView(TemplateView):

@@ -8,6 +8,7 @@ from django.conf import settings
 from django.views.generic import TemplateView, RedirectView
 from index.views import (IndexPageView,
                          BetaEmailView,
+                         TipView,
                          InspirationPageView,
                          error500)
 
@@ -109,6 +110,13 @@ urlpatterns += patterns(
      TemplateView.as_view(template_name="analyticsCharts.html"),
       {},
      'statistics2'),
+
+    # 'Tipsa frisör'-page. Template in index/templates
+    (r'^tip/',
+     TipView.as_view(),
+     {},
+     'tip'),
+
     (r'^about-us/',
      TemplateView.as_view(template_name="about_us.html"),
      {},

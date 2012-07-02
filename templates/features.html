@@ -1,30 +1,16 @@
-{# load google_analytics #}
-{% load bootstrap %}
+{% extends "base.html" %}
+{% load url from future %}
+{% load index_extras %}
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <script type="text/javascript" src="{{ JQUERY_SCRIPT }}"></script>
 
-    {% bootstrap_js all %}
-    {% bootstrap_less %}
-    {# Used to load js that's specific to a page #}
     {% block html-head %}{% endblock %}
   
     
-    <title>{% block title %}StyleMatch - Framtidens marknadsföringsverktyg{% endblock %}</title>
-  </head>
-  <body class="body-padding-zero body-beta-background">
-    
-	<div class="container">
-	<div class="beta-header">
-	</div>
-	
-      <section id="gridSystem">
+  {% block title %}Vad är StyleMatch?{% endblock %}
+
 	{% block content %} 
 	<br><br>
-	<div id="features-banner" class="shadow-beta well">
+	<div id="features-banner" class="">
 <!-- start -->
 <div class="row">
 <div class="span7">
@@ -93,9 +79,8 @@
 	<br><br>
 
 <center><h2><i> StyleMatch är framtidens sätt att marknadsföra sig som frisör.</i></h2>
-  <p> StyleMatch lanseras snart inom Sverige. Ansök om en inbjudan redan idag. </p>
   <br>
-  <a class="btn btn-large btn-info" href="/">Ansök om inbjudan</a> 
+  <a class="btn btn-large btn-info" href="/accounts/register/">Skapa din profil nu!</a> 
 	</center>
 	</div>
 	
@@ -108,8 +93,4 @@
 	
 	{% endblock %}
       </section>
-	{% block footer %} {% endblock %}
-    </div>
-  {# analytics #}
-  </body>
-</html>
+	

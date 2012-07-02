@@ -172,8 +172,14 @@
           {% block content %} {% endblock %}
         </div>
       </div>
+      
+    
     </div>
-
+  <!-- this block-tag is used to have different background-colors on a page -->
+      {% block second-background-another-color %}
+      {% endblock%}
+      
+      
     {% block footer %}{% include 'base_footer.html' %} {% endblock %}
   
     {% block javascript-block %}

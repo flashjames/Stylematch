@@ -9,6 +9,7 @@ from django.views.generic import TemplateView, RedirectView
 from index.views import (IndexPageView,
                          BetaEmailView,
                          TipView,
+                         StylistView,
                          InspirationPageView,
                          error500)
 
@@ -130,8 +131,8 @@ urlpatterns += patterns(
             TemplateView.as_view(template_name="features.html"),
             {},
             'features_page'),
-    (u'^frisor/',
-            TemplateView.as_view(template_name="frisor_page.html"),
+    (u'^frisör/',
+            StylistView.as_view(),
             {},
             'frisor_page'),
     (r'^anvandarvillkor/',

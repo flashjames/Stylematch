@@ -116,6 +116,10 @@ class IndexPageView(TemplateView):
         return context
 
 
+class StylistView(LoginRequiredMixin, TemplateView):
+    template_name="frisor_page.html"
+
+
 def logout_page(request):
     """
     Log users out and re-direct them to the main page.

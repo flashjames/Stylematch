@@ -14,6 +14,7 @@ from accounts.api import ProfileResource
 import simplejson as json
 from copy import copy
 from braces.views import LoginRequiredMixin
+from cities import *
 
 
 class InspirationPageView(ListView):
@@ -110,7 +111,6 @@ class IndexPageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexPageView, self).get_context_data(**kwargs)
-        from cities import *
         context['popular_cities'] = popular
         context['other_cities'] = other
         return context

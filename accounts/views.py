@@ -284,9 +284,6 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
     template_name = "profiles/profile_edit.html"
     form_class = UserProfileForm
 
-    def __init__(self, *args, **kwargs):
-        super(EditProfileView, self).__init__(*args, **kwargs)
-
     def form_valid(self, form):
         """
         Needs to be overridden because regular form_valid returns

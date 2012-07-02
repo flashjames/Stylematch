@@ -6,7 +6,7 @@ Replace this with more appropriate tests for your application.
 """
 
 from django.test import TestCase
-from index.models import BetaEmail
+from index.models import BetaEmail, Tip
 
 
 class IndexViewsTest(TestCase):
@@ -36,4 +36,30 @@ class IndexViewsTest(TestCase):
         except:
             self.fail("'good@email.com' should be in the database")
 
+    def test_tip(self):
+        resp = self.client.get('/tip/')
+        self.assertEqual(resp.status_code, 200)
 
+        data = {'name': 'Alice',
+                'address': 'Big street 123',
+                'zip': '12345',
+                'city': 'New York',
+                'phone': '0731234567'}
+        resp = self.client.post('/tip/', data, follow=True)
+        self.assertEqual(resp.status_code, 200)
+
+        try:
+            # also make sure a hyphen is inserted
+            tip = Tip.objects.get(phone='073-1234567')
+        except:
+            self.fail("Tip with phonenumber '073-1234567' should "
+                      "be in the database")
+
+        # try post the same data again
+        resp = self.client.post('/tip/', data, follow=True)
+        self.assertEqual(resp.status_code, 200)
+
+        tip = Tip.objects.filter(phone='073-1234567')
+
+        # only 1 tip with that phone number can exist
+        self.assertEqual(len(tip), 1)

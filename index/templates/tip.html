@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load url from future %}
+{% load index_extras %}
+
+{% block content %}
+
+<div class="row" style="padding-top:25px;">
+  <div class="span12">
+    <h1>Tipsa din frisör om StyleMatch
+    <small>Ni får båda en biobiljett!</small>
+    </h1>
+    <div id="tip-instructions">
+      <ol>
+        <li>Fyll i den adress som vi ska skicka biobiljetten till</li>
+        <li>Prata med din frisör om hur grymt StyleMatch är och
+            ge ditt mobilnummer som Kampanjkod.</li>
+        <li>När frisören sedan gör en profil och skriver in ditt mobilnummer
+            i fältet "Kampanjkod" så skickar vi direkt en biobiljett till
+            dig, och även en till din frisör.</li>
+      </ol>
+    </div>
+    <form action="" method="post" class="form-horizontal">
+      <fieldset>
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="control-group{% if field.errors %} error{%endif%}">
+          <label class="control-label" for="id_{{ field.name }}">
+            {{ field.label }}
+          </label>
+          <div class="controls">
+            {{ field }}
+            <span class="help-inline">{{ field.errors.as_text }}</span>
+          </div>
+        </div>
+        {% endfor %}
+        <div class="form-actions">
+          <button type="submit" class="btn btn-info btn-large">
+            Spara här och ge mobilnumret till din frisör!
+          </button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

@@ -58,7 +58,7 @@ def bootstrap_less():
         LESS_TAG = '<link rel="stylesheet/less" type="text/css" href="%sless/%s">'
 
         output = [LESS_TAG % (settings.STATIC_URL, "bootstrap.less"),
-                  '<script src="%sjs/less-1.2.2.min.js" type="text/javascript"></script>' % settings.STATIC_URL,
+                  '<script src="%sjs/less-1.3.0.min.js" type="text/javascript"></script>' % settings.STATIC_URL,
                   ]
         output = '\n'.join(output)
 

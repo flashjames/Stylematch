@@ -13,6 +13,7 @@ from index.forms import TipForm
 from accounts.api import ProfileResource
 import simplejson as json
 from copy import copy
+from braces.views import LoginRequiredMixin
 
 
 class InspirationPageView(ListView):
@@ -89,7 +90,7 @@ class BetaEmailView(CreateView):
         return super(BetaEmailView, self).form_valid(form)
 
 
-class TipView(CreateView):
+class TipView(LoginRequiredMixin, CreateView):
     """
     Tip your stylist about us!
     """

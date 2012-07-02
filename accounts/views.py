@@ -344,12 +344,8 @@ class OpenHoursView(LoginRequiredMixin, UpdateView):
     model = OpenHours
     template_name = "accounts/hours_form.html"
 
-    def __init__(self, *args, **kwargs):
-        super(OpenHoursView, self).__init__(*args, **kwargs)
-        # written here in init since it will give reverse url error
-        # if just written in class definition. because urls.py isnt loaded
-        # when this class is defined
-        self.success_url = reverse('profiles_add_hours')
+    def get_success_url(self):
+        return reverse('profiles_add_hours')
 
     def get_object(self, queryset=None):
         obj = OpenHours.objects.get(user__exact=self.request.user.id)
@@ -374,12 +370,8 @@ class EditImagesView(LoginRequiredMixin, CreateView):
     template_name = "accounts/edit_images.html"
     form_class = GalleryImageForm
 
-    def __init__(self, *args, **kwargs):
-        super(EditImagesView, self).__init__(*args, **kwargs)
-        # written here in init since it will give reverse url error
-        # if just written in class definition. because urls.py isnt loaded
-        # when this class is defined
-        self.success_url = reverse('edit_images')
+    def get_success_url(self):
+        return reverse('edit_images')
 
     def form_invalid(self, form):
         """
@@ -524,12 +516,8 @@ class SaveProfileImageView(EditImagesView):
     """
     form_class = ProfileImageForm
 
-    def __init__(self, *args, **kwargs):
-        super(SaveProfileImageView, self).__init__(*args, **kwargs)
-        # written here in init since it will give reverse url error
-        # if just written in class definition. because urls.py isnt loaded
-        # when this class is defined
-        self.success_url = reverse('crop_image')
+    def get_success_url(self):
+        return reverse('crop_image')
 
     # Called when we're sure all fields in the form are valid
     def form_valid(self, form):
@@ -581,12 +569,8 @@ class CropPictureView(LoginRequiredMixin, FormView):
     form_class = CropCoordsForm
     template_name = "accounts/crop_image.html"
 
-    def __init__(self, *args, **kwargs):
-        super(CropPictureView, self).__init__(*args, **kwargs)
-        # written here in init since it will give reverse url error
-        # if just written in class definition. because urls.py isnt loaded
-        # when this class is defined
-        self.success_url = reverse('profile_display_redirect')
+    def get_success_url(self):
+        return reverse('profile_display_redirect')
 
     def crop(self, original_image, image_filename, start_x_coordinate,
              start_y_coordinate, width, height):

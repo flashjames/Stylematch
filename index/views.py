@@ -76,13 +76,8 @@ class BetaEmailView(CreateView):
     template_name = "betaemailpage.html"
     model = BetaEmail
 
-    def __init__(self, *args, **kwargs):
-        super(BetaEmailView, self).__init__(*args, **kwargs)
-
-        # written here in init since it will give reverse url error
-        # if just written in class definition. because urls.py isnt loaded
-        # when this class is defined
-        self.success_url = reverse('index_page')
+    def get_success_url(self):
+        return reverse('index_page')
 
     def form_valid(self, form):
         messages.success(self.request, "Din mail är nu registrerad, "
@@ -97,13 +92,8 @@ class TipView(LoginRequiredMixin, CreateView):
     form_class = TipForm
     template_name = "tip.html"
 
-    def __init__(self, *args, **kwargs):
-        super(TipView, self).__init__(*args, **kwargs)
-
-        # written here in init since it will give reverse url error
-        # if just written in class definition. because urls.py isnt loaded
-        # when this class is defined
-        self.success_url = reverse('index_page')
+    def get_success_url(self):
+        return reverse('index_page')
 
     def form_valid(self, form):
         messages.success(self.request, "Tack för din anmälan! Vi skickar "

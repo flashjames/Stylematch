@@ -87,45 +87,44 @@ TOKEN_FILE_NAME = 'analytics.dat'
 
 
 def process_flags(argv):
-  """Uses the command-line flags to set the logging level.
+    """Uses the command-line flags to set the logging level.
 
-  Args:
-    argv: List of command line arguments passed to the python script.
-  """
+    Args:
+      argv: List of command line arguments passed to the python script.
+    """
+    # Let the gflags module process the command-line arguments.
+    try:
+        argv = FLAGS(argv)
+    except gflags.FlagsError, e:
+        print '%s\nUsage: %s ARGS\n%s' % (e, argv[0], FLAGS)
+        sys.exit(1)
 
-  # Let the gflags module process the command-line arguments.
-  try:
-    argv = FLAGS(argv)
-  except gflags.FlagsError, e:
-    print '%s\nUsage: %s ARGS\n%s' % (e, argv[0], FLAGS)
-    sys.exit(1)
-
-  # Set the logging according to the command-line flag.
-  logging.getLogger().setLevel(getattr(logging, FLAGS.logging_level))
+        # Set the logging according to the command-line flag.
+        logging.getLogger().setLevel(getattr(logging, FLAGS.logging_level))
 
 
 def initialize_service():
-  """Returns an instance of service from discovery data and does auth.
+    """Returns an instance of service from discovery data and does auth.
 
-  This method tries to read any existing OAuth 2.0 credentials from the
-  Storage object. If the credentials do not exist, new credentials are
-  obtained. The crdentials are used to authorize an http object. The
-  http object is used to build the analytics service object.
+    This method tries to read any existing OAuth 2.0 credentials from the
+    Storage object. If the credentials do not exist, new credentials are
+    obtained. The crdentials are used to authorize an http object. The
+    http object is used to build the analytics service object.
 
-  Returns:
+    Returns:
     An analytics v3 service object.
-  """
+    """
 
-  # Create an httplib2.Http object to handle our HTTP requests.
-  http = httplib2.Http()
+    # Create an httplib2.Http object to handle our HTTP requests.
+    http = httplib2.Http()
 
-  # Prepare credentials, and authorize HTTP object with them.
-  storage = Storage(TOKEN_FILE_NAME)
-  credentials = storage.get()
-  if credentials is None or credentials.invalid:
-    credentials = run(FLOW, storage)
+    # Prepare credentials, and authorize HTTP object with them.
+    storage = Storage(TOKEN_FILE_NAME)
+    credentials = storage.get()
+    if credentials is None or credentials.invalid:
+        credentials = run(FLOW, storage)
 
-  http = credentials.authorize(http)
+    http = credentials.authorize(http)
 
-  # Retrieve service.
-  return build('analytics', 'v3', http=http)
+    # Retrieve service.
+    return build('analytics', 'v3', http=http)

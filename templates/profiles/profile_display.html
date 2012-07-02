@@ -84,7 +84,7 @@
     <h2 style="display:inline-block">{{ first_name }} {{ last_name }}</h2>
     <div class="fb-like pull-right" data-href="http://www.{{ site_domain }}/{{ profile.temporary_profile_url }}" data-send="false" data-layout="button_count" data-width="50" data-show-faces="true"></div>
     <h3>{{ profile.salon_name }}   |   {{ profile.salon_city }}</h3>
-    <blockquote><p>{{ profile.profile_text }}</p></blockquote>
+    <blockquote><p>{{ profile.profile_text|linebreaksbr }}</p></blockquote>
     
     {% include "book_me_modal_snippet.html" %}
     <a class="btn btn-large btn-info pull-right book-me-btn"  data-toggle="modal" href="#bookmemodal" onclick="_gaq.push(['_trackEvent', 'Privatperson - Profil', 'Boka frisör', '{{ first_name }} {{ last_name }}'])">Boka mig!</a>

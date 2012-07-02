@@ -72,12 +72,6 @@ class UserProfileForm(ModelForm):
         """
         data = self.cleaned_data['profile_url']
 
-        # reverse() can't find url's with - (bindestreck) in it
-        # TODO: Fix reverse() so user's can use - in their profile_url
-        if '-' in data:
-            raise ValidationError("Sökvägen får inte innehålla - "
-                                  "(bindestreck)")
-
         # is profile url used by another user or a path used by django?
         if not self.is_unique_url_name(data) or self.is_systempath(data):
             raise ValidationError("Den här sökvägen är redan tagen")

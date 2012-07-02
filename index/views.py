@@ -105,8 +105,9 @@ class TipView(CreateView):
         self.success_url = reverse('index_page')
 
     def form_valid(self, form):
-        messages.success(self.request, "Du är nu anmäld och vi kommer skicka "
-                                "biobiljetten så fort din frisör skapar sin profil!")
+        messages.success(self.request, "Tack för din anmälan! Vi skickar "
+                                       "biobiljetten så fort din frisör skapar "
+                                       "sin profil!")
         return super(TipView, self).form_valid(form)
 
 

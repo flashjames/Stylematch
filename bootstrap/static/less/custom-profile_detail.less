@@ -784,34 +784,40 @@ x.push {
     height: 200px; /* .push must be the same height as .footer */
 }
 
-
 /* END LOG IN PAGE */
 
 /* SIGNUP STEPS */
 
-/*
-  .signup-label{
-  font-size:12px;
-  }
-
-.signup-label-div{
-height:70px;
+.sell-block li, .sell-block h3 {
+    color: white;
+    margin-top:20px;
+    padding-right:10px;
+    padding-left:14px;
+    list-style-type:none;
 }
 
-.signup-label-button{
-margin-top:10px;
-margin-bottom: 20px;
+.sell-block h3 {
+    padding-right:10px;
+    padding-left:14px;
 }
 
-.open-hours-div{
-height:400px;
-background-color:;
+.sell-block li {
+    margin-bottom:5px;
 }
 
-.checkbox-height{
-height:50px;
+.sell-block ul {
+    margin-bottom:30px;
 }
-*/
+
+.sell-block {
+    margin-top:10px;
+    /* from block on first page */
+    background: -webkit-gradient(linear, left top, left bottom, from(#3a352e), to(#534c42));
+    -moz-box-shadow: 3px 3px 5px 6px #ccc;
+    -webkit-box-shadow: 3px 3px 5px 6px #ccc;
+    box-shadow: 3px 3px 5px 6px #ccc;
+
+}
 
 .signup-step1 form {
     margin-top:30px;
@@ -958,7 +964,6 @@ ul.service-list {
     margin-left:0px;
 }
 
-
 .unique-list-item-part {
     display:inline-block;
 }
@@ -971,18 +976,9 @@ ul.service-list {
     visibility:hidden;
 }
 
-.btn-signup-step3 {
-    margin-left:75px;
-}
-
 /* END EDIT SERVICES PAGE */
 
 /* PROFILE PAGE */
-
-/* Images should be scaled by django,
-   ie. this should be removed in the future
-   .image-block is used in "edit-images" ui
-   */
 
 div.profile-image-border {
     background-color:grey;
@@ -1051,7 +1047,6 @@ div.profile-image-border {
     border-left: 5px solid lightGrey;
 }
 
-
 #salon-information {
     background-color: grey;
     color:#999;
@@ -1065,6 +1060,7 @@ div.profile-image-border {
     -moz-border-radius: 2px;
     border-radius: 2px;
 }
+
 #salon-information p {
     margin-left:10px;
     font-size:14px;
@@ -1343,60 +1339,61 @@ div.edit-images-image-border {
 
 /* INSPIRATION PAGE */
 
-    .inspiration-images {
-      margin: 0 auto;
-      max-width:400px;
-    }
-    .inspiration-list {
-      padding: 0;
-      list-style-type:none;
-    }
-    .inspiration-item {
-      margin-bottom: 50px;
-    }
+.inspiration-images {
+    margin: 0 auto;
+    max-width:400px;
+}
 
-    .mainImageContent {
-    }
-    .leftSidebar {
-      float: left;
-      margin-right: 30px;
-    }
-    .leftSidebar .profile-image {
-      width: 50px;
-      height: 50px;
-      display: block;
-    }
-    .image {
-      margin: 0 auto;
-      width: 400px;
-      display: inline-block;
-    }
-    .rightSidebar {
-      display: inline-block;
-    }
-    .comment-div {
-      text-align: center;
-      width: 100%;
-    }
-    .comment {
-      font-family: Helvetica, tahoma, verdana;
-      font-size: 14px;
-      cursor: pointer;
-      color: #cc2222;
-      margin: 10px 30px 0 0;
-    }
-    .comment:hover {
-      color: #ff0000;
-    }
-    .fb {
-      text-align:center;
-    }
-    .fb-like {
-      display:block;
-      margin-bottom: 5px;
-    }
-    .pin-it-button {
-      display:block;
-    }
+.inspiration-list {
+    padding: 0;
+    list-style-type:none;
+}
+
+.inspiration-item {
+    margin-bottom: 50px;
+}
+
+ 
+.leftSidebar {
+    float: left;
+    margin-right: 30px;
+}
+.leftSidebar .profile-image {
+    width: 50px;
+    height: 50px;
+    display: block;
+}
+.image {
+    margin: 0 auto;
+    width: 400px;
+    display: inline-block;
+}
+.rightSidebar {
+    display: inline-block;
+}
+.comment-div {
+    text-align: center;
+    width: 100%;
+}
+.comment {
+    font-family: Helvetica, tahoma, verdana;
+    font-size: 14px;
+    cursor: pointer;
+    color: #cc2222;
+    margin: 10px 30px 0 0;
+}
+.comment:hover {
+    color: #ff0000;
+}
+.fb {
+    text-align:center;
+}
+.fb-like {
+    display:block;
+    margin-bottom: 5px;
+}
+.pin-it-button {
+    display:block;
+}
 
 /* END INSPIRATION PAGE */

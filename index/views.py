@@ -106,7 +106,7 @@ class SearchCityView(TemplateView):
 
         # fix pagination
         current_page = offset / limit + 1
-        pages = lastpage = vals['meta']['total_count'] / limit
+        pages = lastpage = vals['meta']['total_count'] / limit + 1
         pages = make_pagination_list(range(1, pages + 1), current_page)
         has_previous = current_page > 1
         has_next = current_page < lastpage

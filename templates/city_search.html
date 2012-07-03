@@ -77,7 +77,7 @@
             Om StyleMatch
           </p>
           <div style="width:286px;height:200px;overflow:auto;">
-            <h1>Frisör i {{ city }}</h1>
+            <h1 style="font-size:20px;">Frisör i {{ city }}</h1>
             <p>
                I {{ city }} hittar du din favoritsalong eller frisör, där du kan klippa håret, 
                göra slingor, permanenta, färga eller bara fixa en herrklippning eller damklippning. 
@@ -89,7 +89,7 @@
               <a href="/">StyleMatch.se</a> har {{ profiles|length }} anslutna frisörer i {{ city }} som klipper stans bästa frisyrer
             </p>
             
-            <h3>De bästa frisörerna i {{ city }}</h3>
+            <h2>De bästa frisörsalongerna i {{ city }}</h2>
             <ul>
             {% for profile in profiles %}
               <li>
@@ -98,6 +98,21 @@
               </li>
             {% endfor %}
             </ul>
+            
+            <h3>Hur bokar jag en frisör?</h3>
+            <p> 
+	            Vi rekommenderar alla nya användare att läsa "<a href="/faq/privatperson/">Hur hittar jag en frisör</a>".
+            </p>
+            <ol>
+            	<li>Välj först den stad du vill bläddra bland frisörsalonger i, i detta fall {{ city }}.</li>
+            	<li>Bläddra bland våra frisörer som finns i den staden, och besök sedan dens profil.</li>
+            	<li>Bläddra bland bilder på frisyrer, färger och fina bilder på uppsättningar.</li>
+            	<li>Boka sedan frisören genom att ringa till salongen med numret som finns på profilen.</li>
+            	<li>Gå in och rekommendera frisören efter besöket på <a href="http://www.stylematch.se/">StyleMatch.se</a></li>
+            </ol>
+            
+            <h4></h4>
+            
           </div>
         </div> <!-- .search-city-about-stylematch -->
         <!-- Slut på info om stylematch --> 

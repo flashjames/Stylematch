@@ -151,7 +151,7 @@
       <ul>
         {% block previouslink %}
           {% if has_previous %}
-            <li class="prev"><a href="?offset={{ page_previous|offset:limit }}&{{ getvars }}">«</a></li>
+            <li class="prev"><a href="?offset={{ page_previous|offset:limit }}{{ getvars }}">«</a></li>
           {% endif %}
         {% endblock previouslink %}
         {% block pagelinks %}
@@ -160,7 +160,7 @@
               {% ifequal page current_page %}
                 <li class="active"><a href="#">{{ page }}</a></li>
               {% else %}
-                <li><a href="?offset={{ page|offset:limit }}&{{ getvars }}">{{ page }}</a></li>
+                <li><a href="?offset={{ page|offset:limit }}{{ getvars }}">{{ page }}</a></li>
               {% endifequal %}
             {% else %}
               <li class="disabled"><a href="#">...</a></li>
@@ -169,7 +169,7 @@
         {% endblock pagelinks %}
         {% block nextlink %}
           {% if has_next %}
-            <li class="next"><a href="?offset={{ page_next|offset:limit }}&{{ getvars }}">»</a></li>
+            <li class="next"><a href="?offset={{ page_next|offset:limit }}{{ getvars }}">»</a></li>
           {% endif %}
         {% endblock nextlink %}
       </ul>

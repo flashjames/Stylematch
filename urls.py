@@ -102,10 +102,6 @@ urlpatterns += patterns(
             TemplateView.as_view(template_name="betaemail_index.html"),
             {},
             'beta_index_page'),
-    (r'^stats',
-      TemplateView.as_view(template_name="test_chart.html"),
-      {},
-      'statistics'),
     # 'Tipsa frisör'-page. Template in index/templates
     (r'^tip/',
      TipView.as_view(),

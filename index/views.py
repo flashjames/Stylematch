@@ -132,7 +132,9 @@ class SearchCityView(TemplateView):
         if 'offset' in json_request.GET:
             del json_request.GET['offset']
         del json_request.GET['format']
-        getvars = "&" + json_request.GET.urlencode()
+        getvars = ""
+        if json_request.GET:
+            getvars = "&" + json_request.GET.urlencode()
 
 
         # update our context data with the response

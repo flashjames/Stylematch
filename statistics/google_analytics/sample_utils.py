@@ -66,9 +66,9 @@ found at:
 with information from the APIs Console <https://code.google.com/apis/console>.
 
 """ % os.path.join(os.path.dirname(__file__), CLIENT_SECRETS)
-
+asd = os.path.join(os.path.dirname(__file__), CLIENT_SECRETS)
 # Set up a Flow object to be used if we need to authenticate.
-FLOW = flow_from_clientsecrets(CLIENT_SECRETS,
+FLOW = flow_from_clientsecrets(asd,
     scope='https://www.googleapis.com/auth/analytics.readonly',
     message=MISSING_CLIENT_SECRETS_MESSAGE)
 

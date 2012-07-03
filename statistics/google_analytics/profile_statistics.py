@@ -1,6 +1,3 @@
-__author__ = 'api.nickm@gmail.com (Nick Mihailovski)'
-
-import sys
 import sample_utils
 import datetime
 
@@ -11,9 +8,7 @@ from oauth2client.client import AccessTokenRefreshError
 GOOGLE_ANALYTICS_PROFILE_ID = '59146773'
 
 
-def main(argv):
-    sample_utils.process_flags(argv)
-
+def get_profile_visits(profile_url="caroline"):
     # Authenticate and construct service.
     service = sample_utils.initialize_service()
 
@@ -21,11 +16,9 @@ def main(argv):
     try:
         results = get_url_visits(service,
                                      GOOGLE_ANALYTICS_PROFILE_ID,
-                                     'MS_Hairdesign')
+                                     profile_url)
         print_results(results)
-
     # these exceptions should be logged to django/sentry
-
     except TypeError, error:
         # Handle errors in constructing a query.
         print ('There was an error in constructing your query : %s' % error)
@@ -39,6 +32,8 @@ def main(argv):
         # Handle Auth errors.
         print ('The credentials have been revoked or expired, please re-run '
                'the application to re-authorize')
+
+    return results['rows']
 
 
 def get_url_visits(service, ga_profile_id, url):
@@ -97,4 +92,4 @@ def print_results(results):
 
 
 if __name__ == '__main__':
-    main(sys.argv)
+    get_profile_visits()

@@ -12,6 +12,7 @@ from index.views import (IndexPageView,
                          StylistView,
                          InspirationPageView,
                          error500)
+from statistics.views import ProfileVisitsView
 
 from django.contrib import admin
 from django.views.generic.simple import redirect_to
@@ -89,7 +90,10 @@ urlpatterns += patterns(
             TemplateView.as_view(template_name="edit-account-settings.html"),
             {},
             'edit-account-settings'),
-
+    (r'^stats/',
+            ProfileVisitsView.as_view(),
+            {},
+            'profile_visits'),
     (r'^get_invite',
             BetaEmailView.as_view(),
             {},
@@ -98,26 +102,15 @@ urlpatterns += patterns(
             TemplateView.as_view(template_name="betaemail_index.html"),
             {},
             'beta_index_page'),
-
-    (r'^dash',
-     TemplateView.as_view(template_name="dashboard.html"),
-     {},
-     'dash'),
     (r'^stats',
       TemplateView.as_view(template_name="test_chart.html"),
       {},
       'statistics'),
-    (r'^sta',
-     TemplateView.as_view(template_name="analyticsCharts.html"),
-      {},
-     'statistics2'),
-
     # 'Tipsa frisör'-page. Template in index/templates
     (r'^tip/',
      TipView.as_view(),
      {},
      'tip'),
-
     (r'^about-us/',
      TemplateView.as_view(template_name="about_us.html"),
      {},

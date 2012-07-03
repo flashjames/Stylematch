@@ -3,6 +3,10 @@
 
 {% block title %}Profilbild{% endblock %}
 
+{% block remove-links-top %}
+		{% include "no_links_on_top_snippet.html" %}
+{% endblock %}
+
 {% block content %}
 {% include "accounts/signup_progress_bar.html" %}
 <div class="row signup-step1-main" style="margin-bottom:40px;padding-top:60px;">

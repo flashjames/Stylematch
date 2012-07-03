@@ -50,6 +50,18 @@ def facebook():
 
 
 @register.filter
+def offset(page, limit=10):
+    """
+    Used to get a tastypie offset value from a page
+
+    Page 1: Offset 0
+    Page 2: Offset 5
+    Page 3: Offset 10 etc
+    """
+    return (page - 1) * limit
+
+
+@register.filter
 def get_userprofile(user):
     return user.get_profile()
 

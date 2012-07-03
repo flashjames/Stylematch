@@ -71,25 +71,42 @@ class TestPagination(TestCase):
 
     def test_make_pagination_list(self):
         list = range(1, 5) # _1_,2,3,4
-        self.assertEqual([1,2,3,4], make_pagination_list(list, 1))
+        self.assertEqual([1,2,3,4],
+                make_pagination_list(list, 1))
 
         list = range(1, 8) # _1_,2,3 ... 5,6,7
-        self.assertEqual([1,2,3,False,5,6,7], make_pagination_list(list, 1))
+        self.assertEqual([1,2,3,False,5,6,7],
+                make_pagination_list(list, 1))
 
         list = range(1, 8) # 1,2,_3_,4, 5,6,7
-        self.assertEqual([1,2,3,4,5,6,7], make_pagination_list(list, 3))
+        self.assertEqual([1,2,3,4,5,6,7],
+                make_pagination_list(list, 3))
 
         list = range(1, 8) # 1,2,3,4, _5_,6,7
-        self.assertEqual([1,2,3,4,5,6,7], make_pagination_list(list, 5))
+        self.assertEqual([1,2,3,4,5,6,7],
+                make_pagination_list(list, 5))
 
         list = range(1, 18) # _1_,2,3 ... 15,16,17
-        self.assertEqual([1,2,3,False,15,16,17], make_pagination_list(list, 1))
+        self.assertEqual([1,2,3,False,15,16,17],
+                make_pagination_list(list, 1))
 
         list = range(1, 18) # 1,2,3,4,_5_,6 ... 15,16,17
-        self.assertEqual([1,2,3,4,5,6,False,15,16,17], make_pagination_list(list, 5))
+        self.assertEqual([1,2,3,4,5,6,False,15,16,17],
+                make_pagination_list(list, 5))
 
         list = range(1, 18) # 1,2,3 ... 5,_6_,7 ... 15,16,17
-        self.assertEqual([1,2,3,False,5,6,7,False,15,16,17], make_pagination_list(list, 6))
+        self.assertEqual([1,2,3,False,5,6,7,False,15,16,17],
+                make_pagination_list(list, 6))
+
+        list = range(1, 18) # 1,2,3 ... 11, _12_, 13, ... 15,16,17
+        self.assertEqual([1,2,3,False, 11,12,13,False,15,16,17],
+                make_pagination_list(list, 12))
+
+        list = range(1, 18) # 1,2,3 ... 12, _13_, 14, 15,16,17
+        self.assertEqual([1,2,3,False, 12,13,14,15,16,17],
+                make_pagination_list(list, 13))
 
         list = range(1, 18) # 1,2,3 ... 15,16,_17_
-        self.assertEqual([1,2,3,False,15,16,17], make_pagination_list(list, 17))
+        self.assertEqual([1,2,3,False,15,16,17],
+                make_pagination_list(list, 17))
+

@@ -54,12 +54,16 @@ def make_pagination_list(list, current):
     newlist = f7(newlist)
     newlist = sorted(newlist)
 
-    p = None
-    for i in newlist:
-        if p is not None:
-            if i > (p + 1):
-                newlist.insert(p, False)
-        p = i
+    pos = []
+    prev = 0
+    for idx, page in enumerate(newlist):
+        if page > (prev + 1):
+            pos.append(idx)
+        prev = page
+
+    for i,p in enumerate(pos):
+        newlist.insert(p+i, False)
+
     return newlist
 
 

@@ -76,26 +76,22 @@ class SearchCityView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(SearchCityView, self).get_context_data(**kwargs)
 
-        # set limit and offset
-        try:
-            limit = int(self.request.GET['limit'])
-        except:
-            limit = 10
-        try:
-            offset = int(self.request.GET['offset'])
-        except:
-            offset = 0
 
         # .title() capitalizes first letter in each word
         city = self.kwargs['city']
         context['city'] = self.kwargs['city'].title()
 
+
         # create an artificial request to our API
         json_request = copy(self.request)
         json_request.GET._mutable = True
         json_request.GET['format'] = 'json'
-        json_request.GET['limit'] = str(limit)
 
+        # set limit and offset
+        try:
+            offset = int(self.request.GET['offset'])
+        except:
+            offset = 0
         # execute the request
         resp = self.pr.get_list(json_request,
                                 salon_city__iexact=city,
@@ -103,6 +99,24 @@ class SearchCityView(TemplateView):
 
         # get the response
         vals = json.loads(resp)
+
+        if len(vals['objects']) == 0:
+            if int(vals['meta']['total_count']) > 0:
+                # an invalid offset has been set for the request,
+                # repeat the request but with offset = 0
+                # this should not happen unless the user explicitly
+                # sets the offset
+                json_request.GET['offset'] = '0'
+                offset = 0
+                resp = self.pr.get_list(json_request,
+                                        salon_city__iexact=city,
+                                        profile_image_size="100x100").content
+                vals = json.loads(resp)
+
+        try:
+            limit = int(self.request.GET['limit'])
+        except:
+            limit = 10
 
         # fix pagination
         current_page = offset / limit + 1

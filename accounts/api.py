@@ -194,12 +194,11 @@ class ProfileResource(ModelResource):
     def build_filters(self, filters=None):
         if filters is None:
             filters = QueryDict('')
+            filters._mutable=True
 
         if 'profile_image_size' in filters:
             self.profile_image_size = filters['profile_image_size']
-            filters._mutable = True
             del filters['profile_image_size']
-            filters._mutable = False
 
         return super(ProfileResource, self).build_filters(filters)
 

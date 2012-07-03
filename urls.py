@@ -20,6 +20,8 @@ from registration.views import register
 from accounts.register_views import (UserRegistrationForm,
                                      SignupView,
                                      SignupStep2View)
+from index.sitemap import StaticPagesSitemap
+
 admin.autodiscover()
 
 """
@@ -42,6 +44,11 @@ if settings.DEVELOPMENT or settings.STAGING:
         url(r'^500/$',
                 handler500)
     )
+
+    
+sitemaps = {
+    'static': StaticPagesSitemap
+}
 
 urlpatterns += patterns(
     '',
@@ -107,7 +114,7 @@ urlpatterns += patterns(
      TipView.as_view(),
      {},
      'tip'),
-    (r'^about-us/',
+    (r'^om-oss/',
      TemplateView.as_view(template_name="about_us.html"),
      {},
      'about_page'),
@@ -141,17 +148,15 @@ urlpatterns += patterns(
     (r'^inspiration',
             InspirationPageView.as_view(),
             {},
-            'inspiration-page'),
+            'inspiration_page'),
 
     (r'^search',
             TemplateView.as_view(template_name="search.html"),
             {},
             'search'),
-
     url(r'^',
             include('cities_urls')),
-
-
+    (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
     # accounts/profile, should always be at the end. since a user may set a
     # profile url that match another url -> if it's not at the end it may
     # overwrite it.

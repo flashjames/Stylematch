@@ -277,6 +277,7 @@ class ProfileResource(ModelResource):
                 }
         resource_name = "profiles"
         model = UserProfile
+        limit = 10
         # NOTE: Ordering by random is slow
         # https://docs.djangoproject.com/en/dev/ref/models/querysets/#order-by
         queryset = UserProfile.objects.filter(visible=True).order_by('?')

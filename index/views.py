@@ -92,6 +92,7 @@ class SearchCityView(TemplateView):
             offset = int(self.request.GET['offset'])
         except:
             offset = 0
+
         # execute the request
         resp = self.pr.get_list(json_request,
                                 salon_city__iexact=city,
@@ -116,7 +117,7 @@ class SearchCityView(TemplateView):
         try:
             limit = int(self.request.GET['limit'])
         except:
-            limit = 10
+            limit = self.pr._meta.limit
 
         # fix pagination
         current_page = offset / limit + 1

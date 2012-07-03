@@ -37,6 +37,36 @@ class InspirationPageView(ListView):
         return images.order_by('-upload_date')
 
 
+def make_pagination_list(list, current):
+    def f7(seq):
+        seen = set()
+        seen_add = seen.add
+        return [ x for x in seq if x not in seen and not seen_add(x)]
+
+    if len(list) < 6: return list
+
+    newlist = list[:3] + list[len(list)-3:]
+    newlist += [current-1,current, current+1]
+    if 0 in newlist:
+        newlist.remove(0)
+    if current == len(list):
+        newlist.remove(current+1)
+    newlist = f7(newlist)
+    newlist = sorted(newlist)
+
+    pos = []
+    prev = 0
+    for idx, page in enumerate(newlist):
+        if page > (prev + 1):
+            pos.append(idx)
+        prev = page
+
+    for i,p in enumerate(pos):
+        newlist.insert(p+i, False)
+
+    return newlist
+
+
 class SearchCityView(TemplateView):
     """
     """
@@ -46,14 +76,22 @@ class SearchCityView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(SearchCityView, self).get_context_data(**kwargs)
 
+
         # .title() capitalizes first letter in each word
         city = self.kwargs['city']
         context['city'] = self.kwargs['city'].title()
+
 
         # create an artificial request to our API
         json_request = copy(self.request)
         json_request.GET._mutable = True
         json_request.GET['format'] = 'json'
+
+        # set limit and offset
+        try:
+            offset = int(self.request.GET['offset'])
+        except:
+            offset = 0
 
         # execute the request
         resp = self.pr.get_list(json_request,
@@ -63,9 +101,55 @@ class SearchCityView(TemplateView):
         # get the response
         vals = json.loads(resp)
 
+        if len(vals['objects']) == 0:
+            if int(vals['meta']['total_count']) > 0:
+                # an invalid offset has been set for the request,
+                # repeat the request but with offset = 0
+                # this should not happen unless the user explicitly
+                # sets the offset
+                json_request.GET['offset'] = '0'
+                offset = 0
+                resp = self.pr.get_list(json_request,
+                                        salon_city__iexact=city,
+                                        profile_image_size="100x100").content
+                vals = json.loads(resp)
+
+        try:
+            limit = int(self.request.GET['limit'])
+        except:
+            limit = self.pr._meta.limit
+
+        # fix pagination
+        current_page = offset / limit + 1
+        pages = lastpage = vals['meta']['total_count'] / limit + 1
+        pages = make_pagination_list(range(1, pages + 1), current_page)
+        has_previous = current_page > 1
+        has_next = current_page < lastpage
+        page_previous = current_page - 1
+        page_next = current_page + 1
+
+        # pass additional variables
+        if 'offset' in json_request.GET:
+            del json_request.GET['offset']
+        del json_request.GET['format']
+        getvars = ""
+        if json_request.GET:
+            getvars = "&" + json_request.GET.urlencode()
+
+
         # update our context data with the response
         context.update({
-            'profiles': vals['objects']
+            'profiles': vals['objects'],
+            'profiles_total': vals['meta']['total_count'],
+            'pages': pages,
+            'lastpage': lastpage,
+            'current_page': current_page,
+            'has_previous': has_previous,
+            'has_next': has_next,
+            'page_previous': page_previous,
+            'page_next': page_next,
+            'limit': limit,
+            'getvars': getvars,
         })
         return context
 

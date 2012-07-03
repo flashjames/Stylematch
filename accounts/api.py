@@ -194,12 +194,11 @@ class ProfileResource(ModelResource):
     def build_filters(self, filters=None):
         if filters is None:
             filters = QueryDict('')
+            filters._mutable=True
 
         if 'profile_image_size' in filters:
             self.profile_image_size = filters['profile_image_size']
-            filters._mutable = True
             del filters['profile_image_size']
-            filters._mutable = False
 
         return super(ProfileResource, self).build_filters(filters)
 
@@ -278,6 +277,7 @@ class ProfileResource(ModelResource):
                 }
         resource_name = "profiles"
         model = UserProfile
+        limit = 10
         # NOTE: Ordering by random is slow
         # https://docs.djangoproject.com/en/dev/ref/models/querysets/#order-by
         queryset = UserProfile.objects.filter(visible=True).order_by('?')

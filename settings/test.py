@@ -14,6 +14,8 @@ DATABASES = {
     }
 }
 
+SITE_DOMAIN = 'example.com'
+
 # No need to use South in testing
 SOUTH_TESTS_MIGRATE = False
 SKIP_SOUTH_TESTS = True

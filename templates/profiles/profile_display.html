@@ -36,7 +36,7 @@
 
 {% endblock %}
 
-{% block title %}{{ first_name }} {{ last_name }}{% if profile.salon_city %}, frisör i {{ profile.salon_city }} {% endif %}{% endblock %}
+{% block title %}{{ first_name.title }} {{ last_name.title }}{% if profile.salon_city %}, frisör i {{ profile.salon_city.title }} {% endif %}{% endblock %}
 
 {% block content %}
 
@@ -81,9 +81,9 @@
   </div>
 
   <div class="span6 profile-text-block">
-    <h2 style="display:inline-block">{{ first_name }} {{ last_name }}</h2>
+    <h2 style="display:inline-block">{{ first_name.title }} {{ last_name.title }}</h2>
     <div class="fb-like pull-right" data-href="http://www.{{ site_domain }}/{{ profile.temporary_profile_url }}" data-send="false" data-layout="button_count" data-width="50" data-show-faces="true"></div>
-    <h3>{{ profile.salon_name }}   |   {{ profile.salon_city }}</h3>
+    <h3>{{ profile.salon_name.title }}   |   {{ profile.salon_city.title }}</h3>
     <blockquote><p>{{ profile.profile_text|linebreaksbr }}</p></blockquote>
     
     {% include "book_me_modal_snippet.html" %}
@@ -98,10 +98,10 @@
 	    
     </div>
     <h2>Kontakt</h2>
-    <h4>{{ profile.salon_name }}</h4>
+    <h4>{{ profile.salon_name.title }}</h4>
 
    
-    <p>{{ profile.salon_adress }}, {{ profile.salon_city }}</p>
+    <p>{{ profile.salon_adress.title }}, {{ profile.salon_city.title }}</p>
     <p>Tele:
     {% if profile.number_on_profile %}
     {{ profile.personal_phone_number }}

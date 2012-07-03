@@ -9,18 +9,18 @@
 
 {% block content %}
 {% include "accounts/signup_progress_bar.html" %}
-<div class="row signup-step1-main" style="margin-bottom:40px;padding-top:60px;">
+<div class="row signup-step1-main" style="margin-bottom:40px;padding-top:60px;margin-top:70px;">
   <div class="span3 offset2">
       <h3 style="margin-bottom:6px">Nuvarande profilbild</h3>
       <div style="background-color:grey;">
-	<img style="max-width:none;padding-left:5px;padding-top:5px;" width="220" src="{{ STATIC_URL }}img/default_image_profile_logged_in.jpg"/>
+	<a data-toggle="modal" href="#image-upload-dialog-profileimage"><img style="max-width:none;padding-left:5px;padding-top:5px;" width="220" src="{{ STATIC_URL }}img/default_image_profile_logged_in.jpg"/></a>
       </div>
   </div>
 
   <div class="span6 offset1">
     <h3>Ladda upp en bild</h3>
     <p>Du kan ladda upp en JPG eller PNG fil (max filstorlek är 10 MB)</p>
-    <a style="margin-top:10px;" class="btn btn-large btn-primary" data-toggle="modal" href="#image-upload-dialog-profileimage">Ladda upp profilbild</a><span> eller <a class="" href="{% url 'profile_display_redirect' %}">Avbryt</a></span>
+    <a style="margin-top:10px;" class="btn btn-large btn-primary" data-toggle="modal" href="#image-upload-dialog-profileimage">Ladda upp profilbild</a><span> eller <a class="" href="{% url 'profile_display_redirect' %}">Fortsätt utan profilbild</a></span>
   </div>
 {% include "accounts/upload_profile_image_modal.html" %}
 {% endblock %}

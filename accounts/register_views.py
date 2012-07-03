@@ -55,7 +55,7 @@ class SignupView(LoginRequiredMixin, UpdateView):
         context = super(SignupView, self).get_context_data(**kwargs)
 
         context['progress_salon_info'] = "reached-progress"
-        context['progress_width'] = "32%"
+        context['progress_width'] = "40.5%"
 
         return context
 
@@ -77,7 +77,7 @@ class SignupStep2View(EditImagesView):
         context['progress_salon_hours'] = "reached-progress"
         context['progress_salon_price'] = "reached-progress"
         context['progress_profile_pic'] = "reached-progress"
-        context['progress_width'] = "83%"
+        context['progress_width'] = "66%"
 
         return context
 

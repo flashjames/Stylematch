@@ -117,7 +117,7 @@
   {% else %}
     <div class="alert alert-error" style="text-align:center;">
       <p style="font-size: 18px;">
-      Du har inga bilder i galleriet.
+        <strong>Du har inga bilder i galleriet.</strong>
       </p>
       <a href="{% url 'edit_images' %}">
       Ladda upp din första galleribild här!
@@ -140,7 +140,7 @@
   {%if user.is_authenticated and logged_in_user_profile %}
     <h3>Prislista</h3>
     <div class="alert alert-error">
-      Du har inte fyllt i någon prislista än.
+      <p><strong>Du har inte fyllt i någon prislista än!</strong></p>
       <a href="{% url 'profiles_edit_services' %}">
         Fyll i din prislista här!
       </a>
@@ -150,6 +150,7 @@
   </div>
 
   <div class="span3 pull-right">
+    {% if openhours_reviewed %}
     <div>
       <table class="open-hours-profile">
         <thead>
@@ -157,7 +158,6 @@
           <th style="padding-left:15px;">Öppettider</th>
         </thead>
         <tbody>
-
           {% for day in weekdays %}
           <tr>
             <td > {{ day.day }}</td>
@@ -172,6 +172,11 @@
           {% endfor %}
         </tbody>
       </table>
+    {% else %}
+    <div class="alert alert-error">
+      <p><strong>Du har inte fyllt i dina öppettider!</strong></p>
+      <a href="{% url 'profiles_add_hours' %}">Fyll i dina öppettider här</a>
+    {% endif %}
     </div>
   </div>
 </div>

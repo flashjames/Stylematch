@@ -151,6 +151,8 @@ class OpenHours(models.Model):
                                     'default=' + str(default_close_time) + ')')
         exec(code)
 
+    reviewed = models.BooleanField(default=False)
+
 
 # client side url to images, without image filename
 # used in the view that edit the images on the profile

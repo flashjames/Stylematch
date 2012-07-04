@@ -72,7 +72,7 @@ def get_class(self):
 
 
 @register.filter
-def profile_image_thumbnail(userprofile):
+def profile_image_thumbnail(userprofile, logged_in_user_profile):
     """
     Return a thumbnail to use with sorl.thumbnail
     Example usage in template:
@@ -95,7 +95,7 @@ def profile_image_thumbnail(userprofile):
             return userprofile.profile_image_uncropped.file
     except:
         import os
-        if userprofile.user.is_authenticated():
+        if userprofile.user.is_authenticated() and logged_in_user_profile:
             return os.path.join(settings.STATIC_URL, 'img',
                     'default_image_profile_logged_in.jpg')
         else:

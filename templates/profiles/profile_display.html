@@ -48,7 +48,7 @@
 <div class="row masthead" >
   <div class="span3 profile-image ">
     <div class="profile-image-border">
-      {% with profile|profile_image_thumbnail as pit %}
+      {% with profile|profile_image_thumbnail:logged_in_user_profile as pit %}
       {% if pit|get_class != 'ImageFieldFile' %}
       <img src="{{ pit }}" name="profile-image">
       {% else %}

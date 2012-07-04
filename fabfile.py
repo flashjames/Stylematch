@@ -98,6 +98,11 @@ def update_git_submodules():
         sudo('git submodule init', user=env.deploy_user)
         sudo('git submodule update', user=env.deploy_user)
 
+def revert():
+    """ Revert git via reset --hard @{1} """
+    with _cd_project_root():
+        run('git reset --hard @{1}')
+        restart_gunicorn()
 
 def deploy_db_change():
     install_requirements()

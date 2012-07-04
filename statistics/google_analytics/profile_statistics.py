@@ -7,35 +7,6 @@ from oauth2client.client import AccessTokenRefreshError
 # should be moved to Django settings
 GOOGLE_ANALYTICS_PROFILE_ID = '59146773'
 
-
-def get_profile_visits(profile_url="caroline"):
-    # Authenticate and construct service.
-    service = sample_utils.initialize_service()
-
-    # Try to make a request to the API. Print the results or handle errors.
-    try:
-        results = get_url_visits(service,
-                                     GOOGLE_ANALYTICS_PROFILE_ID,
-                                     profile_url)
-        print_results(results)
-    # these exceptions should be logged to django/sentry
-    except TypeError, error:
-        # Handle errors in constructing a query.
-        print ('There was an error in constructing your query : %s' % error)
-
-    except HttpError, error:
-        # Handle API errors.
-        print ('Arg, there was an API error : %s : %s' %
-               (error.resp.status, error._get_reason()))
-
-    except AccessTokenRefreshError:
-        # Handle Auth errors.
-        print ('The credentials have been revoked or expired, please re-run '
-               'the application to re-authorize')
-
-    return results['rows']
-
-
 def get_url_visits(service, ga_profile_id, url):
     """
     Get visit counts for specified url, one entry for each date.
@@ -57,6 +28,62 @@ def get_url_visits(service, ga_profile_id, url):
         filters=profile_filter,
         start_index='1',
       max_results='32').execute()
+
+
+def concat_data_points(visit_points):
+    """
+    Join data points, three points to one point
+    """
+    
+    new_data = []
+    at_point = 0
+    sum_points = 0
+    new_point = {}
+    for point in data:
+        if at_point == 0:
+            new_point['start_date'] = point[0]
+        if at_point == 2:
+            new_point['end_date'] = point[0]
+
+        sum_points += int(point[1])
+
+        # since we've summed three points, reset counters and
+        # add the sum to the new data-point dict
+        if at_point == 2:
+            at_point = 0
+            new_point['visits'] = sum_points
+            sum_points = 0
+        
+
+        # break if not 3 points left, since we dont wont to show these
+        
+def get_profile_visits(profile_url="caroline"):
+    
+    # Authenticate and construct service.
+    service = sample_utils.initialize_service()
+
+    # Try to make a request to the API. Print the results or handle errors.
+    try:
+        results = get_url_visits(service,
+                                     GOOGLE_ANALYTICS_PROFILE_ID,
+                                     profile_url)
+    # these exceptions should be logged to django/sentry
+    except TypeError, error:
+        # Handle errors in constructing a query.
+        print ('There was an error in constructing your query : %s' % error)
+
+    except HttpError, error:
+        # Handle API errors.
+        print ('Arg, there was an API error : %s : %s' %
+               (error.resp.status, error._get_reason()))
+
+    except AccessTokenRefreshError:
+        # Handle Auth errors.
+        print ('The credentials have been revoked or expired, please re-run '
+               'the application to re-authorize')
+    
+    visit_points = results['rows']
+    return concat_data_points(visit_points)
 
 
 def print_results(results):
@@ -92,4 +119,6 @@ def print_results(results):
 
 
 if __name__ == '__main__':
-    get_profile_visits()
+    data = [[u'20120604', u'6'], [u'20120605', u'4'], [u'20120606', u'2'], [u'20120607', u'9'], [u'20120608', u'6'], [u'20120609', u'2'], [u'20120610', u'7'], [u'20120611', u'0'], [u'20120612', u'4'], [u'20120613', u'10'], [u'20120614', u'0'], [u'20120615', u'0'], [u'20120616', u'0'], [u'20120617', u'0'], [u'20120618', u'5'], [u'20120619', u'4'], [u'20120620', u'3'], [u'20120621', u'1'], [u'20120622', u'1'], [u'20120623', u'1'], [u'20120624', u'2'], [u'20120625', u'0'], [u'20120626', u'7'], [u'20120627', u'4'], [u'20120628', u'0'], [u'20120629', u'3'], [u'20120630', u'1'], [u'20120701', u'1'], [u'20120702', u'6'], [u'20120703', u'2'], [u'20120704', u'2']]
+    concat_data_points(data)
+    #get_profile_visits()

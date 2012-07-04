@@ -55,6 +55,18 @@ var visitor_count_data = {{ visitor_count_data|safe }};
   color:white;
   }
 
+  /* Hide axis which is only used 
+  to place dates correctly */
+  path.domain {
+  stroke:rgb(59,89,152);
+  }
+  line.tick {
+  stroke:none;
+  }
+  path.domain {
+  stroke:none;
+  }
+
  
 </style>
 {% endblock %}

@@ -189,6 +189,7 @@ class ProfileImage(BaseImage):
 
 
 class GalleryImage(BaseImage):
+    votes = models.PositiveIntegerField(default=0)
     comment = models.CharField(max_length=100,
                                blank=True)
     order = models.PositiveIntegerField(blank=True,

@@ -6,6 +6,21 @@
 
 {% block html-head %}
   <script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
+  <script type="text/javascript">
+    function like(counter, id) {
+        if (id != '') {
+            $('#like-' + counter + " .counter").text("...");
+            $.post(
+                '/like/',
+                { 'id': id,
+                  'csrfmiddlewaretoken': '{{ csrf_token }}' },
+                function(data) {
+                    $('#like-' + counter + " .counter").text(data);
+                }
+            );
+        }
+    }
+  </script>
   <script>(function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;

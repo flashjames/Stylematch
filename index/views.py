@@ -4,8 +4,8 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib import auth, messages
-from django.http import HttpResponseRedirect
-from django.views.generic import ListView, CreateView, TemplateView
+from django.http import HttpResponseRedirect, HttpResponse
+from django.views.generic import View, ListView, CreateView, TemplateView
 from django.core.urlresolvers import reverse
 from accounts.models import UserProfile, GalleryImage, Featured
 from index.models import BetaEmail, Tip
@@ -207,6 +207,26 @@ class IndexPageView(TemplateView):
         context['popular_cities'] = popular
         context['other_cities'] = other
         return context
+
+
+class LikeView(View):
+    """
+    An API like view to handle like request via ajax
+    """
+    def post(self, request, *args, **kwargs):
+        id = int(request.POST['id'])
+        try:
+            image = GalleryImage.objects.get(pk=id)
+        except:
+            # wrong ID, couldn't find gallery image
+            return HttpResponse("The ID is WROOONG")
+
+        voted_images = request.session.get('has_voted',[])
+        if id not in voted_images:
+            image.votes += 1
+            image.save()
+            request.session['has_voted'] = voted_images + [id]
+        return HttpResponse(str(image.votes))
 
 
 class StylistView(LoginRequiredMixin, StaffRequiredMixin, TemplateView):

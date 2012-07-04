@@ -85,6 +85,9 @@ class DisplayProfileView(DetailView):
 
         # if no gallery images uploaded, display a default image
         if not queryset:
+            if self.request.user.is_authenticated() and \
+                    self.object.user == self.request.user:
+                return []
             queryset = [os.path.join(
                         settings.STATIC_URL,
                         'img/default_image_profile_not_logged_in.jpg')]

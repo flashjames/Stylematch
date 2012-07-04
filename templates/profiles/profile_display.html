@@ -117,6 +117,7 @@
 <hr class="soften">
 <div class="row">
   <div class="span10 offset1" id="gallery">
+  {% if gallery_images %}
     {% include "profiles/display_images_snippet.html" with images=gallery_images css_class='gallery-image' %}
   </div>
   <script>
@@ -126,6 +127,18 @@
     height: 500
     });
   </script>
+  {% else %}
+    <div style="text-align:center;">
+      <p style="font-size: 18px;">
+      Du har inga bilder i galleriet.
+      </p>
+      <a href="{% url 'edit_images' %}">
+      Ladda upp din första galleribild här!
+      </a>
+      </div>
+  </div>
+  {% endif %}
+
 </div>
 <hr class="soften">
 {% if services %}

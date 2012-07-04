@@ -65,7 +65,7 @@ class DisplayProfileView(DetailView):
         try:
             profile_picture = self.get_profile_image(profile_user_id)
         except:
-            if self.is_authenticated:
+            if self.is_authenticated and self.object.user.id == self.request.user.id:
                 profile_picture = os.path.join(
                         settings.STATIC_URL,
                         'img/default_image_profile_logged_in.jpg')
@@ -85,6 +85,9 @@ class DisplayProfileView(DetailView):
 
         # if no gallery images uploaded, display a default image
         if not queryset:
+            if self.request.user.is_authenticated() and \
+                    self.object.user == self.request.user:
+                return []
             queryset = [os.path.join(
                         settings.STATIC_URL,
                         'img/default_image_profile_not_logged_in.jpg')]
@@ -129,9 +132,7 @@ class DisplayProfileView(DetailView):
 
         return day
 
-    def get_openinghours(self, profile_user_id):
-
-        obj = OpenHours.objects.get(user__exact=profile_user_id)
+    def get_openinghours(self, obj):
 
         weekday_list = ['Måndag',
                         'Tisdag',
@@ -184,7 +185,12 @@ class DisplayProfileView(DetailView):
         context['last_name'] = profile_user.last_name
 
         # opening hours the displayed userprofile have
-        context['weekdays'] = self.get_openinghours(profile_user_id)
+        try:
+            obj = OpenHours.objects.get(user__exact=profile_user_id)
+            context['openhours_reviewed'] = obj.reviewed
+            context['weekdays'] = self.get_openinghours(obj)
+        except:
+            pass
 
         return context
 
@@ -340,6 +346,16 @@ class ServicesView(LoginRequiredMixin, TemplateView):
 class OpenHoursView(LoginRequiredMixin, UpdateView):
     model = OpenHours
     template_name = "accounts/hours_form.html"
+
+    def form_valid(self, form):
+        """
+        Passes 'valid' context variable
+        """
+        if not self.object.reviewed:
+            self.object.reviewed = True
+            self.object.save()
+        return self.render_to_response(self.get_context_data(form=form,
+                                                             valid=True))
 
     def get_success_url(self):
         return reverse('profiles_add_hours')

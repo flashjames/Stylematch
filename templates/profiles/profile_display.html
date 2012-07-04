@@ -115,7 +115,7 @@
     });
   </script>
   {% else %}
-    <div style="text-align:center;">
+    <div class="alert alert-error" style="text-align:center;">
       <p style="font-size: 18px;">
       Du har inga bilder i galleriet.
       </p>
@@ -128,14 +128,25 @@
 </div>
 
 <hr class="soften">
-{% if services %}
 
 <div class="row" >
   <div class="span8">
+{% if services %}
     <h3>Prislista</h3>
     {% for service in services %}
     {% include "profiles/display_service_snippet.html" with service=service %}
     {% endfor %}
+{% else %}
+  {%if user.is_authenticated and logged_in_user_profile %}
+    <h3>Prislista</h3>
+    <div class="alert alert-error">
+      Du har inte fyllt i någon prislista än.
+      <a href="{% url 'profiles_edit_services' %}">
+        Fyll i din prislista här!
+      </a>
+    </div>
+  {% endif %}
+{% endif %} {# services #}
   </div>
 
   <div class="span3 pull-right">
@@ -164,6 +175,5 @@
     </div>
   </div>
 </div>
-{% endif %} {# services #}
 
 {% endblock %}

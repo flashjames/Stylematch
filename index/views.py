@@ -81,6 +81,15 @@ class SearchCityView(TemplateView):
         city = self.kwargs['city']
         context['city'] = self.kwargs['city'].title()
 
+        # get a standard profile that is always displayed
+        # standard profile is the first profile registered in the city
+        try:
+            standard_profile = UserProfile.objects.filter(
+                                        visible=True,
+                                        salon_city__iexact=city)\
+                     .order_by('user__date_joined')[0]
+        except:
+            standard_profile = ""
 
         # create an artificial request to our API
         json_request = copy(self.request)
@@ -136,7 +145,6 @@ class SearchCityView(TemplateView):
         if json_request.GET:
             getvars = "&" + json_request.GET.urlencode()
 
-
         # update our context data with the response
         context.update({
             'profiles': vals['objects'],
@@ -150,6 +158,7 @@ class SearchCityView(TemplateView):
             'page_next': page_next,
             'limit': limit,
             'getvars': getvars,
+            'standard_profile': standard_profile,
         })
         return context
 

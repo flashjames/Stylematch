@@ -5,26 +5,30 @@
 <script src="http://d3js.org/d3.v2.js"></script>
 <script src="{{ STATIC_URL }}js/underscore-min.js"></script>
 <style>
- 
-  path {
-  stroke: steelblue;
-  stroke-width: 4;
+  .line {
   fill: none;
+  stroke: #000;
+  stroke-width: 1.5px;
+  }
+  
+  .axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+  }
+  path.area {
+  fill:grey;
+  }
+  line {
+  stroke:green;
+  stroke-width:3;
   }
 
-  line {
-  stroke: black;
-  stroke-width:1;
-  }
   path.area {
   fill:grey;
   }
   circle {
   fill:green;
-  }
-  text {
-  font-family: Arial;
-  font-size: 9pt;
   }
   #tooltip {
   position:absolute;
@@ -37,6 +41,8 @@
   font-size:12px;
   color:white;
   }
+
+ 
 </style>
 {% endblock %}
 {% block content %}
@@ -48,11 +54,11 @@
   </div>
 </script>
 
-<div class="row">
-  <div class="span10 offset1">
-    <h1>hellloo1</h1>
+<div class="row main-content">
+  <div class="span10">
+    <h1>Visit statistics</h1>
     <div id="bar-demo"></div>
   </div>
 </div>
-<script type="text/javascript" src="{{ STATIC_URL }}js/chart.js">
+<script type="text/javascript" src="{{ STATIC_URL }}js/chart.js"></script>
 {% endblock %}

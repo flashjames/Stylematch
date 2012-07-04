@@ -179,8 +179,8 @@ urlpatterns += patterns(
     # profile url that match another url -> if it's not at the end it may
     # overwrite it.
     url(r'^',
-            include('accounts.urls')),
-)
+        include('accounts.urls')),
+    )
 
 if settings.DEVELOPMENT:
     urlpatterns += patterns('django.views.static',

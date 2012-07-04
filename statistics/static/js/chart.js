@@ -1,30 +1,56 @@
-//var data = {{ data|safe }};
-//console.log(asd);
-var data = [3, 6, 2, 7, 5, 2, 1, 3, 8, 9, 2, 5, 1],
-w = 820,
-h = 200,
-margin = 40,
-y = d3.scale.linear().domain([0, d3.max(data)]).range([0 + margin, h - margin]),
-x = d3.scale.linear().domain([0, data.length]).range([0 + margin, w - margin])
+var data = [3, 6, 2, 7, 5, 2, 1, 0, 8, 900, 2, 5, 1];
 
-var vis = d3.select("#bar-demo")
-    .append("svg:svg")
-    .attr("width", w)
-    .attr("height", h)
+var margin = {top: 10, right: 10, bottom: 20, left: 10},
+width = 420 - margin.left - margin.right,
+height = 200 - margin.top - margin.bottom;
 
-var g = vis.append("svg:g")
-    .attr("transform", "translate(0, 200)");
 
+var y = d3.scale.linear().domain([0, d3.max(data)]).range([height, 0]),
+x = d3.scale.linear().domain([0, data.length]).range([0, width])
+
+//
 var line = d3.svg.line()
-    .x(function(d,i) { return x(i); })
-    .y(function(d) { return -1 * y(d); })
-    
+//.interpolate("monotone")
+    .x(function(d, i) { return x(i); })
+    .y(function(d, i) { return y(d); });
 
-var s = g.append("svg:path")
-    .attr("d", line(data));
+// the svg we write on
+var svg = d3.select("#bar-demo").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+// does this do anything useful? I see it in all examples, but cant
+// find any difference visually.
+svg.append("defs").append("clipPath")
+    .attr("id", "clip")
+    .append("rect")
+    .attr("width", width)
+    .attr("height", height);
 
-g.selectAll(".point")
+var path = svg.append("g")
+    .attr("clip-path", "url(#clip)")
+    .append("path")
+    .data([data])
+    .attr("class", "line")
+    .attr("d", line);
+
+var area = d3.svg.area()
+//.interpolate("monotone")
+    .x(function(d, i) { return x(i); })
+    .y0(height)
+    .y1(function(d) { return y(d); });
+
+// Add the area path.
+svg.append("g")
+    .append("svg:path")
+    .attr("class", "area")
+    .attr("clip-path", "url(#clip)")
+    .attr("d", area(data));
+
+// points on the line, where each data-point is
+svg.selectAll(".point")
     .data(data)
     .enter()
     .append("circle")
@@ -33,14 +59,13 @@ g.selectAll(".point")
         return x(i);
     })
     .attr("cy", function(d) {
-	return -1 * y(d)
-	console.log(y(d));
-	return 50;
+        return y(d)
     })
-    .on("mouseover", mouseover)
-    .on("mouseout", mouseout);
+    .on("mouseover", tooltip_on)
+    .on("mouseout", tooltip_off);
 
-function mouseover() {
+// add tooltip on mouseover data-point
+function tooltip_on() {
     var chart_tooltip = _.template($('#chart-tooltip').html(), {'visitor_count': 800, 'start_date': '2012-13-14', 'end_date': '2012-17-14'});
     $("body").append(chart_tooltip);
 
@@ -48,49 +73,28 @@ function mouseover() {
     $("#tooltip").offset({ top: position.top-16, left: position.left+20});
 
     d3.select(this)
-	.attr("stroke", "orange")
-	.attr("stroke-width", 5)
-	.attr("stroke-opacity", 0.6);
+        .attr("stroke", "orange")
+        .attr("stroke-width", 5)
+        .attr("stroke-opacity", 0.6);
 }
 
-function mouseout() {
+// remove the tooltip on mouseout
+function tooltip_off() {
     $('#tooltip').remove();
     d3.select(this)
-	.attr("stroke", "none");
+        .attr("stroke", "none");
 }
 
-
-g.append("svg:line")
+// x-axis
+svg.append("svg:line")
     .attr("x1", x(0))
-    .attr("y1", -1 * y(0))
-    .attr("x2", w - margin - 10)
-    .attr("y2", -1 * y(0))
+    .attr("y1", y(0))
+    .attr("x2", width)
+    .attr("y2", y(0))
 
-g.append("svg:line")
+// y-axis
+svg.append("svg:line")
     .attr("x1", x(0))
-    .attr("y1", -1 * y(0))
+    .attr("y1", y(0))
     .attr("x2", x(0))
-    .attr("y2", -1 * y(d3.max(data)))
-
-
-/*
-ADD LABELS
-g.selectAll(".xLabel")
-    .data(x.ticks(3))
-    .enter().append("svg:text")
-    .attr("class", "xLabel")
-    .text(String)
-    .attr("x", function(d) { return x(d) })
-    .attr("y", 0)
-    .attr("text-anchor", "middle")
-
-g.selectAll(".xTicks")
-    .data(x.ticks(3))
-    .enter().append("svg:line")
-    .attr("class", "xTicks")
-    .attr("x1", function(d) { return x(d); })
-    .attr("y1", -1 * y(0))
-    .attr("x2", function(d) { return x(d); })
-    .attr("y2", -1 * y(-0.3))
-
-*/
+    .attr("y2", y(d3.max(data)))

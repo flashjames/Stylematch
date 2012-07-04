@@ -41,6 +41,8 @@
       }, 4000);
       };
 
+      {# TODO: Move this to where it is actually needed. #}
+      {# It's throwing exceptions in pages where .popover1 doesn't exists. #}
       $('.popover1').tooltip(defaultOption).click(showAndHidePopover);
 
       });

@@ -1,4 +1,4 @@
-from fabric.api import sudo, env, cd, run
+from fabric.api import sudo, env, cd, run, local
 from fabric.contrib.console import confirm
 import datetime
 
@@ -44,7 +44,7 @@ def manage(cmd):
 def git_pull(remote='origin', branch='master'):
     'Updates the repository.'
     with _cd_project_root():
-        sudo('git pull %s %s' %(remote, branch), user=env.deploy_user)
+        sudo('git pull %s %s' % (remote, branch), user=env.deploy_user)
 
 
 # High-level commands
@@ -54,7 +54,8 @@ def install_requirements():
 
 
 def test():
-    manage('test --settings=settings.test')
+    """ TODO: Don't go through with deploy if any test fail """
+    local('python manage.py test --settings=settings.test')
 
 
 def collectstatic():
@@ -98,13 +99,16 @@ def update_git_submodules():
         sudo('git submodule init', user=env.deploy_user)
         sudo('git submodule update', user=env.deploy_user)
 
+
 def revert():
     """ Revert git via reset --hard @{1} """
     with _cd_project_root():
         run('git reset --hard @{1}')
         restart_gunicorn()
 
+
 def deploy_db_change():
+    test()
     install_requirements()
     backup_database()
     git_pull()
@@ -113,14 +117,13 @@ def deploy_db_change():
     compile_less()
     collectstatic()
     restart_gunicorn()
-    test()
 
 
 def deploy(branch='master'):
+    test()
     install_requirements()
     git_pull(branch=branch)
     update_git_submodules()
     compile_less()
     collectstatic()
     restart_gunicorn()
-    test()

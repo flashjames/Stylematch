@@ -11,6 +11,7 @@ from index.views import (IndexPageView,
                          TipView,
                          StylistView,
                          InspirationPageView,
+                         LikeView,
                          error500)
 from statistics.views import ProfileVisitsView
 
@@ -161,6 +162,10 @@ urlpatterns += patterns(
             InspirationPageView.as_view(),
             {},
             'inspiration_page'),
+    (r'^like/$',
+            LikeView.as_view(),
+            {},
+            'api_like_view'),
 
     (r'^search',
             TemplateView.as_view(template_name="search.html"),

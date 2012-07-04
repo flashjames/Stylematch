@@ -4,8 +4,8 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib import auth, messages
-from django.http import HttpResponseRedirect
-from django.views.generic import ListView, CreateView, TemplateView
+from django.http import HttpResponseRedirect, HttpResponse
+from django.views.generic import View, ListView, CreateView, TemplateView
 from django.core.urlresolvers import reverse
 from accounts.models import UserProfile, GalleryImage, Featured
 from index.models import BetaEmail, Tip
@@ -81,6 +81,15 @@ class SearchCityView(TemplateView):
         city = self.kwargs['city']
         context['city'] = self.kwargs['city'].title()
 
+        # get a standard profile that is always displayed
+        # standard profile is the first profile registered in the city
+        try:
+            standard_profile = UserProfile.objects.filter(
+                                        visible=True,
+                                        salon_city__iexact=city)\
+                     .order_by('user__date_joined')[0]
+        except:
+            standard_profile = ""
 
         # create an artificial request to our API
         json_request = copy(self.request)
@@ -136,7 +145,6 @@ class SearchCityView(TemplateView):
         if json_request.GET:
             getvars = "&" + json_request.GET.urlencode()
 
-
         # update our context data with the response
         context.update({
             'profiles': vals['objects'],
@@ -150,6 +158,7 @@ class SearchCityView(TemplateView):
             'page_next': page_next,
             'limit': limit,
             'getvars': getvars,
+            'standard_profile': standard_profile,
         })
         return context
 
@@ -198,6 +207,26 @@ class IndexPageView(TemplateView):
         context['popular_cities'] = popular
         context['other_cities'] = other
         return context
+
+
+class LikeView(View):
+    """
+    An API like view to handle like request via ajax
+    """
+    def post(self, request, *args, **kwargs):
+        id = int(request.POST['id'])
+        try:
+            image = GalleryImage.objects.get(pk=id)
+        except:
+            # wrong ID, couldn't find gallery image
+            return HttpResponse("The ID is WROOONG")
+
+        voted_images = request.session.get('has_voted',[])
+        if id not in voted_images:
+            image.votes += 1
+            image.save()
+            request.session['has_voted'] = voted_images + [id]
+        return HttpResponse(str(image.votes))
 
 
 class StylistView(LoginRequiredMixin, StaffRequiredMixin, TemplateView):

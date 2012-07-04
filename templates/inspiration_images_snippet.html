@@ -13,7 +13,6 @@
              title="{{ image.user.first_name }} {{ image.user.last_name }}" />
         {% endthumbnail %}
       </a>
-      <img class="hype" src="http://stylematch.s3-website-eu-west-1.amazonaws.com/test/hype.png"/>
     </div>
 
     <div class="image">
@@ -41,8 +40,12 @@
 
   </div>
   <div style="clear:both;" class="comment-div">
+    <span style="margin-right: 20px;" id="like-{{ forloop.counter0 }}">
+      <img src="{{ STATIC_URL }}img/goodguygreg.jpg" style="vertical-align:middle;">
+      <span class="counter">{{ image.votes }} <a onclick="like({{ forloop.counter0 }}, {{ image.id }})">Gilla</a></span>
+    </span>
     <a class="comment" onclick="$('#fb-wrapper-{{ forloop.counter0 }}').slideToggle();">
-      Se kommentarer
+      <fb:comments-count href="{{ image.get_image_url }}"></fb:comments-count> kommentarer
     </a>
   </div>
   <div id="fb-wrapper-{{ forloop.counter0 }}" class="fb" style="display:none;">

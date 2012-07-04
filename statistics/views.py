@@ -10,5 +10,5 @@ class ProfileVisitsView(TemplateView):
         context = super(ProfileVisitsView, self).get_context_data(**kwargs)
         # since we use the list in a template, to create a javascript array
         # the python list needs to be converted to JSON
-        #context['data'] = json.dumps(profile_statistics.get_profile_visits())
+        context['visitor_count_data'] = json.dumps(profile_statistics.get_profile_visits())
         return context

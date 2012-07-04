@@ -84,7 +84,6 @@ urlpatterns += patterns(
             IndexPageView.as_view(),
             {},
             'index_page'),
-
     (r'^accounts/signup-step1/',
             SignupView.as_view(),
             {},
@@ -93,7 +92,6 @@ urlpatterns += patterns(
             SignupStep2View.as_view(),
             {},
             'signupstep2_page'),
-
     (r'^accounts/edit-settings/',
             TemplateView.as_view(template_name="edit-account-settings.html"),
             {},

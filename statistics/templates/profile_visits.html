@@ -2,8 +2,16 @@
 {% load url from future %}
 {% load index_extras %}
 {% block html-head %}
-<script src="http://d3js.org/d3.v2.js"></script>
+<script src="{{ STATIC_URL }}js/d3.v2.min.js"></script>
 <script src="{{ STATIC_URL }}js/underscore-min.js"></script>
+
+<script type="text/javascript">
+<!-- Visitor count statistics to chart -->
+{% if visitor_count_data %}
+var visitor_count_data = {{ visitor_count_data|safe }};
+{% endif %}
+</script>
+
 <style>
   .line {
   fill: none;
@@ -16,26 +24,31 @@
   stroke: #000;
   shape-rendering: crispEdges;
   }
+
   path.area {
   fill:grey;
+  stroke:rgb(59,89,152);
   }
+
   line {
-  stroke:green;
+  stroke:rgb(59,89,152);
   stroke-width:3;
   }
 
   path.area {
-  fill:grey;
+  fill:rgb(210,229,215);
   }
+
   circle {
-  fill:green;
+  fill:rgb(59,89,152);
   }
+
   #tooltip {
   position:absolute;
   background-color:#333;
-  padding:2px 5px 2px 5px;
-  
+  padding:2px 5px 2px 5px;  
   }
+
   #tooltip p {
   margin:0px;
   font-size:12px;

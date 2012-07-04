@@ -1,18 +1,23 @@
-var data = [3, 6, 2, 7, 5, 2, 1, 0, 8, 900, 2, 5, 1];
+// this function makes it easier to switch to using data, other sources.
+// all functions that take values from the daya array use this function
+function get_value(arr) {
+    //return arr;
+    return parseInt(arr[1]);
+}
 
+//var data = [3, 6, 2, 7, 5, 2, 1, 0, 8, 9, 2, 5, 1];
+var data = visitor_count_data; //.slice(0,10);
 var margin = {top: 10, right: 10, bottom: 20, left: 10},
 width = 420 - margin.left - margin.right,
 height = 200 - margin.top - margin.bottom;
 
-
-var y = d3.scale.linear().domain([0, d3.max(data)]).range([height, 0]),
+var y = d3.scale.linear().domain([0, d3.max(data, function(d) { return get_value(d); })]).range([height, 0]),
 x = d3.scale.linear().domain([0, data.length]).range([0, width])
 
-//
 var line = d3.svg.line()
 //.interpolate("monotone")
     .x(function(d, i) { return x(i); })
-    .y(function(d, i) { return y(d); });
+    .y(function(d, i) { return y(get_value(d)); });
 
 // the svg we write on
 var svg = d3.select("#bar-demo").append("svg")
@@ -40,7 +45,7 @@ var area = d3.svg.area()
 //.interpolate("monotone")
     .x(function(d, i) { return x(i); })
     .y0(height)
-    .y1(function(d) { return y(d); });
+    .y1(function(d) { return y(get_value(d)); });
 
 // Add the area path.
 svg.append("g")
@@ -56,10 +61,12 @@ svg.selectAll(".point")
     .append("circle")
     .attr("r", 4)
     .attr("cx", function(d, i) {
+	console.log(d,i);
         return x(i);
     })
     .attr("cy", function(d) {
-        return y(d)
+	console.log(get_value(d));
+        return y(get_value(d))
     })
     .on("mouseover", tooltip_on)
     .on("mouseout", tooltip_off);
@@ -97,4 +104,5 @@ svg.append("svg:line")
     .attr("x1", x(0))
     .attr("y1", y(0))
     .attr("x2", x(0))
-    .attr("y2", y(d3.max(data)))
+    .attr("y2", y(d3.max(data, function(d) { return get_value(d); })))
+

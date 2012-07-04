@@ -9,7 +9,7 @@
 <script type="text/javascript"> Galleria.loadTheme('{{ GALLERIA_THEME }}'); </script>
 <script src="{{ STATIC_URL }}js/bootstrap-modal.js" type="text/javascript"></script>
 <script type="text/javascript">
-	$('#bookmemodal').modal();
+  $('#bookmemodal').modal();
 </script>
 
 <meta name="keywords" content="frisör {{ profile.salon_city }},hitta frisör {{ profile.salon_city }},boka frisör,boka frisör {{ profile.salon_city }},frisör">
@@ -22,26 +22,19 @@
 {% endblock %}
 <meta property="og:street-address" content="{{ profile.salon_adress }}">
 <meta property="og:locality" content="{{ profile.salon_city }}">
-<meta property="og:phone_number" content="{% if profile.number_on_profile %}
-    {{ profile.personal_phone_number }}
-    {% else %}
-    {{ profile.salon_phone_number }}
-    {% endif %} ">
+
+<meta property="og:phone_number" content="{% if profile.number_on_profile %}{{ profile.personal_phone_number }}{% else %}{{ profile.salon_phone_number }}{% endif %}">
 
 <meta property="og:postal-code" content="{{ zip_adress }}">
 <meta property="og:country-name" content="SWEDEN">
 <meta property="og:title" content="{{ first_name }} {{ last_name }}">
 </script>
-
-
-{% endblock %}
+{% endblock %} {# html-head #}
 
 {% block title %}{{ first_name.title }} {{ last_name.title }}{% if profile.salon_city %}, frisör i {{ profile.salon_city.title }} {% endif %}{% endblock %}
 
 {% block content %}
-
 <div id="fb-root"></div>
-
 
 {% if user.is_authenticated and logged_in_user_profile %}
 {% include "profiles/edit_profile_menu.html" with display_profile="active" %}
@@ -53,7 +46,6 @@
 <br><br>
 
 <div class="row masthead" >
-
   <div class="span3 profile-image ">
     <div class="profile-image-border">
       {% with profile|profile_image_thumbnail as pit %}
@@ -66,18 +58,17 @@
       {% endif %}
       {% endwith %}
 
-    {% if user.is_authenticated and logged_in_user_profile %}
-    <a class="edit-profile-image-test-links" href="{% url 'edit_images' %}">
-    <div class="edit-profile-image-test">
-    <h3> Tryck här för att byta profilbild</h3>
-    </div></a>
-    {% endif %}
-    
-    <!-- data-href, since we want to use a permanent url for likes (so they can change their "profile url" and still keep the likes.) -->
-    <div class="fb-like facebook-like-on-profile-display" data-href="http://www.{{ site_domain }}/{{ profile.temporary_profile_url }}" data-send="true" data-layout="button_count" data-width="220" data-show-faces="true" data-action="recommend"></div>
-  
+      {% if user.is_authenticated and logged_in_user_profile %}
+      <a class="edit-profile-image-test-links" href="{% url 'edit_images' %}">
+        <div class="edit-profile-image-test">
+          <h3> Tryck här för att byta profilbild</h3>
+        </div>
+      </a>
+      {% endif %}
+
+      <!-- data-href, since we want to use a permanent url for likes (so they can change their "profile url" and still keep the likes.) -->
+      <div class="fb-like facebook-like-on-profile-display" data-href="http://www.{{ site_domain }}/{{ profile.temporary_profile_url }}" data-send="true" data-layout="button_count" data-width="220" data-show-faces="true" data-action="recommend"></div>
     </div>
-    
   </div>
 
   <div class="span6 profile-text-block">
@@ -85,32 +76,28 @@
     <div class="fb-like pull-right" data-href="http://www.{{ site_domain }}/{{ profile.temporary_profile_url }}" data-send="false" data-layout="button_count" data-width="50" data-show-faces="true"></div>
     <h3>{{ profile.salon_name.title }}   |   {{ profile.salon_city.title }}</h3>
     <blockquote><p>{{ profile.profile_text|linebreaksbr }}</p></blockquote>
-    
+
     {% include "book_me_modal_snippet.html" %}
     <a class="btn btn-large btn-info pull-right book-me-btn"  data-toggle="modal" href="#bookmemodal" onclick="_gaq.push(['_trackEvent', 'Privatperson - Profil', 'Boka frisör', '{{ first_name }} {{ last_name }}'])">Boka mig!</a>
-    
+
   </div>
   <div class="span3" id="salon-information">
      <div>
-	    
-    <img class="salong-map-profile" src="http://maps.googleapis.com/maps/api/staticmap?center={{ profile.salon_adress }}, {{ profile.salon_city }},sweden&zoom=13&size=220x220&maptype=roadmap
-&markers=color:red%7Ccolor:red%7C{{ profile.salon_adress }}, {{ profile.salon_city }},sweden&sensor=false"></img>
-	    
+      <img class="salong-map-profile" 
+           src="http://maps.googleapis.com/maps/api/staticmap?center={{ profile.salon_adress }}, {{ profile.salon_city }},sweden&zoom=13&size=220x220&maptype=roadmap&markers=color:red%7Ccolor:red%7C{{ profile.salon_adress }}, {{ profile.salon_city }},sweden&sensor=false">
+      </img>
     </div>
     <h2>Kontakt</h2>
     <h4>{{ profile.salon_name.title }}</h4>
 
-   
     <p>{{ profile.salon_adress.title }}, {{ profile.salon_city.title }}</p>
     <p>Tele:
     {% if profile.number_on_profile %}
     {{ profile.personal_phone_number }}
     {% else %}
     {{ profile.salon_phone_number }}
-    {% endif %} </p>
-    
-   
-    
+    {% endif %}
+    </p>
   </div>
 </div>
 
@@ -138,8 +125,8 @@
       </div>
   </div>
   {% endif %}
-
 </div>
+
 <hr class="soften">
 {% if services %}
 
@@ -176,21 +163,7 @@
       </table>
     </div>
   </div>
-
 </div>
-{% endif %}
-
-<div class="row show-grid">
-
-</div><div class="row show-grid">
-
-
-  {% if user.is_authenticated %}
-</div>
-</div>
-{% endif %}
-</div>
-
-
+{% endif %} {# services #}
 
 {% endblock %}

@@ -46,7 +46,7 @@ if settings.DEVELOPMENT or settings.STAGING:
                 handler500)
     )
 
-    
+
 sitemaps = {
     'static': StaticPagesSitemap
 }
@@ -102,11 +102,11 @@ urlpatterns += patterns(
             ProfileVisitsView.as_view(),
             {},
             'profile_visits'),
-    (r'^get_invite',
+    (r'^get_invite/',
             BetaEmailView.as_view(),
             {},
             'get_invite'),
-    (r'^start',
+    (r'^start/',
             TemplateView.as_view(template_name="betaemail_index.html"),
             {},
             'beta_index_page'),
@@ -140,7 +140,7 @@ urlpatterns += patterns(
             TemplateView.as_view(template_name="faq_privatperson.html"),
             {},
             'faq-privatperson-page'),
-    (r'^faq',
+    (r'^faq/',
             TemplateView.as_view(template_name="faq.html"),
             {},
             'faq-page'),
@@ -158,7 +158,7 @@ urlpatterns += patterns(
     # tracking-code so google apps know we own the domain.
     (r'^google66ca7050dfade3e4.html',
             TemplateView.as_view(template_name="google66ca7050dfade3e4.html")),
-    (r'^inspiration',
+    (r'^inspiration/',
             InspirationPageView.as_view(),
             {},
             'inspiration_page'),
@@ -167,13 +167,14 @@ urlpatterns += patterns(
             {},
             'api_like_view'),
 
-    (r'^search',
+    (r'^search/',
             TemplateView.as_view(template_name="search.html"),
             {},
             'search'),
     url(r'^',
             include('cities_urls')),
-    (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
+    (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap',
+     {'sitemaps': sitemaps}),
     # accounts/profile, should always be at the end. since a user may set a
     # profile url that match another url -> if it's not at the end it may
     # overwrite it.

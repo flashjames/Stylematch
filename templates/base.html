@@ -74,11 +74,7 @@
 
   </head>
 
-  <body class="{% if user.is_authenticated %}body-logged-in {% endif %} padding-zero"
-        data-spy="scroll"
-        data-target=".subnav"
-        data-offset="50"
-        data-twttr-rendered="true">
+  <body class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true">
 
     {% if user.is_authenticated %}{# Add menubar at top #}
       {% include "authenticated_menu.html" %}
@@ -86,20 +82,18 @@
 
     <div class="bigpage">
 
+{# This tag is for pages that don't need the links in the header, for an example on how to use, see the signup-steps. #}
+      {% block remove-links-top %}
+      <div class="container header">
+
       {% if not user.is_authenticated %}
-      <div class="container">
-        <div class="row" style="margin-top:5px;">
-          <div class="span12">
+        <div class="row" style="margin:2px;">
+          <div class="span3 offset9 pull-right">
             <a class="btn btn-mini btn-info pull-right" href="{% url 'registration_register' %}">Bli medlem som frisör</a>
             <a class="btn btn-mini pull-right" href="{% url 'auth_login' %}">Logga in</a>
           </div>
         </div>
-      </div>
       {% endif %}
-
-      {# This tag is for pages that don't need the links in the header, for an example on how to use, see the signup-steps. #}
-      {% block remove-links-top %}
-      <div class="container header">
 
         <div class="row masthead">
           <div class="span4">

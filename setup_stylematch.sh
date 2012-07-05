@@ -73,7 +73,10 @@ function setup()
         echo 'from .dev import *' > settings/local.py
 
         # have syncdb initiate everything, and skip south for now
-        python manage.py syncdb --al
+        python manage.py syncdb --all
+
+        # ... and do south now.
+        python manage.py migrate --fake
     fi
 }
 

@@ -11,7 +11,6 @@ distribute==0.6.24
 django-debug-toolbar==0.9.4
 django-defaultsite==1.1
 django-extensions==0.9
-django-galleria==0.1
 django-liveserver==0.1a-2
 django-registration==0.8
 django-ses==0.4.1

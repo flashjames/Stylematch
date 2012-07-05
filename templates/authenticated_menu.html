@@ -25,7 +25,7 @@
         <ul class="nav">
           {# BUG: url 'profile_display_redirect' doesn't return the actual user URL. #}
           {# it returns /profile/ which is terrible. Fix! #}
-          {% url 'profile_display_redirect' as pdr %}<li class="{% active request pdr %}"><a href="/#dashboard">Översikt</a></li>
+          {#{% url 'profile_display_redirect' as pdr %}<li class="{% active request pdr %}"><a href="/#dashboard">Översikt</a></li>#}
           {% url 'profile_display_redirect' as pdr %}<li class="{% active request pdr %}"><a href="{{ pdr }}">Visa profil</a></li>
           {% url 'profile_edit' as pe              %}<li class="{% active request pe  %}"><a href="{{ pe  }}">Ändra profil</a></li>
           {% url 'edit_images' as ei               %}<li class="{% active request ei  %}"><a href="{{ ei  }}">Lägg upp bilder</a></li>

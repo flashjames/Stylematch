@@ -21,9 +21,13 @@ def current_url(request):
 
 @register.simple_tag
 def active(request, pattern):
-    #import pdb;pdb.set_trace()
-    import re
-    if re.search(pattern, request.path):
+    """
+    Add the active class to an object. Example usage in a template:
+
+    {% url 'myurl' as my %}<li class="{% active request my %}"><a href="{{ my }}">My URL</a></li>
+
+    """
+    if request.path == pattern:
         return 'active'
     return ''
 

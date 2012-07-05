@@ -1,0 +1,35 @@
+{% load url from future %}
+
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container-fluid">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <a class="brand" href="/">StyleMatch</a>
+      <div class="btn-group pull-right">
+        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+          <i class="icon-user"></i> {{ user.first_name }} {{ user.last_name }}
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="{% url 'edit-account-settings' %}">Kontoinställningar</a></li>
+          <li class="divider"></li>
+          <li><a href="{% url 'logout' %}">Logga ut</a></li>
+        </ul>
+      </div>
+      <div class="nav-collapse">
+        <ul class="nav">
+          <li><a href="#dashboard{# url 'profile_dashboard' #}">Översikt</a></li>
+          <li><a href="{% url 'profile_display_redirect' %}">Visa profil</a></li>
+          <li><a href="{% url 'profile_edit' %}">Ändra profil</a></li>
+          <li><a href="{% url 'edit_images' %}">Lägg upp bilder</a></li>
+          <li><a href="{% url 'profiles_edit_services' %}">Förändra prislista</a></li>
+          <li><a href="{% url 'profiles_add_hours' %}">Förändra öppettider</a></li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+</div>

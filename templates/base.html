@@ -80,7 +80,7 @@
       {% include "authenticated_menu.html" %}
     {% endif %}
 
-    <div class="bigpage">
+    <div class="bigpage{% url 'index_page' as index %}{% ifequal request.path index %} bg-firstpage{%endifequal %}">
 
 {# This tag is for pages that don't need the links in the header, for an example on how to use, see the signup-steps. #}
       {% block remove-links-top %}

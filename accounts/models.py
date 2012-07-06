@@ -214,7 +214,7 @@ class UserProfile(models.Model):
     fixa så twitter och facebook profil visas här, se styleseat
     fixa description till denna modell
     """
-    user = models.ForeignKey(User, unique=True, editable=False)
+    user = models.OneToOneField(User, parent_link=True, unique=True, editable=False)
 
     visible = models.BooleanField(
         "Visa i sökresultat och visa användarens bilder", default=False)

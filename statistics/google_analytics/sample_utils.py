@@ -43,7 +43,6 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
 from oauth2client.tools import run
 
-
 FLAGS = gflags.FLAGS
 
 # CLIENT_SECRETS, name of a file containing the OAuth 2.0 information for this
@@ -83,7 +82,7 @@ gflags.DEFINE_enum('logging_level', 'ERROR',
 # Name of file that will store the access and refresh tokens to access
 # the API without having to login each time. Make sure this file is in
 # a secure place.
-TOKEN_FILE_NAME = 'analytics.dat'
+TOKEN_FILE_NAME = 'statistics/google_analytics/analytics.dat'
 
 
 def process_flags(argv):
@@ -103,6 +102,43 @@ def process_flags(argv):
         logging.getLogger().setLevel(getattr(logging, FLAGS.logging_level))
 
 
+def service_auth():
+    """
+    Service authentication doesnt work with Google analytics / Core reporting
+    api at the moment.
+    TODO: Use this when Google analytics api accept service authentication
+    """
+    from oauth2client.client import SignedJwtAssertionCredentials
+    f = file('8e0706de8908522bcf58bd475b9e6cc638294571-privatekey.p12', 'rb')
+
+    key = f.read()
+    f.close()
+    
+    # Create an httplib2.Http object to handle our HTTP requests and authorize it
+    # with the Credentials. Note that the first parameter, service_account_name,
+    # is the Email address created for the Service account. It must be the email
+    # address associated with the key that was created.
+    credentials = SignedJwtAssertionCredentials(
+        '854546516036-ndecnttg9u84f4t0jf9jdr0054jle8ug.apps.googleusercontent.com',
+        key,
+        scope='https://www.googleapis.com/auth/analytics.readonly')
+    return credentials
+
+
+def client_auth():
+    # Prepare credentials, and authorize HTTP object with them.
+    storage = Storage(TOKEN_FILE_NAME)
+    credentials = storage.get()
+    # remove this? to not get people to try to auth
+    if credentials is None or credentials.invalid:
+        logging.getLogger().critical("Either we dont have a analytics.dat "
+                                     "file or it has expired. The analytics.dat"
+                                     "file is used to connect to the Core"
+                                     "reporting api.")
+        credentials = run(FLOW, storage)
+        
+    return credentials
+
 def initialize_service():
     """Returns an instance of service from discovery data and does auth.
 
@@ -118,12 +154,8 @@ def initialize_service():
     # Create an httplib2.Http object to handle our HTTP requests.
     http = httplib2.Http()
 
-    # Prepare credentials, and authorize HTTP object with them.
-    storage = Storage(TOKEN_FILE_NAME)
-    credentials = storage.get()
-    if credentials is None or credentials.invalid:
-        credentials = run(FLOW, storage)
-
+    credentials = client_auth()
+    #credentials = service_auth()
     http = credentials.authorize(http)
 
     # Retrieve service.

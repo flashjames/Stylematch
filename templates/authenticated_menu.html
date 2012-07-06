@@ -1,18 +1,23 @@
 {% load url from future %}
+{% load thumbnail %}
+{% load index_extras %}
 
-<div class="navbar navbar-fixed-top">
+<div class="authed navbar navbar-fixed-top">
   <div class="navbar-inner">
-    <div class="container-fluid">
-      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
+    <div class="container">
       <a class="brand" href="/">StyleMatch</a>
-      <div class="btn-group pull-right">
-        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-          <i class="icon-user"></i> {{ user.first_name }} {{ user.last_name }}
-          <span class="caret"></span>
+      <div class="profile-dropdown dropdown pull-right">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            {% with user.get_profile|profile_image_thumbnail as pit %}
+            {% if pit|get_class != 'ImageFieldFile' %}
+            <img src="{{ pit }}" />
+            {% else %}
+            {% thumbnail user.get_profile|profile_image_thumbnail:user.is_authenticated "36x36" crop="center" as im %}
+            <img src="{{ im.url }}" />
+            {% endthumbnail %}
+            {% endif %}
+            {% endwith %}
+            <span class="profile-name">{{ user.first_name }} {{ user.last_name }}</span>
         </a>
         <ul class="dropdown-menu">
           <li><a href="{% url 'edit-account-settings' %}">Kontoinställningar</a></li>
@@ -22,14 +27,14 @@
       </div>
       <div class="nav-collapse">
         <ul class="nav">
-          <li><a href="#dashboard{# url 'profile_dashboard' #}">Översikt</a></li>
-          <li><a href="{% url 'profile_display_redirect' %}">Visa profil</a></li>
-          <li><a href="{% url 'profile_edit' %}">Ändra profil</a></li>
-          <li><a href="{% url 'edit_images' %}">Lägg upp bilder</a></li>
-          <li><a href="{% url 'profiles_edit_services' %}">Förändra prislista</a></li>
-          <li><a href="{% url 'profiles_add_hours' %}">Förändra öppettider</a></li>
+          {#{% url 'profile_dashboard' as pdr %}<li class="{% active request pdr %}"><a href="/#dashboard">Översikt</a></li>#}
+          {% url 'profile_display_with_profile_url' slug=user.get_profile.profile_url as pdr %}<li class="{% active request pdr %}"><a href="{{ pdr }}">Visa profil</a></li>
+          {% url 'profile_edit' as pe              %}<li class="{% active request pe  %}"><a href="{{ pe  }}">Ändra profil</a></li>
+          {% url 'edit_images' as ei               %}<li class="{% active request ei  %}"><a href="{{ ei  }}">Lägg upp bilder</a></li>
+          {% url 'profiles_edit_services' as pes   %}<li class="{% active request pes %}"><a href="{{ pes }}">Förändra prislista</a></li>
+          {% url 'profiles_add_hours' as pah       %}<li class="{% active request pah %}"><a href="{{ pah }}">Förändra öppettider</a></li>
         </ul>
-      </div><!--/.nav-collapse -->
+      </div>
     </div>
   </div>
 </div>

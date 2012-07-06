@@ -36,14 +36,9 @@
 {% block content %}
 <div id="fb-root"></div>
 
-{% if user.is_authenticated and logged_in_user_profile %}
-{% include "profiles/edit_profile_menu.html" with display_profile="active" %}
-{% endif %}
 {% if user.is_superuser %}
 {% include "profiles/admin_profile.html" %}
 {% endif %}
-<!-- remove these <br> asap!! -->
-<br><br>
 
 <div class="row masthead" >
   <div class="span3 profile-image ">
@@ -137,7 +132,7 @@
     {% include "profiles/display_service_snippet.html" with service=service %}
     {% endfor %}
 {% else %}
-  {%if user.is_authenticated and logged_in_user_profile %}
+  {% if user.is_authenticated and logged_in_user_profile %}
     <h3>Prislista</h3>
     <div class="alert alert-error">
       <p><strong>Du har inte fyllt i någon prislista än!</strong></p>
@@ -173,11 +168,13 @@
         </tbody>
       </table>
     {% else %}
-    <div class="alert alert-error">
-      <p><strong>Du har inte fyllt i dina öppettider!</strong></p>
-      <a href="{% url 'profiles_add_hours' %}">Fyll i dina öppettider här</a>
+      {% if user.is_authenticated and logged_in_user_profile %}
+      <div class="alert alert-error">
+        <p><strong>Du har inte fyllt i dina öppettider!</strong></p>
+        <a href="{% url 'profiles_add_hours' %}">Fyll i dina öppettider här</a>
+      </div>
+      {% endif %}
     {% endif %}
-    </div>
   </div>
 </div>
 

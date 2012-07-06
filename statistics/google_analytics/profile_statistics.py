@@ -32,20 +32,24 @@ def get_url_visits(service, ga_profile_id, url):
 
 def concat_data_points(visit_points):
     """
-    Join data points, three points to one point
+    Join all data points, three points to one point
     """
     concated_points = []
-    at_point = -1
     sum_points = 0
-    print len(visit_points)
-    for i in range(0,len(visit_points),3):
-        if i * 3  > len(visit_points):
+    for i in range(0, len(visit_points) ,3):
+        # need three data points to concentate, break the loop
+        # if there's only one or two data points left
+        if i + 2 >= len(visit_points):
             break
-        
+
+        # concentate three data points to one new point
+        # and save end- and startdate, of the concentated data points
         new_point = {}
-        new_point['visits'] = int(visit_points[i][1]) + int(visit_points[i+1][1]) + int(visit_points[i+2][1])
-        new_point['end_date'] = visit_points[i][0]
+        new_point['visits'] = (int(visit_points[i][1]) +
+                               int(visit_points[i+1][1]) +
+                               int(visit_points[i+2][1])) 
         new_point['start_date'] = visit_points[i][0]
+        new_point['end_date'] = visit_points[i+2][0]
         concated_points.append(new_point)
         
     return concated_points
@@ -113,6 +117,4 @@ def print_results(results):
 
 
 if __name__ == '__main__':
-    data = [[u'20120604', u'6'], [u'20120605', u'4'], [u'20120606', u'2'], [u'20120607', u'9'], [u'20120608', u'6'], [u'20120609', u'2'], [u'20120610', u'7'], [u'20120611', u'0'], [u'20120612', u'4'], [u'20120613', u'10'], [u'20120614', u'0'], [u'20120615', u'0'], [u'20120616', u'0'], [u'20120617', u'0'], [u'20120618', u'5'], [u'20120619', u'4'], [u'20120620', u'3'], [u'20120621', u'1'], [u'20120622', u'1'], [u'20120623', u'1'], [u'20120624', u'2'], [u'20120625', u'0'], [u'20120626', u'7'], [u'20120627', u'4'], [u'20120628', u'0'], [u'20120629', u'3'], [u'20120630', u'1'], [u'20120701', u'1'], [u'20120702', u'6'], [u'20120703', u'2'], [u'20120704', u'2']]
-    print concat_data_points(data)
-    #get_profile_visits()
+    get_profile_visits()

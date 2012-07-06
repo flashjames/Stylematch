@@ -129,6 +129,12 @@ def client_auth():
     # Prepare credentials, and authorize HTTP object with them.
     storage = Storage(TOKEN_FILE_NAME)
     credentials = storage.get()
+
+    logging.getLogger().critical("Either we dont have a analytics.dat "
+                                 "file or it has expired. The analytics.dat"
+                                 "file is used to connect to the Core"
+                                 "reporting api.")
+
     # remove this? to not get people to try to auth
     if credentials is None or credentials.invalid:
         logging.getLogger().critical("Either we dont have a analytics.dat "

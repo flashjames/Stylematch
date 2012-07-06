@@ -3,7 +3,7 @@
 <div class="row profile-menu-underline">
   <div class="span11">
     <ul class="nav nav-tabs edit-navigation" style="margin-bottom:0px; ">
-      <li><a href="{% url 'admin:accounts_userprofile_change' profile.user_id %}">Visa i Django Admin</a></li>
+      <li><a href="{% url 'admin:auth_user_change' profile.user.id %}">Visa i Django Admin</a></li>
     </ul>
   </div>
 </div>

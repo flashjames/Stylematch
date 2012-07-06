@@ -1,12 +1,13 @@
 from accounts.models import UserProfile, GalleryImage, ProfileImage, InviteCode, Featured
 from django.contrib import admin
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
 from django.contrib.admin.widgets import AdminFileWidget
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from sorl.thumbnail import get_thumbnail
 import os
-
 
 def thumbnail(img):
     try:
@@ -39,19 +40,6 @@ class AdminImageWidget(AdminFileWidget):
         return mark_safe(u''.join(output))
 
 
-class UserProfileAdmin(admin.ModelAdmin):
-    readonly_fields = ('temporary_profile_url',
-                       'profile_image_cropped',
-                       'profile_image_uncropped',
-                       'user_link',)
-
-    def user_link(self, obj):
-        change_url = reverse('admin:auth_user_change', args=(obj.user.id,))
-        return mark_safe('<a href="%s">%s</a>' % (change_url, obj.user.email))
-
-    user_link.short_description = 'User'
-
-
 class FeaturedAdmin(admin.ModelAdmin):
     list_filter = ('city',)
 
@@ -60,14 +48,9 @@ class ImageAdmin(admin.ModelAdmin):
     readonly_fields = ('user_link',)
 
     def user_link(self, obj):
-        try:
-            up = UserProfile.objects.get(user=obj.user)
-            change_url = reverse('admin:accounts_userprofile_change', args=(up.id,))
-            return mark_safe('<a href="%s">%s</a>' % (change_url, obj.user.email))
-        except:
-            return "Error occured getting this field value"
+        change_url = reverse('admin:auth_user_change', args=(obj.user.id,))
+        return mark_safe('<a href="%s">%s</a>' % (change_url, obj.user.email))
     user_link.short_description = 'Owner'
-
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         if db_field.name == 'file':
@@ -78,8 +61,19 @@ class ImageAdmin(admin.ModelAdmin):
         return sup.formfield_for_dbfield(db_field, **kwargs)
 
 
+class UserProfileInline(admin.StackedInline):
+    model = UserProfile
+    readonly_fields = ('temporary_profile_url',
+                       'profile_image_cropped',
+                       'profile_image_uncropped',)
 
-admin.site.register(UserProfile, UserProfileAdmin)
+
+class UserProfileAdmin(UserAdmin):
+    inlines = [ UserProfileInline, ]
+
+
+admin.site.unregister(User)
+admin.site.register(User, UserProfileAdmin)
 admin.site.register(ProfileImage, ImageAdmin)
 admin.site.register(GalleryImage, ImageAdmin)
 admin.site.register(InviteCode)

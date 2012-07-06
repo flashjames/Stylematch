@@ -194,6 +194,17 @@ hr.soften {
     font-weight: 100;
 }
 
+// Info appears as a neutral blue
+.btn-info {
+  .buttonBackground(#ECC98A,#E7B864);
+  color:#9C824B;
+}
+.btn-primary {
+  .buttonBackground(@primaryButtonBackground, spin(@primaryButtonBackground, 20));
+  .buttonBackground(#ECC98A,#E7B864);
+  color:#9C824B;
+}
+
 /* END GENERAL */
 
 /* RESET PASSWORD PAGE */

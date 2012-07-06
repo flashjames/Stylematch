@@ -10,68 +10,24 @@
 </div>
 <div class="tabbable tabs-left">
   <ul class="nav nav-tabs" id="infotabs">
-    <li class="active">Du har<span>4</span>steg kvar till en perfekt profil!</li>
+    <li class="active">Du har<span>{{ actual_tasks_to_do }}</span>steg kvar till en perfekt profil!</li>
   </ul>
   <div class="tab-content tasktable" id="lA">
     <table class="table">
       <caption>Att göra:</caption>
       <tbody>
+        {% for task in tasks_to_be_done %}
         <tr>
-          <td class="cleared">
-            <a href="#">
-            <span class="label label-success">Ok</span>
-              Gör ditt StyleMatch-konto!
+          <td{% if task.passed %} class="cleared"{% endif %}>
+            <a href="{{ task.url }}">
+              <span class="label label-{% if task.passed %}success{% else %}important{% endif %}">
+                {% if task.passed %}Ok{% else %}Ej klart{% endif %}
+              </span>
+              {{ task.text }}
             </a>
           </td>
         </tr>
-        <tr>
-          <td>
-            <a href="{% url 'edit_images' %}">
-            <span class="label label-important">Ej klart</span>
-              Ladda upp en profilbild
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <a href="{% url 'profile_edit' %}">
-            <span class="label label-important">Ej klart</span>
-              Fyll i salongsinformation
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <a href="{% url 'edit_images' %}">
-            <span class="label label-important">Ej klart</span>
-              Ladda upp din första galleribild!
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <a href="{% url 'profiles_edit_services' %}">
-            <span class="label label-important">Ej klart</span>
-              Lägg upp din prislista
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <a href="{% url 'profiles_add_hours' %}">
-            <span class="label label-important">Ej klart</span>
-              Skriv in dina öppettider
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <a href="{% url 'profile_edit' %}">
-            <span class="label label-important">Ej klart</span>
-              Skriv din personliga information
-            </a>
-          </td>
-        </tr>
+        {% endfor %}
       </tbody>
     </table>
   </div>

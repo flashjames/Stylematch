@@ -35,7 +35,7 @@
 <script type="text/javascript">
   function moveScroller() {
     var a = function() {
-      var b = $(window).scrollTop();
+      var b = $(window).scrollTop(){% if user.is_authenticated %} + 40{% endif %};
       var d = $("#scroller-anchor").offset().top;
       var c=$("#scroller");
       var footer = $('.base-footer-div').offset().top;
@@ -43,6 +43,7 @@
       if (b>d && profile_list_height > 510) {
         pos = footer - (b+600);
         if (pos > 0) pos = 0;
+        {% if user.is_authenticated %}pos += 40;{% endif %}
         c.css({position:"fixed",top:pos+"px"})
       } else {
         if (b<=d) {
@@ -110,7 +111,7 @@
             </p>
             <ol>
             	<li>Välj först den stad du vill bläddra bland frisörsalonger i, i detta fall {{ city }}.</li>
-            	<li>Bläddra bland våra frisörer som finns i den staden, och besök sedan dens profil.</li>
+              <li>Bläddra bland våra frisörer(t.ex. <a href="/{{ standard_profile.profile_url }}/">{{ standard_profile.user.first_name }} {{ standard_profile.user.last_name }}</a>) som finns i den staden, och besök sedan dens profil.</li>
             	<li>Bläddra bland bilder på frisyrer, färger och fina bilder på uppsättningar.</li>
             	<li>Boka sedan frisören genom att ringa till salongen med numret som finns på profilen.</li>
             	<li>Gå in och rekommendera frisören efter besöket på <a href="http://www.stylematch.se/">StyleMatch.se</a></li>

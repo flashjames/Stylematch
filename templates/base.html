@@ -86,15 +86,14 @@
 {# This tag is for pages that don't need the links in the header, for an example on how to use, see the signup-steps. #}
       {% block remove-links-top %}
       <div class="container header">
-
       {% if not user.is_authenticated %}
+
         <div class="row" style="margin:2px;">
-          <div class="span3 offset9 pull-right">
-            <a class="btn btn-mini btn-info pull-right" href="{% url 'registration_register' %}">Bli medlem som frisör</a>
-            <a class="btn btn-mini pull-right" href="{% url 'auth_login' %}">Logga in</a>
+          <div class="span3 offset9 pull-right top-right-menu">
+            <a class="pull-right" href="{% url 'auth_login' %}">Logga in</a>
+            <a class="top-menu-border pull-right" href="{% url 'registration_register' %}">Bli medlem som frisör</a>
           </div>
         </div>
-      {% endif %}
 
         <div class="row masthead">
           <div class="span4">
@@ -113,6 +112,7 @@
             <a href="{% url 'about_page' as about %}{{ about }}">Om Stylematch</a>
           </div>
         </div>{# row masthead #}
+      {% endif %}
       </div>{# container #}
       {% endblock %} {# remove-links-top #}
 

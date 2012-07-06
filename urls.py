@@ -13,6 +13,7 @@ from index.views import (IndexPageView,
                          InspirationPageView,
                          LikeView,
                          error500)
+from dashboard.views import DashboardView
 from statistics.views import ProfileVisitsView
 
 from django.contrib import admin
@@ -164,6 +165,10 @@ urlpatterns += patterns(
             LikeView.as_view(),
             {},
             'api_like_view'),
+
+    (r'^dashboard/$',
+            DashboardView.as_view(), {},
+            'dashboard'),
 
     (r'^search/',
             TemplateView.as_view(template_name="search.html"),

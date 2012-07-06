@@ -138,6 +138,7 @@ INSTALLED_APPS = (
     'braces',
     'index',
     'accounts',
+    'dashboard',
     'storages',
     'defaultsite',
     'django_su',

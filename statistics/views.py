@@ -14,5 +14,9 @@ class ProfileVisitsView(LoginRequiredMixin, TemplateView):
         profile_url = userprofile.profile_url
         # since we use the list in a template, to create a javascript array
         # the python list needs to be converted to JSON
-        context['visitor_count_data'] = json.dumps(profile_statistics.get_profile_visits(profile_url))
+        try:
+            context['visitor_count_data'] = json.dumps(profile_statistics.get_profile_visits(profile_url))
+        # if the google api authentication key is missing
+        except AttributeError:
+            context['visitor_count_data'] = []
         return context

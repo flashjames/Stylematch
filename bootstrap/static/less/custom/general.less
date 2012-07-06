@@ -83,8 +83,8 @@ hr.soften {
         font-size: 12px;
         text-transform: uppercase;
         margin-right: 11px;
-        letter-spacing: 2.5px;
-        font-weight: 100;
+        letter-spacing: 1.5px;
+        font-weight:100;
         &:hover {
             color: lightgrey;
             text-decoration: none;
@@ -197,13 +197,17 @@ hr.soften {
 // Info appears as a neutral blue
 .btn-info {
   .buttonBackground(#ECC98A,#E7B864);
-  color:#9C824B;
+  color:#302E2A;
 }
 .btn-primary {
   .buttonBackground(@primaryButtonBackground, spin(@primaryButtonBackground, 20));
   .buttonBackground(#ECC98A,#E7B864);
-  color:#9C824B;
+  color:#302E2A;
 }
+
+input, button, select, textarea {
+	font-family:@baseFontFamily;
+	}
 
 /* END GENERAL */
 

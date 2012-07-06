@@ -30,6 +30,7 @@
     letter-spacing: 1.5px;
     margin-left: 20px;
     line-height: 1;
+    font-family:@headerFontFamily;
 }
 
 div.search-form {
@@ -39,7 +40,7 @@ div.search-form {
     margin-left: 45px;
     label, input, button, select, textarea, span {
         font-weight: 300;
-        font-family: "Helvetica Neue", "Century Gothic";
+        font-family:@baseFontFamily;
     }
 }
 
@@ -100,15 +101,17 @@ div.profile-image-border-front {
     background: -moz-linear-gradient(top, #3A352E, #534C42);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#3A352E, endColorstr=#534C42);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#3A352E, endColorstr=#534C42)";
-    h1 {
+    h2 {
         margin-top: 15px;
         color: white;
         margin-bottom: 12px;
         text-align: center;
+        font-family: @headerFontFamily;
+        font-size: 36px;
     }
     a {
         margin-top: 10px;
-        margin-left: 36px;
+        margin-left: 28px;
         font-weight: 100;
         letter-spacing: 1.5px;
         font-size: 18px;
@@ -123,6 +126,7 @@ div.profile-image-border-front {
         font-size: 30px;
         display: inline;
         vertical-align: top;
+        font-family:@headerFontFamily;
     }
     a {
         font-weight: 100;

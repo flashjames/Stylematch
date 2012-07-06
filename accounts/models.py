@@ -45,7 +45,7 @@ def create_temporary_profile_url(sender, user, request, **kwargs):
     tmp_url = re.sub(r'\s', '', tmp_url)
     if len(users) > 1:
         tmp_url += "%d" % (len(users))
-    userprofile = UserProfile.objects.get(user=user)
+    userprofile = user.userprofile
     userprofile.profile_url = tmp_url.lower()
     userprofile.save()
 user_registered.connect(create_temporary_profile_url)

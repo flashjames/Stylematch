@@ -94,7 +94,7 @@ class DisplayProfileView(DetailView):
         return queryset
     
     def get_profile_image(self, user):
-        userprofile = UserProfile.objects.get(user=user)
+        userprofile = user.userprofile
 
         # display cropped profile image if there's any
         if userprofile.profile_image_cropped:
@@ -274,12 +274,10 @@ class RedirectToProfileView(LoginRequiredMixin, RedirectView):
                        kwargs={'slug': profile_url})
 
     def get_user_profile_url(self):
-        query = UserProfile.objects.filter(user=self.request.user).get()
-        return query.profile_url
+        return self.request.user.userprofile.profile_url
 
     def get_user_temporary_profile_url(self):
-        query = UserProfile.objects.filter(user=self.request.user).get()
-        return query.temporary_profile_url
+        return self.request.user.userprofile.temporary_profile_url
 
 
 class EditProfileView(LoginRequiredMixin, UpdateView):
@@ -314,8 +312,7 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         return form_class(self.request, **self.get_form_kwargs())
 
     def get_object(self, queryset=None):
-        obj = UserProfile.objects.get(user__exact=self.request.user.id)
-        return obj
+        return self.request.user.userprofile
 
     def get_context_data(self, **kwargs):
         context = super(EditProfileView, self).get_context_data(**kwargs)
@@ -400,7 +397,7 @@ class EditImagesView(LoginRequiredMixin, CreateView):
 
     def get_profile_image(self, user):
         try:
-            userprofile = UserProfile.objects.get(user__exact=user)
+            userprofile = user.userprofile
 
             # display cropped profile image if there's any
             if userprofile.profile_image_cropped:
@@ -507,7 +504,7 @@ class SaveProfileImageView(EditImagesView):
         self.object.save()
         form.save_m2m()
 
-        current_userprofile = UserProfile.objects.get(user=self.request.user)        
+        current_userprofile = self.request.user.userprofile
         # remove old uncropped profile image
         if current_userprofile.profile_image_uncropped:
             current_userprofile.profile_image_uncropped.delete()
@@ -537,7 +534,7 @@ class SaveProfileImageView(EditImagesView):
         image = self.request.FILES.get('file')
         filename = get_unique_filename(image.name)
 
-        current_userprofile = UserProfile.objects.get(user=self.request.user)
+        current_userprofile = self.request.user.userprofile
 
         # remove old uncropped profile image
         if current_userprofile.profile_image_uncropped:
@@ -611,16 +608,14 @@ class CropPictureView(LoginRequiredMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super(CropPictureView, self).get_context_data(**kwargs)
-        current_userprofile = UserProfile.objects.get(
-            user__exact=self.request.user)
+        current_userprofile = self.request.user.userprofile
         context['profile_image_uncropped'] = (
             current_userprofile.profile_image_uncropped)
         return context
 
     # Called when we're sure all fields in the form are valid
     def form_valid(self, form):
-        current_userprofile = UserProfile.objects.get(
-            user__exact=self.request.user)
+        current_userprofile = self.request.user.userprofile
 
         if not current_userprofile.profile_image_uncropped:
             raise ObjectDoesNotExist("No uncropped profile image found")

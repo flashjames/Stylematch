@@ -234,21 +234,18 @@ class TestModels(TestCase):
         new_user = self.backend.register(request,
                                          username='alice',
                                          **self.user_info)
-        up = UserProfile.objects.get(user=new_user)
-        self.assertEqual(up.profile_url, 'alice-wonder')
+        self.assertEqual(new_user.userprofile.profile_url, 'alice-wonder')
 
         # alice wonder land -> 'alice-wonder-land'
         request = _mock_request('alice', 'wonder land')
         new_user = self.backend.register(request,
                                          username='alice1',
                                          **self.user_info)
-        up = UserProfile.objects.get(user=new_user)
-        self.assertEqual(up.profile_url, 'alice-wonder-land')
+        self.assertEqual(new_user.userprofile.profile_url, 'alice-wonder-land')
 
         # alice-yun wonderland -> 'alice-yun-wonderland'
         request = _mock_request('alice-yun', 'wonderland')
         new_user = self.backend.register(request,
                                          username='alice2',
                                          **self.user_info)
-        up = UserProfile.objects.get(user=new_user)
-        self.assertEqual(up.profile_url, 'alice-yun-wonderland')
+        self.assertEqual(new_user.userprofile.profile_url, 'alice-yun-wonderland')

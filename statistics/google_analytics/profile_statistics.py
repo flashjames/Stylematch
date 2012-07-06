@@ -83,8 +83,7 @@ def get_profile_visits(profile_url):
                'the application to re-authorize')
     
     visit_points = results['rows']
-    concated_data_points = concat_data_points(visit_points)
-    return concat_data_points
+    return concat_data_points(visit_points)
 
 
 def get_fb_likes(profile_url):

@@ -54,7 +54,7 @@ def install_requirements():
 
 
 def test():
-    """ TODO: Don't go through with deploy if any test fail """
+    """ Don't go through with deploy if any test fail """
     local('python manage.py test --settings=settings.test')
 
 
@@ -107,13 +107,13 @@ def revert():
         restart_gunicorn()
 
 
-def deploy_db_change():
+def deploy_db_change(app=''):
     test()
     install_requirements()
     backup_database()
     git_pull()
     update_git_submodules()
-    migrate('accounts')
+    migrate(app)
     compile_less()
     collectstatic()
     restart_gunicorn()

@@ -194,9 +194,17 @@ urlpatterns += patterns(
 
 if settings.DEVELOPMENT:
     urlpatterns += patterns('django.views.static',
-                            url(r'^static/(?P<path>.*)$', 'serve'),
                             url(r'^media/(?P<path>.*)$',
                                 'serve', {
                                     'document_root': settings.MEDIA_ROOT,
                                     }),
                             )
+
+if settings.STAGING or settings.DEVELOPMENT:
+    urlpatterns += patterns('django.views.static',
+                            url(r'^static/(?P<path>.*)$',
+                                'serve', {
+                                    'document_root': settings.STATIC_ROOT,
+                                    }),
+                            )
+

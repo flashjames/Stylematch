@@ -98,7 +98,7 @@
             <ul>
             {% for profile in profiles %}
               <li>
-                <a href="{{ profile.profile_url }}">{{ profile.first_name }} {{ profile.last_name }}</a> på {{ profile.salon_name }}.
+                <a href="/{{ profile.profile_url }}/">{{ profile.first_name }} {{ profile.last_name }}</a> på {{ profile.salon_name }}.
                 {{ profile.salon_adress }}, {{ profile.salon_city }}
               </li>
             {% endfor %}
@@ -138,14 +138,14 @@
       <li class="profile-list-item-city" >
         <div style="position:relative;height:105px;">
           <div class="span profile-list-picture">
-            <a href="/{{ profile.profile_url }}" >
+            <a href="/{{ profile.profile_url }}/" >
               <img src="{{ profile.profile_image }}"
                    alt="{{ profile.first_name }} {{ profile.last_name }} på {{ profile.salon_name }}"
                    style="height:100px; width:100px;" />
             </a>
           </div>
 
-          <a href="/{{ profile.profile_url }}">
+          <a href="/{{ profile.profile_url }}/">
             <p class="city-search-profilename"
                style="display:inline-block">{{ profile.first_name.title }} {{ profile.last_name.title }}
             </p>
@@ -153,7 +153,7 @@
           <p class="profile-list-item-city-salon-name">{{ profile.salon_name.title }}</p>
           <p class="profile-list-item-city-salon-adress"> {{ profile.salon_adress.title }}, {{ profile.salon_city.title }}</p>
           <div class="profile-list-link-to-profile">
-            <a class="search-page-view-on-map pull-right" href="/{{ profile.profile_url }}">
+            <a class="search-page-view-on-map pull-right" href="/{{ profile.profile_url }}/">
               <i class="icon-user"></i>
               Visa Profil
             </a>

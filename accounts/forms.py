@@ -67,11 +67,10 @@ class UserProfileForm(ModelForm):
         return True
 
     def clean_profile_url(self):
-        """
-        Check if the url is unique ie. it's not in use
-        """
         data = self.cleaned_data['profile_url']
-
+        if not re.match("^[A-Za-z0-9ÅÄÖåäö-]*$", data):
+            raise ValidationError("Sökvägen får endast innehålla: bokstäver, siffror och bindestreck (-)")
+            
         # is profile url used by another user or a path used by django?
         if not self.is_unique_url_name(data) or self.is_systempath(data):
             raise ValidationError("Den här sökvägen är redan tagen")

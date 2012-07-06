@@ -1,4 +1,5 @@
 from accounts.models import UserProfile, GalleryImage, ProfileImage, InviteCode, Featured
+from django import forms
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
@@ -66,6 +67,13 @@ class UserProfileInline(admin.StackedInline):
     readonly_fields = ('temporary_profile_url',
                        'profile_image_cropped',
                        'profile_image_uncropped',)
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        sup = super(UserProfileInline, self)
+        formfield = sup.formfield_for_dbfield(db_field, **kwargs)
+        if db_field.name == 'profile_text':
+            formfield.widget = forms.Textarea(attrs=formfield.widget.attrs)
+        return formfield
 
 
 class UserProfileAdmin(UserAdmin):

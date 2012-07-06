@@ -1,19 +1,23 @@
 {% load url from future %}
+{% load thumbnail %}
 {% load index_extras %}
 
-<div class="navbar navbar-fixed-top">
+<div class="authed navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
-      <a class="btn btn-navbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
       <a class="brand" href="/">StyleMatch</a>
-      <div class="btn-group pull-right">
-        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-          <i class="icon-user"></i> {{ user.first_name }} {{ user.last_name }}
-          <span class="caret"></span>
+      <div class="profile-dropdown dropdown pull-right">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            {% with user.get_profile|profile_image_thumbnail as pit %}
+            {% if pit|get_class != 'ImageFieldFile' %}
+            <img src="{{ pit }}" />
+            {% else %}
+            {% thumbnail user.get_profile|profile_image_thumbnail:user.is_authenticated "36x36" crop="center" as im %}
+            <img src="{{ im.url }}" />
+            {% endthumbnail %}
+            {% endif %}
+            {% endwith %}
+            <span class="profile-name">{{ user.first_name }} {{ user.last_name }}</span>
         </a>
         <ul class="dropdown-menu">
           <li><a href="{% url 'edit-account-settings' %}">Kontoinställningar</a></li>

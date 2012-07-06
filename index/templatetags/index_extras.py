@@ -76,7 +76,7 @@ def get_class(self):
 
 
 @register.filter
-def profile_image_thumbnail(userprofile, logged_in_user_profile):
+def profile_image_thumbnail(userprofile, logged_in_user_profile=False):
     """
     Return a thumbnail to use with sorl.thumbnail
     Example usage in template:

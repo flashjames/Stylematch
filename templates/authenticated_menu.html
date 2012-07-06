@@ -27,7 +27,7 @@
       </div>
       <div class="nav-collapse">
         <ul class="nav">
-          {#{% url 'profile_dashboard' as pdr %}<li class="{% active request pdr %}"><a href="/#dashboard">Översikt</a></li>#}
+          {% url 'dashboard' as pdr %}<li class="{% active request pdr %}"><a href="{{ pdr }}">Översikt</a></li>
           {% url 'profile_display_with_profile_url' slug=user.get_profile.profile_url as pdr %}<li class="{% active request pdr %}"><a href="{{ pdr }}">Visa profil</a></li>
           {% url 'profile_edit' as pe              %}<li class="{% active request pe  %}"><a href="{{ pe  }}">Ändra profil</a></li>
           {% url 'edit_images' as ei               %}<li class="{% active request ei  %}"><a href="{{ ei  }}">Lägg upp bilder</a></li>

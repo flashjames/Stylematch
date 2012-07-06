@@ -78,6 +78,8 @@ class UserProfileInline(admin.StackedInline):
 
 class UserProfileAdmin(UserAdmin):
     inlines = [ UserProfileInline, ]
+    list_display = ('username', 'email', 'first_name', 'last_name', 'date_joined', 'last_login')
+    list_filter = ('is_staff', 'is_superuser', 'is_active', 'userprofile__salon_city',)
 
 
 admin.site.unregister(User)

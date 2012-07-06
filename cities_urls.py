@@ -15,7 +15,7 @@ urlpatterns = patterns('',)
 for city in cities:
     urlpatterns += patterns('',
         # need to be first, or redirection to profile wont work.
-        url(u'^'+city,
+        url(u'^'+city+'/$',
                 SearchCityView.as_view(),
                 {'city':city}),
     )

@@ -3,6 +3,9 @@ import datetime
 
 from apiclient.errors import HttpError
 from oauth2client.client import AccessTokenRefreshError
+from urllib2 import urlopen, quote
+from simplejson import loads
+
 
 # should be moved to Django settings
 GOOGLE_ANALYTICS_PROFILE_ID = '59146773'
@@ -55,8 +58,7 @@ def concat_data_points(visit_points):
     return concated_points
 
 
-def get_profile_visits(profile_url="caroline"):
-    
+def get_profile_visits(profile_url):
     # Authenticate and construct service.
     service = sample_utils.initialize_service()
 
@@ -81,7 +83,24 @@ def get_profile_visits(profile_url="caroline"):
                'the application to re-authorize')
     
     visit_points = results['rows']
-    return concat_data_points(visit_points)
+    concated_data_points = concat_data_points(visit_points)
+    return concat_data_points
+
+
+def get_fb_likes(profile_url):
+    try:
+        content = loads(urlopen("https://api.facebook.com/method/fql.query?"+ "format=json" + "&query=" + quote("select like_count from link_stat where url='http://www.stylematch.se/carolinebergholm/'")).read())
+    except:
+        logging.getLogger().critical("Something is wrong with the get facebook likes query")
+        return 0
+
+    try:
+        result = content[0]['like_count']
+    except:
+        logging.getLogger().critical("Something is wrong with the get facebook likes query")        
+        result = 0
+        
+    return result
 
 
 def print_results(results):
@@ -117,4 +136,4 @@ def print_results(results):
 
 
 if __name__ == '__main__':
-    get_profile_visits()
+    print get_fb_likes()

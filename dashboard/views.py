@@ -88,13 +88,15 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         except GalleryImage.MultipleObjectsReturned:
             pass
         tasks_to_be_done.append(task)
-
-
+        
+        
         # if all tasks is done, return an empty list
         # so this won't be displayed in the template
         all_passed = len([0 for x in tasks_to_be_done if not x['passed']]) <= 0
         if all_passed:
             return []
+        else:
+            tasks_to_be_done = sorted(tasks_to_be_done, key=lambda k: k['passed'], reverse=True) 
         return tasks_to_be_done
 
     def get_context_data(self, **kwargs):

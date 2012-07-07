@@ -18,11 +18,13 @@ var line = d3.svg.line()
     .y(function(d, i) { return y(get_value(d)); });
 
 // the svg we write on
-var svg = d3.select("#bar-demo").append("svg")
+var svg = d3.select("#profile-visitor-statistics").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
+    .attr("class","svg-charts")
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
 
 // does this do anything useful? I see it in all examples, but cant
 // find any difference visually.

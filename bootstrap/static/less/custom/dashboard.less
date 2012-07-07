@@ -17,7 +17,7 @@
         font-size: 14px;
         padding: 9px 1px 9px 9px;
         text-transform: uppercase;
-        border-right: 0;
+	border-right: 1px solid white;
         width: 246px;
         .border-radius(5px 0 0 5px);
         &.active {
@@ -57,7 +57,7 @@
     table {
         padding: 5px;
         border-collapse: separate;
-        border-spacing: 2px;
+        border-spacing: 0px 2px;
         tbody {
             tr {
                 background-color: @errorBackground;
@@ -65,6 +65,18 @@
                     td {
                         background-color: darken(@errorBackground, 10%);
                         font-weight: bold;
+                    }
+                }
+		&.cleared:hover {
+                    td {
+                        background-color: darken(@successBackground, 10%);
+                        font-weight: bold;
+                    }
+                }
+		&.cleared {
+                    background-color: @successBackground;
+                    a {
+                        color: @successText;
                     }
                 }
                 td {
@@ -80,16 +92,10 @@
                         color: @errorText;
                         text-decoration: none;
                     }
-                    &.cleared {
-                        background-color: @successBackground;
-                        &:hover {
-                            color: darken(@successText, 10%);
-                            background-color: darken(@successBackground, 10%);
-                        }
-                        a {
-                            color: @successText;
-                        }
-                    }
+		    &.left-cell {
+			width:65px;
+		    }
+                    
                 }
             }
         }
@@ -103,6 +109,10 @@
     }
 }
 
+.svg-charts {
+    background-color:white;
+    padding:10px 0px 25px 10px;
+}
 
 /* VISITORS STATISTICS CHART */
 

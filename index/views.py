@@ -1,14 +1,12 @@
 # coding:utf-8
-# Create your views here.
-# from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib import auth, messages
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic import View, ListView, CreateView, TemplateView
 from django.core.urlresolvers import reverse
-from accounts.models import UserProfile, GalleryImage, Featured
-from index.models import BetaEmail, Tip
+from accounts.models import UserProfile, GalleryImage
+from index.models import BetaEmail
 from index.forms import TipForm
 from accounts.api import ProfileResource
 import simplejson as json
@@ -41,16 +39,16 @@ def make_pagination_list(list, current):
     def f7(seq):
         seen = set()
         seen_add = seen.add
-        return [ x for x in seq if x not in seen and not seen_add(x)]
+        return [x for x in seq if x not in seen and not seen_add(x)]
 
     if len(list) < 6: return list
 
-    newlist = list[:3] + list[len(list)-3:]
-    newlist += [current-1,current, current+1]
+    newlist = list[:3] + list[len(list) - 3:]
+    newlist += [current - 1, current, current + 1]
     if 0 in newlist:
         newlist.remove(0)
     if current == len(list):
-        newlist.remove(current+1)
+        newlist.remove(current + 1)
     newlist = f7(newlist)
     newlist = sorted(newlist)
 
@@ -61,8 +59,8 @@ def make_pagination_list(list, current):
             pos.append(idx)
         prev = page
 
-    for i,p in enumerate(pos):
-        newlist.insert(p+i, False)
+    for i, p in enumerate(pos):
+        newlist.insert(p + i, False)
 
     return newlist
 
@@ -75,7 +73,6 @@ class SearchCityView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(SearchCityView, self).get_context_data(**kwargs)
-
 
         # .title() capitalizes first letter in each word
         city = self.kwargs['city']
@@ -191,8 +188,8 @@ class TipView(LoginRequiredMixin, StaffRequiredMixin, CreateView):
 
     def form_valid(self, form):
         messages.success(self.request, "Tack för din anmälan! Vi skickar "
-                                       "biobiljetten så fort din frisör skapar "
-                                       "sin profil!")
+                                       "biobiljetten så fort din frisör"
+                                       " skapar sin profil!")
         return super(TipView, self).form_valid(form)
 
 
@@ -221,7 +218,7 @@ class LikeView(View):
             # wrong ID, couldn't find gallery image
             return HttpResponse("The ID is WROOONG")
 
-        voted_images = request.session.get('has_voted',[])
+        voted_images = request.session.get('has_voted', [])
         if id not in voted_images:
             image.votes += 1
             image.save()
@@ -230,7 +227,7 @@ class LikeView(View):
 
 
 class StylistView(LoginRequiredMixin, StaffRequiredMixin, TemplateView):
-    template_name="frisor_page.html"
+    template_name = "frisor_page.html"
 
 
 def logout_page(request):

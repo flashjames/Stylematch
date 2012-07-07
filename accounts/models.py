@@ -40,7 +40,7 @@ def create_temporary_profile_url(sender, user, request, **kwargs):
     last_name = request.POST['last_name']
     users = User.objects.filter(first_name=first_name,
                                 last_name=last_name)
-    names = (first_name +" "+ last_name).split(' ')
+    names = (first_name + " " + last_name).split(' ')
     tmp_url = "-".join(names)
     tmp_url = re.sub(r'\s', '', tmp_url)
     if len(users) > 1:
@@ -214,7 +214,8 @@ class UserProfile(models.Model):
     fixa så twitter och facebook profil visas här, se styleseat
     fixa description till denna modell
     """
-    user = models.OneToOneField(User, parent_link=True, unique=True, editable=False)
+    user = models.OneToOneField(User, parent_link=True,
+                                unique=True, editable=False)
 
     visible = models.BooleanField(
         "Visa i sökresultat och visa användarens bilder", default=False)
@@ -240,7 +241,7 @@ class UserProfile(models.Model):
         max_length=1,
         default=False,
         choices=DISPLAY_NUMBER_CHOICES)
-    
+
     personal_phone_number = models.CharField("Personligt telefonnummer",
                                              max_length=30,
                                              blank=True,

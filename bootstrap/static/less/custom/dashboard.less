@@ -57,7 +57,7 @@
     table {
         padding: 5px;
         border-collapse: separate;
-        border-spacing: 2px;
+        border-spacing: 0px 2px;
         tbody {
             tr {
                 background-color: @errorBackground;
@@ -65,6 +65,18 @@
                     td {
                         background-color: darken(@errorBackground, 10%);
                         font-weight: bold;
+                    }
+                }
+		&.cleared:hover {
+                    td {
+                        background-color: darken(@successBackground, 10%);
+                        font-weight: bold;
+                    }
+                }
+		&.cleared {
+                    background-color: @successBackground;
+                    a {
+                        color: @successText;
                     }
                 }
                 td {
@@ -80,16 +92,10 @@
                         color: @errorText;
                         text-decoration: none;
                     }
-                    &.cleared {
-                        background-color: @successBackground;
-                        &:hover {
-                            color: darken(@successText, 10%);
-                            background-color: darken(@successBackground, 10%);
-                        }
-                        a {
-                            color: @successText;
-                        }
-                    }
+		    &.left-cell {
+			width:65px;
+		    }
+                    
                 }
             }
         }

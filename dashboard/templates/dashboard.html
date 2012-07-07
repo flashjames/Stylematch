@@ -8,10 +8,10 @@
 <script src="{{ STATIC_URL }}js/underscore-min.js"></script>
 
 <script type="text/javascript">
-<!-- Visitor count statistics to chart -->
-{% if visitor_count_data %}
-var visitor_count_data = {{ visitor_count_data|safe }};
-{% endif %}
+  <!-- Visitor count statistics to chart -->
+  {% if visitor_count_data %}
+  var visitor_count_data = {{ visitor_count_data|safe }};
+  {% endif %}
 </script>
 {% endblock %}
 
@@ -21,7 +21,7 @@ var visitor_count_data = {{ visitor_count_data|safe }};
 <script type="text/template" id="chart-tooltip">
   <div id="tooltip" >
     <p><%= visitor_count %> personer har besökt dig</p>
-    <p><%= start_date %> - <%= end_date %></p>    
+    <p><%= start_date %> - <%= end_date %></p>
   </div>
 </script>
 
@@ -42,15 +42,19 @@ var visitor_count_data = {{ visitor_count_data|safe }};
       <caption>Att göra:</caption>
       <tbody>
         {% for task in tasks_to_be_done %}
-        <tr>
-          <td{% if task.passed %} class="cleared"{% endif %}>
+        <tr {% if task.passed %}class="cleared"{% endif %}>
+          <td class="left-cell">
             <a href="{{ task.url }}">
               <span class="label label-{% if task.passed %}success{% else %}important{% endif %}">
                 {% if task.passed %}Ok{% else %}Ej klart{% endif %}
+
               </span>
-              {{ task.text }}
             </a>
           </td>
+          <td>
+            <a href="{{ task.url }}">{{ task.text }}</a>
+          </td>
+
         </tr>
         {% endfor %}
       </tbody>
@@ -58,26 +62,25 @@ var visitor_count_data = {{ visitor_count_data|safe }};
   </div>
 </div>
 {% endif %}
-<hr class="soften">
+
 <h1>Statistik</h1>
 {% block statistics %}
 <div id="statistics-block" class="row">
   <div class="span6">
     <h3>Antal besökare på din profil</h3>
     <div class="well">
-          <div id="bar-demo"></div>
+      <div id="bar-demo"></div>
     </div>
   </div>
-<!--  <div class="span4">
-    <div class="well">
-      <img src="http://placehold.it/260x180" />
-    </div>
+  <!--  <div class="span4">
+        <div class="well">
+          <img src="http://placehold.it/260x180" />
+        </div>
   </div>
 </div>-->
-<!-- Google analytics visitor count chart, with D3js -->
-<script type="text/javascript" src="{{ STATIC_URL }}js/chart.js"></script>
+  <!-- Google analytics visitor count chart, with D3js -->
+  <script type="text/javascript" src="{{ STATIC_URL }}js/chart.js"></script>
 
-{% endblock %}
+  {% endblock %}
 
-{% endblock %}
-
+  {% endblock %}

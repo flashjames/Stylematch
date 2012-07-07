@@ -12,12 +12,13 @@ django-debug-toolbar==0.9.4
 django-defaultsite==1.1
 django-extensions==0.9
 django-liveserver==0.1a-2
-django-registration==0.8
+-e git+git@github.com:trew/django-registration@346823d4df5db902dffe1ec2f447d38a52889c47#egg=django_registration-dev
 django-ses==0.4.1
 django-social-auth==0.6.6
 django-storages==1.1.4
 django-su==0.2
 django-tastypie==0.9.11
+google-api-python-client==1.0c2
 gunicorn==0.14.2
 httplib2==0.7.2
 ipdb==0.6.1
@@ -29,6 +30,7 @@ oauth2==1.5.211
 pep8==1.2
 pycrypto==2.6
 python-dateutil==1.5
+python-gflags==2.0
 python-openid==2.2.5
 raven==1.7.5
 selenium==2.22.1
@@ -37,4 +39,3 @@ sorl-thumbnail==11.12
 ssh==1.7.14
 unittest2==0.5.1
 wsgiref==0.1.2
-google-api-python-client==1.0c2

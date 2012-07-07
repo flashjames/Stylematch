@@ -46,7 +46,7 @@
           <td class="left-cell">
             <a href="{{ task.url }}">
               <span class="label label-{% if task.passed %}success{% else %}important{% endif %}">
-                {% if task.passed %}Ok{% else %}Ej klart{% endif %}
+                {% if task.passed %}Ok  <i class="icon-ok icon-white"></i>{% else %}Ej klart{% endif %}
 
               </span>
             </a>

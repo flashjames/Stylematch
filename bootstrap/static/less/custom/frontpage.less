@@ -59,7 +59,7 @@ div.search-form-title {
 }
 
 div.profile-image-border-front {
-    background-color: grey;
+    background-color: @background-color-blocks;
     width: 230px;
     height: 280px;
     position: relative;
@@ -81,12 +81,13 @@ div.profile-image-border-front {
     }
     h3 {
         margin-left: 10px;
-        color: white;
+        color: @font-color-on-buttons;
     }
     h5 {
         margin-left: 10px;
-        color: black;
+        color: #474747;
         text-transform: uppercase;
+        font-size:11px;
     }
 }
 
@@ -95,12 +96,15 @@ div.profile-image-border-front {
 }
 
 .join-now-block-frontpage {
-    background: -webkit-gradient(linear, left top, left bottom, from(#3A352E), to(#534C42));
-    .box-shadow(3px 3px 5px 6px #ccc);
+    .box-shadow(2px 2px 6px -2px #000);
+    .border-radius(3px);
     height: 140px;
-    background: -moz-linear-gradient(top, #3A352E, #534C42);
+    background-color:#3A352E;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#3A352E, endColorstr=#534C42);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#3A352E, endColorstr=#534C42)";
+    background: -moz-linear-gradient(top, lightgray, gray);
+    background: -webkit-gradient(linear, left top, left bottom, from(#3A352E), to(#534C42)); 
+    background: url('http://localhost:8001/static/less/custom/../../img/header_background.png') repeat-x;
     h2 {
         margin-top: 15px;
         color: white;
@@ -108,6 +112,7 @@ div.profile-image-border-front {
         text-align: center;
         font-family: @headerFontFamily;
         font-size: 36px;
+        text-shadow: -2px -1px 7px gray;
     }
     a {
         margin-top: 10px;

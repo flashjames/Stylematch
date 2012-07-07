@@ -2,6 +2,8 @@
 @color1: #C0C0C0;
 @color-links-nav: #DDB670;
 @background-color: 1 #E8E4E1;
+@background-color-blocks: #CCC9C0;
+@font-color-on-buttons: #302E2A;
 
 /* GENERAL */
 
@@ -197,13 +199,16 @@ hr.soften {
 // Info appears as a neutral blue
 .btn-info {
   .buttonBackground(#ECC98A,#E7B864);
-  color:#302E2A;
+  color:@font-color-on-buttons;
+  &:hover{
+  }
 }
 .btn-primary {
   .buttonBackground(@primaryButtonBackground, spin(@primaryButtonBackground, 20));
   .buttonBackground(#ECC98A,#E7B864);
-  color:#302E2A;
+  color:@font-color-on-buttons;
 }
+
 
 input, button, select, textarea {
 	font-family:@baseFontFamily;

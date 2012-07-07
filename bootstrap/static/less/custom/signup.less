@@ -3,8 +3,10 @@
 .sell-block {
     margin-top: 10px;
     /* from block on first page */
-    background: -webkit-gradient(linear, left top, left bottom, from(#3a352e), to(#534c42));
-    .box-shadow(3px 3px 5px 6px #ccc);
+    background-color: @background-color-blocks;
+    .box-shadow(2px 2px 6px -2px #000);
+    .border-radius(2px);
+    border-top: 0px solid black;
 
     ul {
         margin-bottom: 30px;
@@ -18,6 +20,10 @@
     }
     h3{
     	font-size:18px;
+    	color:@font-color-on-buttons;
+    }
+    li{
+   		color:#474747;
     }
 }
 
@@ -29,6 +35,7 @@
 .edit-hours-form td {
     font-weight: 300;
 }
+
 
 #signup-step2-buttons {
     margin-top:15px;
@@ -59,6 +66,12 @@
     p {
 	margin-top:18px;
     }
+}    
+.signup-step1{
+	.form-actions{
+	background-color:transparent;
+	border-top:0px solid black;
+	}
 }
 
 /* END SIGNUP STEPS */

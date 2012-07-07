@@ -12,7 +12,7 @@ from registration.forms import RegistrationForm
 
 from accounts.views import (OpenHoursView,
                             ServicesView,
-                            EditImagesView,
+                            SaveProfileImageView,
                             get_unique_filename)
 
 from index.models import BetaEmail
@@ -61,7 +61,7 @@ class SignupView(LoginRequiredMixin, UpdateView):
         return context
 
 
-class SignupStep2View(EditImagesView):
+class SignupStep2View(SaveProfileImageView):
     template_name = "accounts/signup_step2.html"
 
     def __init__(self, *args, **kwargs):
@@ -82,23 +82,6 @@ class SignupStep2View(EditImagesView):
 
         context['no_menu'] = True
         return context
-
-    # Called when we're sure all fields in the form are valid
-    def form_valid(self, form):
-        f = self.request.FILES.get('file')
-
-        filename = get_unique_filename(f.name)
-
-        # add data to form fields that will be saved to db
-        self.object = form.save(commit=False)
-        self.object.user = self.request.user
-        self.object.filename = filename
-
-        # default image type, Gallery
-        self.object.image_type = 'C'
-        self.object.save()
-        form.save_m2m()
-        return super(SignupStep2View, self).form_valid(form)
 
 
 class RegisterCustomBackend(DefaultBackend):

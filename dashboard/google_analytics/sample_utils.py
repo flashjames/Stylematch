@@ -82,7 +82,8 @@ gflags.DEFINE_enum('logging_level', 'ERROR',
 # Name of file that will store the access and refresh tokens to access
 # the API without having to login each time. Make sure this file is in
 # a secure place.
-TOKEN_FILE_NAME = 'statistics/google_analytics/analytics.dat'
+# TODO: This filename shouldnt be hardcoded
+TOKEN_FILE_NAME = 'dashboard/google_analytics/analytics.dat'
 
 
 def process_flags(argv):

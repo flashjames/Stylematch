@@ -3,7 +3,28 @@
 
 {% block title %}Översikt{% endblock %}
 
+{% block html-head %}
+<script src="{{ STATIC_URL }}js/d3.v2.min.js"></script>
+<script src="{{ STATIC_URL }}js/underscore-min.js"></script>
+
+<script type="text/javascript">
+<!-- Visitor count statistics to chart -->
+{% if visitor_count_data %}
+var visitor_count_data = {{ visitor_count_data|safe }};
+{% endif %}
+</script>
+{% endblock %}
+
+
 {% block content %}
+<!-- Underscore.js Templates -->
+<script type="text/template" id="chart-tooltip">
+  <div id="tooltip" >
+    <p><%= visitor_count %> personer har besökt dig</p>
+    <p><%= start_date %> - <%= end_date %></p>    
+  </div>
+</script>
+
 <div class="page-header">
   <h1>
     Översikt
@@ -41,14 +62,9 @@
 <h2>Statistik</h2>
 {% block statistics %}
 <div class="row">
-  <div class="span4">
+  <div class="span6">
     <div class="well">
-      <img src="http://placehold.it/260x180" />
-    </div>
-  </div>
-  <div class="span4">
-    <div class="well">
-      <img src="http://placehold.it/260x180" />
+          <div id="bar-demo"></div>
     </div>
   </div>
   <div class="span4">
@@ -57,6 +73,9 @@
     </div>
   </div>
 </div>
+<!-- Google analytics visitor count chart, with D3js -->
+<script type="text/javascript" src="{{ STATIC_URL }}js/chart.js"></script>
+
 {% endblock %}
 
 {% endblock %}

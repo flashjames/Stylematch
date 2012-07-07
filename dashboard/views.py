@@ -1,7 +1,12 @@
 # coding:utf-8
+import json
 from django.views.generic import TemplateView
 from django.core.urlresolvers import reverse
 from accounts.models import Service, OpenHours, GalleryImage
+from django.views.generic.base import TemplateView
+from braces.views import LoginRequiredMixin
+from dashboard.google_analytics import profile_statistics
+from accounts.models import UserProfile
 
 class DashboardView(TemplateView):
     template_name="dashboard.html"
@@ -102,5 +107,15 @@ class DashboardView(TemplateView):
                     [0 for x
                      in context['tasks_to_be_done']
                      if not x['passed']])
+
+        # visits statistics chart
+        profile_url = self.request.user.userprofile.profile_url
+        try:
+            # since we use the list in a template, to create a javascript array
+            # the python list needs to be converted to JSON
+            context['visitor_count_data'] = json.dumps(profile_statistics.get_profile_visits(profile_url))
+        # if the google api authentication key is missing
+        except AttributeError:
+            context['visitor_count_data'] = []
 
         return context

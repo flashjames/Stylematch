@@ -144,7 +144,6 @@ INSTALLED_APPS = (
     'django_su',
     'fts',
     'sorl.thumbnail',
-    'statistics',
     'gunicorn',
 )
 

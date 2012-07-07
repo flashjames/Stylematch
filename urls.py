@@ -14,7 +14,6 @@ from index.views import (IndexPageView,
                          LikeView,
                          error500)
 from dashboard.views import DashboardView
-from statistics.views import ProfileVisitsView
 
 from django.contrib import admin
 from django.views.generic.simple import redirect_to
@@ -97,10 +96,6 @@ urlpatterns += patterns(
             TemplateView.as_view(template_name="edit-account-settings.html"),
             {},
             'edit-account-settings'),
-    (r'^stats/',
-            ProfileVisitsView.as_view(),
-            {},
-            'profile_visits'),
     (r'^get_invite/',
             BetaEmailView.as_view(),
             {},

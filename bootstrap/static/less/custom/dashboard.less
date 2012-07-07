@@ -95,3 +95,62 @@
         }
     }
 }
+
+
+/* VISITORS STATISTICS CHART */
+
+.line {
+    fill: none;
+    stroke: #000;
+    stroke-width: 1.5px;
+}
+
+.axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+path.area {
+    fill:grey;
+    stroke:rgb(59,89,152);
+}
+
+line {
+    stroke:rgb(59,89,152);
+    stroke-width:3;
+}
+
+path.area {
+    fill:rgb(210,229,215);
+}
+
+circle {
+    fill:rgb(59,89,152);
+}
+
+#tooltip {
+    position:absolute;
+    background-color:#333;
+    padding:2px 5px 2px 5px;
+}
+
+#tooltip p {
+    margin:0px;
+    font-size:12px;
+    color:white;
+}
+
+/* Hide axis which is only used
+   to place dates correctly */
+path.domain {
+    stroke:rgb(59,89,152);
+}
+line.tick {
+    stroke:none;
+}
+path.domain {
+    stroke:none;
+}
+
+/* END VISITORS STATISTICS CHART */

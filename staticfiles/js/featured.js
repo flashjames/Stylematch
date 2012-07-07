@@ -46,7 +46,8 @@
             this.profileList = new ProfileCollection();
 
             data = { 'salon_city__iexact' : $('#city').val(),
-                     'profile_image_size': '220x220' };
+                     'profile_image_size': '220x220',
+                     'limit': '6' };
             this.profileList.fetch({
                 data: data,
                 success: function(collection, response) {
@@ -72,7 +73,8 @@
             this.profileList = new ProfileCollection();
 
             data = { 'salon_city__iexact' : $('#city').val(),
-                     'profile_image_size': '220x220' };
+                     'profile_image_size': '220x220',
+                     'limit': '6' };
             this.profileList.fetch({
                 data: data,
                 success: function(collection, response) {

@@ -101,8 +101,6 @@
 
 .line {
     fill: none;
-    stroke: #000;
-    stroke-width: 1.5px;
 }
 
 .axis path, .axis line {
@@ -112,17 +110,13 @@
 }
 
 path.area {
-    fill:grey;
+    fill:rgb(210,229,215);
     stroke:rgb(59,89,152);
 }
 
 line {
     stroke:rgb(59,89,152);
-    stroke-width:3;
-}
-
-path.area {
-    fill:rgb(210,229,215);
+    stroke-width:5;
 }
 
 circle {
@@ -133,12 +127,11 @@ circle {
     position:absolute;
     background-color:#333;
     padding:2px 5px 2px 5px;
-}
-
-#tooltip p {
-    margin:0px;
-    font-size:12px;
-    color:white;
+    p {
+	margin:0px;
+	font-size:12px;
+	color:white;
+    }
 }
 
 /* Hide axis which is only used
@@ -146,6 +139,7 @@ circle {
 path.domain {
     stroke:rgb(59,89,152);
 }
+
 line.tick {
     stroke:none;
 }

@@ -242,9 +242,6 @@
                     type: 'error'
                 });
 			});
-		    }
-		}
-            };
 
             // if it's a model that's not synced to the server and not in the 
             // services list yet, on the page -> collection.create()

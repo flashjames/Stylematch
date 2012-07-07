@@ -86,7 +86,7 @@
             this.model.save({}, {
                  error: function(collection, error, options) {
                      var noty_id = noty({
-                         text: "Error: Model didnt sync with server, after the order was changed"
+                         text: "Error: Model didnt sync with server, after the order was changed",
                          type: 'error'
                      });
                  }
@@ -111,7 +111,7 @@
                             },
                             error:function() {
                                 var noty_id = noty({
-                                    text: "Behandlingen kunde inte tas bort. Kontrollera anslutningen!"
+                                    text: "Behandlingen kunde inte tas bort. Kontrollera anslutningen!",
                                     type: 'error'
                                 });
                             }
@@ -170,14 +170,14 @@
 
                     if(!response) {
                         var noty_id = noty({
-                            text: "Error: Couldn't get users services from API"
+                            text: "Error: Couldn't get users services from API",
                             type: 'error'
                         });
                     }
                 },
                 error: function(collection, error, options) {
                     var noty_id = noty({
-                        text: "Connection Error"
+                        text: "Connection Error",
                         type: 'error'
                     });
                 }

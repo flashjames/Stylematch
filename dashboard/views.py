@@ -52,11 +52,10 @@ class DashboardView(TemplateView):
             task['passed'] = False
         tasks_to_be_done.append(task)
 
-
         # Add services
         task = { 'url': reverse('profiles_edit_services'),
                  'text': u'Lägg upp din prislista',
-                 'passed': False }
+                 'passed': True }
         try:
             s = Service.objects.get(user=userprofile.user)
         except Service.DoesNotExist:

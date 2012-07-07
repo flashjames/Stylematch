@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load url from future %}
 
+{% block title %}Översikt{% endblock %}
+
 {% block content %}
 <div class="page-header">
   <h1>
@@ -8,6 +10,8 @@
     <small>Blaha blaha</small>
   </h1>
 </div>
+
+{% if tasks_to_be_done %}
 <div class="tabbable tabs-left">
   <ul class="nav nav-tabs" id="infotabs">
     <li class="active">Du har<span>{{ actual_tasks_to_do }}</span>steg kvar till en perfekt profil!</li>
@@ -32,6 +36,7 @@
     </table>
   </div>
 </div>
+{% endif %}
 
 <h2>Statistik</h2>
 {% block statistics %}

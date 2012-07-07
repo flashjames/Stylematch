@@ -13,6 +13,8 @@ import simplejson as json
 from copy import copy
 from braces.views import LoginRequiredMixin, StaffRequiredMixin
 from cities import *
+from django.core.urlresolvers import reverse
+from django.shortcuts import redirect
 
 
 class InspirationPageView(ListView):
@@ -204,6 +206,14 @@ class IndexPageView(TemplateView):
         context['popular_cities'] = popular
         context['other_cities'] = other
         return context
+
+    def get(self, request):
+        # if logged in, redirect to dashboard
+        # instead of displaying index poage
+        if request.user.is_authenticated():
+            return redirect(reverse('dashboard'))
+        else:
+            return super(IndexPageView, self).get(request)
 
 
 class LikeView(View):

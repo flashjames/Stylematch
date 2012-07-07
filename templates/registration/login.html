@@ -1,34 +1,24 @@
 {% extends "base.html" %}
 {% load url from future %}
 {% load index_extras %}
-
+{% block title %}Logga in{% endblock %}
 {% block content %}
 <div class="login-center-div">
 {% if form.errors %}
 <h3 style="color:red;" class="error">Emailadressen eller lösenordet du angav var fel. Vänligen försök igen.</h3><br>
 {% endif %}
-
+<h2 style="margin-left:83px;margin-bottom:20px;">Logga in</h2>
 <form action="" method="post">
   {% csrf_token %}
   <label for="username" style="float: left; font-size: 13px; margin-top: 5px; padding-right: 3px;">Emailadress:</label>
-  <input type="text" name="username" value="" id="username"><br>
+  <input style="margin-left:6px;" type="text" name="username" value="" id="username"><br>
   <label for="password" style="float: left; font-size: 13px; margin-top: 5px; padding-right: 21px;">Lösenord:</label>
-  <input type="password" name="password" value="" id="password"><br>
+  <input style="margin-left:2px;" type="password" name="password" value="" id="password"><br>
 
-  <input type="submit" value="Logga in" class="btn btn-info"/>
+  <input style="margin-left:80px;" type="submit" value="Logga in" class="btn btn-info"/>
+  <a style="margin-left:45px;" href="{% url 'auth_password_reset' %}">Glömt lösenord</a>
   <input type="hidden" name="next" value="{{ next|escape }}" />
 </form>
 
-<ul>
- <!-- <li>
-    <a href="{% url 'socialauth_begin' 'facebook' %}">Enter using Facebook</a>
-  </li>-->
-  <li>
-    <a href="{% url 'registration_register' %}">Registrera Konto</a>
-  </li>
-  <li>
-     <a href="{% url 'auth_password_reset' %}">Glömt lösenord</a>
-  </li>
-</ul>
 </div>
 {% endblock %}

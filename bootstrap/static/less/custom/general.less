@@ -2,6 +2,8 @@
 @color1: #C0C0C0;
 @color-links-nav: #DDB670;
 @background-color: 1 #E8E4E1;
+@background-color-blocks: #CCC9C0;
+@font-color-on-buttons: #302E2A;
 
 /* GENERAL */
 
@@ -83,8 +85,8 @@ hr.soften {
         font-size: 12px;
         text-transform: uppercase;
         margin-right: 11px;
-        letter-spacing: 2.5px;
-        font-weight: 100;
+        letter-spacing: 1.5px;
+        font-weight:100;
         &:hover {
             color: lightgrey;
             text-decoration: none;
@@ -162,13 +164,14 @@ hr.soften {
 }
 
 .content {
-    background-color: #EEEEEE;
+    background-color:#E8E4E1;
     padding: 20px;
     padding-bottom: 200px;
+    background:url("../../img/content-transparence-white-30.png");
 }
 
 .content-background {
-    background-color: #E8E4E1;
+    background-color: #EDECE9;
     background-size: cover;
     position: relative;
 }
@@ -187,11 +190,29 @@ hr.soften {
     vertical-align: top;
 }
 
-#stylists_in {
+#stylists-in {
     margin: 0;
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 100;
 }
+
+// Info appears as a neutral blue
+.btn-info {
+  .buttonBackground(#ECC98A,#E7B864);
+  color:@font-color-on-buttons;
+  &:hover{
+  }
+}
+.btn-primary {
+  .buttonBackground(@primaryButtonBackground, spin(@primaryButtonBackground, 20));
+  .buttonBackground(#ECC98A,#E7B864);
+  color:@font-color-on-buttons;
+}
+
+
+input, button, select, textarea {
+	font-family:@baseFontFamily;
+	}
 
 /* END GENERAL */
 

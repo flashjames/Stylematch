@@ -45,7 +45,7 @@
 }
 
 .search-page-view-on-map {
-    font-family: "Helvetica Neue", "Century Gothic", Arial, sans-serif;
+    font-family: @baseFontFamily;
     font-size: 13px;
     line-height: 18px;
     font-weight: lighter;
@@ -66,6 +66,8 @@
         line-height: 36px;
         font-weight: 100;
         display: block;
+        margin-bottom:20px;
+        font-family:@headerFontFamily;
     }
 }
 
@@ -76,10 +78,10 @@
 
 .city-search-profilename {
     font-size: 24px;
-    letter-spacing: 1.5px;
+    letter-spacing: 1.2px;
     margin: 0;
     font-weight: 100;
-    color: #333;
+    color: black;
     text-rendering: optimizelegibility;
 }
 
@@ -93,10 +95,12 @@
 }
 
 .profile-list-item-city-salon-name {
-    font-size: 16px;
-    font-color: grey;
-    letter-spacing: 1.5px;
+    font-size: 14px;
+    font-color: gray;
+    letter-spacing: 1px;
     font-weight: 100;
+    color:gray;
+    text-transform:uppercase;
 }
 
 .profile-list-link-to-profile {
@@ -106,7 +110,7 @@
     a {
         color: #3A352E;
         font-size: 12px;
-        letter-spacing: 1.5px;
+        letter-spacing: 0.8px;
         font-weight: 100;
     }
 }
@@ -115,7 +119,9 @@
     margin-top: 10px;
     font-weight: 100;
     color: #333;
-    letter-spacing: 1.5px;
+    position:absolute;
+    bottom:0;
+    left:120px;
 }
 
 .profile-list-item-city {

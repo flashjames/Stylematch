@@ -85,14 +85,9 @@
             this.model.set({order: indexInList, silent:true});
             this.model.save({}, {
                  error: function(collection, error, options) {
-                     $('#alert').notify();
-                     $('#alert').notify("create", {
-                         text: "Error: Model didnt sync with server, after the order was changed"
-                     }, {
-                         expires: false,
-                         click: function(e,instance) {
-                             instance.close();
-                         }
+                     var noty_id = noty({
+                         text: "Error: Model didnt sync with server, after the order was changed",
+                         type: 'error'
                      });
                  }
             });
@@ -106,28 +101,35 @@
         },
         deleteService:function () {
             var service = this;
-            jConfirm('Är du säker på att du vill ta bort den här behandlingen?',
-                     'Bekräfta borttagning',
-                 function(r) {
-                    if (r === true) {
-                        service.model.destroy({
-                            success:function() {
-                                vent.trigger('changeModelToEdit', new Service());
-                            },
-                            error:function() {
-                                $('#alert').notify();
-                                $('#alert').notify("create", {
-                                    text: "Behandlingen kunde inte tas bort. Kontrollera anslutningen!"
-                                }, {
-                                    expires: false,
-                                    click: function(e,instance) {
-                                        instance.close();
-                                    }
-                                });
-                            }
-                        });
+            noty({
+                text: "Är du säker på att du vill ta bort den här behandlingen?",
+                buttons: [
+                  {type: 'btn btn-mini btn-success', text: 'Ja', click: function($noty) {
+                      service.model.destroy({
+                          success:function() {
+                              vent.trigger('changeModelToEdit', new Service());
+                          },
+                          error:function() {
+                              var noty_id = noty({
+                                  text: "Behandlingen kunde inte tas bort. Kontrollera anslutningen!",
+                                  type: 'error'
+                              });
+                          }
+                      });
+                      $noty.close();
                     }
-            });
+                  },
+                  {type: 'btn btn-mini btn-error', text: 'Cancel', click: function($noty) {
+                      $noty.close();
+                    }
+                  }
+                  ],
+                closable: false,
+                timeout: false,
+                layout: 'center',
+                animateOpen: {opacity: 'show'},
+                animateClose: {opacity: 'hide'},
+              });
             return false;
         },
         close:function () {
@@ -179,26 +181,16 @@
                     }
 
                     if(!response) {
-                        $('#alert').notify();
-                        $('#alert').notify("create", {
-                              text: "Error: Couldn't get users services from API"
-                        }, {
-                            expires: false,
-                            click: function(e,instance) {
-                                instance.close();
-                            }
+                        var noty_id = noty({
+                            text: "Error: Couldn't get users services from API",
+                            type: 'error'
                         });
                     }
                 },
                 error: function(collection, error, options) {
-                    $('#alert').notify();
-                    $('#alert').notify("create", {
-                        text: "Connection Error"
-                    }, {
-                        expires: false,
-                        click: function(e,instance) {
-                            instance.close();
-                        }
+                    var noty_id = noty({
+                        text: "Connection Error",
+                        type: 'error'
                     });
                 }
             });
@@ -239,49 +231,38 @@
             var self = this;
             responseCallback = {
                 success: function(collection, error, options) {
-                    $('#alert').notify();
-                    $('#alert').notify("create", {
-                          text: 'Uppdateringen lyckades!'
-                    }, {
-                        expires: 3000,
-                        click: function(e,instance) {
-                            instance.close();
-                        }
+                    var noty_id = noty({
+                        text: 'Uppdateringen lyckades!',
+                        type: 'success',
                     });
                     ServiceView.newForm();
                     self.showPriceList();
                 },
-		error: function(collection, error, options) {
-		    //Some error in the user input
-		    if(error.status == 400) {
-			
-			ServiceView.cleanForm();
+                error: function(collection, error, options) {
+                    //Some error in the user input
+                    if(error.status == 400) {
+                        ServiceView.cleanForm();
 
-			var btn = $('.save');
-			btn.html("Spara");
-			ServiceView.displayFormErrors(collection, error, options);
-		    //The server probably went down 
-		    } else {
-			$('#alert').notify();
-			$('#alert').notify("create", {
-			    text: 'Uppdateringen misslyckades!'
-			}, {
-			    expires: false,
-			    click: function(e,instance) {
-				instance.close();
-			    }
-			});
-		    }
-		}
+                        var btn = $('.save');
+                        btn.html("Spara");
+                        ServiceView.displayFormErrors(collection, error, options);
+                    } else {
+                        var noty_id = noty({
+                            text: 'Uppdateringen misslyckades!',
+                            type: 'error'
+                        });
+                    }
+                }
             };
 
             // if it's a model that's not synced to the server and not in the 
             // services list yet, on the page -> collection.create()
-            if(this.model.isNew())
+            if (this.model.isNew()) {
                 this.serviceList.create(this.model, responseCallback);
+            } else {
             // already on server, just sync it.
-            else
                 this.model.save({}, responseCallback);
+            }
 
             return false;
         },
@@ -309,17 +290,12 @@
             }
             catch(err) {
                 //TODO: Log this somewhere?
-                $('#alert').notify();
-                $('#alert').notify("create", {
-                    text: 'Det skedde ett fel och felmeddelandet var inte i korrekt JSON-format!'
-                }, {
-                    expires: false,
-                    click: function(e,instance) {
-                        instance.close();
-                    }
+                var noty_id = noty({
+                    text: 'Det skedde ett fel och felmeddelandet var inte i korrekt JSON-format!',
+                    type: 'error'
                 });
             }
-        }
+        },
     });
 
     //events used to delegate between views

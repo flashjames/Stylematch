@@ -5,6 +5,12 @@
 <!DOCTYPE html>
 <html lang="en" style="height:100%;">
   <head>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300|Cardo|Raleway:100' rel='stylesheet' type='text/css'>
+
+
+
+  
+  
     <title>{% block title %}{% endblock %} | StyleMatch</title>
     <meta charset="utf-8" />
     <meta name="robots" content="NOODP">
@@ -16,6 +22,8 @@
     <script src="{{ STATIC_URL }}js/bootstrap-alert.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}js/bootstrap-tooltip.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}js/bootstrap-dropdown.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}js/noty/js/jquery.noty.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}js/jquery.noty.custom.js" type="text/javascript"></script>
     {% intercom_analytics %}
     <script id="IntercomSettingsScriptTag">
       {% comment %} Intercom.io settings {% endcomment %}
@@ -75,7 +83,7 @@
 
   <body class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true">
 
-    {% if user.is_authenticated %}{# Add menubar at top #}
+    {% if user.is_authenticated and not no_menu %}{# Add menubar at top #}
       <div style="padding:19px;"></div>
       {% include "authenticated_menu.html" %}
     {% endif %}

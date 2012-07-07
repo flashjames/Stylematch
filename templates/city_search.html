@@ -92,7 +92,7 @@
                kvalitet.
             </p>
             <p>
-              <a href="/">StyleMatch.se</a> har {{ profiles_total }} anslutna frisörer i {{ city }} som klipper stans bästa frisyrer
+              <a href="/">StyleMatch.se</a> har {% if profiles_total == 1 %} 1 ansluten frisör {% else %} {{ profiles_total }} anslutna frisörer {% endif %} i {{ city }} som klipper stans bästa frisyrer
             </p>
             
             <h2>De bästa frisörsalongerna i {{ city }}</h2>
@@ -106,12 +106,11 @@
             </ul>
             
             <h3>Hur bokar jag en frisör?</h3>
-            <p> 
-	            Vi rekommenderar alla nya användare att läsa "<a href="/faq/privatperson/">Hur hittar jag en frisör</a>".
+            <p>Vi rekommenderar alla nya användare att läsa "<a href="/faq/privatperson/">Hur hittar jag en frisör</a>".
             </p>
             <ol>
             	<li>Välj först den stad du vill bläddra bland frisörsalonger i, i detta fall {{ city }}.</li>
-              <li>Bläddra bland våra frisörer(t.ex. <a href="/{{ standard_profile.profile_url }}/">{{ standard_profile.user.first_name }} {{ standard_profile.user.last_name }}</a>) som finns i den staden, och besök sedan dens profil.</li>
+              <li>Bläddra bland våra frisörer(t.ex. <a href="/{{ standard_profile.profile_url }}/">{{ standard_profile.user.first_name }} {{ standard_profile.user.last_name }}</a>) som finns i den staden, och besök sedan den profilen.</li>
             	<li>Bläddra bland bilder på frisyrer, färger och fina bilder på uppsättningar.</li>
             	<li>Boka sedan frisören genom att ringa till salongen med numret som finns på profilen.</li>
             	<li>Gå in och rekommendera frisören efter besöket på <a href="http://www.stylematch.se/">StyleMatch.se</a></li>

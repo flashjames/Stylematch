@@ -60,12 +60,12 @@ class DisplayProfileView(DetailView):
 
         return images_lst
 
-    def get_profile_image_url(self, profile_user_id):
+    def get_profile_image_url(self):
         profile_picture = ''
         try:
-            profile_picture = self.get_profile_image(profile_user_id)
+            profile_picture = self.get_profile_image(self.object.user)
         except:
-            if self.is_authenticated and self.object.user.id == self.request.user.id:
+            if self.is_authenticated and self.object.user == self.request.user:
                 profile_picture = os.path.join(
                         settings.STATIC_URL,
                         'img/default_image_profile_logged_in.jpg')
@@ -76,17 +76,16 @@ class DisplayProfileView(DetailView):
 
         return profile_picture
 
-    def get_gallery_images(self, user, limit=0):
+    def get_gallery_images(self, limit=0):
         """
         TODO: should have limit on number of imgs to display
         """
         queryset = GalleryImage.objects.filter(
-            user__exact=user).filter(display_on_profile=True)
+            user__exact=self.object.user).filter(display_on_profile=True)
 
         # if no gallery images uploaded, display a default image
         if not queryset:
-            if self.request.user.is_authenticated() and \
-                    self.object.user == self.request.user:
+            if self.is_authenticated and self.object.user == self.request.user:
                 return []
             queryset = [os.path.join(
                         settings.STATIC_URL,
@@ -156,37 +155,29 @@ class DisplayProfileView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(DisplayProfileView, self).get_context_data(**kwargs)
 
-        # to display the parts associated to the profile,
-        # we filter on the user_id of profile owner
-        profile_user_id = context['profile'].user_id
-
         # used to only display edit-profile menu, if at the user's profile
-        current_user_id = self.request.user.id
-        context['logged_in_user_profile'] = False
-        if current_user_id == profile_user_id:
-            context['logged_in_user_profile'] = True
+        context['logged_in_user_profile'] = self.request.user == self.object.user
 
         context['site_domain'] = settings.SITE_DOMAIN
 
         # get images displayed on profile
-        context['profile_image'] = self.get_profile_image_url(profile_user_id)
-        context['gallery_images'] = self.get_gallery_images(profile_user_id)
+        context['profile_image'] = self.get_profile_image_url()
+        context['gallery_images'] = self.get_gallery_images()
 
         # services the displayed userprofile have
         context['services'] = Service.objects.filter(
-                                    user__exact=profile_user_id).filter(
+                                    user=self.object.user).filter(
                                     display_on_profile=True)
 
         for i in context['services']:
             i.length = format_minutes_to_pretty_format(i.length)
 
-        profile_user = User.objects.filter(id__exact=profile_user_id)[0]
-        context['first_name'] = profile_user.first_name
-        context['last_name'] = profile_user.last_name
+        context['first_name'] = self.object.user.first_name
+        context['last_name'] = self.object.user.last_name
 
         # opening hours the displayed userprofile have
         try:
-            obj = OpenHours.objects.get(user__exact=profile_user_id)
+            obj = OpenHours.objects.get(user=self.object.user)
             context['openhours_reviewed'] = obj.reviewed
             context['weekdays'] = self.get_openinghours(obj)
         except:

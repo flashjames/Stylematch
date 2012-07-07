@@ -53,11 +53,9 @@ sitemaps = {
 
 urlpatterns += patterns(
     '',
-
     # favicon
     url(r'^favicon\.ico$',
             RedirectView.as_view(url=settings.STATIC_URL + "img/favicon.ico")),
-
     # redirects to main-page
     (r'^logout/$',
             'index.views.logout_page',
@@ -84,11 +82,11 @@ urlpatterns += patterns(
             IndexPageView.as_view(),
             {},
             'index_page'),
-    (r'^accounts/signup-step1/',
+    (r'^konto/registrering-steg1/',
             SignupView.as_view(),
             {},
             'signupstep1_page'),
-    (r'^accounts/signup-step2/',
+    (r'^konto/registrering-steg2/',
             SignupStep2View.as_view(),
             {},
             'signupstep2_page'),

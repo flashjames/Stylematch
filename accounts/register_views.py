@@ -57,6 +57,7 @@ class SignupView(LoginRequiredMixin, UpdateView):
         context['progress_salon_info'] = "reached-progress"
         context['progress_width'] = "40.5%"
 
+        context['no_menu'] = True
         return context
 
 
@@ -79,6 +80,7 @@ class SignupStep2View(EditImagesView):
         context['progress_profile_pic'] = "reached-progress"
         context['progress_width'] = "66%"
 
+        context['no_menu'] = True
         return context
 
     # Called when we're sure all fields in the form are valid

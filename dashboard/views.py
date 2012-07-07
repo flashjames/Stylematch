@@ -8,7 +8,7 @@ from braces.views import LoginRequiredMixin
 from dashboard.google_analytics import profile_statistics
 from accounts.models import UserProfile
 
-class DashboardView(TemplateView):
+class DashboardView(LoginRequiredMixin, TemplateView):
     template_name="dashboard.html"
 
     def get_tasks_to_be_done(self, userprofile):

@@ -101,23 +101,35 @@
         },
         deleteService:function () {
             var service = this;
-            jConfirm('Är du säker på att du vill ta bort den här behandlingen?',
-                     'Bekräfta borttagning',
-                 function(r) {
-                    if (r === true) {
-                        service.model.destroy({
-                            success:function() {
-                                vent.trigger('changeModelToEdit', new Service());
-                            },
-                            error:function() {
-                                var noty_id = noty({
-                                    text: "Behandlingen kunde inte tas bort. Kontrollera anslutningen!",
-                                    type: 'error'
-                                });
-                            }
-                        });
+            noty({
+                text: "Är du säker på att du vill ta bort den här behandlingen?",
+                buttons: [
+                  {type: 'btn btn-mini btn-success', text: 'Ja', click: function($noty) {
+                      service.model.destroy({
+                          success:function() {
+                              vent.trigger('changeModelToEdit', new Service());
+                          },
+                          error:function() {
+                              var noty_id = noty({
+                                  text: "Behandlingen kunde inte tas bort. Kontrollera anslutningen!",
+                                  type: 'error'
+                              });
+                          }
+                      });
+                      $noty.close();
                     }
-            });
+                  },
+                  {type: 'btn btn-mini btn-error', text: 'Cancel', click: function($noty) {
+                      $noty.close();
+                    }
+                  }
+                  ],
+                closable: false,
+                timeout: false,
+                layout: 'center',
+                animateOpen: {opacity: 'show'},
+                animateClose: {opacity: 'hide'},
+              });
             return false;
         },
         close:function () {

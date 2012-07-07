@@ -68,12 +68,15 @@ class UserProfileForm(ModelForm):
 
     def clean_profile_url(self):
         data = self.cleaned_data['profile_url']
+        if data == "":
+            raise ValidationError("Stylematch-adressen kan inte vara tom")
         if not re.match("^[A-Za-z0-9ÅÄÖåäö-]*$", data):
-            raise ValidationError("Sökvägen får endast innehålla: bokstäver, siffror och bindestreck (-)")
-            
+            raise ValidationError("Stylematch-adressen får endast innehålla:"
+                                  "bokstäver, siffror och bindestreck (-)")
+
         # is profile url used by another user or a path used by django?
         if not self.is_unique_url_name(data) or self.is_systempath(data):
-            raise ValidationError("Den här sökvägen är redan tagen")
+            raise ValidationError("Den här Stylematch-adressen är redan tagen")
         return data
 
     def strip_all_except_digits(self, number):

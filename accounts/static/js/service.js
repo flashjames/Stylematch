@@ -226,30 +226,31 @@
                     ServiceView.newForm();
                     self.showPriceList();
                 },
-		error: function(collection, error, options) {
-		    //Some error in the user input
-		    if(error.status == 400) {
-			
-			ServiceView.cleanForm();
+                error: function(collection, error, options) {
+                    //Some error in the user input
+                    if(error.status == 400) {
+                        ServiceView.cleanForm();
 
-			var btn = $('.save');
-			btn.html("Spara");
-			ServiceView.displayFormErrors(collection, error, options);
-		    //The server probably went down 
-		    } else {
-                var noty_id = noty({
-                    text: 'Uppdateringen misslyckades!',
-                    type: 'error'
-                });
-			});
+                        var btn = $('.save');
+                        btn.html("Spara");
+                        ServiceView.displayFormErrors(collection, error, options);
+                    } else {
+                        var noty_id = noty({
+                            text: 'Uppdateringen misslyckades!',
+                            type: 'error'
+                        });
+                    }
+                }
+            };
 
             // if it's a model that's not synced to the server and not in the 
             // services list yet, on the page -> collection.create()
-            if(this.model.isNew())
+            if (this.model.isNew()) {
                 this.serviceList.create(this.model, responseCallback);
+            } else {
             // already on server, just sync it.
-            else
                 this.model.save({}, responseCallback);
+            }
 
             return false;
         },
@@ -282,7 +283,7 @@
                     type: 'error'
                 });
             }
-        }
+        },
     });
 
     //events used to delegate between views

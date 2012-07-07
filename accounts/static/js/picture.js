@@ -122,25 +122,15 @@
 
                 this.model.save({}, {
                     success:function () {
-                        $('#alert').notify();
-                        $('#alert').notify("create", {
-                              text: 'Kommentaren uppdaterad!'
-                        }, {
-                            expires: 3000,
-                            click: function(e,instance) {
-                                instance.close();
-                            }
+                        var noty_id = noty({
+                            text: 'Kommentaren uppdaterad!',
+                            type: 'success'
                         });
                     },
                     error:function() {
-                        $('#alert').notify();
-                        $('#alert').notify("create", {
-                              text: 'Kommentaren kunde inte uppdateras!'
-                        }, {
-                            expires: false,
-                            click: function(e,instance) {
-                                instance.close();
-                            }
+                        var noty_id = noty({
+                            text: 'Kommentaren kunde inte uppdateras!',
+                            type: 'error'
                         });
                     }
                 });
@@ -159,25 +149,15 @@
 
             this.model.save({}, {
                 success:function () {
-                        $('#alert').notify();
-                        $('#alert').notify("create", {
-                              text: 'Uppdateringen lyckades!'
-                        }, {
-                            expires: 2000,
-                            click: function(e,instance) {
-                                instance.close();
-                            }
+                        var noty_id = noty({
+                            text: 'Uppdateringen lyckades!',
+                            type: 'success'
                         });
                 },
                 error:function() {
-                        $('#alert').notify();
-                        $('#alert').notify("create", {
-                              text: 'Uppdateringen kunde inte slutföras!'
-                        }, {
-                            expires: false,
-                            click: function(e,instance) {
-                                instance.close();
-                            }
+                        var noty_id = noty({
+                            text: 'Uppdateringen kunde inte slutföras!',
+                            type: 'error'
                         });
                 }
             });
@@ -191,14 +171,9 @@
             this.model.set({order: indexInList, silent:true});
             this.model.save({}, {
                 error: function(collection, error, options) {
-                        $('#alert').notify();
-                        $('#alert').notify("create", {
-                              text: 'Oops, något gick galet!'
-                        }, {
-                            expires: false,
-                            click: function(e,instance) {
-                                instance.close();
-                            }
+                        var noty_id = noty({
+                            text: 'Oops, något gick galet!',
+                            type: 'error'
                         });
                     //console.log("Error: Model didnt sync with server, after the order was changed");
                 }
@@ -212,14 +187,9 @@
                     if (r === true) {
                         image.model.destroy({
                             error:function() {
-                                $('#alert').notify();
-                                $('#alert').notify("create", {
-                                      text: 'Bilden kunde inte tas bort!'
-                                }, {
-                                    expires: false,
-                                    click: function(e,instance) {
-                                        instance.close();
-                                    }
+                                var noty_id = noty({
+                                    text: 'Bilden kunde inte tas bort!',
+                                    type: 'error'
                                 });
                             }
                         });
@@ -244,14 +214,9 @@
             this.serviceList.fetch({
                 success: function(collection, response) {
                     if(!response) {
-                        $('#alert').notify();
-                        $('#alert').notify("create", {
-                              text: 'Bilderna kunde inte hämtas!'
-                        }, {
-                            expires: false,
-                            click: function(e,instance) {
-                                instance.close();
-                            }
+                        var noty_id = noty({
+                            text: 'Bilderna kunde inte hämtas!',
+                            type: 'error'
                         });
                     }
                     $('#image-list').html(new ServiceListView({model:collection}).render().el);

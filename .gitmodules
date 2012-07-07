@@ -10,3 +10,6 @@
 [submodule "staticfiles/js/chosen"]
 	path = staticfiles/js/chosen
 	url = https://github.com/harvesthq/chosen.git
+[submodule "staticfiles/js/noty"]
+	path = staticfiles/js/noty
+	url = https://github.com/needim/noty.git

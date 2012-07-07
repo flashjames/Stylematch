@@ -28,7 +28,7 @@ var visitor_count_data = {{ visitor_count_data|safe }};
 <div class="page-header">
   <h1>
     Översikt
-    <small>Blaha blaha</small>
+    <small>{{ user.first_name.title }} {{ user.last_name.title }}</small>
   </h1>
 </div>
 
@@ -58,21 +58,22 @@ var visitor_count_data = {{ visitor_count_data|safe }};
   </div>
 </div>
 {% endif %}
-
-<h2>Statistik</h2>
+<hr class="soften">
+<h1>Statistik</h1>
 {% block statistics %}
-<div class="row">
+<div id="statistics-block" class="row">
   <div class="span6">
+    <h3>Antal besökare på din profil</h3>
     <div class="well">
           <div id="bar-demo"></div>
     </div>
   </div>
-  <div class="span4">
+<!--  <div class="span4">
     <div class="well">
       <img src="http://placehold.it/260x180" />
     </div>
   </div>
-</div>
+</div>-->
 <!-- Google analytics visitor count chart, with D3js -->
 <script type="text/javascript" src="{{ STATIC_URL }}js/chart.js"></script>
 

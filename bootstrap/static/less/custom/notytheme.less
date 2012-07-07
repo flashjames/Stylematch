@@ -1,0 +1,221 @@
+
+@notyFontFamily:    @baseFontFamily;
+@notyFontSize:      @baseFontSize;
+
+@notyNotificationBackground:    #fcfcfc;
+@notyNotificationText:          #555;
+@notyNotificationBorder:        #e5e5e5;
+
+@notyWarningBackground:         @warningBackground;
+@notyWarningText:               @warningText;
+@notyWarningBorder:             @warningBorder;
+
+@notyAlertBackground:           #fcf8e3;
+@notyAlertText:                 #fbeed5;
+@notyAlertBorder:               #c09853;
+
+@notyErrorBackground:           @errorBackground;
+@notyErrorText:                 @errorText;
+@notyErrorBorder:               @errorBorder;
+
+@notySuccessBackground:         @successBackground;
+@notySuccessText:               @successText;
+@notySuccessBorder:             @successBorder;
+
+@notyInfoBackground:            @infoBackground;
+@notyInfoText:                  @infoText;
+@notyInfoBorder:                @infoBorder;
+
+
+.noty_custom_container {
+    &.noty_theme {
+        &.noty_layout_inline{
+            position: relative;
+
+            .noty_cont {
+                &.noty_layout_inline {
+                    position: static;
+                }
+            }
+
+            .noty_bar {
+                position: static;
+
+                .noty_message {
+                    font-size: @notyFontSize;
+                    padding: 4px;
+
+                    .noty_buttons {
+                        margin-top: -1px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.noty_bar {
+    &.noty_theme {
+        font-size: @notyFontSize;
+        line-height: 18px;
+        text-shadow: 0 1px 0 @white;
+        font-family: @notyFontFamily;
+        .noty_message {
+            padding: 8px 14px;
+
+            .noty_buttons {
+                float: right;
+                margin-top: -5px;
+                margin-left: 4px;
+
+                button {
+                    margin-left: 5px;
+                }
+            }
+        }
+        &.noty_closable {
+            .noty_message {
+                padding: 8px 35px 8px 14px;
+            }
+        }
+        .noty_close {
+            position: absolute;
+            top: 7px;
+            right: 16px;
+            font-size: 18px;
+            line-height: 18px;
+            font-weight: bold;
+            color: @black;
+            opacity: 0.2;
+            text-shadow: 0 1px 0 @white;
+            &:hover {
+                opacity: 0.4;
+            }
+            &:after {
+                content: "x";
+            }
+        }
+        &.noty_layout_top {
+            // add margin because of fixed top menu
+            top: 40px;
+        }
+
+        &.noty_layout_center, &.noty_layout_topCenter, &.noty_layout_topLeft,
+        &.noty_layout_topRight, &.noty_layout_bottomLeft, &.noty_layout_bottomRight {
+            .border-radius(4px);
+        }
+
+        &.noty_layout_topLeft, &.noty_layout_topRight,
+        &.noty_layout_bottomLeft, &.noty_layout_bottomRight {
+            .noty_message {
+                .noty_buttons {
+                    float: none;
+                    border-top: 1px solid @notyNotificationBorder;
+                    margin-left: 0;
+                    margin-top: 10px;
+                    padding-top: 10px;
+                    text-align: right;
+                }
+            }
+        }
+
+        &.noty_layout_center, &.note_layout_topCenter {
+            .noty_message {
+                .noty_buttons {
+                    margin-left: 15px;
+                    margin-top: -2px
+                }
+            }
+        }
+
+        &.noty_notification {
+            background-color: @notyNotificationBackground;
+            border: 1px solid @notyNotificationBorder;
+            color: @notyNotificationText;
+            &.noty_layout_topLeft, &.noty_layout_topRight,
+            &.noty_layout_bottomLeft, &.noty_layout_bottomRight {
+                .noty_message {
+                    .noty_buttons {
+                        border-color: @notyNotificationBorder;
+                    }
+                }
+            }
+        }
+
+        &.noty_warning {
+            background-color: @notyWarningBackground;
+            border: 1px solid @notyWarningBorder;
+            color: @notyWarningText;
+            &.noty_layout_topLeft, &.noty_layout_topRight,
+            &.noty_layout_bottomLeft, &.noty_layout_bottomRight {
+                .noty_message {
+                    .noty_buttons {
+                        border-color: @notyWarningBorder;
+                    }
+                }
+            }
+        }
+
+        &.noty_alert {
+            background-color: @notyAlertBackground;
+            border: 1px solid @notyAlertBorder;
+            color: @notyAlertText;
+            &.noty_layout_topLeft, &.noty_layout_topRight,
+            &.noty_layout_bottomLeft, &.noty_layout_bottomRight {
+                .noty_message {
+                    .noty_buttons {
+                        border-color: @notyAlertBorder;
+                    }
+                }
+            }
+        }
+
+        &.noty_error {
+            background-color: @notyErrorBackground;
+            border: 1px solid @notyErrorText;
+            color: @notyErrorText;
+            &.noty_layout_topLeft, &.noty_layout_topRight,
+            &.noty_layout_bottomLeft, &.noty_layout_bottomRight {
+                .noty_message {
+                    .noty_buttons {
+                        border-color: @notyErrorBorder;
+                    }
+                }
+            }
+        }
+
+        &.noty_success {
+            background-color: @notySuccessBackground;
+            border: 1px solid @notySuccessBorder;
+            color: @notySuccessText;
+            &.noty_layout_topLeft, &.noty_layout_topRight,
+            &.noty_layout_bottomLeft, &.noty_layout_bottomRight {
+                .noty_message {
+                    .noty_buttons {
+                        border-color: @notySuccessBorder;
+                    }
+                }
+            }
+        }
+
+        &.noty_information {
+            background-color: @notyInfoBackground;
+            border: 1px solid @notyInfoBorder;
+            color: @notyInfoText;
+            &.noty_layout_topLeft, &.noty_layout_topRight,
+            &.noty_layout_bottomLeft, &.noty_layout_bottomRight {
+                .noty_message {
+                    .noty_buttons {
+                        border-color: @notyInfoBorder;
+                    }
+                }
+            }
+        }
+    } //&.@theme_name
+} //.noty_bar
+
+.noty_modal {
+    &.noty_theme {
+        opacity: 0.7;
+    }
+}

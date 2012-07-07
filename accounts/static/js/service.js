@@ -85,14 +85,9 @@
             this.model.set({order: indexInList, silent:true});
             this.model.save({}, {
                  error: function(collection, error, options) {
-                     $('#alert').notify();
-                     $('#alert').notify("create", {
+                     var noty_id = noty({
                          text: "Error: Model didnt sync with server, after the order was changed"
-                     }, {
-                         expires: false,
-                         click: function(e,instance) {
-                             instance.close();
-                         }
+                         type: 'error'
                      });
                  }
             });
@@ -115,14 +110,9 @@
                                 vent.trigger('changeModelToEdit', new Service());
                             },
                             error:function() {
-                                $('#alert').notify();
-                                $('#alert').notify("create", {
+                                var noty_id = noty({
                                     text: "Behandlingen kunde inte tas bort. Kontrollera anslutningen!"
-                                }, {
-                                    expires: false,
-                                    click: function(e,instance) {
-                                        instance.close();
-                                    }
+                                    type: 'error'
                                 });
                             }
                         });
@@ -179,26 +169,16 @@
                     }
 
                     if(!response) {
-                        $('#alert').notify();
-                        $('#alert').notify("create", {
-                              text: "Error: Couldn't get users services from API"
-                        }, {
-                            expires: false,
-                            click: function(e,instance) {
-                                instance.close();
-                            }
+                        var noty_id = noty({
+                            text: "Error: Couldn't get users services from API"
+                            type: 'error'
                         });
                     }
                 },
                 error: function(collection, error, options) {
-                    $('#alert').notify();
-                    $('#alert').notify("create", {
+                    var noty_id = noty({
                         text: "Connection Error"
-                    }, {
-                        expires: false,
-                        click: function(e,instance) {
-                            instance.close();
-                        }
+                        type: 'error'
                     });
                 }
             });
@@ -239,14 +219,9 @@
             var self = this;
             responseCallback = {
                 success: function(collection, error, options) {
-                    $('#alert').notify();
-                    $('#alert').notify("create", {
-                          text: 'Uppdateringen lyckades!'
-                    }, {
-                        expires: 3000,
-                        click: function(e,instance) {
-                            instance.close();
-                        }
+                    var noty_id = noty({
+                        text: 'Uppdateringen lyckades!',
+                        type: 'success',
                     });
                     ServiceView.newForm();
                     self.showPriceList();
@@ -262,14 +237,10 @@
 			ServiceView.displayFormErrors(collection, error, options);
 		    //The server probably went down 
 		    } else {
-			$('#alert').notify();
-			$('#alert').notify("create", {
-			    text: 'Uppdateringen misslyckades!'
-			}, {
-			    expires: false,
-			    click: function(e,instance) {
-				instance.close();
-			    }
+                var noty_id = noty({
+                    text: 'Uppdateringen misslyckades!',
+                    type: 'error'
+                });
 			});
 		    }
 		}
@@ -309,14 +280,9 @@
             }
             catch(err) {
                 //TODO: Log this somewhere?
-                $('#alert').notify();
-                $('#alert').notify("create", {
-                    text: 'Det skedde ett fel och felmeddelandet var inte i korrekt JSON-format!'
-                }, {
-                    expires: false,
-                    click: function(e,instance) {
-                        instance.close();
-                    }
+                var noty_id = noty({
+                    text: 'Det skedde ett fel och felmeddelandet var inte i korrekt JSON-format!',
+                    type: 'error'
                 });
             }
         }

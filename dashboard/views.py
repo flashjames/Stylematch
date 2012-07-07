@@ -60,7 +60,7 @@ class DashboardView(TemplateView):
             s = Service.objects.get(user=userprofile.user)
         except Service.DoesNotExist:
             task['passed'] = False
-        else:
+        except Service.MultipleObjectsReturned:
             pass
         tasks_to_be_done.append(task)
 
@@ -80,7 +80,7 @@ class DashboardView(TemplateView):
             GalleryImage.objects.get(user=userprofile.user)
         except GalleryImage.DoesNotExist:
             task['passed'] = False
-        else:
+        except GalleryImage.MultipleObjectsReturned:
             pass
         tasks_to_be_done.append(task)
 

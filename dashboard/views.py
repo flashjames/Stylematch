@@ -79,7 +79,7 @@ class DashboardView(TemplateView):
 
         # Upload gallery image
         task = { 'url': reverse('edit_images'),
-                 'text': u'Ladda upp din första galleribild!',
+                 'text': u'Ladda upp din första galleribild',
                  'passed': True }
         try:
             GalleryImage.objects.get(user=userprofile.user)

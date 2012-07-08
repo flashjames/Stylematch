@@ -51,7 +51,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                  'text': u'Skriv in dina öppettider',
                  'passed': True }
         try:
-            oh = OpenHours.objects.get(user=userprofile.user)
+            oh = userprofile.openhours
             task['passed'] = oh.reviewed
         except OpenHours.DoesNotExist:
             task['passed'] = False

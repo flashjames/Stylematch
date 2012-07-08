@@ -8,6 +8,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 from django.core.files.storage import default_storage
 from registration.signals import user_registered
+from accounts.signals import approved_user_criteria_changed
 
 from tools import list_with_time_interval, format_minutes_to_pretty_format
 
@@ -21,6 +22,82 @@ from django.core.validators import MaxLengthValidator
 import uuid
 import os
 import re
+import logging
+
+logger = logging.getLogger(__name__)
+
+class ProfileValidationError(Exception):
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
+
+def check_profile(sender, dirty_fields={}, **kwargs):
+    logger.debug("Checking %s with dirty fields: %s" % (sender, ", ".join(dirty_fields.keys())))
+
+    if sender.__class__ == UserProfile:
+        userprofile = sender
+    elif sender.__class__ == Service:
+        userprofile = sender.user.userprofile
+    else:
+        logger.error("Check_profile got called from an unexpected sender (%s)." % sender)
+        return False
+
+    try:
+        # Information about salon. Address, phone etc
+        if not (userprofile.salon_name or
+                userprofile.salon_city or
+                userprofile.salon_adress or
+                userprofile.zip_adress or
+                userprofile.salon_phone_number):
+            raise ProfileValidationError("Information about salon missing.")
+
+        # profile image
+        if not (userprofile.profile_image_cropped or
+                userprofile.profile_image_uncropped):
+            raise ProfileValidationError("Profile image missing")
+
+        # open hours
+        if not userprofile.openhours:
+            raise ProfileValidationError("Openhours is no longer reviewed. "
+                                         "How the hell did that happen??")
+
+        # services
+        try:
+            Service.objects.get(user=userprofile.user)
+        except Service.DoesNotExist:
+            raise ProfileValidationError("User has no services.")
+        except Service.MultipleObjectsReturned:
+            pass
+
+        # Description about the stylist
+        if not userprofile.profile_text:
+            raise ProfileValidationError("Profile text missing")
+
+        # gallery images
+        gi = GalleryImage.objects.filter(user=userprofile.user)
+        if gi:
+            gi = gi.filter(visible=True)
+            if not gi:
+                raise ProfileValidationError("User has uploaded gallery images, "
+                                             "but they are not visible.")
+        else:
+            raise ProfileValidationError("User has no uploaded gallery images.")
+
+    except ProfileValidationError as e:
+        # create scheduledcheck
+        logger.warn(e)
+        if 'create_checks' in kwargs and kwargs['create_checks']:
+            sc, created = ScheduledCheck.objects.get_or_create(user=userprofile.user)
+            if created:
+                logger.debug("Created new ScheduledCheck: %s" % sc.user)
+        return False
+
+    # remove any entry in scheduledchecks
+    ScheduledCheck.objects.delete(user=userprofile.user)
+    return True
+approved_user_criteria_changed.connect(check_profile)
 
 
 def create_temporary_profile_url(sender, user, request, **kwargs):
@@ -66,6 +143,32 @@ def create_user_profile(sender, instance, created, **kwargs):
         OpenHours.objects.create(user=instance)
 
 
+class DirtyFieldsMixin(object):
+    def __init__(self, *args, **kwargs):
+        super(DirtyFieldsMixin, self).__init__(*args, **kwargs)
+        self._original_state = self._as_dict()
+
+    def _as_dict(self):
+        return dict(
+                [(f.name, getattr(self, f.name))
+                 for f
+                 in self._meta.local_fields
+                 if not f.rel]
+        )
+
+    def get_dirty_fields(self):
+        """
+        Returns a dict of changed fields
+        """
+        new_state = self._as_dict()
+        return dict(
+                [(key, (value, new_state[key]))
+                 for key, value
+                 in self._original_state.iteritems()
+                 if value != new_state[key]]
+        )
+
+
 class Service(models.Model):
     buffer = list_with_time_interval(
                 start=30,
@@ -96,7 +199,7 @@ class Service(models.Model):
         # deliver the services sorted on the order field
         # needs to be here, or the services admin ui will break
         ordering = ['order']
-
+post_delete.connect(check_profile, Service)
 
 class OpenHours(models.Model):
     """
@@ -116,7 +219,7 @@ class OpenHours(models.Model):
     # a temporary buffer
     time_tuple = tuple(time_list)
 
-    user = models.ForeignKey(User, editable=False)
+    user = models.OneToOneField(User, editable=False)
 
     # 8:00 AM
     default_open_time = 480
@@ -207,7 +310,7 @@ class GalleryImage(BaseImage):
         ordering = ['order']
 
 
-class UserProfile(models.Model):
+class UserProfile(DirtyFieldsMixin, models.Model):
     """
     TODO:
     fixa så email från huvudprofilen visas här
@@ -291,9 +394,24 @@ class UserProfile(models.Model):
                                                 on_delete=models.SET_NULL,
                                                 related_name='profile_image_uncropped')
 
+    approved = models.BooleanField("Godkänd", default=False)
+
     def save(self, *args, **kwargs):
         # remove accidental whitespaces from city
         self.salon_city = self.salon_city.strip()
+
+        if self.approved == True:
+            # check if the user is still valid
+            dirties = self.get_dirty_fields()
+            user_criterias = [
+                    'salon_city',
+                    'salon_adress',
+                    'zip_adress',
+                    'salon_phone_number',
+                    'openhours',
+                    'profile_text',
+                    ]
+            approved_user_criteria_changed.send(sender=self, dirty_fields=dirties)
 
         return super(UserProfile, self).save(*args, **kwargs)
 
@@ -354,7 +472,7 @@ class Featured(models.Model):
         verbose_name_plural = "Featured profiles"
 
 
-class ScheduledCheck(model.Model):
+class ScheduledCheck(models.Model):
     """
     A model for accounts that has been approved, but no longer
     matches the criterias for being approved. A scheduled (cron)
@@ -363,6 +481,9 @@ class ScheduledCheck(model.Model):
     """
     user = models.ForeignKey(User, null=False, blank=False, unique=True)
     notification_sent = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return self.user.__unicode__()
 
     def check(self):
         """

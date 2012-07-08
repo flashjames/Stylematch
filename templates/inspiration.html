@@ -5,48 +5,112 @@
 {% block title %}Hitta frisör{% endblock %}
 
 {% block html-head %}
-  <script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
-  <script type="text/javascript">
-    function like(counter, id) {
-        if (id != '') {
-            $('#like-' + counter + " .counter").text("...");
-            $.post(
-                '/like/',
-                { 'id': id,
-                  'csrfmiddlewaretoken': '{{ csrf_token }}' },
-                function(data) {
-                    $('#like-' + counter).text(data);
-                    $('#like-' + counter + " .counter").text(data);
-                }
-            );
-        }
-    }
-  </script>
-  <script>(function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/sv_SE/all.js#xfbml=1&appId=309825002426259";
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));</script>
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="{{ STATIC_URL }}js/underscore-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
+<script>
+  <!-- used in the service.js file, to know where the service api is located -> doesnt need to hardcode the url -->
+  INSPIRATION_API_URL = "{% url 'api_dispatch_list' api_name="profile" resource_name="inspiration" %}";
+</script>
 
-  <link rel="stylesheet" href="{{ STATIC_URL}}js/lightbox/example3/colorbox.css" />
-  <script type="text/javascript" src="{{ STATIC_URL}}js/lightbox/colorbox/jquery.colorbox.js"></script>
+<script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
+  <!-- Bör läggas i backbone scriptet
+       Counter parmametern behövs inte?
+    -->
+<script type="text/javascript">
+  function like(counter, id) {
+  if (id != '') {
+  $('#like-' + counter + " .counter").text("...");
+  $.post(
+  '/like/',
+  { 'id': id,
+  'csrfmiddlewaretoken': '{{ csrf_token }}' },
+  function(data) {
+  $('#like-' + counter).text(data);
+  $('#like-' + counter + " .counter").text(data);
+  }
+  );
+  }
+  }
+</script>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/sv_SE/all.js#xfbml=1&appId=309825002426259";
+  fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));</script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+<!-- Underscore.js Templates -->
+<script type="text/template" id="tpl-inspiration-image-list-item">
+  <% console.log(first_inspiration_image); if(!first_inspiration_image) { %>
+  <hr class="soften">
+  <% } %>
+  <div class="mainImageContent">
+    <div class="leftSidebar">
+      <div class="hype-box">
+        <div class="hype-counter">
+          <p id="like-<%= id %>"></p>
+        </div>
+        <!-- Bör läggas i backbone scriptet -->
+        <a onclick="like(<%= id %>, <%= id %>)"><div class="hype-button">
+            <p>HYPE</p>
+        </div></a>
+      </div>
+    </div>
+
+    <div class="inspiration-image">
+      <a href="<%= image_url %>" class="inspiration-images">
+        <img class="inspiration-images" src="<%= image_url %>"
+             title="<%= comment %>" />
+      </a>
+    </div>
+
+    <div class="rightSidebar">
+      <!--<div class="profile-image-inspiration">
+        <a href="/{# userprofile.profile_url #}/">
+          {# thumbnail userprofile|profile_image_thumbnail "50x50" crop="center" as im #}
+          <img src="{# im.url #}"
+               title="{# image.user.first_name #} {# image.user.last_name #}" />
+          {# endthumbnail #}
+        </a>
+      </div>
+      -->
+      <div class="fb fb-like"
+           data-href="<%= image_url %>"
+           data-send="false"
+           data-layout="button_count"
+           data-width="100"
+           data-show-faces="true">
+      </div>
+      <a href="http://pinterest.com/pin/create/button/?url=http://stylematch.se&media=<%= image_url %>"
+         class="pin-it-button"
+         count-layout="horizontal">
+        <img src="http://stylematch.s3-website-eu-west-1.amazonaws.com/test/PinExt.png"
+             title="Pin It" />
+      </a>
+    </div>
+
+  </div>
+</script>
+
+<link rel="stylesheet" href="{{ STATIC_URL}}js/lightbox/example3/colorbox.css" />
+<script type="text/javascript" src="{{ STATIC_URL}}js/lightbox/colorbox/jquery.colorbox.js"></script>
 {% endblock %}
 {% block content %}
- <div class="row main-content">
-   <div class="span10 offset1">
-     <div style="margin: 0 auto;">
-       <ul class="inspiration-list">
-	 {% include "inspiration_images_snippet.html" with images=pictures %}
-       </ul>
-     </div>
-     <script>
-       $('a.inspiration-images').colorbox({rel:'group2', transition:"none", width:"75%", height:"90%"});
-     </script>
-     
-     <div id="fb-root"></div>
-   </div>
- </div>
+<div class="row main-content">
+  <div class="span11 offset1">
+    <div style="margin: 0 auto;">
+      <div id="inspiration-list">
+    </div>
+    <script>
+      $('a.inspiration-images').colorbox({rel:'group2', transition:"none", width:"75%", height:"90%"});
+    </script>
+
+    <div id="fb-root"></div>
+  </div>
+</div>
+
+<script src="{{ STATIC_URL }}js/inspiration.js"></script>
 {% endblock %}

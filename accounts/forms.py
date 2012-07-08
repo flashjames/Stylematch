@@ -132,7 +132,7 @@ class GalleryImageForm(forms.ModelForm):
 
             return file
         else:
-            raise ValidationError("Filen kunde inte läsas")
+            raise ValidationError("Du måste välja en bild")
 
     class Meta:
         model = GalleryImage

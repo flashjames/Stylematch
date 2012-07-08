@@ -59,7 +59,7 @@ def check_profile(sender, dirty_fields={}, **kwargs):
             raise ProfileValidationError("Profile image missing")
 
         # open hours
-        if not userprofile.openhours:
+        if not userprofile.user.openhours:
             raise ProfileValidationError("Openhours is no longer reviewed. "
                                          "How the hell did that happen??")
 
@@ -78,7 +78,7 @@ def check_profile(sender, dirty_fields={}, **kwargs):
         # gallery images
         gi = GalleryImage.objects.filter(user=userprofile.user)
         if gi:
-            gi = gi.filter(visible=True)
+            gi = gi.filter(display_on_profile=True)
             if not gi:
                 raise ProfileValidationError("User has uploaded gallery images, "
                                              "but they are not visible.")
@@ -87,12 +87,17 @@ def check_profile(sender, dirty_fields={}, **kwargs):
 
     except ProfileValidationError as e:
         # create scheduledcheck
-        logger.warn(e)
-        if 'create_checks' in kwargs and kwargs['create_checks']:
-            sc, created = ScheduledCheck.objects.get_or_create(user=userprofile.user)
-            if created:
-                logger.debug("Created new ScheduledCheck: %s" % sc.user)
+        if userprofile.approved:
+            logger.warn(e)
+            if 'create_checks' in kwargs and kwargs['create_checks']:
+                sc, created = ScheduledCheck.objects.get_or_create(user=userprofile.user)
+                if created:
+                    logger.debug("Created new ScheduledCheck: %s" % sc.user)
         return False
+
+    if not userprofile.approved:
+        userprofile.approved = True
+        userprofile.save()
     return True
 approved_user_criteria_changed.connect(check_profile)
 
@@ -397,18 +402,20 @@ class UserProfile(DirtyFieldsMixin, models.Model):
         # remove accidental whitespaces from city
         self.salon_city = self.salon_city.strip()
 
-        if self.approved == True:
-            # check if the user is still valid
-            dirties = self.get_dirty_fields()
-            user_criterias = [
-                    'salon_city',
-                    'salon_adress',
-                    'zip_adress',
-                    'salon_phone_number',
-                    'openhours',
-                    'profile_text',
-                    ]
-            approved_user_criteria_changed.send(sender=self, dirty_fields=dirties)
+        # check if the user is still valid
+        dirties = self.get_dirty_fields()
+        user_criterias = [
+                'salon_city',
+                'salon_adress',
+                'zip_adress',
+                'salon_phone_number',
+                'openhours',
+                'profile_text',
+                ]
+        for key in dirties.keys():
+            if key in user_criterias:
+                approved_user_criteria_changed.send(sender=self, dirty_fields=dirties)
+                break
 
         return super(UserProfile, self).save(*args, **kwargs)
 

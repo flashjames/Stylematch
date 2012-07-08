@@ -352,3 +352,21 @@ class Featured(models.Model):
     class Meta:
         unique_together = ('user', 'city')
         verbose_name_plural = "Featured profiles"
+
+
+class ScheduledCheck(model.Model):
+    """
+    A model for accounts that has been approved, but no longer
+    matches the criterias for being approved. A scheduled (cron)
+    command will send out email for these accounts.
+
+    """
+    user = models.ForeignKey(User, null=False, blank=False, unique=True)
+    notification_sent = models.BooleanField(default=False)
+
+    def check(self):
+        """
+        Validate all criterias for being approved
+        Return True if valid, otherwise False
+        """
+        return True

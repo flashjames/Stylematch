@@ -6,10 +6,12 @@
 
 <div class="main-content row" >
   <div id="edit-profile-large" class="span12" >
+  
+  <h1>Förändra Kontaktinformation</h1>
 
     {% include "update_notifier.html" %}
 
-    <div id="edit-profile-forms">
+    <div id="edit-profile-forms" class="span6">
       <form  action="" method="post" class="form-horizontal">
 
         {% csrf_token %}
@@ -39,7 +41,7 @@
 
           {% include "profiles/form_snippet.html" with field=form.show_booking_url  css_class="edit-profile-label" %}
 
-	  <div class="form-actions">
+	  <div class="form-actions well">
             <input type="submit" class="btn-large btn-info" value="Spara ändringar" />
 	  </div>
 

@@ -10,10 +10,12 @@
 <div class="main-content row" >
 {% block title-add-hours-signup %}
 {% endblock %}
-<div id="edit-profile-large" class="span11 offset1" >
+
+<div id="edit-profile-large" class="span12" >
+<h1>Förändra Öppettider</h1>
 
     {% include "update_notifier.html" %}
-<!-- Detta ovan borde flyttas ut (dvs det tillhör inte content) -->
+
 
 <div class="edit-hours-form">
 {% block title-add-hours %}
@@ -86,7 +88,7 @@
             </tr> 
     </tbody>
 </table>
-     <div class="form-actions">
+     <div class="form-actions well span6">
     	{% block button-signup-step2 %}
       	 <input type="submit" value="Spara ändringar" class="btn-large btn-info btn-hours-style" />
        {% endblock %}

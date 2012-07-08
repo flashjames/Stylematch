@@ -31,8 +31,11 @@
           {% url 'profile_display_with_profile_url' slug=user.get_profile.profile_url as pdr %}<li class="{% active request pdr %}"><a href="{{ pdr }}">Visa profil</a></li>
           
           
-          {% url 'profile_edit' as pe %} {% url 'edit_images' as ei %}{% url 'profiles_edit_services' as pes %}{% url 'profiles_add_hours' as pah %}
-          <li class="dropdown">
+          {% url 'profile_edit' as pe %}
+          {% url 'edit_images' as ei %}
+          {% url 'profiles_edit_services' as pes %}
+          {% url 'profiles_add_hours' as pah %}
+          <li class="dropdown {% active request pe pes pah %}">
 		    <a href="#"
 		          class="dropdown-toggle"
 		          data-toggle="dropdown">

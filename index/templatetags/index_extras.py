@@ -4,6 +4,7 @@ Global filters needed in all templates
 
 from django.conf import settings
 from django import template
+from django.template.base import Node, TemplateSyntaxError, VariableDoesNotExist, resolve_variable
 register = template.Library()
 
 
@@ -18,18 +19,6 @@ def current_url(request):
    from django.core.urlresolvers import resolve
    current_url = resolve(request.get_full_path()).url_name
    return current_url
-
-@register.simple_tag
-def active(request, pattern):
-    """
-    Add the active class to an object. Example usage in a template:
-
-    {% url 'myurl' as my %}<li class="{% active request my %}"><a href="{{ my }}">My URL</a></li>
-
-    """
-    if request.path == pattern:
-        return 'active'
-    return ''
 
 
 @register.simple_tag
@@ -105,3 +94,47 @@ def profile_image_thumbnail(userprofile, logged_in_user_profile=False):
         else:
             return os.path.join(settings.STATIC_URL, 'img',
                     'default_image_profile_not_logged_in.jpg')
+
+
+def do_active(parser, token):
+    bits = list(token.split_contents())
+    if len(bits) < 3:
+        raise TemplateSyntaxError, "%r takes at least two arguments" % bits[0]
+    return ActiveIfInListNode(bits[1], bits[2:])
+
+def active(parser, token):
+    """
+    Given an item and an arbitrary number of arguments
+    check if any of the items match the first one
+    {% active request first second etc %}
+
+    """
+    return do_active(parser, token)
+active = register.tag(active)
+
+class ActiveIfInListNode(Node):
+    def __init__(self, master, comparables):
+        self.master, self.comparables = master, comparables
+
+    def __repr__(self):
+        return "<ActiveIfInListNode>"
+
+    def render(self, context):
+        try:
+            request = resolve_variable(self.master, context)
+            if not hasattr(request, 'path'):
+                return ""
+        except VariableDoesNotExist:
+            return ""
+
+        comparables = []
+        for val in self.comparables:
+            try:
+                var = resolve_variable(val, context)
+            except VariableDoesNotExist:
+                var = None
+            comparables.append(var)
+
+        if request.path in comparables:
+                return "active"
+        return ""

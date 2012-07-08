@@ -2,29 +2,50 @@
 @notyFontFamily:    @baseFontFamily;
 @notyFontSize:      @baseFontSize;
 
+.notyNotyStyle(@backgroundColor, @textColor) {
+    #gradient > .vertical(@backgroundColor, lighten(@backgroundColor, 10%));
+    border: 1px solid darken(spin(@backgroundColor, -10), 5%);
+    border-top: 0;
+    color: @textColor;
+    &.noty_layout_topLeft, &.noty_layout_topRight,
+    &.noty_layout_bottomLeft, &.noty_layout_bottomRight {
+        .noty_message {
+            .noty_buttons {
+                border-color: darken(spin(@backgroundColor, -10), 5%);
+            }
+        }
+    }
+}
+
 @notyNotificationBackground:    #fcfcfc;
 @notyNotificationText:          #555;
-@notyNotificationBorder:        #e5e5e5;
+@notyNotificationBorder:        darken(spin(@notyNotificationBackground, -10), 5%);
 
-@notyWarningBackground:         @warningBackground;
-@notyWarningText:               @warningText;
-@notyWarningBorder:             @warningBorder;
+@notyWarningBackground:         #ffeb90;
+@notyWarningText:               #886c3b;
+@notyWarningBorder:             darken(spin(@notyWarningBackground, -10), 5%);
 
-@notyAlertBackground:           #fcf8e3;
-@notyAlertText:                 #fbeed5;
-@notyAlertBorder:               #c09853;
+@notyAlertBackground:           #ffec94;
+@notyAlertText:                 #8d620f;
+@notyAlertBorder:               darken(spin(@notyAlertBackground, -10), 5%);
 
 @notyErrorBackground:           @errorBackground;
 @notyErrorText:                 @errorText;
-@notyErrorBorder:               @errorBorder;
+@notyErrorBorder:               darken(spin(@notyErrorBackground, -10), 5%);
 
-@notySuccessBackground:         @successBackground;
-@notySuccessText:               @successText;
-@notySuccessBorder:             @successBorder;
+@notySuccessBackground:         #4a9943;
+@notySuccessText:               #fff;
+@notySuccessBorder:             darken(spin(@notySuccessBackground, -10), 5%);
 
-@notyInfoBackground:            @infoBackground;
-@notyInfoText:                  @infoText;
-@notyInfoBorder:                @infoBorder;
+@notyInfoBackground:            #b6e7ff;
+@notyInfoText:                  #1f6181;
+@notyInfoBorder:                darken(spin(@notyInfoBackground, -10), 5%);
+
+
+@notyMessagePadding: 15px 30px;
+@notyMessageClosablePadding: 15px 70px 15px 30px;
+@notyLayoutTopMessagePadding: 8px 14px 8px 14px;
+
 
 
 .noty_custom_container {
@@ -56,12 +77,12 @@
 
 .noty_bar {
     &.noty_theme {
+        z-index: 1000; // under bootstrap menu
         font-size: @notyFontSize;
         line-height: 18px;
-        text-shadow: 0 1px 0 @white;
         font-family: @notyFontFamily;
         .noty_message {
-            padding: 8px 14px;
+            padding: @notyMessagePadding;
 
             .noty_buttons {
                 float: right;
@@ -75,7 +96,7 @@
         }
         &.noty_closable {
             .noty_message {
-                padding: 8px 35px 8px 14px;
+                padding: @notyMessageClosablePadding;
             }
         }
         .noty_close {
@@ -87,7 +108,6 @@
             font-weight: bold;
             color: @black;
             opacity: 0.2;
-            text-shadow: 0 1px 0 @white;
             &:hover {
                 opacity: 0.4;
             }
@@ -97,7 +117,14 @@
         }
         &.noty_layout_top {
             // add margin because of fixed top menu
-            top: 40px;
+            top: 38px;
+            width: 700px;
+            left: 50%;
+            margin: 0 0 0 -350px;
+            .border-radius(0 0 10px 10px);
+            .noty_message {
+                padding: @notyLayoutTopMessagePadding;
+            }
         }
 
         &.noty_layout_center, &.noty_layout_topCenter, &.noty_layout_topLeft,
@@ -129,87 +156,28 @@
         }
 
         &.noty_notification {
-            background-color: @notyNotificationBackground;
-            border: 1px solid @notyNotificationBorder;
-            color: @notyNotificationText;
-            &.noty_layout_topLeft, &.noty_layout_topRight,
-            &.noty_layout_bottomLeft, &.noty_layout_bottomRight {
-                .noty_message {
-                    .noty_buttons {
-                        border-color: @notyNotificationBorder;
-                    }
-                }
-            }
+            .notyNotyStyle(@notyNotificationBackground, @notyNotificationText);
         }
 
         &.noty_warning {
-            background-color: @notyWarningBackground;
-            border: 1px solid @notyWarningBorder;
-            color: @notyWarningText;
-            &.noty_layout_topLeft, &.noty_layout_topRight,
-            &.noty_layout_bottomLeft, &.noty_layout_bottomRight {
-                .noty_message {
-                    .noty_buttons {
-                        border-color: @notyWarningBorder;
-                    }
-                }
-            }
+            .notyNotyStyle(@notyWarningBackground, @notyWarningText);
         }
 
         &.noty_alert {
-            background-color: @notyAlertBackground;
-            border: 1px solid @notyAlertBorder;
-            color: @notyAlertText;
-            &.noty_layout_topLeft, &.noty_layout_topRight,
-            &.noty_layout_bottomLeft, &.noty_layout_bottomRight {
-                .noty_message {
-                    .noty_buttons {
-                        border-color: @notyAlertBorder;
-                    }
-                }
-            }
+            .notyNotyStyle(@notyAlertBackground, @notyAlertText);
         }
 
         &.noty_error {
-            background-color: @notyErrorBackground;
-            border: 1px solid @notyErrorText;
-            color: @notyErrorText;
-            &.noty_layout_topLeft, &.noty_layout_topRight,
-            &.noty_layout_bottomLeft, &.noty_layout_bottomRight {
-                .noty_message {
-                    .noty_buttons {
-                        border-color: @notyErrorBorder;
-                    }
-                }
-            }
+            .notyNotyStyle(@notyErrorBackground, @notyErrorText);
         }
 
         &.noty_success {
-            background-color: @notySuccessBackground;
-            border: 1px solid @notySuccessBorder;
-            color: @notySuccessText;
-            &.noty_layout_topLeft, &.noty_layout_topRight,
-            &.noty_layout_bottomLeft, &.noty_layout_bottomRight {
-                .noty_message {
-                    .noty_buttons {
-                        border-color: @notySuccessBorder;
-                    }
-                }
-            }
+            .notyNotyStyle(@notySuccessBackground, @notySuccessText);
+            text-shadow: 0 1px 0 black;
         }
 
         &.noty_information {
-            background-color: @notyInfoBackground;
-            border: 1px solid @notyInfoBorder;
-            color: @notyInfoText;
-            &.noty_layout_topLeft, &.noty_layout_topRight,
-            &.noty_layout_bottomLeft, &.noty_layout_bottomRight {
-                .noty_message {
-                    .noty_buttons {
-                        border-color: @notyInfoBorder;
-                    }
-                }
-            }
+            .notyNotyStyle(@notyInfoBackground, @notyInfoText);
         }
     } //&.@theme_name
 } //.noty_bar

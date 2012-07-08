@@ -1,5 +1,9 @@
 
-/* CORE STYLES */
+@notyLayoutMarginLeft: 20px;
+@notyLayoutMarginTop: 20px;
+@notyLayoutMarginRight: 40px;
+@notyLayoutMarginBottom: 20px;
+@notyContainerWidth: 300px;
 
 /* noty bar */
 .noty_bar {
@@ -61,7 +65,7 @@ ul.noty_cont {
     margin: 0px;
     padding: 0px;
     list-style: none;
-    width: 300px;
+    width: @notyContainerWidth;
     li {
         position: relative;
         float: left;
@@ -69,30 +73,25 @@ ul.noty_cont {
         list-style: none;
         padding: 0px;
         margin: 10px 0 0 0;
-        width: 300px; /* Fix for: http://bugs.jquery.com/ticket/2278 */
+        width: @notyContainerWidth; /* Fix for: http://bugs.jquery.com/ticket/2278 */
     }
     &.noty_layout_topLeft {
-        left: 20px;
-        top: 20px;
+        left: @notyLayoutMarginLeft;
+        top: @notyLayoutMarginTop;
     }
     &.noty_layout_topRight {
-        right: 40px;
-        top: 20px;
+        right: @notyLayoutMarginRight;
+        top: @notyLayoutMarginTop;
         li {
             float:right;
         }
     }
     &.noty_layout_bottomLeft {
-        left: 20px;
-        bottom: 20px;
+        left: @notyLayoutMarginLeft;
+        bottom: @notyLayoutMarginBottom;
     }
     &.noty_layout_bottomRight {
-        right: 40px;
-        bottom: 20px;
-    }
-    &.noty_layout_topRight {
-        li {
-            float: right;
-        }
+        right: @notyLayoutMarginRight;
+        bottom: @notyLayoutMarginBottom;
     }
 }

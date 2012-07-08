@@ -181,19 +181,36 @@
         },
         deleteService:function () {
             var image = this;
-            jConfirm('Är du säker på att du vill ta bort den här bilden?',
-                     'Bekräfta borttagning',
-                 function(r) {
-                    if (r === true) {
-                        image.model.destroy({
-                            error:function() {
-                                var noty_id = noty({
-                                    text: 'Bilden kunde inte tas bort!',
-                                    type: 'error'
-                                });
-                            }
-                        });
+            $.noty.closeAll();
+            noty({
+                text: "Är du säker på att du vill ta bort den här bilden?",
+                buttons: [
+                  {type: 'btn btn-success', text: 'Ja, ta bort den.', click: function($noty) {
+                      service.model.destroy({
+                          success:function() {
+                              vent.trigger('changeModelToEdit', new Service());
+                          },
+                          error:function() {
+                              var noty_id = noty({
+                                  text: "Bilden kunde inte tas bort. Kontrollera anslutningen!",
+                                  type: 'error'
+                              });
+                          }
+                      });
+                      $noty.close();
                     }
+                  },
+                  {type: 'btn btn-danger', text: 'Nej, behåll den.', click: function($noty) {
+                      $noty.close();
+                    }
+                  }
+                  ],
+                type: 'warning',
+                closable: false,
+                timeout: false,
+                layout: 'center',
+                animateOpen: {opacity: 'show'},
+                animateClose: {opacity: 'hide'},
             });
             return false;
         },

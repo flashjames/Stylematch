@@ -101,10 +101,11 @@
         },
         deleteService:function () {
             var service = this;
+            $.noty.closeAll();
             noty({
                 text: "Är du säker på att du vill ta bort den här behandlingen?",
                 buttons: [
-                  {type: 'btn btn-mini btn-success', text: 'Ja', click: function($noty) {
+                  {type: 'btn btn-success', text: 'Ja, ta bort den.', click: function($noty) {
                       service.model.destroy({
                           success:function() {
                               vent.trigger('changeModelToEdit', new Service());
@@ -119,12 +120,15 @@
                       $noty.close();
                     }
                   },
-                  {type: 'btn btn-mini btn-error', text: 'Cancel', click: function($noty) {
+                  {type: 'btn btn-danger', text: 'Nej, behåll den.', click: function($noty) {
                       $noty.close();
                     }
                   }
                   ],
-                closable: false,
+                force: true,
+                type: 'warning',
+                closeButton: true,
+                closable: true,
                 timeout: false,
                 layout: 'center',
                 animateOpen: {opacity: 'show'},

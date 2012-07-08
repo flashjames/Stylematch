@@ -14,7 +14,9 @@ class Command(BaseCommand):
         for check in checks:
             user = check.user
             if check_profile(user.userprofile, create_checks=False):
+                # user is ok, remove from checks
                 logger.debug("Checked %s with command, but no harm is done." % user)
+                check.delete()
             else:
                 # User is no longer approved.
                 # TODO: SEND E-MAIL TO ADMIN

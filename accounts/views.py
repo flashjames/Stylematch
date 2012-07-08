@@ -386,29 +386,9 @@ class EditImagesView(LoginRequiredMixin, CreateView):
         form.instance.user = self.request.user
         return form
 
-    def get_profile_image(self, user):
-        try:
-            userprofile = user.userprofile
-
-            # display cropped profile image if there's any
-            if userprofile.profile_image_cropped:
-                profile_image = userprofile.profile_image_cropped
-            else:
-                profile_image = userprofile.profile_image_uncropped
-
-            profile_image = profile_image.get_image_url()
-        except:
-            profile_image = os.path.join(
-                                settings.STATIC_URL,
-                                'img/default_image_profile_not_logged_in.jpg')
-
-        return profile_image
-
     def get_context_data(self, **kwargs):
         context = super(EditImagesView, self).get_context_data(**kwargs)
-        context['profile_image_url'] = self.get_profile_image(
-                                                self.request.user.id
-                                                )
+        context['profile'] = self.request.user.userprofile
 
         context['crop_coords_form'] = CropCoordsForm()
 

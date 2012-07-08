@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load index_extras %}
+{% load thumbnail %}
 {% load url from future %}
 
 {% block html-head %}
@@ -112,7 +113,15 @@
 		<div style="position:absolute;height:230px;background-color:rgba(0,0,0,0.4);" class="edit-profile-image-overlay">
 		  <h3 style="padding-top:150px;color:white;font-weight:bold;"> Tryck här för att byta profilbild</h3>
 		</div>
-                <img src="{{ profile_image_url }}">
+              {% with profile|profile_image_thumbnail:user.is_authenticated as pit %}
+              {% if pit|get_class != 'ImageFieldFile' %}
+              <img src="{{ pit }}" name="profile-image">
+              {% else %}
+              {% thumbnail pit "220x220" cropped="center" as im %}
+              <img src="{{ im.url }}" name="profile-image">
+              {% endthumbnail %}
+              {% endif %}
+              {% endwith %}
 		
 		
 		

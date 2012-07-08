@@ -93,9 +93,6 @@ def check_profile(sender, dirty_fields={}, **kwargs):
             if created:
                 logger.debug("Created new ScheduledCheck: %s" % sc.user)
         return False
-
-    # remove any entry in scheduledchecks
-    ScheduledCheck.objects.delete(user=userprofile.user)
     return True
 approved_user_criteria_changed.connect(check_profile)
 

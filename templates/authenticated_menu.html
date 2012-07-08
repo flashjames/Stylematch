@@ -29,10 +29,26 @@
         <ul class="nav">
           {% url 'dashboard' as pdr %}<li class="{% active request pdr %}"><a href="{{ pdr }}">Översikt</a></li>
           {% url 'profile_display_with_profile_url' slug=user.get_profile.profile_url as pdr %}<li class="{% active request pdr %}"><a href="{{ pdr }}">Visa profil</a></li>
-          {% url 'profile_edit' as pe              %}<li class="{% active request pe  %}"><a href="{{ pe  }}">Ändra profil</a></li>
-          {% url 'edit_images' as ei               %}<li class="{% active request ei  %}"><a href="{{ ei  }}">Lägg upp bilder</a></li>
-          {% url 'profiles_edit_services' as pes   %}<li class="{% active request pes %}"><a href="{{ pes }}">Förändra prislista</a></li>
-          {% url 'profiles_add_hours' as pah       %}<li class="{% active request pah %}"><a href="{{ pah }}">Förändra öppettider</a></li>
+          
+          
+          {% url 'profile_edit' as pe %} {% url 'edit_images' as ei %}{% url 'profiles_edit_services' as pes %}{% url 'profiles_add_hours' as pah %}
+          <li class="dropdown">
+    <a href="#"
+          class="dropdown-toggle"
+          data-toggle="dropdown">
+          Förändra Profil
+          <b class="caret"></b>
+    </a>
+    <ul class="dropdown-menu">
+          <li class="{% active request pe  %}"><a href="{{ pe  }}">Förändra Kontaktinformation</a></li>
+          <li class="{% active request ei  %}"><a href="{{ ei  }}">Lägg upp bilder</a></li>
+          <li class="{% active request pes %}"><a href="{{ pes }}">Förändra prislista</a></li>
+          <li class="{% active request pah %}"><a href="{{ pah }}">Förändra öppettider</a></li>
+    </ul>
+  </li>
+          
+          
+
         </ul>
       </div>
     </div>

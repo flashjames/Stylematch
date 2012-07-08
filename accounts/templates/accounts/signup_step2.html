@@ -14,25 +14,20 @@
   <div class="span2 offset2">
       <h3>Nuvarande profilbild</h3>
       <div id="profile-image">
-	<img width="140" src="{{ STATIC_URL }}img/default_image_profile_not_logged_in.jpg"/>
+	<a data-toggle="modal" href="#image-upload-dialog-profileimage"><img width="140" src="{{ STATIC_URL }}img/default_image_profile_not_logged_in.jpg"/></a>
       </div>
   </div>
 
   <div class="span6 offset1">
     <h3>Ladda upp en bild</h3>
-    <p>Du kan ladda upp en JPG eller PNG fil (max filstorlek är 10 MB)</p>
     <form class="form-horizontal" method="post" enctype="multipart/form-data" action="">
-
       {% csrf_token %}
-      {{ form.file.errors }}
-      <input type="file" name="file" id="id_file">
-      {{ form.non_field_errors }}
-      {{ form.docfile.help_text }}
-      {{ form.docfile.label_tag }}
-      {{ form.docfile.errors }}
-      {{ form.docfile }}
-
-      <div id="signup-step2-buttons">
+      <div class="control-group{% if form.file.errors %} error {% endif %}">
+	<label class="" for="inputWarning">Du kan ladda upp en JPG eller PNG fil</label>
+	  {{ form.file }}
+	  <span class="help-inline">{{ form.file.errors.as_text }}</span>
+      </div>
+      <div>
 	<input type="submit" value="Ladda upp profilbild" class="btn btn-primary btn-large" /><span> eller <a class="" href="{% url 'profile_display_redirect' %}">Fortsätt utan profilbild</a></span>
       </div>
     </form>

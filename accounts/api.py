@@ -155,6 +155,33 @@ class PictureResource(ModelResource):
         max_limit = 0
         validation = FormValidation(form_class=PictureForm)
 
+class InspirationResource(ModelResource):
+    def dehydrate(self, bundle):
+
+        bundle.data['first_name'] = bundle.obj.user.first_name
+        bundle.data['last_name'] = bundle.obj.user.last_name
+        bundle.data['profile_url'] = bundle.obj.user.userprofile.profile_url
+
+        # add client side image url to each Picture object
+        # TODO: Fix it with sorl-thumbnail
+        bundle.data['image_url'] = get_image_url(bundle.data['filename'])
+        return bundle
+
+    def get_queryset(self):
+        users = UserProfile.objects.filter(visible=True)
+        images = GalleryImage.objects.filter(user__in=[i.pk for i in users],
+                                             display_on_profile=True)
+        return images.order_by('-upload_date')
+
+    class Meta:
+        resource_name = 'inspiration'
+        # visible
+        # GalleryImage.user.userprofile.
+        queryset = GalleryImage.objects.all()
+        excludes = ['file', 'user',]
+        limit = 50
+        max_limit = 0
+
 
 class ProfileResource(ModelResource):
     """

@@ -50,11 +50,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         task = { 'url': reverse('profiles_add_hours'),
                  'text': u'Skriv in dina öppettider',
                  'passed': True }
-        try:
-            oh = userprofile.openhours
-            task['passed'] = oh.reviewed
-        except OpenHours.DoesNotExist:
-            task['passed'] = False
+        task['passed'] = userprofile.user.openhours.reviewed
         tasks_to_be_done.append(task)
 
         # Add services

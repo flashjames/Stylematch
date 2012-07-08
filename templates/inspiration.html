@@ -15,6 +15,7 @@
                 { 'id': id,
                   'csrfmiddlewaretoken': '{{ csrf_token }}' },
                 function(data) {
+                    $('#like-' + counter).text(data);
                     $('#like-' + counter + " .counter").text(data);
                 }
             );
@@ -35,8 +36,8 @@
 {% endblock %}
 {% block content %}
  <div class="row main-content">
-   <div class="span8 offset2">
-     <div style="margin: 0 auto; width:700px;">
+   <div class="span10 offset1">
+     <div style="margin: 0 auto;">
        <ul class="inspiration-list">
 	 {% include "inspiration_images_snippet.html" with images=pictures %}
        </ul>

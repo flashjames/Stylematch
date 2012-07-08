@@ -2,47 +2,58 @@
 
 .inspiration-images {
     margin: 0 auto;
-    max-width: 400px;
+    xmax-width: 400px;
 }
 
 .inspiration-list {
     padding: 0;
     list-style-type: none;
+    .soften {
+	margin:0px 0px 28px 0px;
+	position:relative;
+	left:-50px;
+    }
 }
-
-.inspiration-item {
-    margin-bottom: 50px;
-}
-
  
 .leftSidebar {
     float: left;
-    width: 110px;
-    .profile-image {
-        width: 50px;
-        height: 50px;
-        display: block;
-    }
+    xwidth: 110px;
+    margin-right:25px;
+    
 }
 
-.image {
-    margin: 0 auto;
-    width: 400px;
+.profile-image-inspiration {
+	display: block;
+	margin-bottom:25px;
+	img {
+	    width: 50px;
+	    height: 50px;
+	    display: block;
+	}
+    }
+
+.inspiration-image {
+    margin-bottom:28px;
     display: inline-block;
+    img {
+	max-width:560px;
+    }
 }
 .rightSidebar {
     display: inline-block;
+    margin-left:8px;
 }
 .comment-div {
     text-align: center;
     width: 100%;
 }
 .comment {
+    display:block;
     font-family: Helvetica, tahoma, verdana;
     font-size: 14px;
     cursor: pointer;
-    color: #cc2222;
-    margin: 10px 30px 0 0;
+    color: #3B5998;
+    xmargin: 10px 30px 0 0;
     &:hover {
         color: #ff0000;
     }
@@ -51,11 +62,9 @@
 .fb {
     text-align: center;
 }
-.fb-like {
-    display: block;
-    margin-bottom: 5px;
-}
+
 .pin-it-button {
+    margin-top:2px;
     display: block;
 }
 
@@ -68,6 +77,40 @@
     cursor: pointer;
     font-size: 14px;
   }
+}
+
+.hype-box {
+    width:68px;
+}
+
+.common-hype {
+    color:black;
+    background-color:#CCC9C0;
+    p {
+	text-align:center;
+	font-family:Arial;
+	font-weight: bold;
+    }    
+}
+
+.hype-counter {
+    .common-hype;
+    height:42px;
+    margin-bottom:2px;
+    p {
+	padding-top:14px;
+	font-size:25px;
+    }
+    
+}
+
+.hype-button {
+    .common-hype;
+    height:22px;
+    cursor: pointer;
+    p {
+	padding-top:3px;
+    }
 }
 
 /* END INSPIRATION PAGE */

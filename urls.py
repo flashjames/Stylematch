@@ -71,7 +71,7 @@ urlpatterns += patterns(
             name='registration_register'),
     url(r'accounts/register/complete/',
             redirect_to,
-            {'url': '/accounts/signup-step1'},
+            {'url': '/konto/registrering-steg1/'},
             'registration_complete'),
     # login/logout/password-management urls
     (r'',

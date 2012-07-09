@@ -11,7 +11,7 @@
 	 	<li><a href="/accounts/register">Gå med som Frisör</a></li>
 	 	<li><a href="{% url 'about_page' %}">Om Oss</a></li>
 	 	<li><a href="http://blogg.stylematch.se/">Blogg</a></li>
-	 	<li id="press"><a href="#press" class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart" >Press</a></li>
+	 	<li id="press"><a href="{% url 'press_page' %}" class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart" >Press</a></li>
 	 	<li id="jobb"><a href="#jobb" class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart">Jobb</a></li>
 	 	</ul>
  	</div> 	
@@ -41,7 +41,7 @@ hej@stylematch.se</a></li>
 		 	</ul>
 	 		<ul>
 		 		<li class="title">Socialt</li>
-		 		<li class="social"><a href="http://www.facebook.com/StyleMatch" rel="nofollow"><div><img src="{{ STATIC_URL }}img/glyphicons/png/glyphicons_390_facebook.png"/><span>Facebook</span></div></a></li>
+		 		<li class="social"><a href="http://www.facebook.com/StyleMatch.SE" rel="nofollow"><div><img src="{{ STATIC_URL }}img/glyphicons/png/glyphicons_390_facebook.png"/><span>Facebook</span></div></a></li>
 		 		<li class="social"><a href="http://www.twitter.com/stylematch_SE" rel="nofollow"><div><img src="{{ STATIC_URL }}img/glyphicons/png/glyphicons_391_twitter_t.png"/><span>Twitter</span></div></a></li>
 		 	</ul>
 	</div>

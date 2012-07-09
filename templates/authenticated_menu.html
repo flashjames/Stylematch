@@ -7,7 +7,7 @@
     <div class="container">
       <a class="brand" href="/"><img src="{{STATIC_URL}}img/logo.png"/></a>
       <div class="profile-dropdown dropdown pull-right">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+        <a class="dropdown-toggle dropdown" data-toggle="dropdown" href="#">
             {% with user.get_profile|profile_image_thumbnail as pit %}
             {% if pit|get_class != 'ImageFieldFile' %}
             <img src="{{ pit }}" />
@@ -17,7 +17,8 @@
             {% endthumbnail %}
             {% endif %}
             {% endwith %}
-            <span class="profile-name">{{ user.first_name }} {{ user.last_name }}</span>
+            <span class="profile-name">{{ user.first_name }} {{ user.last_name }}<b class="caret"></b></span> 
+           
         </a>
         <ul class="dropdown-menu">
           <li><a href="{% url 'edit-account-settings' %}">Kontoinställningar</a></li>

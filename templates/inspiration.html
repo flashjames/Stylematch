@@ -30,10 +30,10 @@
 
 <!-- Underscore.js Templates -->
 <script type="text/template" id="tpl-inspiration-image-list-item">
-  <% console.log(first_inspiration_image); if(!first_inspiration_image) { %>
+  <% if(!first_inspiration_image) { %>
   <hr class="soften">
   <% } %>
-  <div class="mainImageContent">
+  <div>
     <div class="leftSidebar">
       <div class="hype-box">
         <div class="counter">
@@ -47,7 +47,7 @@
     </div>
 
     <div class="inspiration-image">
-      <a href="<%= image_url %>" class="inspiration-images">
+      <a href="<%= image_url %>" class="inspiration-images cboxElement">
         <img class="inspiration-images" src="<%= image_url %>"
              title="<%= comment %>" />
       </a>
@@ -90,10 +90,6 @@
     <div style="margin: 0 auto;">
       <div id="inspiration-list">
     </div>
-    <script>
-      $('a.inspiration-images').colorbox({rel:'group2', transition:"none", width:"75%", height:"90%"});
-    </script>
-
     <div id="fb-root"></div>
   </div>
 </div>

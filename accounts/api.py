@@ -166,6 +166,22 @@ class InspirationResource(ModelResource):
         # TODO: Fix it with sorl-thumbnail
         bundle.data['image_url'] = get_image_url(bundle.data['filename'])
         return bundle
+    
+    def build_filters(self, filters=None):
+        if filters is None:
+            filters = QueryDict('')
+
+        # get all userprofiles objects
+        users = UserProfile.objects.filter(visible=True)
+        # create a filter for those profiles based on pk
+        filter = {'user__in' : [i.pk for i in users]}
+
+        # build the rest of the filters
+        orm = super(InspirationResource, self).build_filters(filters)
+        # update the filter with our userprofiles
+        orm.update(filter)
+        return orm
+
 
     def get_queryset(self):
         users = UserProfile.objects.filter(visible=True)

@@ -101,7 +101,7 @@
   <input  type="password" name="password" value="" id="password" placeholder="Lösenord">
   <input type="submit" value="Logga in" class="btn btn-info"/>
   <a  href="{% url 'auth_password_reset' %}">Glömt lösenord?</a>
-  <a href="#" data-toggle="collapse" data-target="#loginCollapse"><img class="pull-right" src="{{ STATIC_URL }}/img/closeButton.png"/></a>
+  <a href="#" data-toggle="collapse" data-target="#loginCollapse"><img class="pull-right" src="{{ STATIC_URL }}img/closeButton.png"/></a>
   <input type="hidden" name="next" value="{{ next|escape }}" />
 </form>
                 </div></div>

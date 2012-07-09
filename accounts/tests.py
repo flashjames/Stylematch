@@ -25,21 +25,21 @@ class TestTools(TestCase):
         self.assertEqual("59:59", tools.format_minutes_to_hhmm(3599))
 
     def test_format_minutes_to_pretty_format(self):
-        self.assertEqual("1 minut",
+        self.assertEqual("1 min",
                     tools.format_minutes_to_pretty_format(1))
-        self.assertEqual("2 minuter",
+        self.assertEqual("2 min",
                     tools.format_minutes_to_pretty_format(2))
         self.assertEqual("1 timme",
                     tools.format_minutes_to_pretty_format(60))
-        self.assertEqual("1 timme 1 minut",
+        self.assertEqual("1 timme 1 min",
                     tools.format_minutes_to_pretty_format(61))
         self.assertEqual("2 timmar",
                     tools.format_minutes_to_pretty_format(120))
-        self.assertEqual("2 timmar 1 minut",
+        self.assertEqual("2 timmar 1 min",
                     tools.format_minutes_to_pretty_format(121))
-        self.assertEqual("2 timmar 2 minuter",
+        self.assertEqual("2 timmar 2 min",
                     tools.format_minutes_to_pretty_format(122))
-        self.assertEqual("23 timmar 59 minuter",
+        self.assertEqual("23 timmar 59 min",
                     tools.format_minutes_to_pretty_format(1439))
 
     def test_list_with_time_interval(self):
@@ -62,14 +62,14 @@ class TestTools(TestCase):
                 tools.list_with_time_interval(
                     stop=75,
                     interval=15))
-        self.assertEqual([(30, "30 minuter"),
-                          (45, "45 minuter"),
+        self.assertEqual([(30, "30 min"),
+                          (45, "45 min"),
                           (60, "1 timme"),
-                          (75, "1 timme 15 minuter"),
-                          (90, "1 timme 30 minuter"),
-                          (105, "1 timme 45 minuter"),
+                          (75, "1 timme 15 min"),
+                          (90, "1 timme 30 min"),
+                          (105, "1 timme 45 min"),
                           (120, "2 timmar"),
-                          (135, "2 timmar 15 minuter")],
+                          (135, "2 timmar 15 min")],
                 tools.list_with_time_interval(
                     start=30,
                     stop=140,

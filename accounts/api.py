@@ -182,19 +182,12 @@ class InspirationResource(ModelResource):
         orm.update(filter)
         return orm
 
-
-    def get_queryset(self):
-        users = UserProfile.objects.filter(visible=True)
-        images = GalleryImage.objects.filter(user__in=[i.pk for i in users],
-                                             display_on_profile=True)
-        return images.order_by('-upload_date')
-
     class Meta:
         resource_name = 'inspiration'
-        # visible
-        # GalleryImage.user.userprofile.
-        queryset = GalleryImage.objects.all()
+        queryset = GalleryImage.objects.filter(display_on_profile=True)
+        ordering = ['-upload_date']
         excludes = ['file', 'user',]
+        allowed_methods = ['get'] 
         limit = 50
         max_limit = 0
 

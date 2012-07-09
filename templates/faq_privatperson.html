@@ -1,10 +1,100 @@
 {% extends "base.html" %}
 {% load url from future %}
 
-{% block title %}Vanliga frågor för privatpersoner{% endblock %}
+{% block html-head %}
+<style>
+  h4{
+  font-size: 18px;
+  margin-bottom:4px;
+  margin-top:15px;
+  font-weight:300;
+  }
+  p{
+  margin-left:20px;
+  }
+</style>
+{% endblock %}
+
+{% block title %}Vanliga frågor för frisörer{% endblock %}
 
 {% block content %}
+<div class="faq">
+  <h1>Vanliga frågor för privatpersoner</h1>
 
-<h1> Vanliga frågor för privatpersoner</h1>
+  <div class="span7">
+    <ol>
+      <li><a href="#question1">Hur funkar StyleMatch?</a></li>
+      <li><a href="#question2">Varför ska jag använda StyleMatch?</a></li>
+      <li><a href="#question3">Kostar det något?</a></li>
+      <li><a href="#question4">Måste jag vara medlem för att kunna använda StyleMatch?</a></li>
+      <li><a href="#question5">Är frisörerna utbildade?</a></li>
+      <li><a href="#question6">Kan jag bjuda in min frisör till StyleMatch?</a></li>
+      <li><a href="#question7">Hur hittar jag enklast till StyleMatch?</a></li>
+      <li><a href="#question8">Kan jag boka en frisör online på StyleMatch?</a></li>
+      <li><a href="#question9">Vad är det för bilder som visas på “INSPIRATIONSSIDAN”?</a></li>
+      <li><a href="#question10">Jag vill samarbeta med StyleMatch!</a></li>
+      <li><a href="#question11">Vilka står bakom StyleMatch?</a></li>
+    </ol>
+  </div>
+
+
+  <div class="span7">
+    <ol>
+
+      <li><h4 id="question1">Hur funkar StyleMatch?</h4></li>
+      <p>1. Gå in på StyleMatch.se<br />
+        2. Välj sedan mellan att använda “Hitta frisör” eller “Ge mig inspiration”<br />
+        3. Hitta en frisör eller bild som passar dig och din stil<br />
+        4. Klicka på frisörens profil<br />
+        5. Se vart frisören arbetar, vilka behandlingar som erbjuds samt vilka bilder som finns på profilen<br />
+        5. Ring och boka en tid direkt!<br />
+      </p>
+
+      <li><h4 id="question2">Varför ska jag använda StyleMatch?</h4></li>
+      <p>StyleMatch är en tjänst där du som konsument snabbt och enkelt hittar en frisör som passar just dig och din stil. Med hjälp av tjänsten kan du jämföra priser, kvalité, personlighet och frisörens kreativitet.
+
+        Förutom att hitta en passande frisör kan du även hitta inspiration i det stora urval av bilder som alla våra frisörer delar med sig av.
+      </p>
+
+      <li><h4 id="question3">Kostar det något?</h4></li>
+      <p>För dig som användare av tjänsten kostar det ingenting. Du kan alltså ta del av information om frisörer, erbjudanden och inspirationsbilder helt utan kostnad!
+      </p>
+
+      <li><h4 id="question4">Måste jag vara medlem för att kunna använda StyleMatch?</h4></li>
+      <p>Du behöver inte vara medlem eller skriva in några uppgifter för att få ta del av StyleMatch’s alla möjligheter.
+      </p>
+
+      <li><h4 id="question5">Är frisörerna utbildade?</h4></li>
+      <p>Alla frisörer på StyleMatch innehar ett gesällbrev vilket betyder att man är utbildad enligt bransch praxis.
+      </p>
+
+      <li><h4 id="question6">Kan jag bjuda in min frisör till StyleMatch?</h4></li>
+      <p>
+        Självklart kan du bjuda in din frisör till att använda tjänsten. Om din frisör har några frågor angående tjänsten så be då frisören att kontakta oss på kontakt@stylematch.se
+      </p>
+
+      <li><h4 id="question7">Hur hittar jag enklast till StyleMatch?</h4></li>
+      <p>Det enklaste sättet att hitta till StyleMatch är att skriva in “www.stylematch.se” i din webbläsares adressfält. Du kan även använda googles sökmotor, www.google.se, där det räcker med att skriva in “Stylematch” och sedan välja det översta resultatet!
+      </p>
+
+      <li><h4 id="question8">Kan jag boka en frisör online på StyleMatch?</h4></li>
+      <p>I dagsläget kan du endast använda de telefonnummer som kommer fram när du klickar på en frisörs “BOKA MIG knapp”. Är du intresserad av att kunna boka din frisör online så ber vi dig trycka på denna knapp → “JAG VILL BOKA FRISÖR ONLINE”. Genom att klicka ger du oss bättre förutsättningar att kunna utveckla onlinebokning för vår tjänst, tack!
+      </p>
+
+      <li><h4 id="question9">Vad är det för bilder som visas på “INSPIRATIONSSIDAN”?</h4></li>
+      <p>Under denna flik samlas alla bilder som frisörerna själva lägger upp på sina profiler. På så sätt blir det enklare för dig att finna inspiration och en frisör som passar den stil du söker inför nästa gång du ska klippa dig. Vem vet, kanske är det din frisyr på nästa bild?
+      </p>
+
+      <li><h4 id="question10">Jag vill samarbeta med StyleMatch!</h4></li>
+      <p>StyleMatch är alltid intresserade av att finna nya väger som låter tjänsten utvecklas till det bättre! Har du en idé så tveka inte att kontakta “Martin Andersson” via länken.
+      </p>
+      <li><h4 id="question11">Vilka står bakom StyleMatch?</h4></li>
+      <p>Bakom tjänsten står Avizera AB med org no 556871-7689, företaget innehar F-skatt. Du  kontaktar oss enklast genom att klicka på “KONTAKTA OSS”. Företagets postadressen är Rydsvägen 8A, 2TR, 584 31 Linköping.
+      </p>
+
+
+    </ol>
+  </div>
+</div>
 
 {% endblock %}

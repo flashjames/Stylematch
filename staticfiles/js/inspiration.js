@@ -22,14 +22,11 @@
 	    var first_inspiration_image = true;
             // render each model object as a li object
             _.each(this.model.models, function (inspiration_image) {
-		console.log("aye",inspiration_image);
 		inspiration_image.set({first_inspiration_image: false}, {silent: true});
-		console.log("here",inspiration_image);
 		if(first_inspiration_image) {
 		    inspiration_image.set({first_inspiration_image: true}, {silent: true});
 		    first_inspiration_image = false;
 		}
-
                 $(this.el).append(new InspirationListItemView({model:inspiration_image}).render().el);
             }, this);
 
@@ -85,10 +82,8 @@
         initialize:function () {
             //Glue code, that initialize's all views and models
             this.inspirationList = new InspirationCollection();
-
             this.inspirationList.fetch({
                 success: function(collection, response) {
-		    console.log(collection);
                     if(!response) {
                         var noty_id = noty({
                             text: 'Något gick fel, inga bilder kunde hämtas!',
@@ -102,7 +97,6 @@
         events:{
         },
         render:function (eventName) {
-            //$(this.el).html(this.template(this.model.toJSON()));
             return this;
         },
         close:function () {
@@ -110,7 +104,6 @@
             $(this.el).empty();
         }
     });
-    console.log("hi");
     this.InspirationView = new InspirationView();
 
 

@@ -76,8 +76,8 @@ def backup_database():
     sudo("mysqldump -u root -p django_stylematch > " + filename)
 
 
-def migrate(app='accounts'):
-    manage('migrate ' + app)
+def migrate():
+    manage('migrate')
 
 
 # Server commands
@@ -107,13 +107,13 @@ def revert():
         restart_gunicorn()
 
 
-def deploy_db_change(app=''):
+def deploy_db_change():
     test()
-    install_requirements()
     backup_database()
-    git_pull()
+    git_pull(branch=branch)
+    install_requirements()
     update_git_submodules()
-    migrate(app)
+    migrate()
     compile_less()
     collectstatic()
     restart_gunicorn()
@@ -121,8 +121,8 @@ def deploy_db_change(app=''):
 
 def deploy(branch='master'):
     test()
-    install_requirements()
     git_pull(branch=branch)
+    install_requirements()
     update_git_submodules()
     compile_less()
     collectstatic()

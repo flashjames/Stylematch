@@ -5,14 +5,14 @@
 <div class="authed navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="/">StyleMatch</a>
+      <a class="brand" href="/"><img src="{{STATIC_URL}}img/logo.png"/></a>
       <div class="profile-dropdown dropdown pull-right">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             {% with user.get_profile|profile_image_thumbnail as pit %}
             {% if pit|get_class != 'ImageFieldFile' %}
             <img src="{{ pit }}" />
             {% else %}
-            {% thumbnail user.get_profile|profile_image_thumbnail:user.is_authenticated "36x36" crop="center" as im %}
+            {% thumbnail user.get_profile|profile_image_thumbnail:user.is_authenticated "29x29" crop="center" as im %}
             <img src="{{ im.url }}" />
             {% endthumbnail %}
             {% endif %}

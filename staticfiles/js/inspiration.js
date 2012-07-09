@@ -44,6 +44,11 @@
         },
         render:function (eventName) {
             $(this.el).html(this.template(this.model.toJSON()));
+	    
+	    // make lightbox work for the newly created image
+	    var image_a = $(this.el).find("a.inspiration-images");
+	    image_a.colorbox({rel:'group2', transition:"none", width:"75%", height:"90%"});
+	    //
             return this;
         },
         events:{

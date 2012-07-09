@@ -61,6 +61,10 @@ urlpatterns += patterns(
             'index.views.logout_page',
             {},
             'logout'),
+    (r'^utloggad/$',
+            TemplateView.as_view(template_name="logged_out.html"),
+            {},
+            'logged_out_page'),
     # urls to connect with social media accountsm for example facebook
     url(r'',
             include('social_auth.urls')),

@@ -245,7 +245,7 @@ def logout_page(request):
     Log users out and re-direct them to the main page.
     """
     auth.logout(request)
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect('/utloggad')
 
 
 def error500(request):

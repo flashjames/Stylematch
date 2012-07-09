@@ -77,7 +77,6 @@
 
 .noty_bar {
     &.noty_theme {
-        z-index: 1000; // under bootstrap menu
         font-size: @notyFontSize;
         line-height: 18px;
         font-family: @notyFontFamily;
@@ -117,6 +116,7 @@
         }
         &.noty_layout_top {
             // add margin because of fixed top menu
+            z-index: 1000; // under bootstrap menu
             top: 38px;
             width: 700px;
             left: 50%;

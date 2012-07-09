@@ -144,27 +144,5 @@
   {# To keep the larger header on the front-page #}
   <div class="content-background" style="margin-top:210px;">
 
-  {% if messages %}
-
-  {% for message in messages %}
-    {% ifequal message.extra_tags "modal" %}
-    <script type="text/javascript">
-        var noty_id = noty({
-            text: "{{ message }}",
-            type: "{{ message }}",
-            modal: true,
-        });
-    </script>
-    {% else %}
-    {% endifequal %}
-    {% comment %}
-<script src="{{ STATIC_URL }}js/bootstrap-modal.js" type="text/javascript"></script>
-<script type="text/javascript">
-  $('#myModal').modal({});
-</script>
-{% endcomment %}
-  {% endfor %}
-
-  {% endif %}
     {% endblock %}
 

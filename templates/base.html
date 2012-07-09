@@ -141,7 +141,35 @@
     {% block footer %}{% include 'base_footer.html' %} {% endblock %}
 
     {% block javascript-block %}
-    {% endblock %}
+  {% if messages %}
+
+  {% for message in messages %}
+    {% ifequal message.extra_tags "modal" %}
+    <script type="text/javascript">
+        var noty_id = noty({
+            text: "{{ message }}",
+            type: "{{ message.level|repr }}",
+            layout: "center",
+            timeout: 0,
+            animateOpen: {opacity: 'show'},
+            animateClose: {opacity: 'hide'},
+            closeButton: true,
+            closeOnSelfClick: false,
+            modal: true,
+        });
+    </script>
+    {% else %}
+    <script type="text/javascript">
+        var noty_id = noty({
+            text: "{{ message }}",
+            type: "{{ message.level|repr }}",
+        });
+    </script>
+    {% endifequal %}
+  {% endfor %}
+
+  {% endif %}
+	{% endblock %}{# javascript-block #}
 
     {# GOOGLE ANALYTICS #}
     <script type="text/javascript">

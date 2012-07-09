@@ -7,6 +7,7 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.contrib import messages
 from django.http import Http404
 from django.utils.translation import ugettext as _
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -279,21 +280,25 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
     template_name = "profiles/profile_edit.html"
     form_class = UserProfileForm
 
+    def get_success_url(self):
+        return reverse('profile_edit')
+
     def form_valid(self, form):
         """
         Needs to be overridden because regular form_valid returns
         a HttpRedirectResponse() which cannot take context data
         """
         self.object = form.save()
-        return self.render_to_response(self.get_context_data(form=form,
-                                                             valid=True))
+        messages.success(self.request, "Profilen uppdaterades!")
+        return super(EditProfileView, self).form_valid(form)
 
     def form_invalid(self, form):
         """
         Passes 'invalid' context variable
         """
-        return self.render_to_response(self.get_context_data(form=form,
-                                                             invalid=True))
+        messages.error(self.request, "Oops! Något gick fel. Kontrollera "
+                                     "att alla fält är korrekt ifyllda.")
+        return super(EditProfileView, self).form_invalid(form)
 
     def get_form(self, form_class):
         """
@@ -304,13 +309,6 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user.userprofile
-
-    def get_context_data(self, **kwargs):
-        context = super(EditProfileView, self).get_context_data(**kwargs)
-        context['update_success'] = "Uppdateringen lyckades!"
-        context['update_failure'] = ("Oops! Något gick fel. Kontrollera att "
-                                     "alla fält är korrekt ifyllda.")
-        return context
 
 
 class ServicesView(LoginRequiredMixin, TemplateView):
@@ -337,13 +335,18 @@ class OpenHoursView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         """
-        Passes 'valid' context variable
+        Sets reviewed if not already set
         """
         if not self.object.reviewed:
             self.object.reviewed = True
             self.object.save()
-        return self.render_to_response(self.get_context_data(form=form,
-                                                             valid=True))
+        messages.success(self.request, "Uppdateringen lyckades!")
+        return super(OpenHoursView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Oops! Något gick fel. Kontrollera "
+                                     "att alla fält är korrekt ifyllda.")
+        return super(OpenHoursView, self).form_invalid(form)
 
     def get_success_url(self):
         return reverse('profiles_add_hours')
@@ -351,13 +354,6 @@ class OpenHoursView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         obj = OpenHours.objects.get(user__exact=self.request.user.id)
         return obj
-
-    def get_context_data(self, **kwargs):
-        context = super(OpenHoursView, self).get_context_data(**kwargs)
-        context['update_success'] = "Uppdateringen lyckades!"
-        context['update_failure'] = ("Oops! Något gick fel. Kontrollera att "
-                                     "alla fält är korrekt ifyllda.")
-        return context
 
 
 class EditImagesView(LoginRequiredMixin, CreateView):
@@ -375,11 +371,8 @@ class EditImagesView(LoginRequiredMixin, CreateView):
         return reverse('edit_images')
 
     def form_invalid(self, form):
-        """
-        Passes 'invalid' context variable
-        """
-        return self.render_to_response(self.get_context_data(form=form,
-                                                             invalid=True))
+        messages.error(self.request, form._errors['file'][0])
+        return super(EditImagesView, self).form_invalid(form)
 
     def get_form(self, form_class):
         form = super(EditImagesView, self).get_form(form_class)
@@ -391,12 +384,6 @@ class EditImagesView(LoginRequiredMixin, CreateView):
         context['profile'] = self.request.user.userprofile
 
         context['crop_coords_form'] = CropCoordsForm()
-
-        context['update_success'] = "Uppladdningen lyckades!"
-        try:
-            context['update_failure'] = kwargs['form']._errors['file']
-        except:
-            context['update_failure'] = ""
 
         return context
 
@@ -449,45 +436,9 @@ class EditImagesView(LoginRequiredMixin, CreateView):
 
         self.object.save()
         form.save_m2m()
-        
-        # Can't user super().form_valid(**kwargs) since form_valid returns
-        # a HttpRedirectResponse() which cannot take context data
-        return self.render_to_response(self.get_context_data(form=form,
-                                                             valid=True))
 
-class SaveProfileImageView(EditImagesView):
-    form_class = ProfileImageForm
-
-    # Called when we're sure all fields in the form are valid
-    def form_valid(self, form):
-        image = self.request.FILES.get('file')
-        filename = get_unique_filename(image.name)
-
-        # add data to form fields that will be saved to db
-        self.object = form.save(commit=False)
-          
-        # replace original image, with a resized version
-        self.object.file._file = self.resize_image(image)
-        
-        self.object.user = self.request.user
-        self.object.filename = filename
-
-        self.object.save()
-        form.save_m2m()
-
-        current_userprofile = self.request.user.userprofile
-        # remove old uncropped profile image
-        if current_userprofile.profile_image_uncropped:
-            current_userprofile.profile_image_uncropped.delete()
-        
-        # update UserProfile foreign key, to point at new uncropped profile image
-        current_userprofile.profile_image_uncropped = self.object
-        current_userprofile.save()
-        
-        # Can't user super().form_valid(**kwargs) since form_valid returns
-        # a HttpRedirectResponse() which cannot take context data
-        return self.render_to_response(self.get_context_data(form=form,
-                                                             valid=True))
+        messages.success(self.request, "Uppladdningen lyckades!")
+        return super(EditImagesView, self).form_valid(form)
 
 
 class SaveProfileImageView(EditImagesView):
@@ -533,6 +484,7 @@ class SaveProfileImageView(EditImagesView):
         current_userprofile.profile_image_uncropped = self.object
         current_userprofile.save()
 
+        messages.success(self.request, "Uppladdningen lyckades!")
         return HttpResponseRedirect(self.get_success_url())
 
 

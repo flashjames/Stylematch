@@ -15,17 +15,29 @@
 }
 
 .search-city-about-stylematch {
-    background-color: lightblue;
     width: 286px;
     height: 250px;
     margin: 10px;
     padding: 5px;
-    background-color: grey;
+    background-color: @background-color-blocks;
     color: black;
-    .box-shadow(4px 4px 6px -2px #000);
-    .border-radius(2px);
+    .box-shadow(3px 3px 6px -2px #000);
+    .border-radius(4px);
+    .text-inside {
+    	width:286px;
+	    height:200px;
+	    overflow:auto;
+    }
+    span{
+    	font-size:16px;
+    	font-weight:100;
+    }
+    h1 {
+    	font-size:14px;
+    	margin-bottom:0px;
+    }
     h2, h3 {
-        font-size: 16px;
+        font-size: 14px;
         color: white;
     }
     li {
@@ -78,7 +90,7 @@
 
 .city-search-profilename {
     font-size: 24px;
-    letter-spacing: 1.2px;
+    letter-spacing: 1px;
     margin: 0;
     font-weight: 100;
     color: black;
@@ -95,9 +107,8 @@
 }
 
 .profile-list-item-city-salon-name {
-    font-size: 14px;
+    font-size: 13px;
     font-color: gray;
-    letter-spacing: 1px;
     font-weight: 100;
     color:gray;
     text-transform:uppercase;
@@ -122,6 +133,7 @@
     position:absolute;
     bottom:0;
     left:120px;
+    margin-bottom:0px;
 }
 
 .profile-list-item-city {

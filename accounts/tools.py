@@ -41,9 +41,9 @@ def format_minutes_to_pretty_format(minutes):
         if minutes_remaining >= 1:
             output_str += str(minutes_remaining) + " "
             if minutes_remaining == 1:
-                output_str += "minut"
+                output_str += "min"
             else:
-                output_str += "minuter"
+                output_str += "min"
 
     return output_str.strip()
 

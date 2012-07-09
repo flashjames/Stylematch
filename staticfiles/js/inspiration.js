@@ -50,7 +50,29 @@
             return this;
         },
         events:{
+	    "click .hype-button": "like"
         },
+	like: function() {
+	    /* Send likes for this Inspiration image to django and update the <p> object 
+	       with number of likes */
+	    var self = this;
+	    $.post(
+		'/like/',
+		{ 'id': this.model.get('id'),
+		  'csrfmiddlewaretoken': CSRF_TOKEN },
+		function(data) {
+		    var counter_p = $(self.el).find('.counter > p')
+		    var number_of_votes = parseInt(counter_p.text());
+		    if(data > number_of_votes) {
+			counter_p.text(parseInt(counter_p.text()) + 1);
+		    } else {
+			// display that you've already liked the image
+			// or that something have gone wrong
+		    }
+		}
+	    );
+ 
+	},
         close:function () {
             $(this.el).unbind();
             $(this.el).remove();

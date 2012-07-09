@@ -11,28 +11,14 @@
 <script>
   <!-- used in the service.js file, to know where the service api is located -> doesnt need to hardcode the url -->
   INSPIRATION_API_URL = "{% url 'api_dispatch_list' api_name="profile" resource_name="inspiration" %}";
+  <!-- used to send likes for a picture -->
+  CSRF_TOKEN = "{{ csrf_token }}";
 </script>
 
 <script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
   <!-- Bör läggas i backbone scriptet
        Counter parmametern behövs inte?
     -->
-<script type="text/javascript">
-  function like(counter, id) {
-  if (id != '') {
-  $('#like-' + counter + " .counter").text("...");
-  $.post(
-  '/like/',
-  { 'id': id,
-  'csrfmiddlewaretoken': '{{ csrf_token }}' },
-  function(data) {
-  $('#like-' + counter).text(data);
-  $('#like-' + counter + " .counter").text(data);
-  }
-  );
-  }
-  }
-</script>
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
@@ -50,13 +36,13 @@
   <div class="mainImageContent">
     <div class="leftSidebar">
       <div class="hype-box">
-        <div class="hype-counter">
-          <p id="like-<%= id %>"></p>
+        <div class="counter">
+          <p><%= votes %></p>
         </div>
         <!-- Bör läggas i backbone scriptet -->
-        <a onclick="like(<%= id %>, <%= id %>)"><div class="hype-button">
-            <p>HYPE</p>
-        </div></a>
+	<div class="hype-button">
+          <p>HYPE</p>
+	</div>
       </div>
     </div>
 

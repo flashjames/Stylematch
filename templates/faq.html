@@ -5,10 +5,27 @@
 
 {% block content %}
 
-<div style="padding-top:50px;padding-left:200px;">
-	<h1 style="margin-bottom:50px;">Vanliga frågor</h1>
+<div class="faq">
+	<div class="span11 offset1">
+	<h1>Vanliga frågor</h1>
+	</div>
+	<div class="span8 offset1">
+	<h3>Här har vi listat de vanligaste frågorna vi brukar få. Ingen fråga är för dum för att ställas och vi på StyleMatch älskar att svara på dina frågor. Hittar du inte svaret så tveka aldrig på att kontakt oss!</h3>
+	
+	
+	<h3>Vem är du?</h3>	
 	<a href="{% url 'faq-privatperson-page' %}" class="btn btn-large btn-info" style="margin-right:20px;">Jag är privatperson</a>
 	<a href="{% url 'faq-frisor-page' %}" class="btn btn-large btn-info">Jag är frisör</a>
+	</div>
+</div>
+
+
+
+
+
+<div style="padding-top:50px;padding-left:200px;">
+	
+
 </div>
 
 {% endblock %}

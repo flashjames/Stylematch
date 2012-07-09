@@ -107,7 +107,7 @@ def revert():
         restart_gunicorn()
 
 
-def deploy_db_change():
+def deploy_db_change(branch='master'):
     test()
     backup_database()
     git_pull(branch=branch)

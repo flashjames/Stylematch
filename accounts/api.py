@@ -184,8 +184,7 @@ class InspirationResource(ModelResource):
 
     class Meta:
         resource_name = 'inspiration'
-        queryset = GalleryImage.objects.filter(display_on_profile=True)
-        ordering = ['-upload_date']
+        queryset = GalleryImage.objects.filter(display_on_profile=True).order_by('-upload_date')
         excludes = ['file', 'user',]
         allowed_methods = ['get'] 
         limit = 50

@@ -38,11 +38,13 @@ def check_profile(sender, dirty_fields={}, **kwargs):
 
     if sender.__class__ == UserProfile:
         userprofile = sender
-    elif sender.__class__ == Service:
-        userprofile = sender.user.userprofile
     else:
-        logger.error("Check_profile got called from an unexpected sender (%s)." % sender)
-        return False
+        instance = kwargs.get('instance')
+        if instance is not None and instance.__class__ == Service:
+            userprofile = instance.user.userprofile
+        else:
+            logger.error("Check_profile got called from an unexpected sender (%s)(class: %s)." % (sender, sender.__class__))
+            return False
 
     try:
         # Information about salon. Address, phone etc

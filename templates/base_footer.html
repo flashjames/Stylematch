@@ -10,7 +10,7 @@
 	 	<li><a href="{% url 'about_page' as about %}{{ about }}">Om Oss</a></li>
 	 	<li><a href="http://blogg.stylematch.se/">Blogg</a></li>
 	 	<li id="press"><a href="{% url 'press_page' as press %}{{ press }}" class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart" >Press</a></li>
-	 	<li id="jobb"><a href="#jobb" class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart">Jobb</a></li>
+	 	<li id="jobb"><a href="{% url 'work_page' as about %}{{ work }}" class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart">Jobb</a></li>
 	 	</ul>
  	</div> 	
  	<div class="span3">

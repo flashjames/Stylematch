@@ -103,6 +103,18 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.Loader',
 )
 
+# Replace information tag because jquery.noty accepts type: 'information'
+# instead.
+from django.contrib.messages import constants as message_constants
+NOTIFICATION = 23
+MESSAGE_TAGS = {
+        NOTIFICATION: 'notification',
+        message_constants.INFO: 'info',
+        message_constants.SUCCESS: 'success',
+        message_constants.WARNING: 'warning',
+        message_constants.ERROR: 'error',
+        }
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

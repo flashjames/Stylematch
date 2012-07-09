@@ -55,6 +55,12 @@ def offset(page, limit=10):
 
 
 @register.filter
+def repr(level):
+    from settings import MESSAGE_TAGS as tags
+    return tags.get(level, 'info')
+
+
+@register.filter
 def get_userprofile(user):
     return user.get_profile()
 

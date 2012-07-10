@@ -162,7 +162,10 @@ urlpatterns += patterns(
 
     # tracking-code so google apps know we own the domain.
     (r'^google66ca7050dfade3e4.html',
-            TemplateView.as_view(template_name="google66ca7050dfade3e4.html")),
+                TemplateView.as_view(template_name="google134dd4a575584854.html")),
+    # tracking-code google api
+    (r'^google66ca7050dfade3e4.html',
+     TemplateView.as_view(template_name="google134dd4a575584854.html")),
     (r'^inspiration/',
             InspirationPageView.as_view(),
             {},

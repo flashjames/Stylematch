@@ -26,6 +26,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class ProfileValidationError(Exception):
     def __init__(self, value):
         self.value = value
@@ -33,17 +34,22 @@ class ProfileValidationError(Exception):
         return repr(self.value)
 
 
-def check_profile(sender, dirty_fields={}, **kwargs):
-    logger.debug("Checking %s with dirty fields: %s" % (sender, ", ".join(dirty_fields.keys())))
+def check_profile(sender, dirty_fields={}, create_checks=True, **kwargs):
+    logger.debug("Checking %s with dirty fields: %s" % \
+            (sender, ", ".join(dirty_fields.keys())))
 
     if sender.__class__ == UserProfile:
         userprofile = sender
     else:
         instance = kwargs.get('instance')
-        if instance is not None and instance.__class__ == Service:
+        if (instance is not None and
+               (instance.__class__ == Service or
+                instance.__class__ == OpenHours)):
             userprofile = instance.user.userprofile
         else:
-            logger.error("Check_profile got called from an unexpected sender (%s)(class: %s)." % (sender, sender.__class__))
+            logger.error("Check_profile got called from an unexpected "
+                         "sender (%s)(class: %s)." % \
+                                (sender, sender.__class__))
             return False
 
     try:
@@ -91,15 +97,20 @@ def check_profile(sender, dirty_fields={}, **kwargs):
         # create scheduledcheck
         if userprofile.approved:
             logger.warn(e)
-            if 'create_checks' in kwargs and kwargs['create_checks']:
+            if create_checks:
                 sc, created = ScheduledCheck.objects.get_or_create(user=userprofile.user)
                 if created:
                     logger.debug("Created new ScheduledCheck: %s" % sc.user)
+        else:
+            logger.debug("User %s was not approved for following reason: %s" % (userprofile, e))
         return False
 
     if not userprofile.approved:
         userprofile.approved = True
         userprofile.save()
+        logger.debug("User %s just got approved!" % userprofile)
+        # TODO: SEND WELCOME EMAIL TO USER
+        # TODO: SEND EMAIL TO ADMIN ABOUT USER
     return True
 approved_user_criteria_changed.connect(check_profile)
 
@@ -204,6 +215,8 @@ class Service(models.Model):
         # needs to be here, or the services admin ui will break
         ordering = ['order']
 post_delete.connect(check_profile, Service)
+post_save.connect(check_profile, Service)
+
 
 class OpenHours(models.Model):
     """
@@ -259,6 +272,7 @@ class OpenHours(models.Model):
         exec(code)
 
     reviewed = models.BooleanField(default=False)
+post_save.connect(check_profile, OpenHours)
 
 
 # client side url to images, without image filename

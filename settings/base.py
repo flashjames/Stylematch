@@ -18,6 +18,7 @@ PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 ADMINS = (
     ('Jenso', 'jenso1988@gmail.com'),
+    ('Samuel', 'smulster@gmail.com'),
 )
 
 MANAGERS = ADMINS

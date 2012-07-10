@@ -3,6 +3,7 @@
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib import messages
 from django.conf import settings
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
@@ -34,36 +35,50 @@ class ProfileValidationError(Exception):
         return repr(self.value)
 
 
-def check_profile(sender, dirty_fields={}, create_checks=True, **kwargs):
-    logger.debug("Checking %s with dirty fields: %s" % \
-            (sender, ", ".join(dirty_fields.keys())))
+def check_profile(sender, request, userprofile=None, create_checks=True, **kwargs):
+    """
+    Function attached with a Signal:
+      ``approved_user_criteria_changed``
+    Instead of calling this function directly, use:
 
-    if sender.__class__ == UserProfile:
-        userprofile = sender
-    else:
-        instance = kwargs.get('instance')
-        if (instance is not None and
-               (instance.__class__ == Service or
-                instance.__class__ == OpenHours)):
-            userprofile = instance.user.userprofile
+        from accounts.signals import approved_user_criteria_changed
+        approved_user_criteria_changed.send(self, request)
+
+    """
+
+    logger.debug("Checking %s" % sender)
+
+    if userprofile is None or userprofile.__class__ != UserProfile:
+        if sender.__class__ == UserProfile:
+            userprofile = sender
         else:
-            logger.error("Check_profile got called from an unexpected "
-                         "sender (%s)(class: %s)." % \
-                                (sender, sender.__class__))
-            return False
+            instance = kwargs.get('instance')
+            if (instance is not None and
+                   (instance.__class__ == Service or
+                    instance.__class__ == OpenHours)):
+                userprofile = instance.user.userprofile
+            else:
+                logger.error("Check_profile got called from an unexpected "
+                             "sender (%s)(class: %s)." % \
+                                    (sender, sender.__class__))
+                return False
 
     try:
         # Information about salon. Address, phone etc
-        if not (userprofile.salon_name or
-                userprofile.salon_city or
-                userprofile.salon_adress or
-                userprofile.zip_adress or
-                userprofile.salon_phone_number):
-            raise ProfileValidationError("Information about salon missing.")
+        if not userprofile.salon_name:
+            raise ProfileValidationError("Salon name missing.")
+        if not userprofile.salon_city:
+            raise ProfileValidationError("Salon city missing.")
+        if not userprofile.salon_adress:
+            raise ProfileValidationError("Salon adress missing.")
+        if not userprofile.zip_adress:
+            raise ProfileValidationError("Zip adress missing.")
+        if not userprofile.salon_phone_number:
+            raise ProfileValidationError("Salon phonenumber missing.")
 
         # profile image
-        if not (userprofile.profile_image_cropped or
-                userprofile.profile_image_uncropped):
+        if ((not userprofile.profile_image_cropped) and
+            (not userprofile.profile_image_uncropped)):
             raise ProfileValidationError("Profile image missing")
 
         # open hours
@@ -214,8 +229,6 @@ class Service(models.Model):
         # deliver the services sorted on the order field
         # needs to be here, or the services admin ui will break
         ordering = ['order']
-post_delete.connect(check_profile, Service)
-post_save.connect(check_profile, Service)
 
 
 class OpenHours(models.Model):
@@ -272,7 +285,6 @@ class OpenHours(models.Model):
         exec(code)
 
     reviewed = models.BooleanField(default=False)
-post_save.connect(check_profile, OpenHours)
 
 
 # client side url to images, without image filename
@@ -417,21 +429,6 @@ class UserProfile(DirtyFieldsMixin, models.Model):
     def save(self, *args, **kwargs):
         # remove accidental whitespaces from city
         self.salon_city = self.salon_city.strip()
-
-        # check if the user is still valid
-        dirties = self.get_dirty_fields()
-        user_criterias = [
-                'salon_city',
-                'salon_adress',
-                'zip_adress',
-                'salon_phone_number',
-                'openhours',
-                'profile_text',
-                ]
-        for key in dirties.keys():
-            if key in user_criterias:
-                approved_user_criteria_changed.send(sender=self, dirty_fields=dirties)
-                break
 
         return super(UserProfile, self).save(*args, **kwargs)
 

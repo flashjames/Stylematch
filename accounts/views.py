@@ -27,6 +27,7 @@ from accounts.models import (Service,
                              GalleryImage,
                              ProfileImage,
                              weekdays_model)
+from accounts.signals import approved_user_criteria_changed
 from tools import (format_minutes_to_hhmm,
                    format_minutes_to_pretty_format,
                    get_unique_filename)
@@ -285,6 +286,10 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         """
         self.object = form.save()
         messages.success(self.request, "Profilen uppdaterades!")
+        approved_user_criteria_changed.send(
+                            sender=self,
+                            request=self.request,
+                            userprofile=self.request.user.userprofile)
         return super(EditProfileView, self).form_valid(form)
 
     def form_invalid(self, form):

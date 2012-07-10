@@ -1,6 +1,4 @@
-
 {% load url from future %}
-
 {% block footer %}
 <div class="base-footer-div">
   <div class="container">
@@ -9,10 +7,10 @@
 	 	<ul>
 	 	<li class="title">StyleMatch</li>
 	 	<li><a href="/accounts/register">Gå med som Frisör</a></li>
-	 	<li><a href="{% url 'about_page' %}">Om Oss</a></li>
+	 	<li><a href="{% url 'about_page' as about %}{{ about }}">Om Oss</a></li>
 	 	<li><a href="http://blogg.stylematch.se/">Blogg</a></li>
-	 	<li id="press"><a href="{% url 'press_page' %}">Press</a></li>
-	 	<li id="jobb"><a href="/jobb">Jobb</a></li>
+	 	<li id="press"><a href="{% url 'press_page' as press %}{{ press }}">Press</a></li>
+	 	<li id="jobb"><a href="{% url 'work_page' as about %}{{ work }}">Jobb</a></li>
 	 	</ul>
  	</div> 	
  	<div class="span3">
@@ -26,7 +24,7 @@
  	<div class="span3">
 	 	<ul>
 	 		<li class="title">Hjälp</li>
-	 		<li><a href="{% url 'faq-page' %}">Vanliga Frågor</a></li>
+	 		<li><a href="{% url 'faq-page' as faq %}{{ faq }}">Vanliga Frågor</a></li>
 	 		<li><a href="/kontakt/">Kontakta Oss</a></li>
 	 		<li><a href="/anvandarvillkor/">Användarvillkor</a></li>
 	 	</ul>

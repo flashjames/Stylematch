@@ -2,7 +2,13 @@
 {% load thumbnail %}
 {% load index_extras %}
 
+
 <div class="authed navbar navbar-fixed-top">
+  {% if user.userprofile.approved %}
+    <div id="major_notification">
+    <p>Du har uppgifter att göra!</p>
+    </div>
+  {% endif %}
   <div class="navbar-inner">
     <div class="container">
       <a class="brand" href="/"><img src="{{STATIC_URL}}img/logo.png"/></a>

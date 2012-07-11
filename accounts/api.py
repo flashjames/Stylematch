@@ -161,6 +161,7 @@ class InspirationResource(ModelResource):
         bundle.data['first_name'] = bundle.obj.user.first_name
         bundle.data['last_name'] = bundle.obj.user.last_name
         bundle.data['profile_url'] = bundle.obj.user.userprofile.profile_url
+        bundle.data['salon_city'] = bundle.obj.user.userprofile.salon_city
 
         # add client side image url to each Picture object
         # TODO: Fix it with sorl-thumbnail

@@ -80,17 +80,26 @@
 }
 
 .hype-box {
-    width:68px;
+    width:68px; 
 }
 
 .common-hype {
-    color:black;
+    color: black;
     background-color:#CCC9C0;
     p {
-	text-align:center;
-	font-family:Arial;
-	font-weight: bold;
-    }    
+		text-align:center;
+		font-weight: bolder;
+		display:inline;
+		vertical-align:top;
+		margin-left: 2px;
+		font-size: 15px;
+    }   
+    img{
+       	height:15px; 
+    	margin-top:3px;
+    	margin-left:6px;
+    	display:inline-block;
+    }
 }
 
 .counter {
@@ -98,10 +107,12 @@
     height:42px;
     margin-bottom:2px;
     p {
-	padding-top:14px;
-	font-size:25px;
+		padding:11px;
+		font-size:25px;
+		display:inline-block;
+		text-align:center;
+		margin-left:14px;
     }
-    
 }
 
 .hype-button {
@@ -109,8 +120,22 @@
     height:22px;
     cursor: pointer;
     p {
-	padding-top:3px;
+		padding-top:3px;
+		color:#312D2C;
     }
+    &:hover{
+    	p{
+    	color:#FCF4F2;
+    	}
+    }
+}
+
+.title-for-picture{
+	padding-left:75px;
+	padding-bottom:10px;
+	h3{
+		font-size:25px;
+	}
 }
 
 .inspiration-item {

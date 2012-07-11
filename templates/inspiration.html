@@ -34,6 +34,9 @@
   <hr class="soften">
   <% } %>
   <div>
+  	<div class="span10 title-for-picture"><h3><%= comment %></h3>
+  	<h4>Av: <a href="/<%= profile_url %>/"><%= first_name %> <%= last_name %></a>, Frisör i <%= salon_city %></h4>
+  	</div>
     <div class="leftSidebar">
       <div class="hype-box">
         <div class="counter">
@@ -41,7 +44,7 @@
         </div>
         <!-- Bör läggas i backbone scriptet -->
 	<div class="hype-button">
-          <p>HYPE</p>
+          <img src="{{ STATIC_URL }}img/heart-icon7.png"/> <p>Gilla</p>
 	</div>
       </div>
     </div>

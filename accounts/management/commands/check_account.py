@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from django.core.mail import send_mail
 from accounts.models import ScheduledCheck, check_profile
 import re
 import logging
@@ -19,8 +20,17 @@ class Command(BaseCommand):
                 check.delete()
             else:
                 # User is no longer approved.
-                # TODO: SEND E-MAIL TO ADMIN
                 logger.warn("User %s %s is no longer valid" % \
                         (user.first_name, user.last_name))
+
+                # send an email to admin about this.
+                send_mail(u'Användare ej längre godkänd i %s: %s %s' % (userprofile.salon_city,
+                                                userprofile.user.first_name,
+                                                userprofile.user.last_name),
+                          'http://stylematch.se/admin/auth/user/%s\n'
+                          'http://stylematch.se/%s/' % (userprofile.user.pk,
+                                    userprofile.profile_url),
+                          'noreply@stylematch.se',
+                          ['admin@stylematch.se'])
                 check.notification_sent = True
                 check.save()

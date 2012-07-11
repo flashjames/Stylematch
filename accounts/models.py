@@ -5,9 +5,11 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.conf import settings
+from django.core.mail import send_mail
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 from django.core.files.storage import default_storage
+from django.template.loader import render_to_string
 from registration.signals import user_registered
 from accounts.signals import approved_user_criteria_changed
 
@@ -124,10 +126,37 @@ def check_profile(sender, request, userprofile=None, create_checks=True, **kwarg
         userprofile.approved = True
         userprofile.save()
         logger.debug("User %s just got approved!" % userprofile)
-        # TODO: SEND WELCOME EMAIL TO USER
-        # TODO: SEND EMAIL TO ADMIN ABOUT USER
+
+        # send welcome email to user
+        send_welcome_email(userprofile.user)
+
+        # Send email notifying admin about this.
+        send_mail(u'Godkänd användare i %s: %s %s' % (userprofile.salon_city,
+                                        userprofile.user.first_name,
+                                        userprofile.user.last_name),
+                  'http://stylematch.se/admin/auth/user/%s\n'
+                  'http://stylematch.se/%s/' % (userprofile.user.pk,
+                            userprofile.profile_url),
+                  'noreply@stylematch.se',
+                  ['admin@stylematch.se'])
     return True
 approved_user_criteria_changed.connect(check_profile)
+
+
+def send_welcome_email(user):
+    """
+    Send an email once the user completed all tasks for its account
+
+    """
+    ctx_dict = {'user': user }
+    subject = render_to_string('welcome_email_subject.txt', ctx_dict)
+
+    # remove newlines if any
+    subject = ''.join(subject.splitlines())
+
+    message = render_to_string('welcome_email.txt', ctx_dict)
+
+    user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
 
 
 def create_temporary_profile_url(sender, user, request, **kwargs):

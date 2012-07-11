@@ -94,12 +94,8 @@ def profile_image_thumbnail(userprofile, logged_in_user_profile=False):
             return userprofile.profile_image_uncropped.file
     except:
         import os
-        if userprofile.user.is_authenticated() and logged_in_user_profile:
-            return os.path.join(settings.STATIC_URL, 'img',
-                    'default_image_profile_logged_in.jpg')
-        else:
-            return os.path.join(settings.STATIC_URL, 'img',
-                    'default_image_profile_not_logged_in.jpg')
+        return os.path.join(settings.STATIC_URL, 'img',
+                'default_image_profile_not_logged_in.jpg')
 
 
 def do_active(parser, token):
@@ -142,5 +138,5 @@ class ActiveIfInListNode(Node):
             comparables.append(var)
 
         if request.path in comparables:
-                return "active"
+            return "active"
         return ""

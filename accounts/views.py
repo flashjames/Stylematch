@@ -66,14 +66,9 @@ class DisplayProfileView(DetailView):
         try:
             profile_picture = self.get_profile_image(self.object.user)
         except:
-            if self.is_authenticated and self.object.user == self.request.user:
-                profile_picture = os.path.join(
-                        settings.STATIC_URL,
-                        'img/default_image_profile_logged_in.jpg')
-            else:
-                profile_picture = os.path.join(
-                        settings.STATIC_URL,
-                        'img/default_image_profile_not_logged_in.jpg')
+            profile_picture = os.path.join(
+                    settings.STATIC_URL,
+                    'img/default_image_profile_not_logged_in.jpg')
 
         return profile_picture
 

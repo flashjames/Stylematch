@@ -2,114 +2,115 @@
 {% load url from future %}
 
 {% block html-head %}
-	<style>
-		h4{
-			font-size: 18px;
-			margin-bottom:4px;
-			margin-top:15px;
-			font-weight:300;
-		}
-		p{
-			margin-left:20px;
-		}
-	</style>
+<style>
+  h4{
+  font-size: 18px;
+  margin-bottom:4px;
+  margin-top:15px;
+  font-weight:300;
+  }
+  p{
+  margin-left:20px;
+  }
+</style>
 {% endblock %}
 
 {% block title %}Vanliga frågor för frisörer{% endblock %}
 
 {% block content %}
+<div class="faq row">
+ 
 
-<h1 style="margin:20px 0px 20px 0px"> Vanliga frågor för frisörer</h1>
+  <div class="span7"> 
+  <h1> Vanliga frågor för frisörer</h1>
+    <ol><h3 style="margin-bottom:10px">StyleMatch Söklista</h3>
+      <li><a href="#question1">Vem får vara med i StyleMatch?</a></li>
+      <li><a href="#question2">Vad ska jag göra för att få synas i StyleMatch’s söklista?</a></li>
+      <li><a href="#question3">Varför är inte min StyleMatchprofil med på förstasidan?</a></li>
+      <li><a href="#question4">Varför fungerar söklistan bara på vissa städer?</a></li>
+      <li><a href="#question14">Varför vill jag synas i söklistan?</a></li>
 
-<div class="span7">
-<ol><h3 style="margin-bottom:10px">StyleMatch Söklista</h3>
-<li><a href="#question1">Vem får vara med i StyleMatch?</a></li>
-<li><a href="#question2">Vad ska jag göra för att få synas i StyleMatch’s söklista?</a></li>
-<li><a href="#question3">Varför är inte min StyleMatchprofil med på förstasidan?</a></li>
-<li><a href="#question4">Varför fungerar söklistan bara på vissa städer?</a></li>
-<li><a href="#question14">Varför vill jag synas i söklistan?</a></li>
+
+      <h3 style="margin:10px 0px 10px 0px">Betalningar</h3>
+
+      <li><a href="#question5">Vad kostar det att ha en StyleMatchprofil?</a></li>
+      <li><a href="#question6">Vad betalar jag för?</a></li>
+      <li><a href="#question7">Jag vill ha en StyleMatchprofil men vet inte hur jag ska betala!</a></li>
+      <li><a href="#question8">Vilket är det bästa sättet att betala för min StyleMatchprofil? </a></li>
+
+      <h3>StyleMatch Marknadsföringsverktyg</h3>
+
+      <li><a href="#question15">Hur hittar mina kunder till StyleMatch? </a></li>
+      <li><a href="#question9">Jag har facebook, varför ska jag då ha StyleMatch?</a></li>
+      <li><a href="#question10">Min salong har redan en hemsida, varför ska jag då ha StyleMatch?</a></li>
+      <li><a href="#question11">Innebär StyleMatch att jag har en egen hemsida?</a></li>
+      <li><a href="#question12">Hur sprids min StyleMatchprofil till nya kunder?</a></li>
+      <li><a href="#question13">Kan jag se hur många som besökt min profil?</a></li>
+
+    </ol>
+  </div>
 
 
-<h3 style="margin:10px 0px 10px 0px">Betalningar</h3>
+  <div class="span7">
+    <ol>
 
-<li><a href="#question5">Vad kostar det att ha en StyleMatchprofil?</a></li>
-<li><a href="#question6">Vad betalar jag för?</a></li>
-<li><a href="#question7">Jag vill ha en StyleMatchprofil men vet inte hur jag ska betala!</a></li>
-<li><a href="#question8">Vilket är det bästa sättet att betala för min StyleMatchprofil? </a></li>
+      <li><h4 id="question1">Vem får vara med i StyleMatch?</h4></li>
+      <p>Vår söklista är avsedd för utbildade frisörer med fulländade profiler som aktivt använder vår tjänst.  För att räknas som utbildad krävs det en examen från någon av skolorna som ni hittar på Lista över godkända utbildningar.
+      </p>
 
-<h3 style="margin:10px 0px 10px 0px">StyleMatch Marknadsföringsverktyg</h3>
+      <li><h4 id="question2">Vad ska jag göra för att få synas i StyleMatch’s söklista?
+        </h4>
+      </li>             <p>När du är inloggad på ditt konto så finns det en flik på den övre delen av sida som heter ”Översikt”. Där kan du se vad du har kvar att göra med din profil innan den ansluts till söklistan. </p>
 
-<li><a href="#question15">Hur hittar mina kunder till StyleMatch? </a></li>
-<li><a href="#question9">Jag har facebook, varför ska jag då ha StyleMatch?</a></li>
-<li><a href="#question10">Min salong har redan en hemsida, varför ska jag då ha StyleMatch?</a></li>
-<li><a href="#question11">Innebär StyleMatch att jag har en egen hemsida?</a></li>
-<li><a href="#question12">Hur sprids min StyleMatchprofil till nya kunder?</a></li>
-<li><a href="#question13">Kan jag se hur många som besökt min profil?</a></li>
+      <li><h4 id="question3">Varför är inte min StyleMatchprofil med på förstasidan?</h4>
+      </li>             <p>Du har antagligen inte genomfört alla de steg som finns under fliken ”Översikt” som du hittar på den övre delen av sidan när du är inloggad på ditt konto.  Om du genomfört alla steg och ändå inte finns med i söklistan ber vi dig att kontakta oss på kontakt@stylematch.se. </p>
 
-</ol>
+      <li><h4 id="question4">Varför fungerar söklistan bara på vissa städer?</h4></li>
+      <p>Söklistan fungerar på de städer där vi i dag har anslutna frisörer som använder sig av tjänsten. Kommer du från en stad som inte än finns med i söklistan rekommenderar vi dig att bli den första från din stad att ansluta sig till vår tjänst, välkommen! </p>
+
+      <li><h4 id="question14">Varför vill jag synas i söklistan? </h4></li>
+      <p>När besökare använder sig av söklistan gör dem det av en anledning, dem vill hitta en frisör. Eftersom du lagt ner tid och energi på att verkligen personifiera din profil så kommer kunder som du vill klippa att hitta dig. Genom att finnas med i söklistan så har din profil även chans att synas på förstasidan vilket leder till ökad besöksstatistik och större spridning på din profil och dina uppladdade bilder!
+      </p>
+
+      <li><h4 id="question5">Vad kostar det att ha en StyleMatchprofil?</h4></li>
+      <p>Idag kostar det 299kr inkl moms i månaden att ta del av StyleMatch’s alla möjligheter. För att du ska förstå hur bra tjänsten faktiskt är så bjuder vi självklart på de 30 första dagarna!
+        <br>   Vi vill poängtera att tjänsten absolut inte är bindande på något vis och kan när som helst avslutas med ett enkelt klick under fliken ”Kontoinställningar” </p>
+
+      <li><h4 id="question6">Vad betalar jag för?</h4></li>
+      <p>Med hjälp av din StyleMatchprofil kommer du synas där kunder vill hitta dig. Du anpassar själv din profil och kan på så sätt ta kontroll över din egen marknadsföring. Förutom det får du även med hjälp av enkla verktyg reda på om din marknadsföring faktiskt fungerar!</p>
+
+      <li><h4 id="question7">Jag vill ha en StyleMatchprofil men vet inte hur jag ska betala!</h4></li>
+      <p>Vi vill självklart att du och alla andra duktiga frisörer ska få möjlighet att få ta del av vår tjänst och vi har därför valt att erbjuda olika betalningsalternativ så att du ska kunna välja det som passar dig bäst! </p>
+      <p>Kontokort: Du kan smidigt betala med hjälp av ditt kontokort. Under fliken ”Kontoinställningar” finner du information om vilka uppgifter som ska fyllas i och hur transaktionerna fungerar. </p>
+      <p>Faktura: Varje månad skickar vi till dig en faktura med betalningstid på 30 dagar. Under fliken ”Kontoinställningar” får du själv ange fakturaadress och andra nödvändiga uppgifter, precis som med alla andra fakturor. </p>
+
+
+      <li><h4  id="question8">Vilket är det bästa sättet att betala för min StyleMatchprofil? </h4></li>
+      <p>Valet är självklart upp till dig men vi rekommenderar starkt att betala med kort då de medför många fördelar så som att du alltid kommer betala i tid och inte behöva leta efter fakturan varje månad =)</p>
+
+      <li><h4 id="question15">Hur hittar mina kunder till StyleMatch? </h4></li>
+      <p>Våra främsta uppgifter är att få dig att trivas och att ge dig nya kunder som du vill klippa. Vi arbetar kontinuerligt med marknadsföring av vårt tjänst mot dina kunder och google är något vi lägger stor kraft på. StyleMatch är det första alternativet när man ska leta frisör!</p>
+
+      <li><h4 id="question9">Jag har facebook, varför ska jag då ha StyleMatch?</h4>
+      </li>             <p>Kunder besöker StyleMatch för att dem är intresserade av hår och att klippa sig. På Facebook ingår man inte heller i något sökvertyg vilket gör att dina kunder aktivt måste söka upp dig vilket är svårt om dem inte kan ditt fullständiga namn.  På StyleMatch har du en helt egen profilsida samt plats på söksidan som gör det enkelt för nya och gamla kunder att hitta dig! </p>
+
+      <li><h4 id="question10">Min salong har en hemsida, varför ska jag då ha StyleMatch?</h4></li>
+      <p>Precis som med Facebook så måste kunden veta om vad salongen du arbetar på heter. På StyleMatch ökar chanserna till att kunder hittar dig genom att dem är ute efter en frisör, din personliga profil finns i StyleMatch’s söklista, och du har många bilder under inspirationsfliken som gör det högst trovärdigt att kunden hittar till just dig! </p>
+
+      <p>Du kan självklart länka din hemsida på din StyleMatchprofil men vi vill göra dig uppmärksam på att en hemsida oftast kostar betydligt mer än vad en StyleMatchprofil gör! </p>
+
+      <li><h4 id="question11">Innebär StyleMatch att jag har en egen hemsida?</h4></li>
+      <p>Ja, på sätt och vis kan man faktiskt säga det! I och med att du har valt ett StyleMatchnamn så har du skapat en webbadress som du enkelt kan ge ut till nya och gamla kunder. Adressen ser ut på följande vis http://stylematch.se/dittnamn, där ”dittnamn” när som helst kan ändras. Vi rekommenderar dock att du väljer ett namn och sedan använder det så det blir enkelt för kunder att hitta dig! </p>
+
+      <li><h4 id="question12">Hur sprids min StyleMatchprofil till nya kunder?</h4></li>
+      <p>Vi har valt att hålla stark anknytning till Facebook vilket gör det enkelt för dig, dina vänner och befintliga kunder att dela med sig av din profil till vänner. På din profilsida finns knappen ”Rekommendera” och ”Gilla”. När en kund trycker på någon av dessa knappar kommer din StyleMatchprofil att hoppa upp på kundens Facebooksida vilket gör att kundens vänner också får se din profil! </p>
+
+
+
+      <li><h4 id="question13">Kan jag se hur många som besökt min profil?</h4></li>
+      <p>Självklart vill vi visa för dig hur många personer som besökt din profil. Genom att klicka på fliken ”Översikt” får du en tydlig bild över hur pass bra din profil faktiskt fungerar. Förutom besöksstatistik finner du även där hur många som rekommenderat dig och gillat dina bilder! </p>
+    </ol>
+  </div>
 </div>
-
-
-<div class="span7" style="margin-top:50px">
-		<ol>
-		
-		<li><h4 id="question1">Vem får vara med i StyleMatch?</h4></li>
-		<p>Vår söklista är avsedd för utbildade frisörer med fulländade profiler som aktivt använder vår tjänst.  För att räknas som utbildad krävs det en examen från någon av skolorna som ni hittar på Lista över godkända utbildningar.
-		</p>
-		
-		<li><h4 id="question2">Vad ska jag göra för att få synas i StyleMatch’s söklista?
-		</h4>
-</li>		<p>När du är inloggad på ditt konto så finns det en flik på den övre delen av sida som heter ”Översikt”. Där kan du se vad du har kvar att göra med din profil innan den ansluts till söklistan. </p>
-		
-		<li><h4 id="question3">Varför är inte min StyleMatchprofil med på förstasidan?</h4>
-</li>		<p>Du har antagligen inte genomfört alla de steg som finns under fliken ”Översikt” som du hittar på den övre delen av sidan när du är inloggad på ditt konto.  Om du genomfört alla steg och ändå inte finns med i söklistan ber vi dig att kontakta oss på kontakt@stylematch.se. </p>
-		
-		<li><h4 id="question4">Varför fungerar söklistan bara på vissa städer?</h4></li>
-		<p>Söklistan fungerar på de städer där vi i dag har anslutna frisörer som använder sig av tjänsten. Kommer du från en stad som inte än finns med i söklistan rekommenderar vi dig att bli den första från din stad att ansluta sig till vår tjänst, välkommen! </p>
-		 
-		<li><h4 id="question14">Varför vill jag synas i söklistan? </h4></li>
-		<p>När besökare använder sig av söklistan gör dem det av en anledning, dem vill hitta en frisör. Eftersom du lagt ner tid och energi på att verkligen personifiera din profil så kommer kunder som du vill klippa att hitta dig. Genom att finnas med i söklistan så har din profil även chans att synas på förstasidan vilket leder till ökad besöksstatistik och större spridning på din profil och dina uppladdade bilder! 
-		</p>		
-		
-		<li><h4 id="question5">Vad kostar det att ha en StyleMatchprofil?</h4></li>
-		<p>Idag kostar det 299kr inkl moms i månaden att ta del av StyleMatch’s alla möjligheter. För att du ska förstå hur bra tjänsten faktiskt är så bjuder vi självklart på de 30 första dagarna!
-		<br>   Vi vill poängtera att tjänsten absolut inte är bindande på något vis och kan när som helst avslutas med ett enkelt klick under fliken ”Kontoinställningar” </p>
-		
-		<li><h4 id="question6">Vad betalar jag för?</h4></li>
-		<p>Med hjälp av din StyleMatchprofil kommer du synas där kunder vill hitta dig. Du anpassar själv din profil och kan på så sätt ta kontroll över din egen marknadsföring. Förutom det får du även med hjälp av enkla verktyg reda på om din marknadsföring faktiskt fungerar!</p>
-		
-		<li><h4 id="question7">Jag vill ha en StyleMatchprofil men vet inte hur jag ska betala!</h4></li>
-		<p>Vi vill självklart att du och alla andra duktiga frisörer ska få möjlighet att få ta del av vår tjänst och vi har därför valt att erbjuda olika betalningsalternativ så att du ska kunna välja det som passar dig bäst! </p>
-		<p>Kontokort: Du kan smidigt betala med hjälp av ditt kontokort. Under fliken ”Kontoinställningar” finner du information om vilka uppgifter som ska fyllas i och hur transaktionerna fungerar. </p>
-		<p>Faktura: Varje månad skickar vi till dig en faktura med betalningstid på 30 dagar. Under fliken ”Kontoinställningar” får du själv ange fakturaadress och andra nödvändiga uppgifter, precis som med alla andra fakturor. </p>
-		
-		
-		<li><h4  id="question8">Vilket är det bästa sättet att betala för min StyleMatchprofil? </h4></li>
-		<p>Valet är självklart upp till dig men vi rekommenderar starkt att betala med kort då de medför många fördelar så som att du alltid kommer betala i tid och inte behöva leta efter fakturan varje månad =)</p> 
-		
-		<li><h4 id="question15">Hur hittar mina kunder till StyleMatch? </h4></li>
-		<p>Våra främsta uppgifter är att få dig att trivas och att ge dig nya kunder som du vill klippa. Vi arbetar kontinuerligt med marknadsföring av vårt tjänst mot dina kunder och google är något vi lägger stor kraft på. StyleMatch är det första alternativet när man ska leta frisör!</p>
-		
-		<li><h4 id="question9">Jag har facebook, varför ska jag då ha StyleMatch?</h4>
-</li>		<p>Kunder besöker StyleMatch för att dem är intresserade av hår och att klippa sig. På Facebook ingår man inte heller i något sökvertyg vilket gör att dina kunder aktivt måste söka upp dig vilket är svårt om dem inte kan ditt fullständiga namn.  På StyleMatch har du en helt egen profilsida samt plats på söksidan som gör det enkelt för nya och gamla kunder att hitta dig! </p>
-		
-		<li><h4 id="question10">Min salong har en hemsida, varför ska jag då ha StyleMatch?</h4></li>
-		<p>Precis som med Facebook så måste kunden veta om vad salongen du arbetar på heter. På StyleMatch ökar chanserna till att kunder hittar dig genom att dem är ute efter en frisör, din personliga profil finns i StyleMatch’s söklista, och du har många bilder under inspirationsfliken som gör det högst trovärdigt att kunden hittar till just dig! </p>
-		
-		<p>Du kan självklart länka din hemsida på din StyleMatchprofil men vi vill göra dig uppmärksam på att en hemsida oftast kostar betydligt mer än vad en StyleMatchprofil gör! </p>
-		
-		<li><h4 id="question11">Innebär StyleMatch att jag har en egen hemsida?</h4></li>
-		<p>Ja, på sätt och vis kan man faktiskt säga det! I och med att du har valt ett StyleMatchnamn så har du skapat en webbadress som du enkelt kan ge ut till nya och gamla kunder. Adressen ser ut på följande vis http://stylematch.se/dittnamn, där ”dittnamn” när som helst kan ändras. Vi rekommenderar dock att du väljer ett namn och sedan använder det så det blir enkelt för kunder att hitta dig! </p>
-		
-		<li><h4 id="question12">Hur sprids min StyleMatchprofil till nya kunder?</h4></li>
-		<p>Vi har valt att hålla stark anknytning till Facebook vilket gör det enkelt för dig, dina vänner och befintliga kunder att dela med sig av din profil till vänner. På din profilsida finns knappen ”Rekommendera” och ”Gilla”. När en kund trycker på någon av dessa knappar kommer din StyleMatchprofil att hoppa upp på kundens Facebooksida vilket gör att kundens vänner också får se din profil! </p>
-		
-		
-		
-		<li><h4 id="question13">Kan jag se hur många som besökt min profil?</h4></li>
-		<p>Självklart vill vi visa för dig hur många personer som besökt din profil. Genom att klicka på fliken ”Översikt” får du en tydlig bild över hur pass bra din profil faktiskt fungerar. Förutom besöksstatistik finner du även där hur många som rekommenderat dig och gillat dina bilder! </p>
-</ol>
-</div>
-
 
 {% endblock %}

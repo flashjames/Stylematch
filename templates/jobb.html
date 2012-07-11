@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load index_extras %}
+
+{% block title %}Jobb{% endblock %}
+{% block content %}
+
+<div class="container">
+  <div class="row work">
+    <div class="span5 offset1">
+      <h1>Våga växa, våga lyckas!</h1>
+      <h3>Ett jobb på StyleMatch är en upplevelse du aldrig tidigare upplevt. Du kommer att möta utmaningar. Du kommer att växa. Och du kommer att lyckas. 
+Tänk på att vad du än jobbar med här, så är du en del av något stort. </h3>
+      <p>Du vill skapa, du vill känna och du vill se, se känslor och resultat. Som medarbetare på StyleMatch drivs du av dina inre mål som under din tid hos oss utvecklas och för dig frammåt i livet.</p>
+      <p>Vi är ett företag på uppsprång så får du nu möjlighet att vara med och forma framtidens stora WOW.  Eftersom du fortfarande läser så är du den vi söker!</p>
+      <p>Här har du vår mailadress, <span>hej@stylematch.se</span>, märk ditt mail “Jag är den ni söker”</p>
+      <p>Vi ses!</p>
+    </div>
+    <div class="span6">
+	    <img src="{{ STATIC_URL }}img/love-my-job.png"/>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -22,6 +22,7 @@
     <script src="{{ STATIC_URL }}js/bootstrap-alert.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}js/bootstrap-tooltip.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}js/bootstrap-dropdown.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-collapse.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}js/noty/js/jquery.noty.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}js/jquery.noty.custom.js" type="text/javascript"></script>
     {% intercom_analytics %}
@@ -66,6 +67,8 @@
         }, 1500);
         {% endif %}
       };
+      
+      $(".collapse").collapse();
     </script>
 
     {% block pre-bootstrap-less %}{% endblock %}
@@ -79,6 +82,7 @@
     <!-- This meta-tag shows facebook we are stylematch on facebook --> 
     <meta property="fb:admins" content="637077638" />
     <meta property="fb:app_id" content="309825002426259" />
+  
   </head>
 
   <body class="body-padding-zero" data-spy="scroll" data-target=".subnav" data-offset="50" data-twttr-rendered="true">
@@ -87,6 +91,21 @@
       <div style="padding:19px;"></div>
       {% include "authenticated_menu.html" %}
     {% endif %}
+
+<div id="loginCollapse" class="accordion-body collapse" style="height: 0px; ">
+                <div class="container"><div class="accordion-inner">
+                 <form  action="/login/" method="post">
+  {% csrf_token %}
+  <span>Logga in</span>
+  <input type="text" name="username" value="" id="username" placeholder="Emailadress">
+  <input  type="password" name="password" value="" id="password" placeholder="Lösenord">
+  <input type="submit" value="Logga in" class="btn btn-info"/>
+  <a  href="{% url 'auth_password_reset' %}">Glömt lösenord?</a>
+  <a href="#" data-toggle="collapse" data-target="#loginCollapse"><img class="pull-right" src="{{ STATIC_URL }}img/closeButton.png"/></a>
+  <input type="hidden" name="next" value="{{ next|escape }}" />
+</form>
+                </div></div>
+              </div>
 
     <div class="bigpage{% url 'index_page' as index %}{% ifequal request.path index %} bg-firstpage{%endifequal %}">
 
@@ -97,7 +116,7 @@
 
         <div class="row" style="margin:2px;">
           <div class="span3 offset9 pull-right top-right-menu">
-            <a class="pull-right" href="{% url 'auth_login' %}">Logga in</a>
+            <a class="pull-right" href="#"data-toggle="collapse" data-target="#loginCollapse">Logga in</a>
             <a class="top-menu-border pull-right" href="{% url 'registration_register' %}">Bli medlem som frisör</a>
           </div>
         </div>
@@ -115,6 +134,7 @@
                onclick="indexredirect()">
                  Hitta frisör
             </a>
+            
             <a href="#"  class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart" onclick="goToByScroll('test')">Bli inspirerad </a>
             <a href="{% url 'about_page' as about %}{{ about }}">Om Stylematch</a>
           </div>
@@ -141,7 +161,35 @@
     {% block footer %}{% include 'base_footer.html' %} {% endblock %}
 
     {% block javascript-block %}
-    {% endblock %}
+  {% if messages %}
+
+  {% for message in messages %}
+    {% ifequal message.extra_tags "modal" %}
+    <script type="text/javascript">
+        var noty_id = noty({
+            text: "{{ message }}",
+            type: "{{ message.level|repr }}",
+            layout: "center",
+            timeout: 0,
+            animateOpen: {opacity: 'show'},
+            animateClose: {opacity: 'hide'},
+            closeButton: true,
+            closeOnSelfClick: false,
+            modal: true,
+        });
+    </script>
+    {% else %}
+    <script type="text/javascript">
+        var noty_id = noty({
+            text: "{{ message }}",
+            type: "{{ message.level|repr }}",
+        });
+    </script>
+    {% endifequal %}
+  {% endfor %}
+
+  {% endif %}
+	{% endblock %}{# javascript-block #}
 
     {# GOOGLE ANALYTICS #}
     <script type="text/javascript">

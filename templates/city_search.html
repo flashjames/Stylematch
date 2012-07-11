@@ -7,8 +7,8 @@
 <meta property="og:title" content="StyleMatch.se: Hitta en frisör som passar dig">
 <meta name="description" content="På StyleMatch hittar du din nästa frisör i {{ city }}. Bläddra bland bilder på tidigare klippningar och uppsättningar för att hitta en som passar dig och din hårtyp.">
 
-<script src="{{ STATIC_URL }}js/underscore-min.js"></script>
-<script src="{{ STATIC_URL }}js/backbone-min.js"></script>
+<script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
 <script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
@@ -83,7 +83,7 @@
             Om StyleMatch
           </span>
           <div class="text-inside">
-            <h1>Frisör i {{ city }}</h1>
+            <h1>Frisör {{ city }}</h1>
             <p>
                I {{ city }} hittar du din favoritsalong eller frisör, där du kan klippa håret, 
                göra slingor, permanenta, färga eller bara fixa en herrklippning eller damklippning. 

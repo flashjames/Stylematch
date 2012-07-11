@@ -5,9 +5,9 @@
 {% block title %}Hitta frisör{% endblock %}
 
 {% block html-head %}
-<script src="{{ STATIC_URL }}js/underscore-min.js"></script>
-<script src="{{ STATIC_URL }}js/backbone-min.js"></script>
-<script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
+<script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone_paginator/lib/backbone.paginator.js"></script>
 <script>
   <!-- used in the service.js file, to know where the service api is located -> doesnt need to hardcode the url -->
   INSPIRATION_API_URL = "{% url 'api_dispatch_list' api_name="profile" resource_name="inspiration" %}";
@@ -16,9 +16,6 @@
 </script>
 
 <script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
-  <!-- Bör läggas i backbone scriptet
-       Counter parmametern behövs inte?
-    -->
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
@@ -26,15 +23,14 @@
   js.src = "//connect.facebook.net/sv_SE/all.js#xfbml=1&appId=309825002426259";
   fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));</script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
 <!-- Underscore.js Templates -->
 <script type="text/template" id="tpl-inspiration-image-list-item">
   <% if(!first_inspiration_image) { %>
   <hr class="soften">
   <% } %>
-  <div>
-  	<div class="span10 title-for-picture"><h3><%= comment %></h3>
+  <div>  	
+  <div class="span10 title-for-picture"><h3><%= comment %></h3>
   	<h4>Av: <a href="/<%= profile_url %>/"><%= first_name %> <%= last_name %></a>, Frisör i <%= salon_city %></h4>
   	</div>
     <div class="leftSidebar">
@@ -42,7 +38,6 @@
         <div class="counter">
           <p><%= votes %></p>
         </div>
-        <!-- Bör läggas i backbone scriptet -->
 	<div class="hype-button">
           <img src="{{ STATIC_URL }}img/heart-icon7.png"/> <p>Gilla</p>
 	</div>
@@ -76,7 +71,8 @@
       <a href="http://pinterest.com/pin/create/button/?url=http://stylematch.se&media=<%= image_url %>"
          class="pin-it-button"
          count-layout="horizontal">
-        <img src="http://stylematch.s3-website-eu-west-1.amazonaws.com/test/PinExt.png"
+
+        <img src="//assets.pinterest.com/images/PinExt.png"
              title="Pin It" />
       </a>
     </div>
@@ -89,10 +85,11 @@
 {% endblock %}
 {% block content %}
 <div class="row main-content">
+
+  <button id="trigger">Hi!</button>
   <div class="span11 offset1">
     <div style="margin: 0 auto;">
-      <div id="inspiration-list">
-    </div>
+      <ul id="inspiration-list"></ul>
     <div id="fb-root"></div>
   </div>
 </div>

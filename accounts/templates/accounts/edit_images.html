@@ -11,15 +11,13 @@
   PICTURE_PATH = "{{ user_images_path }}";
 </script>
 
-<script src="{{ STATIC_URL }}js/underscore-min.js"></script>
-<script src="{{ STATIC_URL }}js/backbone-min.js"></script>
+<script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
 <script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
 <script src="{{ STATIC_URL }}js/backbone.modelbinding.js"></script>
 <script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
-<script src="{{ STATIC_URL }}js/jquery.notify.js"></script>
-<script src="{{ STATIC_URL }}js/jquery/jquery.alerts.js"></script>
 
 <style>
   /* remove background around twitter bootstrap modal, on this page */
@@ -32,20 +30,9 @@
 
 {% block content %}
 
-<div id="alert" style="display:none;">
-  <div id="basic-template">
-      <p>#{text}</p>
-  </div>
-</div>
-
-
 <div class="row" > 
 
   <div id="edit-profile-large" class="span12" >
-  
-
-
-      {% include "update_notifier.html" %}
 
     <!-- Underscore.js Templates -->
     <script type="text/template" id="tpl-image-list-item">
@@ -147,7 +134,6 @@
       <form class="form-horizontal" method="post" enctype="multipart/form-data" action="{% url 'edit_images' %}">
 	<fieldset>
         {% csrf_token %}
-        {{ form.file.errors }}
 	<div class="control-group  ">
 	  <label class="control-label" for="inputWarning">Bild</label>
 	  <div class="controls">
@@ -168,11 +154,6 @@
 	<select style="display:none" name="image_type" id="image_type">
 	  <option selected="selected" value="G"></option>
 	</select>
-        {{ form.non_field_errors }}
-        {{ form.docfile.help_text }}
-        {{ form.docfile.label_tag }}
-        {{ form.docfile.errors }}
-        {{ form.docfile }}
 	</fieldset>
     </div>
     <div class="modal-footer">
@@ -192,7 +173,6 @@
       <form class="form-horizontal" method="post" enctype="multipart/form-data" action="{% url 'save_profile_image' %}">
 	<fieldset>
           {% csrf_token %}
-          {{ form.file.errors }}
 	  <div class="control-group  ">
 	    <label class="control-label" for="inputWarning">Bild</label>
 	    <div class="controls ">
@@ -201,11 +181,6 @@
 	      <p class="help-block"></p>
 	    </div>
 	  </div>
-          {{ form.non_field_errors }}
-          {{ form.docfile.help_text }}
-          {{ form.docfile.label_tag }}
-          {{ form.docfile.errors }}
-          {{ form.docfile }}
     </div>
     <div class="modal-footer">
       <a href="#" data-dismiss="modal" class="btn">Stäng</a>

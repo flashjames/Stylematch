@@ -46,6 +46,20 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             task['passed'] = True
         tasks_to_be_done.append(task)
 
+        
+        # Upload gallery image
+        task = { 'url': reverse('edit_images'),
+                 'text': u'Ladda upp din första galleribild',
+                 'passed': True }
+        try:
+            GalleryImage.objects.get(user=userprofile.user)
+        except GalleryImage.DoesNotExist:
+            task['passed'] = False
+        except GalleryImage.MultipleObjectsReturned:
+            pass
+        tasks_to_be_done.append(task)
+
+
         # Add open hours
         task = { 'url': reverse('profiles_add_hours'),
                  'text': u'Skriv in dina öppettider',
@@ -71,20 +85,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                  'passed': False }
         if userprofile.profile_text:
             task['passed'] = True
-        tasks_to_be_done.append(task)
-
-        # Upload gallery image
-        task = { 'url': reverse('edit_images'),
-                 'text': u'Ladda upp din första galleribild',
-                 'passed': True }
-        try:
-            GalleryImage.objects.get(user=userprofile.user)
-        except GalleryImage.DoesNotExist:
-            task['passed'] = False
-        except GalleryImage.MultipleObjectsReturned:
-            pass
-        tasks_to_be_done.append(task)
-        
+        tasks_to_be_done.append(task)        
         
         # if all tasks is done, return an empty list
         # so this won't be displayed in the template

@@ -18,8 +18,8 @@
     FEATURED_PROFILE_API_URL = "{% url 'api_dispatch_list' api_name="profile" resource_name="featured_profiles" %}";
 </script>
 
-<script src="{{ STATIC_URL }}js/underscore-min.js"></script>
-<script src="{{ STATIC_URL }}js/backbone-min.js"></script>
+<script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
 <script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
@@ -144,27 +144,5 @@
   {# To keep the larger header on the front-page #}
   <div class="content-background" style="margin-top:210px;">
 
-  {% if messages %}
-
-  {% for message in messages %}
-<div class="modal" id="myModal">
-  <div class="modal-header">
-    <button class="close" data-dismiss="modal">×</button>
-    <br />
-  </div>
-  <div class="modal-body">
-      <h3>{{ message }}</h3>
-  </div>
-  <div class="modal-footer">
-    <a href="#" class="btn btn-primary " data-dismiss="modal">Stäng</a>
-  </div>
-</div>
-<script src="{{ STATIC_URL }}js/bootstrap-modal.js" type="text/javascript"></script>
-<script type="text/javascript">
-  $('#myModal').modal({});
-</script>
-  {% endfor %}
-
-  {% endif %}
     {% endblock %}
 

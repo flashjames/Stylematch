@@ -1,26 +1,56 @@
-
 {% load url from future %}
-
 {% block footer %}
 <div class="base-footer-div">
-  <div class="container row">
-    <div class="span9 footer-menu">
-      <p class="footer-copyright">© Copyright Avizera AB</p>
-      <a href="{% url 'features_page' as features %}{{ features }}">Synas på StyleMatch</a>
-      <a href="{% url 'about_page' as about %}{{ about }}">Kontakt</a>
-      <a href="/linköping/">Frisörer Linköping</a>
+  <div class="container">
+   <div class="row">
+ 	<div class="span3">
+	 	<ul>
+	 	<li class="title">StyleMatch</li>
+	 	<li><a href="/accounts/register">Gå med som Frisör</a></li>
+	 	<li><a href="{% url 'about_page' as about %}{{ about }}">Om Oss</a></li>
+	 	<li><a href="http://blogg.stylematch.se/">Blogg</a></li>
+	 	<li id="press"><a href="{% url 'press_page' as press %}{{ press }}">Press</a></li>
+	 	<li id="jobb"><a href="{% url 'work_page' as work %}{{ work }}">Jobb</a></li>
+	 	</ul>
+ 	</div> 	
+ 	<div class="span3">
+	 	<ul>
+	 		<li class="title">Städer</li>
+	 		<li><a href="/stockholm/">Stockholm</a></li>
+	 		<li><a href="/linköping/">Linköping</a></li>
+	 		<li><a href="/norrköping/">Norrköping</a></li>
+	 	</ul>
+ 	</div>  
+ 	<div class="span3">
+	 	<ul>
+	 		<li class="title">Hjälp</li>
+	 		<li><a href="{% url 'faq-page' as faq %}{{ faq }}">Vanliga Frågor</a></li>
+	 		<li><a href="/kontakt/">Kontakta Oss</a></li>
+	 		<li><a href="/anvandarvillkor/">Användarvillkor</a></li>
+	 	</ul>
+ 	</div>  
+ 	<div class="span3">
+	 		<ul>
+		 		<li class="title">Kontakta Oss</li>
+		 		<li>0733 - 88 50 88</li>
+		 		<li><a href="mailto:hej@stylematch.se">
+hej@stylematch.se</a></li>
+		 		<li></li>
+		 	</ul>
+	 		<ul>
+		 		<li class="title">Socialt</li>
+		 		<li class="social"><a href="http://www.facebook.com/StyleMatch.SE" rel="nofollow"><div><img src="{{ STATIC_URL }}img/glyphicons/png/glyphicons_390_facebook.png"/><span>Facebook</span></div></a></li>
+		 		<li class="social"><a href="http://www.twitter.com/stylematch_SE" rel="nofollow"><div><img src="{{ STATIC_URL }}img/glyphicons/png/glyphicons_391_twitter_t.png"/><span>Twitter</span></div></a></li>
+		 	</ul>
+	</div>
+	<div class="span12" id="copyright">
+		<p>© 2012 Copyright Avizera AB </p></div>
+	
+ 	</div>  
+ 
+ 
     </div>
-    <div class="span1">
-      <div style="position:relative;left:-70px" id="twitter-follow">
-       <a style="margin-left:30px;" href="https://twitter.com/StyleMatch_SE" class="twitter-follow-button" data-show-count="true" data-lang="sv">Följ @StyleMatch_SE</a>
-      <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-      </div>
-    </div>
-     <div style="margin-left:0px" class="span1">
-        <div id="fb-like" style="margin-left:72px;" class="fb-like" data-href="https://www.facebook.com/StyleMatch.SE" data-send="false" data-layout="button_count" data-width="50" data-show-faces="false"></div>
-      </div>
-  </div>
-</div>
+ </div>
 
 </div> <!-- END what? -->
 

@@ -174,7 +174,7 @@ class BetaEmailView(CreateView):
 
     def form_valid(self, form):
         messages.success(self.request, "Din mail är nu registrerad, "
-                                       "vi kontaktar dig inom kort!")
+                                       "vi kontaktar dig inom kort!", extra_tags="modal")
         return super(BetaEmailView, self).form_valid(form)
 
 
@@ -191,7 +191,7 @@ class TipView(LoginRequiredMixin, StaffRequiredMixin, CreateView):
     def form_valid(self, form):
         messages.success(self.request, "Tack för din anmälan! Vi skickar "
                                        "biobiljetten så fort din frisör"
-                                       " skapar sin profil!")
+                                       " skapar sin profil!", extra_tags="modal")
         return super(TipView, self).form_valid(form)
 
 
@@ -245,7 +245,7 @@ def logout_page(request):
     Log users out and re-direct them to the main page.
     """
     auth.logout(request)
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect('/utloggad')
 
 
 def error500(request):

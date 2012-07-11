@@ -1,15 +1,18 @@
 @logocolor: #96d5cc;
 @color1: #C0C0C0;
 @color-links-nav: #DDB670;
-@background-color: 1 #E8E4E1;
 @background-color-blocks: #CCC9C0;
 @font-color-on-buttons: #302E2A;
+@content-color:#E8E4E1;
+@content-background-color:#EDECE9;
 
 /* GENERAL */
 
+
+
 .body-padding-zero {
     padding: 0;
-    background-color: grey;
+    background-color: #CCC9C0;
 }
 
 .body-beta-background {
@@ -47,11 +50,6 @@ label, input, button, select, textarea {
         color: white;
         font-size: 18px;
     }
-}
-
-
-.main-content {
-    margin-top: 30px;
 }
 
 .masthead {
@@ -164,14 +162,14 @@ hr.soften {
 }
 
 .content {
-    background-color:#E8E4E1;
+    background-color:@content-color;
     padding: 20px;
-    padding-bottom: 200px;
-    background:url("../../img/content-transparence-white-30.png");
+    padding-bottom:80px;
+    padding-top:40px;
 }
 
 .content-background {
-    background-color: #EDECE9;
+    background-color: @content-background-color;
     background-size: cover;
     position: relative;
 }
@@ -244,3 +242,43 @@ input, button, select, textarea {
 }
 
 /* END RESET PASSWORD PAGE */
+
+/* LOGIN THING IN BASE */
+
+
+
+#loginCollapse{
+	  background-color:@content-color;  
+	  label{
+	  		display:inline;
+	  }
+	  input{
+	  		display:inline;
+	  		margin-left:10px;
+	  }
+	  .container{
+	  		background-color: transparent;  
+	  }
+	  span{
+	  		font-size:30px;
+	  		font-weight: 100;
+	  		margin-right:50px;
+	  }
+	  .btn{
+	   		vertical-align: top;
+	   		margin-left:10px;
+	  }
+	  form{
+	  		margin-top:25px;
+	  }
+	  a{
+	   		font-size: 10px;
+	   		margin-left: 10px; 
+	  }
+	  img{
+	   		display:inline;
+	   		height:29px;
+	  }
+}
+
+/* END LOGIN THING */

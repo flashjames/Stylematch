@@ -107,7 +107,7 @@
             return this;
         },
         events:{
-            "click .delete-image":"deleteService",
+            "click .delete-image":"deleteImage",
             "click .show_image_on_profile":"switchDisplayOnProfile",
             "click .save": "saveComment"
         },
@@ -179,16 +179,15 @@
                 }
             });
         },
-        deleteService:function () {
+        deleteImage:function () {
             var image = this;
             $.noty.closeAll();
             noty({
                 text: "Är du säker på att du vill ta bort den här bilden?",
                 buttons: [
                   {type: 'btn btn-success', text: 'Ja, ta bort den.', click: function($noty) {
-                      service.model.destroy({
+                      image.model.destroy({
                           success:function() {
-                              vent.trigger('changeModelToEdit', new Service());
                           },
                           error:function() {
                               var noty_id = noty({

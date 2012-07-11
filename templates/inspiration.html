@@ -2,7 +2,7 @@
 {% load url from future %}
 {% load index_extras %}
 
-{% block title %}Hitta frisör{% endblock %}
+{% block title %}Inspiration{% endblock %}
 
 {% block html-head %}
 <script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
@@ -31,16 +31,16 @@
   <% } %>
   <div>  	
   <div class="span10 title-for-picture"><h3><%= comment %></h3>
-  	<h4>Av: <a href="/<%= profile_url %>/"><%= first_name %> <%= last_name %></a>, Frisör i <%= salon_city %></h4>
+  	<h4><span>Av:</span> <a href="/<%= profile_url %>/"><%= first_name %> <%= last_name %></a>, Frisör <span>i</span> <%= salon_city %></h4>
   	</div>
     <div class="leftSidebar">
       <div class="hype-box">
         <div class="counter">
           <p><%= votes %></p>
         </div>
-	<div class="hype-button">
+        <div class="hype-button">
           <img src="{{ STATIC_URL }}img/heart-icon7.png"/> <p>Gilla</p>
-	</div>
+          </div>
       </div>
     </div>
 

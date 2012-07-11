@@ -31,6 +31,25 @@
     <small>{{ user.first_name.title }} {{ user.last_name.title }}</small>
   </h1>
 </div>
+{% block notification %}
+{% if visibility_notification.approved %}
+<div class="alert alert-info">
+    <a class="close" data-dismiss="alert" href="#">x</a>
+    <h2>Grattis!<h2>
+    <p>Din profil är snart synlig på StyleMatch!</p>
+</div>
+{% endif %}
+
+{% if visibility_notification.visible %}
+<div class="alert alert-success">
+    <a class="close" data-dismiss="alert" href="#">x</a>
+    <h2>Grattis!<h2>
+    <p>Ditt konto är nu tillgängligt i vårt sökverktyg.</p>
+    <p>Tipsa din krets om dig själv på StyleMatch!</p>
+
+</div>
+{% endif %}
+{% endblock %}
 
 {% if tasks_to_be_done %}
 <div class="tabbable tabs-left">

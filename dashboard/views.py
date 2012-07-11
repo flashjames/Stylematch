@@ -106,6 +106,13 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                     [0 for x
                      in context['tasks_to_be_done']
                      if not x['passed']])
+        else:
+            if ((not self.request.user.userprofile.visible) and
+                    self.request.user.userprofile.approved):
+                context['visibility_notification'] = {'approved': True }
+            elif (self.request.user.userprofile.visible and
+                  self.request.user.userprofile.approved):
+                context['visibility_notification'] = {'visible': True }
 
         # visits statistics chart
         profile_url = self.request.user.userprofile.profile_url

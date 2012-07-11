@@ -135,4 +135,4 @@ def print_results(results):
 
 
 if __name__ == '__main__':
-    print get_fb_likes()
+    print get_profile_visits("caroline")

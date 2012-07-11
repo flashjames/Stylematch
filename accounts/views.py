@@ -13,6 +13,7 @@ from django.utils.translation import ugettext as _
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
+from django.template.loader import render_to_string
 from django.http import HttpResponseRedirect
 from django.views.generic import (TemplateView,
                                   UpdateView,
@@ -20,7 +21,7 @@ from django.views.generic import (TemplateView,
                                   RedirectView,
                                   CreateView,
                                   FormView)
-from braces.views import LoginRequiredMixin
+from braces.views import LoginRequiredMixin, SuperuserRequiredMixin
 from accounts.models import (Service,
                              UserProfile,
                              OpenHours,
@@ -595,3 +596,47 @@ class CropPictureView(LoginRequiredMixin, FormView):
         current_userprofile.save()
 
         return HttpResponseRedirect(self.get_success_url())
+
+
+def send_welcome_email(user):
+    """
+    Send an email once the user has been manually approved by us.
+    Called in MakeVisibleView
+
+    """
+    ctx_dict = {'user': user }
+    subject = render_to_string('welcome_email_subject.txt', ctx_dict)
+
+    # remove newlines if any
+    subject = ''.join(subject.splitlines())
+
+    message = render_to_string('welcome_email.txt', ctx_dict)
+
+    user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
+
+
+class MakeVisibleView(SuperuserRequiredMixin, RedirectView):
+
+    def get(self, request, **kwargs):
+        if 'slug' in kwargs:
+            try:
+                userprofileid = int(kwargs['slug'])
+            except ValueError:
+                userprofileid = 0
+
+            try:
+                up = UserProfile.objects.get(pk=userprofileid)
+                if not up.visible and up.approved:
+                    # make user visible and send a welcome email to user
+                    up.visible = True
+                    up.save()
+
+                    send_welcome_email(up.user)
+
+            except UserProfile.DoesNotExist:
+                pass
+
+        if 'next' in request.GET:
+            return HttpResponseRedirect(request.GET['next'])
+        else:
+            return super(MakeVisibleView, self).get(request **kwargs)

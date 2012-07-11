@@ -598,23 +598,6 @@ class CropPictureView(LoginRequiredMixin, FormView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-def send_welcome_email(user):
-    """
-    Send an email once the user has been manually approved by us.
-    Called in MakeVisibleView
-
-    """
-    ctx_dict = {'user': user }
-    subject = render_to_string('welcome_email_subject.txt', ctx_dict)
-
-    # remove newlines if any
-    subject = ''.join(subject.splitlines())
-
-    message = render_to_string('welcome_email.txt', ctx_dict)
-
-    user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
-
-
 class MakeVisibleView(SuperuserRequiredMixin, RedirectView):
 
     def get(self, request, **kwargs):
@@ -630,8 +613,6 @@ class MakeVisibleView(SuperuserRequiredMixin, RedirectView):
                     # make user visible and send a welcome email to user
                     up.visible = True
                     up.save()
-
-                    send_welcome_email(up.user)
 
             except UserProfile.DoesNotExist:
                 pass

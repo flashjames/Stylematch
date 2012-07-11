@@ -127,9 +127,6 @@ def check_profile(sender, request, userprofile=None, create_checks=True, **kwarg
         userprofile.save()
         logger.debug("User %s just got approved!" % userprofile)
 
-        # send welcome email to user
-        send_approved_profile_email(userprofile.user)
-
         # Send email notifying admin about this.
         send_mail(u'Godkänd användare i %s: %s %s' % (userprofile.salon_city,
                                         userprofile.user.first_name,
@@ -141,22 +138,6 @@ def check_profile(sender, request, userprofile=None, create_checks=True, **kwarg
                   ['admin@stylematch.se'])
     return True
 approved_user_criteria_changed.connect(check_profile)
-
-
-def send_approved_profile_email(user):
-    """
-    Send an email once the user completed all tasks for its account
-
-    """
-    ctx_dict = {'user': user }
-    subject = render_to_string('approved_profile_email_subject.txt', ctx_dict)
-
-    # remove newlines if any
-    subject = ''.join(subject.splitlines())
-
-    message = render_to_string('approved_profile_email.txt', ctx_dict)
-
-    user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
 
 
 def create_temporary_profile_url(sender, user, request, **kwargs):

@@ -13,3 +13,6 @@
 [submodule "staticfiles/js/noty"]
 	path = staticfiles/js/noty
 	url = https://github.com/needim/noty.git
+[submodule "staticfiles/js/backbone_paginator"]
+	path = staticfiles/js/backbone_paginator
+	url = git://github.com/addyosmani/backbone.paginator.git

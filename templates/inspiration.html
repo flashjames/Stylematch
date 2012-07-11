@@ -8,6 +8,7 @@
 <script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
 <script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
 <script src="{{ STATIC_URL }}js/backbone_paginator/lib/backbone.paginator.js"></script>
+
 <script>
   <!-- used in the service.js file, to know where the service api is located -> doesnt need to hardcode the url -->
   INSPIRATION_API_URL = "{% url 'api_dispatch_list' api_name="profile" resource_name="inspiration" %}";
@@ -29,18 +30,19 @@
   <% if(!first_inspiration_image) { %>
   <hr class="soften">
   <% } %>
-  <div>  	
-  <div class="span10 title-for-picture"><h3><%= comment %></h3>
-  	<h4><span>Av:</span> <a href="/<%= profile_url %>/"><%= first_name %> <%= last_name %></a>, Frisör <span>i</span> <%= salon_city %></h4>
-  	</div>
+
+  <div>
+    <div class="span10 title-for-picture"><h3><%= comment %></h3>
+      <h4><span>Av:</span> <a href="/<%= profile_url %>/"><%= first_name %> <%= last_name %></a>, Frisör <span>i</span> <%= salon_city %></h4>
+    </div>
     <div class="leftSidebar">
-      <div class="hype-box">
+      <div class="like-box">
         <div class="counter">
           <p><%= votes %></p>
         </div>
-        <div class="hype-button">
+        <div class="like-button">
           <img src="{{ STATIC_URL }}img/heart-icon7.png"/> <p>Gilla</p>
-          </div>
+        </div>
       </div>
     </div>
 
@@ -53,12 +55,12 @@
 
     <div class="rightSidebar">
       <!--<div class="profile-image-inspiration">
-        <a href="/{# userprofile.profile_url #}/">
-          {# thumbnail userprofile|profile_image_thumbnail "50x50" crop="center" as im #}
-          <img src="{# im.url #}"
-               title="{# image.user.first_name #} {# image.user.last_name #}" />
-          {# endthumbnail #}
-        </a>
+          <a href="/{# userprofile.profile_url #}/">
+            {# thumbnail userprofile|profile_image_thumbnail "50x50" crop="center" as im #}
+            <img src="{# im.url #}"
+                 title="{# image.user.first_name #} {# image.user.last_name #}" />
+            {# endthumbnail #}
+          </a>
       </div>
       -->
       <div class="fb fb-like"
@@ -71,7 +73,6 @@
       <a href="http://pinterest.com/pin/create/button/?url=http://stylematch.se&media=<%= image_url %>"
          class="pin-it-button"
          count-layout="horizontal">
-
         <img src="//assets.pinterest.com/images/PinExt.png"
              title="Pin It" />
       </a>
@@ -85,14 +86,13 @@
 {% endblock %}
 {% block content %}
 <div class="row main-content">
-
   <button id="trigger">Hi!</button>
   <div class="span11 offset1">
     <div style="margin: 0 auto;">
       <ul id="inspiration-list"></ul>
-    <div id="fb-root"></div>
+      <div id="fb-root"></div>
+    </div>
   </div>
-</div>
 
-<script src="{{ STATIC_URL }}js/inspiration.js"></script>
-{% endblock %}
+  <script src="{{ STATIC_URL }}js/inspiration.js"></script>
+  {% endblock %}

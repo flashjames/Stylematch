@@ -53,7 +53,6 @@
         parse: function (response) {
             // Be sure to change this based on how your results
             // are structured (e.g d.results is Netflix specific)
-            console.log(response);
             var tags = response.objects;
 
             // number of pages with content
@@ -67,9 +66,13 @@
         tagName:"li",
         className: "inspiration-item",
         template:_.template($('#tpl-inspiration-image-list-item').html()),
-
+	test: function() {
+	    this.votes = 214;
+	    this.tagName
+	    console.log("askjd", this.className);
+	},
         initialize:function () {
-            //_.bindAll(this, "updateModelOrder");
+            _.bindAll(this, 'like_button_mousein', 'like_button_mouseout');
         },
         render:function (eventName) {
             $(this.el).html(this.template(this.model.toJSON()));
@@ -78,28 +81,47 @@
             // make lightbox work for the newly created image
             var image_a = $(this.el).find("a.inspiration-images");
             image_a.colorbox({rel:'group2', transition:"none", width:"75%", height:"90%"});
-
+	    
+	    // bind on
+	    this.$('.like-button').hover(this.like_button_mousein, this.like_button_mouseout);
+	    
             return this;
         },
         events:{
-            "click .hype-button": "like"
+            "click .like-button": "like"
         },
+	like_button_mousein: function() {
+	    if(!this.already_liked) {
+		var counter_p = this.$('.counter > p');
+		this.number_of_votes = parseInt(counter_p.text());
+		counter_p.text("+1");
+	    }
+	},
+	like_button_mouseout: function() {
+	    if(!this.already_liked) {
+		var counter_p = this.$('.counter > p');
+		counter_p.text(this.number_of_votes);
+	    }
+	},
         like: function() {
             /* Send likes for this Inspiration image to django and update the <p> object
                with number of likes */
             var self = this;
+	    self.already_liked = true;
             $.post(
                 '/like/',
                 { 'id': this.model.get('id'),
                   'csrfmiddlewaretoken': CSRF_TOKEN },
                 function(data) {
-                    var counter_p = $(self.el).find('.counter > p')
+		    var counter_p = $(self.el).find('.counter > p')
                     var number_of_votes = parseInt(counter_p.text());
-                    if(data > number_of_votes) {
-                        counter_p.text(parseInt(counter_p.text()) + 1);
+                    if(data > self.number_of_votes) {
+                        counter_p.text(self.number_of_votes + 1);
+			self.$('.like-button > p').remove();
                     } else {
                         // display that you've already liked the image
                         // or that something have gone wrong
+			self.already_liked = false;
                     }
                 }
             );

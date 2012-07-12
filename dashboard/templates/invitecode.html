@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load url from future %}
+
+{% block html-head %}
+<script type="text/javascript" href="{{ STATIC_URL }}js/bootstrap-collapse.js"></script>
+{% endblock %}
+
+{% block content %}
+<h1>Inbjudningskoder
+<small>Bjud in kollegorna till StyleMatch!</small>
+</h1>
+<hr />
+
+<div class="row">
+  <div class="span6 offset2">
+    <h2>Dina koder</h2>
+    <table class="table code-table">
+      <tr>
+        <td class="code">
+          t6J49Tj
+        </td>
+      </tr>
+      <tr>
+        <td class="code">
+          R76Iker2
+        </td>
+      </tr>
+      <tr>
+        <td class="code">
+          PO69as45
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="span6 offset2">
+    <a id="show-used-codes" data-toggle="collapse" href="#used-codes">Visa använda koder</a>
+    <div id="used-codes" class="collapse">
+      <table class="table code-table">
+        <tr>
+          <td>
+            <b>Kod</b>
+          </td>
+          <td>
+            <b>Använd av</b>
+          </td>
+        </tr>
+        <tr>
+          <td class="code used-code">
+            t6J49Tj
+          </td>
+          <td>
+            <a href="http://localhost:8000/linda-hotshot/">Linda Hotshot</a>
+          </td>
+        </tr>
+        <tr>
+          <td class="code used-code">
+            R76Iker2
+          </td>
+          <td>
+            <a href="http://localhost:8000/linda-hotshot/">Linda Hotshot</a>
+          </td>
+        </tr>
+        <tr>
+          <td class="code used-code">
+            PO69as45
+          </td>
+          <td>
+            <a href="http://localhost:8000/linda-hotshot/">Linda Hotshot</a>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

@@ -2,8 +2,8 @@
 import json
 from django.views.generic import TemplateView
 from django.core.urlresolvers import reverse
-from accounts.models import Service, OpenHours, GalleryImage
-from django.views.generic.base import TemplateView
+from accounts.models import Service, OpenHours, GalleryImage, InviteCode
+from django.views.generic import TemplateView
 from braces.views import LoginRequiredMixin
 from dashboard.google_analytics import profile_statistics
 from accounts.models import UserProfile
@@ -118,3 +118,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             context['visitor_count_data'] = []
 
         return context
+
+
+class InviteCodeView(TemplateView):
+    template_name = "invitecode.html"

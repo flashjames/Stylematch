@@ -422,7 +422,9 @@ class UserProfile(DirtyFieldsMixin, models.Model):
         return super(UserProfile, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return u'%s, %s' % (self.user, self.salon_city)
+        return u'%s %s, %s' % (self.user.first_name,
+                               self.user.last_name,
+                               self.salon_city)
 
 
 # Signals handler for deleting files after object record deleted
@@ -478,7 +480,23 @@ class InviteCode(models.Model):
                                  on_delete=models.SET_NULL)
 
     def __unicode__(self):
-        return u'Invitecode: %s Used by: %s' % (self.invite_code, self.reciever)
+        if self.inviter is None:
+            inviter = "-"
+        else:
+            inviter = "%s %s, %s" % (
+                 self.inviter.first_name, self.inviter.last_name,
+                 self.inviter.userprofile.salon_city,
+                    )
+        if self.reciever is None:
+            reciever = "-"
+        else:
+            reciever = "%s %s, %s" % (
+                self.reciever.first_name, self.reciever.last_name,
+                self.reciever.userprofile.salon_city,
+                    )
+        return u'(%s) - %s invited %s - %s' % (
+                self.invite_code, inviter, reciever, self.comment
+                )
 
 
 class Featured(models.Model):
@@ -486,7 +504,9 @@ class Featured(models.Model):
     city = models.CharField("City", max_length=30, null=False, blank=False)
 
     def __unicode__(self):
-        return "%s in %s" % (self.user.user.username, self.city)
+        return "%s %s in %s" % (self.user.user.first_name,
+                                self.user.user.last_name,
+                                self.city)
 
     class Meta:
         unique_together = ('user', 'city')

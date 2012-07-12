@@ -443,7 +443,9 @@ class UserProfile(DirtyFieldsMixin, models.Model):
         return super(UserProfile, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return u'%s, %s' % (self.user, self.salon_city)
+        return u'%s %s, %s' % (self.user.first_name,
+                               self.user.last_name,
+                               self.salon_city)
 
 
 # Signals handler for deleting files after object record deleted
@@ -476,15 +478,46 @@ post_delete.connect(delete_filefield, GalleryImage)
 
 
 class InviteCode(models.Model):
+    """
+    NOTE: Keep the ``used`` boolean, because if the reciever gets
+    deleted, there is no other way to know if the code has been
+    used or not.
+
+    """
     used = models.BooleanField("Have the invite code been used?",
                                default=False)
     invite_code = models.CharField("The string to use as invite code",
                                    max_length=30)
     comment = models.CharField("To who was the invitecode given? And so on..",
-                               max_length=500)
+                               max_length=500,
+                               null=True,
+                               blank=True)
+    inviter = models.ForeignKey(User, related_name='invitecode_inviter',
+                                null=True,
+                                blank=True)
+    reciever = models.ForeignKey(User, related_name='invitecode_reciever',
+                                 null=True,
+                                 blank=True,
+                                 on_delete=models.SET_NULL)
 
     def __unicode__(self):
-        return u'Invitecode: %s Used: %s' % (self.invite_code, self.used)
+        if self.inviter is None:
+            inviter = "-"
+        else:
+            inviter = "%s %s, %s" % (
+                 self.inviter.first_name, self.inviter.last_name,
+                 self.inviter.userprofile.salon_city,
+                    )
+        if self.reciever is None:
+            reciever = "-"
+        else:
+            reciever = "%s %s, %s" % (
+                self.reciever.first_name, self.reciever.last_name,
+                self.reciever.userprofile.salon_city,
+                    )
+        return u'(%s) - %s invited %s - %s' % (
+                self.invite_code, inviter, reciever, self.comment
+                )
 
 
 class Featured(models.Model):
@@ -492,7 +525,9 @@ class Featured(models.Model):
     city = models.CharField("City", max_length=30, null=False, blank=False)
 
     def __unicode__(self):
-        return "%s in %s" % (self.user.user.username, self.city)
+        return "%s %s in %s" % (self.user.user.first_name,
+                                self.user.user.last_name,
+                                self.city)
 
     class Meta:
         unique_together = ('user', 'city')

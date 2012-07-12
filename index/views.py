@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic import View, ListView, CreateView, TemplateView
 from django.core.urlresolvers import reverse
 from accounts.models import UserProfile, GalleryImage
-from index.models import BetaEmail
+from index.models import BetaEmail, InspirationVote
 from index.forms import TipForm
 from accounts.api import ProfileResource
 import simplejson as json
@@ -230,6 +230,12 @@ class LikeView(View):
 
         voted_images = request.session.get('has_voted', [])
         if id not in voted_images:
+            # create a vote object (for statistics) that saves
+            # the timestamp
+            vote = InspirationVote.objects.create(image=image)
+            vote.save()
+
+            # increase the votecount on the image
             image.votes += 1
             image.save()
             request.session['has_voted'] = voted_images + [id]

@@ -149,6 +149,10 @@ urlpatterns += patterns(
             TemplateView.as_view(template_name="press.html"),
             {},
             'press_page'),
+    (r'^stylematch-i-media/',
+            TemplateView.as_view(template_name="in_media.html"),
+            {},
+            'in-media-page'),
     (r'^anvandarvillkor/',
             TemplateView.as_view(template_name="anvandarvillkor.html"),
             {},
@@ -175,9 +179,8 @@ urlpatterns += patterns(
             {},
             'api_like_view'),
 
-    (r'^dashboard/$',
-            DashboardView.as_view(), {},
-            'dashboard'),
+    url(r'^',
+        include('dashboard.urls')),
 
     (r'^search/',
             TemplateView.as_view(template_name="search.html"),

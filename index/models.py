@@ -1,4 +1,5 @@
 from django.db import models
+from accounts.models import GalleryImage
 
 
 class BetaEmail(models.Model):
@@ -18,3 +19,11 @@ class Tip(models.Model):
 
     def __unicode__(self):
         return u'%s, %s' % (self.name, self.phone)
+
+
+class InspirationVote(models.Model):
+    image = models.ForeignKey(GalleryImage)
+    datetime = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return u'%s' % self.image.filename

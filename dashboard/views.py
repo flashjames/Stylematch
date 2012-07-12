@@ -2,9 +2,9 @@
 import json
 from django.views.generic import TemplateView
 from django.core.urlresolvers import reverse
-from accounts.models import Service, OpenHours, GalleryImage
-from django.views.generic.base import TemplateView
-from braces.views import LoginRequiredMixin
+from accounts.models import Service, OpenHours, GalleryImage, InviteCode
+from django.views.generic import TemplateView
+from braces.views import LoginRequiredMixin, StaffRequiredMixin
 from dashboard.google_analytics import profile_statistics
 from accounts.models import UserProfile
 
@@ -123,5 +123,22 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         # if the google api authentication key is missing
         except AttributeError:
             context['visitor_count_data'] = []
+
+        return context
+
+
+class InviteCodeView(LoginRequiredMixin, StaffRequiredMixin, TemplateView):
+    template_name = "invitecode.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(InviteCodeView, self).get_context_data(**kwargs)
+
+        # only hit the database once
+        all_codes = InviteCode.objects.filter(inviter=self.request.user)
+        unused_codes = all_codes.filter(reciever=None)
+        used_codes = all_codes.exclude(reciever=None)
+
+        context['codes'] = unused_codes
+        context['used_codes'] = used_codes
 
         return context

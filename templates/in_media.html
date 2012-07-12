@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load url from future %}
+
+{% block title %}I media{% endblock %}
+
+{% block content %}
+
+<div class="in-media row">
+	<div class="span11 offset1">
+		<h1>
+			StyleMatch i Media
+		</h1>
+		<h2>
+			Detta är ett urval av nyhetsartiklar och bloggposter som StyleMatch har synts i.
+		</h2>
+	
+	<div class="span7">
+		<ul>
+		<!-- 	Lägg nyaste artiklarna överst	 -->
+		
+			<li><a target="_blank" href="{{ STATIC_URL }}img/in_media/linkopingstidning-july-2012.jpg">"Unga företagare röjer i frisördjungeln" - Linköpings Tidning, Tryckt Tidning</a> - 2012-07-06 </li>
+			<li><a target="_blank" href="http://www.linkopingstidning.se/article/articleview/48270/1/73/">"Unga företagare röjer i frisördjungeln" - Linköpings Tidning, Hemsida</a> - 2012-07-06 </li>
+			<li><a target="_blank" href="http://osccarsvalland.spotlife.se/2012/06/01/stylematch/">"StyleMatch" av Osccar Svalland</a> - 2012-06-01</li>
+			<li><a target="_blank" href="{{ STATIC_URL }}img/in_media/elin-drommen-2012.jpg">"Välkommen till de produktiva lekstugornas värld." - Sektionstidningen för Civilekonomsprogrammet vid Linköpings Universitet</a> - 2012-05-29</li>
+			<li><a target="_blank" href="http://osccarsvalland.spotlife.se/2012/05/21/stylematch-hitta-din-frisor/">"StyleMatch - Hitta din frisör" av Osccar Svalland</a> - 2012-05-21</li>
+			<li><a target="_blank" href="{{ STATIC_URL }}img/in_media/ipikuri-2012.jpg"> Ipikuré, Sektionstidningen för Industriell ekonomi vid Linköpings Universitet</a> - 2012-05-11</li>
+			<li><a target="_blank" href="http://honhannah.blogg.se/2012/may/stylematch.html">"StyleMatch" av Hanna Rondahl</a> - 2012-05-08</li>	
+			
+		</ul>
+	</div>
+		
+	</div>
+	
+	
+	
+	
+	
+</div>
+
+{% endblock %}

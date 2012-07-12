@@ -66,11 +66,11 @@
         tagName:"li",
         className: "inspiration-item",
         template:_.template($('#tpl-inspiration-image-list-item').html()),
-	test: function() {
-	    this.votes = 214;
-	    this.tagName
-	    console.log("askjd", this.className);
-	},
+        test: function() {
+            this.votes = 214;
+            this.tagName
+            console.log("askjd", this.className);
+        },
         initialize:function () {
             _.bindAll(this, 'like_button_mousein', 'like_button_mouseout');
         },
@@ -81,53 +81,53 @@
             // make lightbox work for the newly created image
             var image_a = $(this.el).find("a.inspiration-images");
             image_a.colorbox({rel:'group2', transition:"none", width:"75%", height:"90%"});
-	    
-	    // bind on
-	    this.$('.like-button').hover(this.like_button_mousein, this.like_button_mouseout);
-	    
+
+            // bind on
+            this.$('.like-button').hover(this.like_button_mousein, this.like_button_mouseout);
+
             return this;
         },
         events:{
             "click .like-button": "like"
         },
-	like_button_mousein: function() {
-	    if(!this.already_liked) {
-		var counter_p = this.$('.counter > p');
-		this.number_of_votes = parseInt(counter_p.text());
-		counter_p.text("+1");
-	    }
-	},
-	like_button_mouseout: function() {
-	    if(!this.already_liked) {
-		var counter_p = this.$('.counter > p');
-		counter_p.text(this.number_of_votes);
-	    }
-	},
+        like_button_mousein: function() {
+            if(!this.already_liked) {
+                var counter_p = this.$('.counter > p');
+                this.number_of_votes = parseInt(counter_p.text());
+                counter_p.text("+1");
+            }
+        },
+        like_button_mouseout: function() {
+            if(!this.already_liked) {
+                var counter_p = this.$('.counter > p');
+                counter_p.text(this.number_of_votes);
+            }
+        },
         like: function() {
             /* Send likes for this Inspiration image to django and update the <p> object
                with number of likes */
             var self = this;
-	    self.already_liked = true;
+            self.already_liked = true;
             $.post(
                 '/like/',
                 { 'id': this.model.get('id'),
                   'csrfmiddlewaretoken': CSRF_TOKEN },
                 function(data) {
-		    var counter_p = $(self.el).find('.counter > p')
+                    var counter_p = $(self.el).find('.counter > p')
                     var number_of_votes = parseInt(counter_p.text());
                     if(data > self.number_of_votes) {
                         counter_p.text(self.number_of_votes + 1);
-			self.$('.like-button > p').remove();
+                        self.$('.like-button > p').remove();
                     } else {
                         // display that you've already liked the image
                         // or that something have gone wrong
-			self.already_liked = false;
+                        self.already_liked = false;
                     }
                 }
             );
 
         },
-        
+
         close:function () {
             $(this.el).unbind();
             $(this.el).remove();
@@ -144,20 +144,20 @@
             this.inspirationList.bind('reset', this.addAll, this);
             this.inspirationList.pager({error: this.fetchError, success: this.fetchSuccess});          
         },
-	fetchSuccess: function(collection, response) {
-	    if(!response) {
-		var noty_id = noty({
-		    text: 'Något gick fel, inga bilder kunde hämtas!',
-		    type: 'error'
-		});
-	    }
-	},
-	fetchError: function(collection, response) {
-	    var noty_id = noty({
-		text: 'Något gick fel, inga bilder kunde hämtas!',
-		type: 'error'
-	    });
-	},
+        fetchSuccess: function(collection, response) {
+            if(!response) {
+                var noty_id = noty({
+                    text: 'Något gick fel, inga bilder kunde hämtas!',
+                    type: 'error'
+                });
+            }
+        },
+        fetchError: function(collection, response) {
+            var noty_id = noty({
+                text: 'Något gick fel, inga bilder kunde hämtas!',
+                type: 'error'
+            });
+        },
         events:{
             'click #trigger': 'trigger',
         },
@@ -168,7 +168,7 @@
             var first_inspiration_image = true;
             // render each model object as a li object
             _.each( this.inspirationList.models, function (inspiration_image) {
-		// no <hr> before first image (is set in template, with first_inspiration_image)
+                // no <hr> before first image (is set in template, with first_inspiration_image)
                 if(first_inspiration_image) {
                     inspiration_image.set({first_inspiration_image: true}, {silent: true});
                     first_inspiration_image = false;
@@ -178,7 +178,7 @@
             return this;
         },
         trigger: function() {
-	    console.log("trigger");
+            console.log("trigger");
             this.inspirationList.requestNextPage({error: this.fetchError, success: this.fetchSuccess, add: true });
 
         },

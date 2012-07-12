@@ -160,6 +160,7 @@
         },
         events:{
             'click #trigger': 'trigger',
+            'scroll' : 'checkScroll',
         },
         addOne: function(inspiration_image) {
             this.$('#inspiration-list').append(new InspirationListItemView({model:inspiration_image}).render().el);
@@ -176,6 +177,12 @@
                 this.$('#inspiration-list').append(new InspirationListItemView({model:inspiration_image}).render().el);
             }, this);
             return this;
+        },
+        checkScroll: function() {
+            var triggerPoint = 100; // 100px from the bottom
+            if ( this.el.scrollTop + this.el.clientHeight + triggerPoint > this.el.scrollHeight ) {
+                this.inspirationList.requestNextPage({error: this.fetchError, success: this.fetchSuccess, add: true });
+            }
         },
         trigger: function() {
             console.log("trigger");

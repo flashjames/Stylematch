@@ -6,10 +6,16 @@
 {% endblock %}
 
 {% block content %}
-<h1>Inbjudningskoder
-<small>Bjud in kollegorna till StyleMatch!</small>
-</h1>
-<hr />
+<div class="page-header">
+  <h1>Inbjudningskoder
+  <small>Bjud in kollegorna till StyleMatch!</small>
+  </h1>
+</div>
+<div class="row">
+  <div class="span12">
+    Lorem ipsum om varför detta är bra och vad de tjänar på det osv osv
+  </div>
+</div>
 
 <div class="row">
   <div class="span6 offset2">
@@ -25,7 +31,7 @@
       {% endfor %}
     </table>
     {% else %}
-    <p>Du har inga koder kvar.</p>
+    <div class="alert alert-error">Du har inga koder kvar. Bravo!</div>
     {#<a href="#">Behöver du fler?</a>#}
     {% endif %}
   </div>

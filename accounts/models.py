@@ -460,10 +460,18 @@ class InviteCode(models.Model):
     invite_code = models.CharField("The string to use as invite code",
                                    max_length=30)
     comment = models.CharField("To who was the invitecode given? And so on..",
-                               max_length=500)
+                               max_length=500,
+                               null=True,
+                               blank=True)
+    inviter = models.ForeignKey(User, related_name='invitecode_inviter',
+                                null=True,
+                                blank=True)
+    reciever = models.ForeignKey(User, related_name='invitecode_reciever',
+                                 null=True,
+                                 blank=True)
 
     def __unicode__(self):
-        return u'Invitecode: %s Used: %s' % (self.invite_code, self.used)
+        return u'Invitecode: %s Used by: %s' % (self.invite_code, self.reciever)
 
 
 class Featured(models.Model):

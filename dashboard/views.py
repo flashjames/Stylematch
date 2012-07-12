@@ -120,5 +120,18 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class InviteCodeView(TemplateView):
+class InviteCodeView(LoginReqiredMixin, TemplateView):
     template_name = "invitecode.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(InviteCodeView, self).get_context_data(**kwargs)
+
+        # only hit the database once
+        all_codes = InviteCode.objects.filter(inviter=self.user)
+        unused_codes = all_codes.filter(reciever=None)
+        used_codes = all_codes.exclude(reciever=None)
+
+        context['codes'] = used_codes
+        context['unused_codes'] = unused_codes
+
+        return context

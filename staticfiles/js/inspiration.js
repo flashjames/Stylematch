@@ -142,25 +142,32 @@
             this.inspirationList = new InspirationCollection();
             this.inspirationList.bind('add', this.addOne, this);
             this.inspirationList.bind('reset', this.addAll, this);
-            this.inspirationList.pager({error: this.fetchError, success: this.fetchSuccess});          
+
+            // 'Body' won't trigger scroll events unless its overflow setting is explicitly set to 'scroll'
+            var self = this;
+            $(window).bind('scroll', function(ev) {
+                var triggerPoint = $(window).height() * 3;
+                if ( self.el.scrollTop + triggerPoint > self.el.scrollHeight ) {
+                    self.loadData();
+                }
+            });
+            this.inspirationList.pager({error: this.fetchError, success: this.fetchSuccess});
         },
         fetchSuccess: function(collection, response) {
             if(!response) {
                 var noty_id = noty({
-                    text: 'Något gick fel, inga bilder kunde hämtas!',
+                    text: 'Ett okänt fel uppstod.!',
                     type: 'error'
                 });
             }
         },
         fetchError: function(collection, response) {
+            // this is triggered when the user has
+            // reached the bottom, but why?
             var noty_id = noty({
-                text: 'Något gick fel, inga bilder kunde hämtas!',
+                text: 'Inga fler bilder kunde hämtas!',
                 type: 'error'
             });
-        },
-        events:{
-            'click #trigger': 'trigger',
-            'scroll' : 'checkScroll',
         },
         addOne: function(inspiration_image) {
             this.$('#inspiration-list').append(new InspirationListItemView({model:inspiration_image}).render().el);
@@ -178,16 +185,8 @@
             }, this);
             return this;
         },
-        checkScroll: function() {
-            var triggerPoint = 100; // 100px from the bottom
-            if ( this.el.scrollTop + this.el.clientHeight + triggerPoint > this.el.scrollHeight ) {
-                this.inspirationList.requestNextPage({error: this.fetchError, success: this.fetchSuccess, add: true });
-            }
-        },
-        trigger: function() {
-            console.log("trigger");
+        loadData: function() {
             this.inspirationList.requestNextPage({error: this.fetchError, success: this.fetchSuccess, add: true });
-
         },
         render:function (eventName) {
             return this;

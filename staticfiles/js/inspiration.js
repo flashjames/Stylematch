@@ -66,11 +66,6 @@
         tagName:"li",
         className: "inspiration-item",
         template:_.template($('#tpl-inspiration-image-list-item').html()),
-        test: function() {
-            this.votes = 214;
-            this.tagName
-            console.log("askjd", this.className);
-        },
         initialize:function () {
             _.bindAll(this, 'like_button_mousein', 'like_button_mouseout');
         },
@@ -132,7 +127,6 @@
             $(this.el).unbind();
             $(this.el).remove();
         }
-
     });
 
     window.InspirationView = Backbone.View.extend({

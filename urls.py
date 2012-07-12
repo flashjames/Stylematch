@@ -179,9 +179,8 @@ urlpatterns += patterns(
             {},
             'api_like_view'),
 
-    (r'^dashboard/$',
-            DashboardView.as_view(), {},
-            'dashboard'),
+    url(r'^',
+        include('dashboard.urls')),
 
     (r'^search/',
             TemplateView.as_view(template_name="search.html"),

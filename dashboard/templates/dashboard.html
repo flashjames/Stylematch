@@ -39,7 +39,7 @@
     <h2>Hej! </h2>
     <p>Nu har du gjort klart alla de steg som krävs för att få vara med i söklistan. Vi kommer inom de närmaste 24 timmarna att se över din profil och sedan lägga in den i vår söklista! </p>
     <p>Du kommer få ett meddelande HÄR när din profil blir synlig i söklistan!</p>
-    <p>Du kan redan nu använda din profil genom att sprida den till vänner och kunder genom din personliga adress (http:/stylematch/dittnamn).</p>
+    <p>Du kan redan nu använda din profil genom att sprida den till vänner och kunder genom din personliga adress (<a href="{% url 'profile_display_with_profile_url' slug=user.userprofile.profile_url as profile_url %}{{ profile_url }}">http://stylematch.se{{ profile_url }}</a>).</p>
     <p>Glöm inte att du alltid kan göra din profil lite bättre, den blir ditt nya ansikte på internet! </p>
     <p>/ Martin</p>
   </div>

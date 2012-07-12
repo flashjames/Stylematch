@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from accounts.models import Service, OpenHours, GalleryImage, InviteCode
 from index.models import InspirationVote
 from django.views.generic import TemplateView
-from braces.views import LoginRequiredMixin, StaffRequiredMixin
+from braces.views import LoginRequiredMixin
 from dashboard.google_analytics import profile_statistics
 from accounts.models import UserProfile
 from datetime import datetime, timedelta
@@ -202,7 +202,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class InviteCodeView(LoginRequiredMixin, StaffRequiredMixin, TemplateView):
+class InviteCodeView(LoginRequiredMixin, TemplateView):
     template_name = "invitecode.html"
 
     def get_context_data(self, **kwargs):

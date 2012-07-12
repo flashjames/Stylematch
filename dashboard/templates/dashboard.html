@@ -6,6 +6,7 @@
 {% block html-head %}
 <script src="{{ STATIC_URL }}js/d3.v2.min.js"></script>
 <script src="{{ STATIC_URL }}js/underscore-min.js"></script>
+<script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
 
 <script type="text/javascript">
   <!-- Visitor count statistics to chart -->
@@ -32,40 +33,6 @@
   </h1>
 </div>
 {% block notification %}
-{% if visibility_notification.approved %}
-<div class="span11 alert alert-info">
-  <a class="close" data-dismiss="alert" href="#">x</a>
-  <div class="span7 offset2">
-    <h2>Hej! </h2>
-    <p>Nu har du gjort klart alla de steg som krävs för att få vara med i söklistan. Vi kommer inom de närmaste 24 timmarna att se över din profil och sedan lägga in den i vår söklista! </p>
-    <p>Du kommer få ett meddelande HÄR när din profil blir synlig i söklistan!</p>
-    <p>Du kan redan nu använda din profil genom att sprida den till vänner och kunder genom din personliga adress (<a href="{% url 'profile_display_with_profile_url' slug=user.userprofile.profile_url as profile_url %}{{ profile_url }}">http://stylematch.se{{ profile_url }}</a>).</p>
-    <p>Glöm inte att du alltid kan göra din profil lite bättre, den blir ditt nya ansikte på internet! </p>
-    <p>/ Martin</p>
-  </div>
-</div>
-
-{% endif %}
-
-{% if visibility_notification.visible %}
-<div class="span11 alert alert-success">
-  <a class="close" data-dismiss="alert" href="#">x</a>
-  <div class="span7 offset2">
-    <h2>Hej igen!</h2>
-    <p>Nu har vi sett över din profil och den ser ut att vara på topp!</p>
-    <ul>
-      <li>Du finns nu med i söklistan!</li>
-      <li>Dina bilder visas nu upp på inspirationssidan!</li>
-      <li>Du kommer nu högt upp i googlesökningar!</li>
-    </ul>
-    <p>-----------------------------------------------------------------</p>
-    <p>= Nu syns dina kunskaper som frisör!<p>
-    <p>Fortsätt att hålla din profil på topp genom att alltid ladda upp nya bilder på dina senaste jobb och kreationer.</p>
-    <p>Nu är du igång och har alla möjligheter att styra din marknadsföring dit du vill!</p>
-    <p>/ Martin</p>
-  </div>
-</div>
-{% endif %}
 {% endblock %}
 
 {% if tasks_to_be_done %}
@@ -108,15 +75,64 @@
       <div id="profile-visitor-statistics"></div>
     </div>
   </div>
-  <!--  <div class="span4">
-        <div class="well">
-          <img src="http://placehold.it/260x180" />
-        </div>
-  </div>
+</div>
+<!--  <div class="span4">
+      <div class="well">
+        <img src="http://placehold.it/260x180" />
+      </div>
+</div>
 </div>-->
-  <!-- Google analytics visitor count chart, with D3js -->
-  <script type="text/javascript" src="{{ STATIC_URL }}js/chart.js"></script>
+<!-- Google analytics visitor count chart, with D3js -->
+<script type="text/javascript" src="{{ STATIC_URL }}js/chart.js"></script>
 
-  {% endblock %}
+<div class="modal onpage-messages-modal fade" id="onpage-message" style="display:none;">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal">×</button>
+    <h3>Meddelande från StyleMatch</h3>
+  </div>
+  <div class="onpage-content-outerborder">
+    <div class="onpage-content-innerborder">
+      <!-- uploads from here should be gallery images -->
+      <div class="modal-body onpage-message-body">
+        {% if visibility_notification.approved %}
+        <h2>Hej! </h2>
+        <p>Nu har du gjort klart alla de steg som krävs för att få vara med i söklistan. Vi kommer inom de närmaste 24 timmarna att se över din profil och sedan lägga in den i vår söklista! </p>
+        <p>Du kommer få ett meddelande HÄR när din profil blir synlig i söklistan!</p>
+        <p>Du kan redan nu använda din profil genom att sprida den till vänner och kunder genom din personliga adress (<a href="{% url 'profile_display_with_profile_url' slug=user.userprofile.profile_url as profile_url %}{{ profile_url }}">http://stylematch.se{{ profile_url }}</a>).</p>
+        <p>Glöm inte att du alltid kan göra din profil lite bättre, den blir ditt nya ansikte på internet! </p>
+        <p>/ Martin</p>
+        {% endif %}
 
-  {% endblock %}
+        {% if visibility_notification.visible %}
+        <h2>Hej igen!</h2>
+        <p>Nu har vi sett över din profil och den ser ut att vara på topp!</p>
+        <ul>
+          <li>Du finns nu med i StyleMatchs sökmotor</li>
+          <li>Dina bilder visas upp på inspirationssidan</li>
+          <li>Du kommer högt upp i googlesökningar</li>
+        </ul>
+        <p>Fortsätt att hålla din profil på topp genom att ladda upp nya bilder på dina senaste jobb och kreationer, för att att styra din marknadsföring dit du vill!</p>
+        <p>/ Martin</p>
+        {% endif %}
+        <div class="onpage-message-sender">
+          <span><img src="{{ STATIC_URL }}img/martin_liten.jpg"></span>
+          <span class="sender-name">Martin från StyleMatch</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% if visibility_notification.approved or visibility_notification.visible %}
+<script>
+  /* Toggle modal if any message incomming */
+  setTimeout(function() {
+  $('#onpage-message').modal('show')
+  }, 3000);
+</script>
+{% endif %}
+
+{% endblock %}
+
+{% endblock %}

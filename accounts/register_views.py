@@ -108,6 +108,13 @@ class RegisterCustomBackend(DefaultBackend):
         user.is_active = True
 
         user.save()
+
+        # update the used invitecode (if any)
+        invite_code = kwargs['invite_code']
+        if invite_code is not None:
+            invite_code.reciever = user
+            invite_code.save()
+
         return user
 
 
@@ -142,19 +149,21 @@ class UserRegistrationForm(RegistrationForm):
         """
         Validates that the user have supplied a valid invite code.
         And marks the code as used, if the other fields are correctly filled.
+
+        NOTE: Match on invite code is case insensitive.
+
         """
         supplied_invite_code = self.cleaned_data['invite_code']
-        queryset = InviteCode.objects.filter(
-                        invite_code__iexact=supplied_invite_code).filter(
-                        used=False)
+        try:
+            invite_code = InviteCode.objects.get(
+                        invite_code__iexact=supplied_invite_code,
+                        used=False,
+                        reciever=None)
+        except InviteCode.DoesNotExist:
+            # a permanent key which can be used by us
+            if supplied_invite_code == "permanent1":
+                return None
 
-        # a permanent key which can be used by us
-        if supplied_invite_code == "permanent1":
-            return supplied_invite_code
-
-        # check that the invite_code exists
-        invite_code = queryset[:1]
-        if not invite_code:
             raise forms.ValidationError(u'Din inbjudningskod (\'%s\') '
                                         u'var felaktig. Vänligen kontrollera '
                                         u'att du skrev rätt.'
@@ -166,11 +175,11 @@ class UserRegistrationForm(RegistrationForm):
         # this is run even if the passwords doesnt match in the clean()
         # method. since this function is run before clean()
         if self.is_valid():
-            invite_code = invite_code[0]
             invite_code.used = True
             invite_code.save()
+            return invite_code
 
-        return supplied_invite_code
+        return None
 
     def clean(self):
         """

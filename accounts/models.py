@@ -455,6 +455,12 @@ post_delete.connect(delete_filefield, GalleryImage)
 
 
 class InviteCode(models.Model):
+    """
+    NOTE: Keep the ``used`` boolean, because if the reciever gets
+    deleted, there is no other way to know if the code has been
+    used or not.
+
+    """
     used = models.BooleanField("Have the invite code been used?",
                                default=False)
     invite_code = models.CharField("The string to use as invite code",
@@ -468,7 +474,8 @@ class InviteCode(models.Model):
                                 blank=True)
     reciever = models.ForeignKey(User, related_name='invitecode_reciever',
                                  null=True,
-                                 blank=True)
+                                 blank=True,
+                                 on_delete=models.SET_NULL)
 
     def __unicode__(self):
         return u'Invitecode: %s Used by: %s' % (self.invite_code, self.reciever)

@@ -36,7 +36,7 @@
     {% endif %}
   </div>
 </div>
-{% if unused_codes %}
+{% if used_codes %}
 <div class="row">
   <div class="span6 offset2">
     <a id="show-used-codes" data-toggle="collapse" href="#used-codes">Visa använda koder</a>
@@ -50,13 +50,13 @@
             <b>Använd av</b>
           </td>
         </tr>
-        {% for code in unused_codes %}
+        {% for code in used_codes %}
         <tr>
           <td class="code used-code">
             {{ code.invite_code }}
           </td>
           <td>
-            <a href="{% url 'profile_with_profile_url' slug=code.reciever.userprofile.profile_url %}">
+            <a href="{% url 'profile_display_with_profile_url' slug=code.reciever.userprofile.profile_url %}">
               {{ code.reciever.first_name }} {{ code.reciever.last_name }}
             </a>
           </td>
@@ -66,6 +66,6 @@
     </div>
   </div>
 </div>
-{% endif %}{# if unused_codes #}
+{% endif %}{# if used_codes #}
 {% endblock %}
 

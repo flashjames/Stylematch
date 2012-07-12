@@ -131,7 +131,7 @@ class InviteCodeView(LoginRequiredMixin, TemplateView):
         unused_codes = all_codes.filter(reciever=None)
         used_codes = all_codes.exclude(reciever=None)
 
-        context['codes'] = used_codes
-        context['unused_codes'] = unused_codes
+        context['codes'] = unused_codes
+        context['used_codes'] = used_codes
 
         return context

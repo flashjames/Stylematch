@@ -56,8 +56,7 @@
             var tags = response.objects;
 
             // number of pages with content
-            this.totalPages = Math.floor(response.meta.total_count / this.perPage);
-
+            this.totalPages = Math.floor((response.meta.total_count - 1) / this.perPage);
             return tags;
         }
     });
@@ -136,28 +135,31 @@
             this.inspirationList = new InspirationCollection();
             this.inspirationList.bind('add', this.addOne, this);
             this.inspirationList.bind('reset', this.addAll, this);
-
-            // 'Body' won't trigger scroll events unless its overflow setting is explicitly set to 'scroll'
-            var self = this;
-            $(window).bind('scroll', function(ev) {
-                var triggerPoint = $(window).height() * 3;
-                if ( self.el.scrollTop + triggerPoint > self.el.scrollHeight ) {
-                    self.loadData();
-                }
-            });
+	    _.bindAll(this, 'loadData', 'fetchSuccess'); 
+	    
+	    this.waitingForData = true;
             this.inspirationList.pager({error: this.fetchError, success: this.fetchSuccess});
+
+	    // 'Body' won't trigger scroll events unless its overflow setting is explicitly set to 'scroll'
+            $(window).bind('scroll', this.loadData);
+
         },
         fetchSuccess: function(collection, response) {
+	    // no more pages of images to retrieve
+	    if(collection.currentPage == collection.totalPages) {
+		// used to dont trigger loadData, if set to true
+		this.noPagesLeft = true;
+	    }
             if(!response) {
                 var noty_id = noty({
                     text: 'Ett okänt fel uppstod.!',
                     type: 'error'
                 });
-            }
+            } else {
+		this.waitingForData = false;
+	    }
         },
         fetchError: function(collection, response) {
-            // this is triggered when the user has
-            // reached the bottom, but why?
             var noty_id = noty({
                 text: 'Inga fler bilder kunde hämtas!',
                 type: 'error'
@@ -180,7 +182,16 @@
             return this;
         },
         loadData: function() {
-            this.inspirationList.requestNextPage({error: this.fetchError, success: this.fetchSuccess, add: true });
+	    // load more images three 'browser windows' from bottom
+	    var triggerPoint = $(window).height() * 3;
+	    
+	    // dont load more images if already waiting for data or there are no more images to load
+            if ( (this.el.scrollTop + triggerPoint > this.el.scrollHeight) && !this.waitingForData
+	       && !this.noPagesLeft) {
+ 		this.waitingForData = true;
+		this.inspirationList.requestNextPage({error: this.fetchError, success: this.fetchSuccess, add: true });
+            }
+	    
         },
         render:function (eventName) {
             return this;

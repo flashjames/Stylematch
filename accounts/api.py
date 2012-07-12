@@ -1,4 +1,5 @@
 #-*- coding:utf-8 -*-
+import os
 from django.conf import settings
 from accounts.models import (Service,
                              GalleryImage,
@@ -13,7 +14,7 @@ from tastypie.validation import FormValidation
 from tastypie.resources import ModelResource
 from tastypie.authorization import Authorization
 from tastypie.authentication import BasicAuthentication
-import os
+from sorl.thumbnail import get_thumbnail
 
 
 class PerUserAuthorization(Authorization):
@@ -163,9 +164,8 @@ class InspirationResource(ModelResource):
         bundle.data['profile_url'] = bundle.obj.user.userprofile.profile_url
         bundle.data['salon_city'] = bundle.obj.user.userprofile.salon_city
 
-        # add client side image url to each Picture object
-        # TODO: Fix it with sorl-thumbnail
-        bundle.data['image_url'] = get_image_url(bundle.data['filename'])
+        # rescaled image with sorl-thumbnail
+        bundle.data['image_url'] = "".join([settings.MEDIA_URL, get_thumbnail(bundle.obj.file, '560').name])
         return bundle
     
     def build_filters(self, filters=None):
@@ -186,7 +186,7 @@ class InspirationResource(ModelResource):
     class Meta:
         resource_name = 'inspiration'
         queryset = GalleryImage.objects.filter(display_on_profile=True).order_by('-upload_date')
-        excludes = ['file', 'user',]
+        excludes = ['user',]
         allowed_methods = ['get'] 
         limit = 50
         max_limit = 0

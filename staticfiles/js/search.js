@@ -48,14 +48,9 @@
             this.profileList.fetch({
                 success: function(collection, response) {
                     if(!response) {
-                        $('#alert').notify();
-                        $('#alert').notify("create", {
-                              text: 'Profilerna kunde inte hämtas!'
-                        }, {
-                            expires: false,
-                            click: function(e,instance) {
-                                instance.close();
-                            }
+                        var noty_id = noty({
+                            text: 'Profilerna kunde inte hämtas!',
+                            type: 'error'
                         });
                     }
                     $('#profile-list').html(new ProfileListView({model:collection}).render().el);
@@ -82,14 +77,9 @@
                 data: data,
                 success: function(collection, response) {
                     if(!response) {
-                        $('#alert').notify();
-                        $('#alert').notify("create", {
-                              text: 'Profilerna kunde inte hämtas!'
-                        }, {
-                            expires: false,
-                            click: function(e,instance) {
-                                instance.close();
-                            }
+                        var noty_id = noty({
+                            text: 'Profilerna kunde inte hämtas!',
+                            type: 'error'
                         });
                     }
                     $('#profile-list').html(new ProfileListView({model:collection}).render().el);

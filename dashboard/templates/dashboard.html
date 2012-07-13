@@ -71,7 +71,7 @@
     <div>
       <div id="profile-visitor-statistics"></div>
     </div>
-  </div>
+  </div>{# /.span6 #}
   <!--
   <div class="span4">
     <div class="well">
@@ -79,8 +79,9 @@
     </div>
   </div>
   -->
-</div>
+</div>{# /#statistics-block .row #}
 
+{% if GIS %}
 <div class="row">
   <div class="span6">
     <h3>Dina galleribilder</h3>
@@ -90,7 +91,7 @@
           Total Antal <em>Gilla</em>
         </td>
         <td>
-          <strong>152</strong>
+          <strong>{{ GIS.likes.total }}</strong>
         </td>
       </tr>
       <tr>
@@ -98,11 +99,11 @@
           Antal <em>Gilla</em> den senaste veckan
         </td>
         <td>
-          <strong>23</strong>
+          <strong>{{ GIS.likes.last_week }}</strong>
         </td>
       </tr>
     </table>
-  </div>
+  </div>{# /.span6 #}
   <div id="most-popular-image" class="span6">
     <h3>Din populäraste bild</h3>
     <table class="table gallery-statistics-table">
@@ -111,7 +112,7 @@
           Totalt Antal <em>Gilla</em>
         </td>
         <td>
-          <strong>15</strong>
+          <strong>{{ GIS.mpi.likes.total }}</strong>
         </td>
       </tr>
       <tr>
@@ -119,13 +120,14 @@
           Antal <em>Gilla</em> den senaste veckan
         </td>
         <td>
-          <strong>7</strong>
+          <strong>{{ GIS.mpi.likes.last_week }}</strong>
         </td>
       </tr>
     </table>
     <img src="http://placehold.it/260x180" />
-  </div>
-</div>
+  </div>{# /#most-popular-image #}
+</div>{# /.row #}
+{% endif %}{# /if GIS #}
 
 
 

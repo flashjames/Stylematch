@@ -3,10 +3,12 @@ import json
 from django.views.generic import TemplateView
 from django.core.urlresolvers import reverse
 from accounts.models import Service, OpenHours, GalleryImage, InviteCode
+from index.models import InspirationVote
 from django.views.generic import TemplateView
 from braces.views import LoginRequiredMixin, StaffRequiredMixin
 from dashboard.google_analytics import profile_statistics
 from accounts.models import UserProfile
+from datetime import datetime, timedelta
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name="dashboard.html"
@@ -96,6 +98,59 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             tasks_to_be_done = sorted(tasks_to_be_done, key=lambda k: k['passed'], reverse=True) 
         return tasks_to_be_done
 
+
+    def get_likes_data(self, votes):
+        data = {}
+        data['total'] = votes.count()
+        lastweek = datetime.now() - timedelta(days=7)
+        data['last_week'] = votes.filter(datetime__gte=lastweek).count()
+        return data
+
+    def get_gallery_image_statistics(self):
+        """
+        Gallery Image Statistics structure
+        GIS --
+          likes --
+            total: XX
+            last_week: XX
+          image --
+            likes --
+              total: XX
+              last_week: XX
+
+        """
+
+        # build basic structure
+        GIS = {}
+        GIS['likes'] = {}
+
+        # get all data from the database, order by votes because it is used later
+        gallery_images = GalleryImage.objects\
+                                .filter(user=self.request.user,
+                                        display_on_profile=True)\
+                                .order_by('votes')
+        if not gallery_images:
+            return {}
+        keys = [x.pk for x in gallery_images]
+        all_votes = InspirationVote.objects.filter(id__in=keys)
+
+        # get data from all images
+        GIS['likes'] = self.get_likes_data(all_votes)
+
+        # get the most popular gallery image
+        mpi = gallery_images[0]
+        GIS['mpi'] = {}
+        GIS['mpi']['image'] = mpi.file
+
+        # get all votes for that image
+        mpi_votes = all_votes.filter(id=mpi.pk)
+
+        # get data for image
+        GIS['mpi']['likes'] = self.get_likes_data(mpi_votes)
+
+        return GIS
+
+
     def get_context_data(self, **kwargs):
         context = super(DashboardView, self).get_context_data(**kwargs)
 
@@ -116,6 +171,9 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         # if the google api authentication key is missing
         except AttributeError:
             context['visitor_count_data'] = []
+
+        # Gallery images statistics
+        context['GIS'] = self.get_gallery_image_statistics()
 
         return context
 

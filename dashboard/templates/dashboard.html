@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load url from future %}
+{% load thumbnail %}
 
 {% block title %}Översikt{% endblock %}
 
@@ -13,6 +14,8 @@
   var visitor_count_data = {{ visitor_count_data|safe }};
   {% endif %}
 </script>
+<link rel="stylesheet" href="{{ STATIC_URL}}js/lightbox/example3/colorbox.css" />
+<script type="text/javascript" src="{{ STATIC_URL}}js/lightbox/colorbox/jquery.colorbox.js"></script>
 {% endblock %}
 
 
@@ -124,7 +127,9 @@
         </td>
       </tr>
     </table>
-    <img src="http://placehold.it/260x180" />
+    {% thumbnail GIS.mpi.image.file "260" as im %}
+    <a href="{{ GIS.mpi.image.get_image_url }}" class="mpi"><img src="{{ im.url }}"/></a>
+    {% endthumbnail %}
   </div>{# /#most-popular-image #}
 </div>{# /.row #}
 {% endif %}{# /if GIS #}
@@ -133,6 +138,9 @@
 
   <!-- Google analytics visitor count chart, with D3js -->
   <script type="text/javascript" src="{{ STATIC_URL }}js/chart.js"></script>
+  <script>
+    $('a.mpi').colorbox({rel:'group2', transition:"none", width:"75%", height:"90%"});
+  </script>
 
 
 {% endblock %} {# /statistics #}

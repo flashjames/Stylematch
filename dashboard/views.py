@@ -140,7 +140,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         # get the most popular gallery image
         mpi = gallery_images[0]
         GIS['mpi'] = {}
-        GIS['mpi']['image'] = mpi.file
+        GIS['mpi']['image'] = mpi
 
         # get all votes for that image
         mpi_votes = all_votes.filter(id=mpi.pk)

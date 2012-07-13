@@ -5,6 +5,34 @@
         cache: false
     });
 
+    window.Map = Backbone.Model.extend({});
+
+    window.MapView = Backbone.View.extend({
+        tagName: 'div',
+        className:'map',
+        latitude:'59.33',
+        longitude:'18.07',
+
+        initialize: function() {
+            this.latlng = new google.maps.LatLng(this.latitude, this.longitude);
+
+            var myOptions = {
+              center: this.latlng,
+              zoom: 14,
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            this.map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+
+            _.bindAll(this, 'render');
+            this.render();
+        },
+        render: function() {
+            return this;
+        }
+    });
+
+
     window.Profile = Backbone.Model.extend({});
 
     window.ProfileCollection = Backbone.Collection.extend({
@@ -41,21 +69,9 @@
     window.ProfileView = Backbone.View.extend({
         el: $("body"),
         initialize:function () {
-            //Glue code, that initialize's all views and models
 
-            this.profileList = new ProfileCollection();
-
-            this.profileList.fetch({
-                success: function(collection, response) {
-                    if(!response) {
-                        var noty_id = noty({
-                            text: 'Profilerna kunde inte hämtas!',
-                            type: 'error'
-                        });
-                    }
-                    $('#profile-list').html(new ProfileListView({model:collection}).render().el);
-                }
-            });
+            // Load profile with default values
+            this.filter();
         },
         events:{
             "click .submit":"filter"/*,
@@ -89,6 +105,7 @@
     });
 
     this.ProfileView = new ProfileView();
+    this.MapView = new MapView();
 
 
 })(jQuery);

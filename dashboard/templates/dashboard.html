@@ -63,8 +63,8 @@
 </div>
 {% endif %}
 
-<h1>Statistik</h1>
 {% block statistics %}
+<h1>Statistik</h1>
 <div id="statistics-block" class="row">
   <div class="span6">
     <h3>Antal besökare på din profil</h3>
@@ -72,15 +72,66 @@
       <div id="profile-visitor-statistics"></div>
     </div>
   </div>
-  <!--  <div class="span4">
-        <div class="well">
-          <img src="http://placehold.it/260x180" />
-        </div>
+  <!--
+  <div class="span4">
+    <div class="well">
+      <img src="http://placehold.it/260x180" />
+    </div>
   </div>
-</div>-->
+  -->
+</div>
+
+<div class="row">
+  <div class="span6">
+    <h3>Dina galleribilder</h3>
+    <table class="table gallery-statistics-table">
+      <tr>
+        <td>
+          Total Antal <em>Gilla</em>
+        </td>
+        <td>
+          <strong>152</strong>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Antal <em>Gilla</em> den senaste veckan
+        </td>
+        <td>
+          <strong>23</strong>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div id="most-popular-image" class="span6">
+    <h3>Din populäraste bild</h3>
+    <table class="table gallery-statistics-table">
+      <tr>
+        <td>
+          Totalt Antal <em>Gilla</em>
+        </td>
+        <td>
+          <strong>15</strong>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Antal <em>Gilla</em> den senaste veckan
+        </td>
+        <td>
+          <strong>7</strong>
+        </td>
+      </tr>
+    </table>
+    <img src="http://placehold.it/260x180" />
+  </div>
+</div>
+
+
+
   <!-- Google analytics visitor count chart, with D3js -->
   <script type="text/javascript" src="{{ STATIC_URL }}js/chart.js"></script>
 
-  {% endblock %}
 
-  {% endblock %}
+{% endblock %} {# /statistics #}
+{% endblock %}{# /content #}

@@ -74,7 +74,7 @@
 
             // make lightbox work for the newly created image
             var image_a = $(this.el).find("a.inspiration-images");
-            image_a.colorbox({rel:'group2', transition:"none", width:"75%", height:"90%"});
+            image_a.colorbox({rel:'group2', transition:"none", width:"75%", height:"90%", returnFocus:false});
 
             // bind on
             this.$('.like-button').hover(this.like_button_mousein, this.like_button_mouseout);

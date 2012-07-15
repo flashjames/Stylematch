@@ -7,15 +7,17 @@
 <li class="inspiration-item">
   <div class="mainImageContent">
     <div class="leftSidebar">
-      <a href="/{{ userprofile.profile_url }}/">
-        {% thumbnail userprofile|profile_image_thumbnail "50x50" crop="center" as im %}
-        <img class="profile-image" src="{{ im.url }}"
-             title="{{ image.user.first_name }} {{ image.user.last_name }}" />
-        {% endthumbnail %}
-      </a>
+      <div class="hype-box">
+	<div class="hype-counter">
+	  <p id="like-{{ forloop.counter0 }}">{{ image.votes }}</p>
+	</div>
+	<a onclick="like({{ forloop.counter0 }}, {{ image.id }})"><div class="hype-button">
+	  <p>HYPE</p>
+	</div></a>
+      </div>
     </div>
 
-    <div class="image">
+    <div class="inspiration-image">
       <a href="{{ image.get_image_url }}" class="inspiration-images">
         <img class="inspiration-images" src="{{ image.get_image_url }}"
              title="{{ image.comment }}" />
@@ -23,6 +25,15 @@
     </div>
 
     <div class="rightSidebar">
+      <div class="profile-image-inspiration">
+        <a href="/{{ userprofile.profile_url }}/">
+          {% thumbnail userprofile|profile_image_thumbnail "50x50" crop="center" as im %}
+          <img src="{{ im.url }}"
+               title="{{ image.user.first_name }} {{ image.user.last_name }}" />
+          {% endthumbnail %}
+	</a>
+      </div>
+
       <div class="fb fb-like"
                 data-href="{{ image.get_image_url }}"
                 data-send="false"
@@ -30,7 +41,7 @@
                 data-width="100"
                 data-show-faces="true">
       </div>
-      <a href="http://pinterest.com/pin/create/button/"
+      <a href="http://pinterest.com/pin/create/button/?url=http://stylematch.se&media={{ image.get_image_url }}"
                 class="pin-it-button"
                 count-layout="horizontal">
         <img src="http://stylematch.s3-website-eu-west-1.amazonaws.com/test/PinExt.png"
@@ -39,6 +50,7 @@
     </div>
 
   </div>
+<!--
   <div style="clear:both;" class="comment-div">
     <span style="margin-right: 20px;" id="like-{{ forloop.counter0 }}">
       <img src="{{ STATIC_URL }}img/goodguygreg.jpg" style="vertical-align:middle;">
@@ -48,6 +60,8 @@
       <fb:comments-count href="{{ image.get_image_url }}"></fb:comments-count> kommentarer
     </a>
   </div>
+-->
+
   <div id="fb-wrapper-{{ forloop.counter0 }}" class="fb" style="display:none;">
     <div class="fb-comments"
               data-href="{{ image.get_image_url }}"
@@ -56,6 +70,8 @@
     </div>
   </div>
 </li>
-
+{% if not forloop.last %}
+<hr class="soften">
+{% endif %}
 {% endwith %}
 {% endfor %}

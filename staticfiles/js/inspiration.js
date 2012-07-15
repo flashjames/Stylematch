@@ -157,6 +157,7 @@
                 });
             } else {
 		this.waitingForData = false;
+		$('#loading-animation').hide(0);
 	    }
         },
         fetchError: function(collection, response) {
@@ -189,6 +190,8 @@
             if ( (this.el.scrollTop + triggerPoint > this.el.scrollHeight) && !this.waitingForData
 	       && !this.noPagesLeft) {
  		this.waitingForData = true;
+		$('#loading-animation').show(0);
+		console.log("load more");
 		this.inspirationList.requestNextPage({error: this.fetchError, success: this.fetchSuccess, add: true });
             }
 	    

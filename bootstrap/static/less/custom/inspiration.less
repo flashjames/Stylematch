@@ -13,9 +13,7 @@
  
 .leftSidebar {
     float: left;
-    xwidth: 110px;
-    margin-right:25px;
-    
+    margin-right:25px;  
 }
 
 .profile-image-inspiration {
@@ -64,17 +62,6 @@
     display: block;
 }
 
-.counter {
-  font-size: 20px;
-  color: @orange;
-  font-weight: bold;
-  a {
-    color: @pink;
-    cursor: pointer;
-    font-size: 14px;
-  }
-}
-
 .like-box {
     width:68px; 
 }
@@ -83,20 +70,8 @@
     color: black;
     background-color:#CCC9C0;
     p {
-		text-align:center;
-		font-weight: bolder;
-		display:inline;
-		vertical-align:top;
-		margin-left: 2px;
-		font-size: 15px;
+	text-align:center;	
     }   
-    img{
-       	height:15px; 
-    	margin-top:3px;
-    	margin-left:6px;
-    	display:inline-block;
-    }
-
 }
 
 .counter {
@@ -104,12 +79,10 @@
     height:42px;
     margin-bottom:2px;
     p {
-		padding:11px;
-		font-size:25px;
-		display:inline-block;
-		text-align:center;
-		margin-left:14px;
-		font-weight:100;
+	padding-top:11px;
+	font-size:32px;
+	display:block;
+	font-weight:100;
     }
 }
 
@@ -118,13 +91,24 @@
     height:22px;
     cursor: pointer;
     p {
-		padding-top:3px;
-		color:#312D2C;
+	display:inline;
+	color:#312D2C;
+	font-size:15px;
+	font-weight:bolder;
+	position:relative;
+	top:1px;
     }
     &:hover{
     	p{
-    	color:#FCF4F2;
+    	    color:#FCF4F2;
     	}
+    }
+    img{
+       	height:15px; 
+    	margin-left:7px;
+    	display:inline-block;
+	vertical-align:bottom;
+	width:17px;
     }
 }
 

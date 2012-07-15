@@ -85,23 +85,18 @@
             "click .like-button": "like"
         },
         like_button_mousein: function() {
-            if(!this.already_liked) {
                 var counter_p = this.$('.counter > p');
                 this.number_of_votes = parseInt(counter_p.text());
                 counter_p.text("+1");
-            }
         },
         like_button_mouseout: function() {
-            if(!this.already_liked) {
                 var counter_p = this.$('.counter > p');
                 counter_p.text(this.number_of_votes);
-            }
         },
         like: function() {
             /* Send likes for this Inspiration image to django and update the <p> object
                with number of likes */
             var self = this;
-            self.already_liked = true;
             $.post(
                 '/like/',
                 { 'id': this.model.get('id'),
@@ -111,11 +106,14 @@
                     var number_of_votes = parseInt(counter_p.text());
                     if(data > self.number_of_votes) {
                         counter_p.text(self.number_of_votes + 1);
-                        self.$('.like-button > p').remove();
+			self.number_of_votes += 1;
                     } else {
                         // display that you've already liked the image
                         // or that something have gone wrong
-                        self.already_liked = false;
+			var noty_id = noty({
+			    text: 'Du har redan gillat denna bild',
+			    type: 'error'
+			});
                     }
                 }
             );
@@ -191,7 +189,6 @@
 	       && !this.noPagesLeft) {
  		this.waitingForData = true;
 		$('#loading-animation').show(0);
-		console.log("load more");
 		this.inspirationList.requestNextPage({error: this.fetchError, success: this.fetchSuccess, add: true });
             }
 	    

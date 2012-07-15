@@ -70,12 +70,7 @@
         },
         render:function (eventName) {
             $(this.el).html(this.template(this.model.toJSON()));
-
-
-            // make lightbox work for the newly created image
-            var image_a = $(this.el).find("a.inspiration-images");
-            image_a.colorbox({rel:'group2', transition:"none", width:"75%", height:"90%", returnFocus:false});
-
+        
             // bind on
             this.$('.like-button').hover(this.like_button_mousein, this.like_button_mouseout);
 
@@ -142,6 +137,35 @@
             $(window).bind('scroll', this.loadData);
 
         },
+	initColorbox: function() {
+            var image_a = $(this.el).find("a.inspiration-images");
+            image_a.colorbox({
+		rel:'group2', 
+		transition:"none", 
+		//width:"75%", 
+		//height:"90%", 
+		//open:true,
+		returnFocus:false, 
+		scrolling:false, 
+		maxWidth: "95%",
+		maxHeight: "95%",
+		//left:true,
+		onComplete: function() {
+		    //$('#cboxContent').append("<p style='color:white'>HEJE!</p>");console.log("hah");
+
+	    // remove main-content scroll when colorbox is open
+	    $(document).bind('cbox_open', function(){ 
+		//$('body').css({overflow:'hidden'}); 
+	    }).bind('cbox_closed', function(){ 
+		//$('body').css({overflow:'auto'}); 
+	    });
+
+
+		    //$('#cboxMiddleRight').append("<p style='color:white'>HEJE</p>");
+	    
+		}
+	    });
+	},
         fetchSuccess: function(collection, response) {
 	    // no more pages of images to retrieve
 	    if(collection.currentPage == collection.totalPages) {
@@ -156,6 +180,9 @@
             } else {
 		this.waitingForData = false;
 		$('#loading-animation').hide(0);
+		// we need to re-init colorbox everytime we load more images
+		// (haven't found any 'add image' function in colorbox)
+		this.initColorbox();
 	    }
         },
         fetchError: function(collection, response) {

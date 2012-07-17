@@ -126,7 +126,8 @@ class GalleryImageForm(forms.ModelForm):
                 raise ValidationError("Bilden är för stor ( > %s )"
                                     % convert_bytes(settings.MAX_IMAGE_SIZE))
             filename = file._name.lower() 
-            if not filename.endswith(('.jpg', '.gif', '.png')):
+            if not filename.endswith(('.jpg', '.gif', '.png', '.jpeg', '.jpe',
+                                      '.jfif', '.jfi', '.jif')):
                 raise ValidationError("Endast bildfiler i formaten "
                                       "PNG, JPG och GIF är accepterade.")
 

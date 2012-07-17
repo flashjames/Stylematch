@@ -1,4 +1,5 @@
 #-*- coding:utf-8 -*-
+import os
 from django.conf import settings
 from accounts.models import (Service,
                              GalleryImage,
@@ -8,12 +9,13 @@ from accounts.models import (Service,
                              get_image_url)
 from django.forms import ModelForm
 from django.contrib.auth.models import User
-from tastypie import fields
 from tastypie.validation import FormValidation
 from tastypie.resources import ModelResource
 from tastypie.authorization import Authorization
 from tastypie.authentication import BasicAuthentication
-import os
+from sorl.thumbnail import get_thumbnail
+from django.http import QueryDict
+from datetime import datetime
 
 
 class PerUserAuthorization(Authorization):
@@ -156,6 +158,67 @@ class PictureResource(ModelResource):
         validation = FormValidation(form_class=PictureForm)
 
 
+class InspirationResource(ModelResource):
+    def time_since_upload(self, upload_date):
+        """
+        Convert upload_date to minutes, or hours or days
+        since upload.
+        """
+        time_since_upload_delta = datetime.now() - upload_date
+        minutes_since_upload = time_since_upload_delta.seconds / 60
+        # days
+        if time_since_upload_delta.days > 0:
+            return "".join([str(time_since_upload_delta.days), " dagar"])
+        # hours
+        elif minutes_since_upload >= 60:
+            plural_or_singular = " timmar"
+            if minutes_since_upload / 60 == 1:
+                plural_or_singular = " timme"
+            return "".join([str(minutes_since_upload / 60),
+                            plural_or_singular])
+        # minutes
+        else:
+            return "".join([str(minutes_since_upload), " minuter"])
+
+    def dehydrate(self, bundle):
+
+        bundle.data['first_name'] = bundle.obj.user.first_name
+        bundle.data['last_name'] = bundle.obj.user.last_name
+        bundle.data['profile_url'] = bundle.obj.user.userprofile.profile_url
+        bundle.data['salon_city'] = bundle.obj.user.userprofile.salon_city
+        #now = datetime.now() #
+
+        bundle.data['time_since_upload'] = self.time_since_upload(
+            bundle.obj.upload_date)
+        # rescaled image with sorl-thumbnail
+        bundle.data['image_url'] = "".join([settings.MEDIA_URL,
+                                            get_thumbnail(bundle.obj.file, '560').name])
+        return bundle
+
+    def build_filters(self, filters=None):
+        if filters is None:
+            filters = QueryDict('')
+
+        # get all userprofiles objects
+        users = UserProfile.objects.filter(visible=True)
+        # create a filter for those profiles based on pk
+        filter = {'user__in': [i.pk for i in users]}
+
+        # build the rest of the filters
+        orm = super(InspirationResource, self).build_filters(filters)
+        # update the filter with our userprofiles
+        orm.update(filter)
+        return orm
+
+    class Meta:
+        resource_name = 'inspiration'
+        queryset = GalleryImage.objects.filter(display_on_profile=True).order_by('-upload_date')
+        excludes = ['user']
+        allowed_methods = ['get']
+        limit = 50
+        max_limit = 0
+
+
 class ProfileResource(ModelResource):
     """
     Resource to access a profile
@@ -194,7 +257,7 @@ class ProfileResource(ModelResource):
     def build_filters(self, filters=None):
         if filters is None:
             filters = QueryDict('')
-            filters._mutable=True
+            filters._mutable = True
 
         if 'profile_image_size' in filters:
             self.profile_image_size = filters['profile_image_size']

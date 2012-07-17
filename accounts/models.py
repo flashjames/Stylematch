@@ -369,7 +369,9 @@ class UserProfile(DirtyFieldsMixin, models.Model):
     profile_url = models.CharField("http://stylematch.se/",
                                    max_length=40,
                                    blank=True)
-    # used to reach profile if no profile_url set
+    
+    # dont remove this, it's this url that all facebook likes
+    # for a profile are tied to 
     temporary_profile_url = models.CharField(editable=False,
                                              unique=True,
                                              max_length=36)

@@ -161,7 +161,8 @@ class UserRegistrationForm(RegistrationForm):
                         reciever=None)
         except InviteCode.DoesNotExist:
             # a permanent key which can be used by us
-            if supplied_invite_code == "permanent1":
+            if supplied_invite_code == "permanent1" or (
+                supplied_invite_code == "gxc347"):
                 return None
 
             raise forms.ValidationError(u'Din inbjudningskod (\'%s\') '

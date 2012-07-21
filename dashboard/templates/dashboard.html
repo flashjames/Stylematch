@@ -75,23 +75,12 @@
       <div id="profile-visitor-statistics"></div>
     </div>
   </div>{# /.span6 #}
-  <!--
-  <div class="span4">
-    <div class="well">
-      <img src="http://placehold.it/260x180" />
-    </div>
-  </div>
-  -->
-</div>{# /#statistics-block .row #}
-
-{% if GIS %}
-<div class="row">
-  <div class="span6">
+  <div class="span3">
     <h3>Dina galleribilder</h3>
     <table class="table gallery-statistics-table">
       <tr>
         <td>
-          Total Antal <em>Gilla</em>
+          Total Antal <em>Gilla</em> markeringar
         </td>
         <td>
           <strong>{{ GIS.likes.total }}</strong>
@@ -99,7 +88,7 @@
       </tr>
       <tr>
         <td>
-          Antal <em>Gilla</em> den senaste veckan
+          Antal <em>Gilla</em> markeringar den senaste veckan
         </td>
         <td>
           <strong>{{ GIS.likes.last_week }}</strong>
@@ -107,12 +96,12 @@
       </tr>
     </table>
   </div>{# /.span6 #}
-  <div id="most-popular-image" class="span6">
+  <div id="most-popular-image" class="span3">
     <h3>Din populäraste bild</h3>
     <table class="table gallery-statistics-table">
       <tr>
         <td>
-          Totalt Antal <em>Gilla</em>
+          Totalt Antal <em>Gilla</em> markeringar
         </td>
         <td>
           <strong>{{ GIS.mpi.likes.total }}</strong>
@@ -120,27 +109,39 @@
       </tr>
       <tr>
         <td>
-          Antal <em>Gilla</em> den senaste veckan
+          Antal <em>Gilla</em> markeringar den senaste veckan
         </td>
         <td>
           <strong>{{ GIS.mpi.likes.last_week }}</strong>
         </td>
       </tr>
     </table>
-    {% thumbnail GIS.mpi.image.file "260" as im %}
+    {% thumbnail GIS.mpi.image.file "232" as im %}
     <a href="{{ GIS.mpi.image.get_image_url }}" class="mpi"><img src="{{ im.url }}"/></a>
     {% endthumbnail %}
   </div>{# /#most-popular-image #}
+
+  <!--
+      <div class="span4">
+        <div class="well">
+          <img src="http://placehold.it/260x180" />
+        </div>
+      </div>
+      -->
+</div>{# /#statistics-block .row #}
+
+{% if GIS %}
+<div class="row">
 </div>{# /.row #}
 {% endif %}{# /if GIS #}
 
 
 
-  <!-- Google analytics visitor count chart, with D3js -->
-  <script type="text/javascript" src="{{ STATIC_URL }}js/chart.js"></script>
-  <script>
-    $('a.mpi').colorbox({rel:'group2', transition:"none", width:"75%", height:"90%"});
-  </script>
+<!-- Google analytics visitor count chart, with D3js -->
+<script type="text/javascript" src="{{ STATIC_URL }}js/chart.js"></script>
+<script>
+  $('a.mpi').colorbox({rel:'group2', transition:"none", width:"75%", height:"90%"});
+</script>
 
 
 {% endblock %} {# /statistics #}

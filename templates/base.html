@@ -145,12 +145,7 @@
             <a href="{% url 'index_page' as index %}{{ index }}"><img src="{{STATIC_URL}}img/logo.png"/></a>
           </div>
           <div class="span7 main-menu">
-            <a href="#"
-               class="popover1"
-               rel="tooltip"
-               data-content=""
-               data-original-title="Kommer snart! Använd sökblocket på förstasidan tills vidare"
-               onclick="indexredirect()">
+            <a href="{% url 'search' %}">
                  Hitta frisör
             </a>
             

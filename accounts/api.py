@@ -228,20 +228,20 @@ class ProfileResource(ModelResource):
     def move_up(self, id, data):
         for i in range(len(data['objects'])):
             if int(data['objects'][i].data['id']) == id:
-                if i > 5:
+                if i > 2:
                     obj = data['objects'].pop(i)
                     import random
-                    pos = random.randint(0, 5)
+                    pos = random.randint(0, 2)
                     data['objects'].insert(pos, obj)
         return data
 
     def move_down(self, id, data):
         for i in range(len(data['objects'])):
             if int(data['objects'][i].data['id']) == id:
-                if i < 6 and len(data['objects']) > 6:
+                if i < 3 and len(data['objects']) > 3:
                     obj = data['objects'].pop(i)
                     import random
-                    pos = random.randint(6, len(data['objects']) - 1)
+                    pos = random.randint(3, len(data['objects']) - 1)
                     data['objects'].insert(pos, obj)
         return data
 
@@ -259,6 +259,7 @@ class ProfileResource(ModelResource):
             filters = QueryDict('')
             filters._mutable = True
 
+        # save the requested profile_image_size for later use in ``dehydrate``
         if 'profile_image_size' in filters:
             self.profile_image_size = filters['profile_image_size']
             del filters['profile_image_size']

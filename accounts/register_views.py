@@ -21,9 +21,10 @@ from index.models import BetaEmail
 class SignupViewForm(ModelForm):
     """
     Form used in registration step 1, used to filter out wanted fields
+
     """
     salon_phone_number = forms.CharField(label='Telefonnummer för bokning')
-    
+
     def __init__(self, *args, **kwargs):
         super(SignupViewForm, self).__init__(*args, **kwargs)
 
@@ -39,6 +40,7 @@ class SignupView(LoginRequiredMixin, UpdateView):
     """
     Step 1 in the user registration, after the main user registration.
     The user is asked to fill in some of the other fields.
+
     """
     template_name = "accounts/signup_step1.html"
     form_class = SignupViewForm
@@ -161,7 +163,7 @@ class UserRegistrationForm(RegistrationForm):
                         reciever=None)
         except InviteCode.DoesNotExist:
             # a permanent key which can be used by us
-            if supplied_invite_code == "permanent1" or (
+            if (supplied_invite_code == "permanent1" or
                 supplied_invite_code == "gxc347"):
                 return None
 
@@ -199,14 +201,13 @@ class UserRegistrationForm(RegistrationForm):
                 error_msg = "Lösenorden stämmer ej överens"
                 self._errors['password1'] = self.error_class([error_msg])
                 raise ValidationError(error_msg)
-            
 
             MIN_LENGTH = 5
             if len(password1) < MIN_LENGTH:
                 error_msg = "Lösenordet är för kort, minst 5 tecken."
                 self._errors['password1'] = self.error_class([error_msg])
                 raise forms.ValidationError(error_msg)
-            
+
         return self.cleaned_data
 
     class Meta:

@@ -145,7 +145,7 @@
             <a href="{% url 'index_page' as index %}{{ index }}"><img src="{{STATIC_URL}}img/logo.png"/></a>
           </div>
           <div class="span7 main-menu">
-            <a href="{% url 'search' %}">
+            <a href="{% url 'search' as search %} {{ search }}">
                  Hitta frisör
             </a>
             

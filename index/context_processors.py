@@ -20,3 +20,6 @@ def galleria_urls(request):
         'GALLERIA_SCRIPT': galleria_script,
         'GALLERIA_THEME': galleria_theme,
     }
+
+def google_analytics(context):
+    return { 'GOOGLE_ANALYTICS_KEY' : settings.GOOGLE_ANALYTICS_KEY }

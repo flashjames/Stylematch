@@ -69,6 +69,9 @@ def make_pagination_list(list, current):
 
 class SearchCityView(TemplateView):
     """
+    A search view for all cities. Enables static text instead of dynamically
+    loaded data via ajax. Google likes static text better.
+
     """
     template_name = "city_search.html"
     pr = ProfileResource()
@@ -117,6 +120,7 @@ class SearchCityView(TemplateView):
                 # sets the offset
                 json_request.GET['offset'] = '0'
                 offset = 0
+
                 resp = self.pr.get_list(json_request,
                                         salon_city__iexact=city,
                                         profile_image_size="100x100").content
@@ -219,6 +223,7 @@ class IndexPageView(TemplateView):
 class LikeView(View):
     """
     An API like view to handle like request via ajax
+
     """
     def post(self, request, *args, **kwargs):
         id = int(request.POST['id'])
@@ -226,7 +231,7 @@ class LikeView(View):
             image = GalleryImage.objects.get(pk=id)
         except:
             # wrong ID, couldn't find gallery image
-            return HttpResponse("The ID is WROOONG")
+            return HttpResponse("Couldn't find the ID for this gallery image")
 
         voted_images = request.session.get('has_voted', [])
         if id not in voted_images:
@@ -242,7 +247,7 @@ class LikeView(View):
         return HttpResponse(str(image.votes))
 
 
-class StylistView(LoginRequiredMixin, StaffRequiredMixin, TemplateView):
+class StylistView(TemplateView):
     template_name = "frisor_page.html"
 
 

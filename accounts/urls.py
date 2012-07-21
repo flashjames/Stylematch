@@ -1,5 +1,9 @@
 from django.conf.urls.defaults import *
-from accounts.api import ServiceResource, PictureResource, ProfileResource, FeaturedProfileResource
+from accounts.api import (ServiceResource,
+                          PictureResource,
+                          ProfileResource,
+                          FeaturedProfileResource,
+                          InspirationResource)
 from accounts.views import (ServicesView,
                             EditProfileView,
                             DisplayProfileView,
@@ -15,6 +19,8 @@ profile_api.register(ServiceResource())
 profile_api.register(PictureResource())
 profile_api.register(ProfileResource())
 profile_api.register(FeaturedProfileResource())
+profile_api.register(InspirationResource())
+
 
 urlpatterns = patterns('',
     # need to be first, or redirection to profile wont work.

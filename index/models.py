@@ -22,6 +22,10 @@ class Tip(models.Model):
 
 
 class InspirationVote(models.Model):
+    """
+    A vote on a gallery image. Saves the datetime for the vote
+
+    """
     image = models.ForeignKey(GalleryImage)
     datetime = models.DateTimeField(auto_now_add=True)
 

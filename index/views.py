@@ -242,7 +242,7 @@ class LikeView(View):
         return HttpResponse(str(image.votes))
 
 
-class StylistView(LoginRequiredMixin, StaffRequiredMixin, TemplateView):
+class StylistView(TemplateView):
     template_name = "frisor_page.html"
 
 

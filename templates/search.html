@@ -139,51 +139,7 @@
         </div>
         <!-- slut på kartan         -->
 
-        <!-- Detta är info om stylematch -->
-        <div class="search-city-about-stylematch">
-          <span>
-            Om StyleMatch
-          </span>
-          <div class="text-inside">
-            <h1>Frisör {{ city }}</h1>
-            <p>
-              I {{ city }} hittar du din favoritsalong eller frisör, där du kan klippa håret,
-              göra slingor, permanenta, färga eller bara fixa en herrklippning eller damklippning.
-              Du kan hitta en frisör i {{ city }} som passar din personlighet och vad du vill ha i en
-              <b>klippning</b>. Alla <b>frisörer</b> på StyleMatch är utbildade så du kan känna dig säker på
-              kvalitet.
-            </p>
-            <p>
-              <a href="/">StyleMatch.se</a> har {% if profiles_total == 1 %} 1 ansluten frisör {% else %} {{ profiles_total }} anslutna frisörer {% endif %} i {{ city }} som klipper stans bästa frisyrer
-            </p>
-
-            <h2>De bästa frisörsalongerna i {{ city }}</h2>
-            <ul>
-              {% for profile in profiles %}
-              <li>
-                <a href="/{{ profile.profile_url }}/">{{ profile.first_name }} {{ profile.last_name }}</a> på {{ profile.salon_name }}.
-                {{ profile.salon_adress }}, {{ profile.salon_city }}
-              </li>
-              {% endfor %}
-            </ul>
-
-            <h3>Hur bokar jag en frisör?</h3>
-            <p>Vi rekommenderar alla nya användare att läsa "<a href="/faq/privatperson/">Hur hittar jag en frisör</a>".
-            </p>
-            <ol>
-              <li>Välj först den stad du vill bläddra bland frisörsalonger i, i detta fall {{ city }}.</li>
-              <li>Bläddra bland våra frisörer(t.ex. <a href="/{{ standard_profile.profile_url }}/">{{ standard_profile.user.first_name }} {{ standard_profile.user.last_name }}</a>) som finns i den staden, och besök sedan den profilen.</li>
-              <li>Bläddra bland bilder på frisyrer, färger och fina bilder på uppsättningar.</li>
-              <li>Boka sedan frisören genom att ringa till salongen med numret som finns på profilen.</li>
-              <li>Gå in och rekommendera frisören efter besöket på <a href="http://www.stylematch.se/">StyleMatch.se</a></li>
-            </ol>
-
-            <h4></h4>
-
-          </div>
-        </div> <!-- .search-city-about-stylematch -->
-        <!-- Slut på info om stylematch -->
-
+     
       </div>
     </div>
     <script type="text/javascript">

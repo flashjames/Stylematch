@@ -168,7 +168,7 @@ urlpatterns += patterns(
     url(r'^',
         include('dashboard.urls')),
 
-    (r'^sok/',
+    (u'^sök/',
             TemplateView.as_view(template_name="search.html"),
             {},
             'search'),

@@ -139,6 +139,7 @@
             if (online_booking === true) {
                 data['show_booking_url'] = true;
             }
+            data['limit'] = 0; // list ALL stylists
             this.profileList.fetch({
                 data: data,
                 success: function(collection, response) {

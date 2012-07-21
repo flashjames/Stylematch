@@ -149,7 +149,7 @@
                  Hitta frisör
             </a>
             
-            <a href="#"  class="popover1" rel="tooltip" data-content="" data-original-title="Kommer snart" onclick="goToByScroll('test')">Bli inspirerad </a>
+            <a href="{% url 'inspiration_page' as inspiration %} {{ inspiration }}">Bli inspirerad </a>
             <a href="{% url 'about_page' as about %}{{ about }}">Om Stylematch</a>
           </div>
         </div>{# row masthead #}

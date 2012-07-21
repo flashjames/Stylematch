@@ -125,8 +125,7 @@
             this.filter();
         },
         events:{
-            "click .submit":"filter"/*,
-            "change #city":"filter"*/
+            "click .submit":"filter"
         },
         filter: function() {
 
@@ -134,10 +133,6 @@
             city = $('#city').val();
             if (city !== 'Alla') {
                 data = { 'salon_city__iexact' : $('#city').val() };
-            }
-            online_booking = $('#online-booking').prop("checked");
-            if (online_booking === true) {
-                data['show_booking_url'] = true;
             }
             data['limit'] = 0; // list ALL stylists
             this.profileList.fetch({
@@ -157,6 +152,5 @@
     });
 
     this.ProfileView = new ProfileView();
-
 
 })(jQuery);

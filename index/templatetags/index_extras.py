@@ -1,7 +1,7 @@
 """
 Global filters needed in all templates
 """
-
+import urllib
 from django.conf import settings
 from django import template
 from django.template.base import Node, TemplateSyntaxError, VariableDoesNotExist, resolve_variable
@@ -15,7 +15,7 @@ def pdb(element):
     return element
 
 @register.simple_tag
-def current_url(request):
+def current_url(request, url):
    from django.core.urlresolvers import resolve
    current_url = resolve(request.get_full_path()).url_name
    return current_url
@@ -79,8 +79,8 @@ def profile_image_thumbnail(userprofile, logged_in_user_profile=False):
         {% if image|get_class != 'ImageFieldFile' %}
           <img src="{{ image }}">
         {% else %}
-        {% thumbnail image "100x100 as im %}
-          <img src="{{ im.url }}">
+        {% thumbnail image 100x100 as im %}
+          <img src='{{ im.url }}'>
         {% endthumbnail %}
         {% endif %}
 
@@ -111,6 +111,7 @@ def active(parser, token):
     {% active request first second etc %}
 
     """
+
     return do_active(parser, token)
 active = register.tag(active)
 
@@ -136,7 +137,10 @@ class ActiveIfInListNode(Node):
             except VariableDoesNotExist:
                 var = None
             comparables.append(var)
-
-        if request.path in comparables:
+            
+        path = request.path
+        # need to urllencode the path, else it wont match swedish-chars
+        path = urllib.quote(path.encode('utf-8'))
+        if path in comparables:
             return "active"
         return ""

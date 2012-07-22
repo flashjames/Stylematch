@@ -67,6 +67,7 @@ class UserProfileInline(admin.StackedInline):
     readonly_fields = ('temporary_profile_url',
                        'profile_image_cropped',
                        'profile_image_uncropped',)
+    #exclude = ['visible_message_read', 'approved_message_read']
 
     def formfield_for_dbfield(self, db_field, **kwargs):
         sup = super(UserProfileInline, self)

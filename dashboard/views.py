@@ -174,13 +174,17 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                 userprofile.approved and not
                 userprofile.visible_message_read):
                 
-                context['visibility_notification'] = {'visible': True }                
+                context['visibility_notification'] = {'visible': True }
+                userprofile.visible_message_read = True
+                userprofile.save()
             # display 'you will soon be in search directory' message
             elif ((not userprofile.visible) and
                   userprofile.approved and not
                   userprofile.approved_message_read):
                 
                 context['visibility_notification'] = {'approved': True }
+                userprofile.approved_message_read = True
+                userprofile.save()
             
         # visits statistics chart
         profile_url = self.request.user.userprofile.profile_url
@@ -196,37 +200,6 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['GIS'] = self.get_gallery_image_statistics()
 
         return context
-
-class MessageReadView(LoginRequiredMixin, View):
-    """
-    An API MessageRead view to handle message read request via ajax
-    """
-    def post(self, request, *args, **kwargs):
-        userprofile = self.request.user.userprofile
-        message_to_mark_read = request.POST['message_to_mark_read']
-        
-        if message_to_mark_read == "visible_message":
-            if userprofile.visible_message_read:
-                logger.error("This function should be called, since this user"
-                         " already has marked this message as read once.")
-
-            userprofile.visible_message_read = True
-            userprofile.save()
-            return HttpResponse("done")
-        elif message_to_mark_read == "approved_message":
-            if userprofile.visible_message_read:
-                logger.error("This function should be called, since this user"
-                         " already has marked this message as read once.")
-
-            userprofile.approved_message_read = True
-            userprofile.save()
-            return HttpResponse("done")
-        
-        return HttpResponse("No message marked as read.")
-
-            
-        
-
 
 
 class InviteCodeView(LoginRequiredMixin, StaffRequiredMixin, TemplateView):

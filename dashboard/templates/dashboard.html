@@ -185,30 +185,9 @@ should be displayed. It also marks the notificiation as read, the first time it 
 
 {% if visibility_notification.approved or visibility_notification.visible %}
 <script>
-  var CSRF_TOKEN = "{{ csrf_token }}";
-
-  {% if visibility_notification.approved %}
-  var message_to_mark_read = "approved_message";
-  {% endif %}
-  {% if visibility_notification.visible %}
-  var message_to_mark_read = "visible_message";
-  {% endif %}
-
-  $('#onpage-message').on('hide', function() {
-            $.post(
-                '/översikt/meddelande-läst/',
-                { 'message_to_mark_read': message_to_mark_read,
-                  'csrfmiddlewaretoken': CSRF_TOKEN },
-                function(data) {
-                // send client-side error to us
-                }
-            );
-
-  });
-  $('#onpage-message').modal('show')
   /* Toggle modal if any message incomming */
   setTimeout(function() {
-  //$('#onpage-message').modal('show')
+  $('#onpage-message').modal('show')
   }, 3000);
   
 </script>

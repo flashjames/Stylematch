@@ -13,6 +13,7 @@ from django.utils.translation import ugettext as _
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
+from django.template.loader import render_to_string
 from django.http import HttpResponseRedirect
 from django.views.generic import (TemplateView,
                                   UpdateView,
@@ -20,13 +21,14 @@ from django.views.generic import (TemplateView,
                                   RedirectView,
                                   CreateView,
                                   FormView)
-from braces.views import LoginRequiredMixin
+from braces.views import LoginRequiredMixin, SuperuserRequiredMixin
 from accounts.models import (Service,
                              UserProfile,
                              OpenHours,
                              GalleryImage,
                              ProfileImage,
                              weekdays_model)
+from accounts.signals import approved_user_criteria_changed
 from tools import (format_minutes_to_hhmm,
                    format_minutes_to_pretty_format,
                    get_unique_filename)
@@ -346,6 +348,9 @@ class OpenHoursView(LoginRequiredMixin, UpdateView):
         if not self.object.reviewed:
             self.object.reviewed = True
             self.object.save()
+            approved_user_criteria_changed.send(sender=self,
+                                                request=self.request,
+                                                userprofile=self.request.user.userprofile)
         messages.success(self.request, "Uppdateringen lyckades!")
         return super(OpenHoursView, self).form_valid(form)
 
@@ -444,6 +449,10 @@ class EditImagesView(LoginRequiredMixin, CreateView):
         form.save_m2m()
 
         messages.success(self.request, "Uppladdningen lyckades!")
+
+        approved_user_criteria_changed.send(sender=self,
+                                            request=self.request,
+                                            userprofile=self.request.user.userprofile)
         return super(EditImagesView, self).form_valid(form)
 
 
@@ -491,6 +500,9 @@ class SaveProfileImageView(EditImagesView):
         current_userprofile.save()
 
         messages.success(self.request, "Uppladdningen lyckades!")
+        approved_user_criteria_changed.send(sender=self,
+                                            request=self.request,
+                                            userprofile=self.request.user.userprofile)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -600,4 +612,32 @@ class CropPictureView(LoginRequiredMixin, FormView):
         current_userprofile.profile_image_cropped = picture
         current_userprofile.save()
 
+        approved_user_criteria_changed.send(sender=self,
+                                            request=self.request,
+                                            userprofile=self.request.user.userprofile)
         return HttpResponseRedirect(self.get_success_url())
+
+
+class MakeVisibleView(SuperuserRequiredMixin, RedirectView):
+
+    def get(self, request, **kwargs):
+        if 'slug' in kwargs:
+            try:
+                userprofileid = int(kwargs['slug'])
+            except ValueError:
+                userprofileid = 0
+
+            try:
+                up = UserProfile.objects.get(pk=userprofileid)
+                if not up.visible and up.approved:
+                    # make user visible and send a welcome email to user
+                    up.visible = True
+                    up.save()
+
+            except UserProfile.DoesNotExist:
+                pass
+
+        if 'next' in request.GET:
+            return HttpResponseRedirect(request.GET['next'])
+        else:
+            return super(MakeVisibleView, self).get(request **kwargs)

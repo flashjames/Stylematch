@@ -11,7 +11,8 @@ from accounts.views import (ServicesView,
                             EditImagesView,
                             OpenHoursView,
                             SaveProfileImageView,
-                            CropPictureView)
+                            CropPictureView,
+                            MakeVisibleView)
 from tastypie.api import Api
 
 profile_api = Api(api_name='profile')
@@ -54,6 +55,11 @@ urlpatterns = patterns('',
             'profiles_add_hours'),
     (r'^api/',
             include(profile_api.urls)),
+
+    (r'^admin/makevisible/(?P<slug>\d+)/$',
+            MakeVisibleView.as_view(),
+            {},
+            'makevisible'),
     (r'^(?P<slug>[-\w]+)/$',
             DisplayProfileView.as_view(),
             {},

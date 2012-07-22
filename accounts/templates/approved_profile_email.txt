@@ -1,0 +1,3 @@
+Välkommen, {{ user.first_name }} {{ user.last_name }}!
+
+Din profil blir snart synlig.

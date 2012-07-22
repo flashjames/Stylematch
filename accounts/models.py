@@ -3,10 +3,13 @@
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib import messages
 from django.conf import settings
+from django.core.mail import send_mail
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 from django.core.files.storage import default_storage
+from django.template.loader import render_to_string
 from registration.signals import user_registered
 from accounts.signals import approved_user_criteria_changed
 
@@ -26,6 +29,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class ProfileValidationError(Exception):
     def __init__(self, value):
         self.value = value
@@ -33,7 +37,7 @@ class ProfileValidationError(Exception):
         return repr(self.value)
 
 
-def check_profile(sender, **kwargs):
+def check_profile(sender, request=None, userprofile=None, create_checks=True, **kwargs):
     """
     When a critical field on a profile has changed this function will be
     called to make sure the profile is still good.
@@ -47,28 +51,38 @@ def check_profile(sender, **kwargs):
     logger.debug("Checking %s" % sender)
 
     # Retrieve the correct ``userprofile`` profile
-    if sender.__class__ == UserProfile:
-        userprofile = sender
-    else:
-        instance = kwargs.get('instance')
-        if instance is not None and instance.__class__ == Service:
-            userprofile = instance.user.userprofile
+    if userprofile is None or userprofile.__class__ != UserProfile:
+        if sender.__class__ == UserProfile:
+            userprofile = sender
         else:
-            logger.error("Check_profile got called from an unexpected sender (%s)(class: %s)." % (sender, sender.__class__))
-            return False
+            instance = kwargs.get('instance')
+            if (instance is not None and
+                   (instance.__class__ == Service or
+                    instance.__class__ == OpenHours)):
+                userprofile = instance.user.userprofile
+            else:
+                logger.error("Check_profile got called from an unexpected "
+                             "sender (%s)(class: %s)." % \
+                                    (sender, sender.__class__))
+                return False
 
     try:
         # Check the information about salon. address, phone etc
-        if not (userprofile.salon_name or
-                userprofile.salon_city or
-                userprofile.salon_adress or
-                userprofile.zip_adress or
-                userprofile.salon_phone_number):
-            raise ProfileValidationError("Information about salon missing.")
+        if not userprofile.salon_name:
+            raise ProfileValidationError("Salon name missing.")
+        if not userprofile.salon_city:
+            raise ProfileValidationError("Salon city missing.")
+        if not userprofile.salon_adress:
+            raise ProfileValidationError("Salon adress missing.")
+        if not userprofile.zip_adress:
+            raise ProfileValidationError("Zip adress missing.")
+        if not userprofile.salon_phone_number:
+            raise ProfileValidationError("Salon phonenumber missing.")
 
         # There must be a profile image
         if not (userprofile.profile_image_cropped or
                 userprofile.profile_image_uncropped):
+
             raise ProfileValidationError("Profile image missing")
 
         # Open hours must be reviewed. This happens the first time a user
@@ -109,16 +123,29 @@ def check_profile(sender, **kwargs):
 
         if userprofile.approved:
             logger.warn(e)
-            if 'create_checks' in kwargs and kwargs['create_checks']:
+            if create_checks:
                 sc, created = ScheduledCheck.objects.get_or_create(user=userprofile.user)
                 if created:
                     logger.debug("Created new ScheduledCheck: %s" % sc.user)
+        else:
+            logger.debug("User %s was not approved for following reason: %s" % (userprofile, e))
         return False
 
     # If the user passed the test, approve the user.
     if not userprofile.approved:
         userprofile.approved = True
         userprofile.save()
+        logger.debug("User %s just got approved!" % userprofile)
+
+        # Send email notifying admin about this.
+        send_mail(u'Godkänd användare i %s: %s %s' % (userprofile.salon_city,
+                                        userprofile.user.first_name,
+                                        userprofile.user.last_name),
+                  'http://stylematch.se/admin/auth/user/%s\n'
+                  'http://stylematch.se/%s/' % (userprofile.user.pk,
+                            userprofile.profile_url),
+                  'noreply@stylematch.se',
+                  ['admin@stylematch.se'])
     return True
 approved_user_criteria_changed.connect(check_profile)
 
@@ -242,7 +269,7 @@ class Service(models.Model):
         # deliver the services sorted on the order field
         # needs to be here, or the services admin ui will break
         ordering = ['order']
-post_delete.connect(check_profile, Service)
+
 
 class OpenHours(models.Model):
     """
@@ -362,16 +389,15 @@ class UserProfile(DirtyFieldsMixin, models.Model):
     user = models.OneToOneField(User, parent_link=True,
                                 unique=True, editable=False)
 
-    visible = models.BooleanField(
-        "Visa i sökresultat och visa användarens bilder", default=False)
-
     # max_length? less?
     profile_text = models.CharField("Om mig", max_length=500, blank=True)
 
     profile_url = models.CharField("http://stylematch.se/",
                                    max_length=40,
                                    blank=True)
-    # used to reach profile if no profile_url set
+    
+    # dont remove this, it's this url that all facebook likes
+    # for a profile are tied to 
     temporary_profile_url = models.CharField(editable=False,
                                              unique=True,
                                              max_length=36)
@@ -435,8 +461,15 @@ class UserProfile(DirtyFieldsMixin, models.Model):
                                                 blank=True,
                                                 on_delete=models.SET_NULL,
                                                 related_name='profile_image_uncropped')
-
-    approved = models.BooleanField("Godkänd", default=False)
+    visible = models.BooleanField(
+        "Visa i sökresultat och visa användarens bilder", default=False)
+    visible_message_read = models.BooleanField(default=False)
+    
+    # when this field is True, the profile have all information a complete profile should have.
+    # approved == 'approved by the system, to be in search results - need human approving tho
+    # to be displayed in search results'.
+    approved = models.BooleanField("Profilen är komplett", default=False)
+    approved_message_read = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         # remove accidental whitespaces from city

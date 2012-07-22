@@ -4,6 +4,16 @@
   <div class="span11">
     <ul class="nav nav-tabs edit-navigation" style="margin-bottom:0px; ">
       <li><a href="{% url 'admin:auth_user_change' profile.user.id %}">Visa i Django Admin</a></li>
+      {% if profile.visible %}
+      <li><a>Synlig</a></li>
+      {% else %}
+      <li><a href="/admin/makevisible/{{ profile.id }}/?next={{ request.path }}">Gör synlig</a></li>
+      {% endif %}
+      {% if profile.approved %}
+      <li><a>Godkänd</a></li>
+      {% else %}
+      <li><a>Ej godkänd</a></li>
+      {% endif %}
     </ul>
   </div>
 </div>

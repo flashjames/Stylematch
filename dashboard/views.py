@@ -1,6 +1,7 @@
 # coding:utf-8
 import json
-from django.views.generic import TemplateView
+import logging
+from django.views.generic import TemplateView, View
 from django.core.urlresolvers import reverse
 from accounts.models import Service, OpenHours, GalleryImage, InviteCode
 from index.models import InspirationVote
@@ -9,6 +10,9 @@ from braces.views import LoginRequiredMixin, StaffRequiredMixin
 from dashboard.google_analytics import profile_statistics
 from accounts.models import UserProfile
 from datetime import datetime, timedelta
+from django.http import HttpResponse
+
+logger = logging.getLogger(__name__)
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name="dashboard.html"
@@ -156,12 +160,32 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
         context['tasks_to_be_done'] = self.get_tasks_to_be_done(
                             self.request.user.userprofile)
+
+        # any tasks left to be done?
         if context['tasks_to_be_done']:
             context['actual_tasks_to_do'] = len(
                     [0 for x
                      in context['tasks_to_be_done']
                      if not x['passed']])
-
+        else:
+            userprofile = self.request.user.userprofile
+            # display 'you're now displayed in search directory' message
+            if (userprofile.visible and
+                userprofile.approved and not
+                userprofile.visible_message_read):
+                
+                context['visibility_notification'] = {'visible': True }
+                userprofile.visible_message_read = True
+                userprofile.save()
+            # display 'you will soon be in search directory' message
+            elif ((not userprofile.visible) and
+                  userprofile.approved and not
+                  userprofile.approved_message_read):
+                
+                context['visibility_notification'] = {'approved': True }
+                userprofile.approved_message_read = True
+                userprofile.save()
+            
         # visits statistics chart
         profile_url = self.request.user.userprofile.profile_url
         try:

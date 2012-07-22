@@ -7,6 +7,7 @@ from accounts.models import (Service,
                              UserProfile,
                              Featured,
                              get_image_url)
+from accounts.signals import approved_user_criteria_changed
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 from tastypie.validation import FormValidation
@@ -91,7 +92,22 @@ class ServiceResource(ModelResource):
         # Now pick up the M2M bits.
         m2m_bundle = self.hydrate_m2m(bundle)
         self.save_m2m(m2m_bundle)
+
+        approved_user_criteria_changed.send(
+                                sender=self,
+                                request=request,
+                                userprofile=request.user.userprofile
+        )
         return bundle
+
+    def obj_delete(self, request=None, **kwargs):
+        pre = super(ServiceResource, self).obj_delete(request, **kwargs)
+        approved_user_criteria_changed.send(
+                                sender=self,
+                                request=request,
+                                userprofile=request.user.userprofile
+        )
+        return pre
 
     class Meta:
         model = Service
@@ -138,7 +154,22 @@ class PictureResource(ModelResource):
         # Now pick up the M2M bits.
         m2m_bundle = self.hydrate_m2m(bundle)
         self.save_m2m(m2m_bundle)
+
+        approved_user_criteria_changed.send(
+                                sender=self,
+                                request=request,
+                                userprofile=request.user.userprofile
+        )
         return bundle
+
+    def obj_delete(self, request=None, **kwargs):
+        pre = super(PictureResource, self).obj_delete(request, **kwargs)
+        approved_user_criteria_changed.send(
+                                sender=self,
+                                request=request,
+                                userprofile=request.user.userprofile
+        )
+        return pre
 
     def dehydrate(self, bundle):
         # add client side image url to each Picture object

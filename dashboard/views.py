@@ -1,6 +1,7 @@
 # coding:utf-8
 import json
-from django.views.generic import TemplateView
+import logging
+from django.views.generic import TemplateView, View
 from django.core.urlresolvers import reverse
 from accounts.models import Service, OpenHours, GalleryImage, InviteCode
 from index.models import InspirationVote
@@ -9,6 +10,9 @@ from braces.views import LoginRequiredMixin, StaffRequiredMixin
 from dashboard.google_analytics import profile_statistics
 from accounts.models import UserProfile
 from datetime import datetime, timedelta
+from django.http import HttpResponse
+
+logger = logging.getLogger(__name__)
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name="dashboard.html"
@@ -156,19 +160,28 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
         context['tasks_to_be_done'] = self.get_tasks_to_be_done(
                             self.request.user.userprofile)
+
+        # any tasks left to be done?
         if context['tasks_to_be_done']:
             context['actual_tasks_to_do'] = len(
                     [0 for x
                      in context['tasks_to_be_done']
                      if not x['passed']])
         else:
-            if ((not self.request.user.userprofile.visible) and
-                    self.request.user.userprofile.approved):
+            userprofile = self.request.user.userprofile
+            # display 'you're now displayed in search directory' message
+            if (userprofile.visible and
+                userprofile.approved and not
+                userprofile.visible_message_read):
+                
+                context['visibility_notification'] = {'visible': True }                
+            # display 'you will soon be in search directory' message
+            elif ((not userprofile.visible) and
+                  userprofile.approved and not
+                  userprofile.approved_message_read):
+                
                 context['visibility_notification'] = {'approved': True }
-            elif (self.request.user.userprofile.visible and
-                  self.request.user.userprofile.approved):
-                context['visibility_notification'] = {'visible': True }
-
+            
         # visits statistics chart
         profile_url = self.request.user.userprofile.profile_url
         try:
@@ -183,6 +196,37 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['GIS'] = self.get_gallery_image_statistics()
 
         return context
+
+class MessageReadView(LoginRequiredMixin, View):
+    """
+    An API MessageRead view to handle message read request via ajax
+    """
+    def post(self, request, *args, **kwargs):
+        userprofile = self.request.user.userprofile
+        message_to_mark_read = request.POST['message_to_mark_read']
+        
+        if message_to_mark_read == "visible_message":
+            if userprofile.visible_message_read:
+                logger.error("This function should be called, since this user"
+                         " already has marked this message as read once.")
+
+            userprofile.visible_message_read = True
+            userprofile.save()
+            return HttpResponse("done")
+        elif message_to_mark_read == "approved_message":
+            if userprofile.visible_message_read:
+                logger.error("This function should be called, since this user"
+                         " already has marked this message as read once.")
+
+            userprofile.approved_message_read = True
+            userprofile.save()
+            return HttpResponse("done")
+        
+        return HttpResponse("No message marked as read.")
+
+            
+        
+
 
 
 class InviteCodeView(LoginRequiredMixin, StaffRequiredMixin, TemplateView):

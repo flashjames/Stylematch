@@ -388,9 +388,6 @@ class UserProfile(DirtyFieldsMixin, models.Model):
     user = models.OneToOneField(User, parent_link=True,
                                 unique=True, editable=False)
 
-    visible = models.BooleanField(
-        "Visa i sökresultat och visa användarens bilder", default=False)
-
     # max_length? less?
     profile_text = models.CharField("Om mig", max_length=500, blank=True)
 
@@ -463,8 +460,15 @@ class UserProfile(DirtyFieldsMixin, models.Model):
                                                 blank=True,
                                                 on_delete=models.SET_NULL,
                                                 related_name='profile_image_uncropped')
-
-    approved = models.BooleanField("Godkänd", default=False)
+    visible = models.BooleanField(
+        "Visa i sökresultat och visa användarens bilder", default=False)
+    visible_message_read = models.BooleanField(default=False)
+    
+    # when this field is True, the profile have all information a complete profile should have.
+    # approved == 'approved by the system, to be in search results - need human approving tho
+    # to be displayed in search results'.
+    approved = models.BooleanField("Profilen är komplett", default=False)
+    approved_message_read = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         # remove accidental whitespaces from city

@@ -1,6 +1,6 @@
 # coding:utf-8
 from django.conf.urls.defaults import *
-from dashboard.views import DashboardView, InviteCodeView, MessageReadView
+from dashboard.views import DashboardView, InviteCodeView
 
 urlpatterns = patterns('',
     (u'^översikt/invitecode/$',

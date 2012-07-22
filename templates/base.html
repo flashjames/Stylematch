@@ -38,6 +38,7 @@
     <script type="text/javascript">
       $('.dropdown-toggle').dropdown({trigger:'hover'});
 
+      /* Only used on city_search page currently */
       /* Function to trigger tooltip when clicked and hide after a delay*/
       $(document).ready(function() {
       var defaultOption={trigger:'manual', delay: {hide: 500 }};
@@ -55,10 +56,6 @@
 
       });
 
-      function goToByScroll(id){
-        $('html,body').delay(1500).animate({scrollTop: $("#"+id).offset().top},'slow');
-      }
-
       function indexredirect() {
         {% url 'index_page' as index %}
         {% if request.path != index %}
@@ -68,6 +65,7 @@
         {% endif %}
       };
       
+      /* Login block at top of page */
       $(".collapse").collapse();
     </script>
 

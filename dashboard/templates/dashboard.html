@@ -177,12 +177,7 @@
   </div>
 </div>
 
-{% comment %}
-Code to toogle the message modal, if any visibility notification 
-should be displayed. It also marks the notificiation as read, the first time it is closed
--> message only displayed once.
-{% endcomment %}
-
+{# Code to toogle the message modal, if any visibility notification should be displayed. #}
 {% if visibility_notification.approved or visibility_notification.visible %}
 <script>
   /* Toggle modal if any message incomming */

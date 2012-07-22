@@ -60,6 +60,10 @@ class SignupView(LoginRequiredMixin, UpdateView):
         context['progress_width'] = "40.5%"
 
         context['no_menu'] = True
+
+        # used to determine if it's a newly registered user
+        # -> display more clearly where he should go on profile page
+        self.request.session['extra_user_guidance'] = True
         return context
 
 

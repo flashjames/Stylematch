@@ -4,10 +4,10 @@
 
 
 <div class="authed navbar navbar-fixed-top">
-  {% if user.userprofile.approved %}
-    <div id="major_notification">
-    <p>Du har uppgifter att göra!</p>
-    </div>
+  {% if extra_user_guidance %}
+  <div id="major-notification">
+    <div class="center"><a href="{% url 'dashboard' as  dashboard%} {{ dashboard }}">För att göra klart din profil, gå vidare till Översikt.</a></div>
+  </div>
   {% endif %}
   <div class="navbar-inner">
     <div class="container">
@@ -34,7 +34,7 @@
       </div>
       <div class="nav-collapse">
         <ul class="nav">
-          {% url 'dashboard' as pdr %}<li class="{% active request pdr %}"><a href="{{ pdr }}">Översikt</a></li>
+          {% url 'dashboard' as pdr %}<li class="{% active request pdr %}{% if extra_user_guidance %}call-to-action{% endif %}"><a href="{{ pdr }}">Översikt</a></li>
           {% url 'profile_display_with_profile_url' slug=user.get_profile.profile_url as pdr %}<li class="{% active request pdr %}"><a href="{{ pdr }}">Visa profil</a></li>
           
           

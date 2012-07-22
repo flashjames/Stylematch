@@ -8,9 +8,6 @@
 <script src="{{ GALLERIA_SCRIPT }}" type="text/javascript" />
 <script type="text/javascript"> Galleria.loadTheme('{{ GALLERIA_THEME }}'); </script>
 <script src="{{ STATIC_URL }}js/bootstrap-modal.js" type="text/javascript"></script>
-<script type="text/javascript">
-  $('#bookmemodal').modal();
-</script>
 
 <meta name="keywords" content="frisör {{ profile.salon_city }},hitta frisör {{ profile.salon_city }},boka frisör,boka frisör {{ profile.salon_city }},frisör">
 <meta name="description" content="{{ first_name }} {{ last_name }}, frisör i {{ profile.salon_city }}. Se bilder på tidigare klippningar och bli inspirerad för att sedan bilda dig en uppfattning om det är rätt frisör för dig.">
@@ -39,8 +36,6 @@
 {% if user.is_superuser %}
 {% include "profiles/admin_profile.html" %}
 {% endif %}
-
-
 
 <div class="row masthead" >
   <div class="span3 profile-image ">
@@ -179,5 +174,16 @@
     {% endif %}
   </div>
 </div>
+
+  {# Display a red bar over navigation if the user just have registered #}
+  {% if extra_user_guidance %}
+  <script type="text/javascript">
+    setTimeout(function() {
+    $('#major-notification').slideDown();
+    $('.masthead').css('margin-top','48px');
+    }, 3000);
+  </script>
+  {% endif %}
+
 
 {% endblock %}

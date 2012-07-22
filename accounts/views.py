@@ -184,6 +184,11 @@ class DisplayProfileView(DetailView):
         except:
             pass
 
+        # first time a user visits this view, we give her guidance
+        if self.request.session.get('extra_user_guidance', False):
+            self.request.session['extra_user_guidance'] = False
+            context['extra_user_guidance'] = True
+
         return context
 
     def get_object(self, queryset=None):

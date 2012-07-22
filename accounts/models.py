@@ -37,22 +37,26 @@ class ProfileValidationError(Exception):
         return repr(self.value)
 
 
-def check_profile(sender, request, userprofile=None, create_checks=True, **kwargs):
+def check_profile(sender, **kwargs):
     """
-    Function attached with a Signal:
-      ``approved_user_criteria_changed``
-    Instead of calling this function directly, use:
+    When a critical field on a profile has changed this function will be
+    called to make sure the profile is still good.
 
-        from accounts.signals import approved_user_criteria_changed
-        approved_user_criteria_changed.send(self, request)
+    If the profile is no longer good, a scheduled check object will be
+    created that later on is being checked with a cron-script. To manually
+    check the profiles use:
+      ./manage.py check_profile
 
     """
-
     logger.debug("Checking %s" % sender)
 
-    if userprofile is None or userprofile.__class__ != UserProfile:
-        if sender.__class__ == UserProfile:
-            userprofile = sender
+    # Retrieve the correct ``userprofile`` profile
+    if sender.__class__ == UserProfile:
+        userprofile = sender
+    else:
+        instance = kwargs.get('instance')
+        if instance is not None and instance.__class__ == Service:
+            userprofile = instance.user.userprofile
         else:
             instance = kwargs.get('instance')
             if (instance is not None and
@@ -66,29 +70,27 @@ def check_profile(sender, request, userprofile=None, create_checks=True, **kwarg
                 return False
 
     try:
-        # Information about salon. Address, phone etc
-        if not userprofile.salon_name:
-            raise ProfileValidationError("Salon name missing.")
-        if not userprofile.salon_city:
-            raise ProfileValidationError("Salon city missing.")
-        if not userprofile.salon_adress:
-            raise ProfileValidationError("Salon adress missing.")
-        if not userprofile.zip_adress:
-            raise ProfileValidationError("Zip adress missing.")
-        if not userprofile.salon_phone_number:
-            raise ProfileValidationError("Salon phonenumber missing.")
+        # Check the information about salon. address, phone etc
+        if not (userprofile.salon_name or
+                userprofile.salon_city or
+                userprofile.salon_adress or
+                userprofile.zip_adress or
+                userprofile.salon_phone_number):
+            raise ProfileValidationError("Information about salon missing.")
 
-        # profile image
-        if ((not userprofile.profile_image_cropped) and
-            (not userprofile.profile_image_uncropped)):
+        # There must be a profile image
+        if not (userprofile.profile_image_cropped or
+                userprofile.profile_image_uncropped):
+
             raise ProfileValidationError("Profile image missing")
 
-        # open hours
+        # Open hours must be reviewed. This happens the first time a user
+        # reviews them, and they cannot be "unreviewed".
         if not userprofile.user.openhours:
             raise ProfileValidationError("Openhours is no longer reviewed. "
                                          "How the hell did that happen??")
 
-        # services
+        # There must be at least one service
         try:
             Service.objects.get(user=userprofile.user)
         except Service.DoesNotExist:
@@ -96,11 +98,11 @@ def check_profile(sender, request, userprofile=None, create_checks=True, **kwarg
         except Service.MultipleObjectsReturned:
             pass
 
-        # Description about the stylist
+        # User must have written a description about themself.
         if not userprofile.profile_text:
             raise ProfileValidationError("Profile text missing")
 
-        # gallery images
+        # At least one gallery image must be uploaded.
         gi = GalleryImage.objects.filter(user=userprofile.user)
         if gi:
             gi = gi.filter(display_on_profile=True)
@@ -111,7 +113,13 @@ def check_profile(sender, request, userprofile=None, create_checks=True, **kwarg
             raise ProfileValidationError("User has no uploaded gallery images.")
 
     except ProfileValidationError as e:
-        # create scheduledcheck
+        # If the user has once been approved, but the profile is no longer
+        # valid, then the user should be checked later again. If it turns out
+        # to be invalid then too, an admin will be notified.
+
+        # If the user hasn't been approved yet, the profile isn't visible and
+        # the admin doesn't have to be notified.
+
         if userprofile.approved:
             logger.warn(e)
             if create_checks:
@@ -122,6 +130,7 @@ def check_profile(sender, request, userprofile=None, create_checks=True, **kwarg
             logger.debug("User %s was not approved for following reason: %s" % (userprofile, e))
         return False
 
+    # If the user passed the test, approve the user.
     if not userprofile.approved:
         userprofile.approved = True
         userprofile.save()
@@ -155,15 +164,29 @@ def create_temporary_profile_url(sender, user, request, **kwargs):
         return
     first_name = request.POST['first_name']
     last_name = request.POST['last_name']
+
+    # Get all users with the same name
     users = User.objects.filter(first_name=first_name,
                                 last_name=last_name)
+
+    # This forces a double name to be separate in the list.
+    # Eva Marie Johnson => ['Eva', 'Marie', 'Johnson']
     names = (first_name + " " + last_name).split(' ')
-    tmp_url = "-".join(names)
+
+    # Join them together using hyphen
+    # ['Eva', 'Marie', 'Johnson'] => "Eva-Marie-Johnson"
+    tmp_url = "-".join(names).lower()
     tmp_url = re.sub(r'\s', '', tmp_url)
+
+    # Append a number depending on how many that has the exact name before
+    # ex. 2 users before have the exact same name:
+    # "Eva-Marie-Johnson" => "Eva-Marie-Johnson3"
     if len(users) > 1:
         tmp_url += "%d" % (len(users))
+
+    # Save the URL
     userprofile = user.userprofile
-    userprofile.profile_url = tmp_url.lower()
+    userprofile.profile_url = tmp_url
     userprofile.save()
 user_registered.connect(create_temporary_profile_url)
 
@@ -184,6 +207,11 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 
 class DirtyFieldsMixin(object):
+    """
+    Add a method ``get_dirty_fields`` that allows a model to see the changed
+    fields upon save().
+
+    """
     def __init__(self, *args, **kwargs):
         super(DirtyFieldsMixin, self).__init__(*args, **kwargs)
         self._original_state = self._as_dict()
@@ -199,6 +227,7 @@ class DirtyFieldsMixin(object):
     def get_dirty_fields(self):
         """
         Returns a dict of changed fields
+
         """
         new_state = self._as_dict()
         return dict(
@@ -353,7 +382,6 @@ class GalleryImage(BaseImage):
 class UserProfile(DirtyFieldsMixin, models.Model):
     """
     TODO:
-    fixa så email från huvudprofilen visas här
     fixa så twitter och facebook profil visas här, se styleseat
     fixa description till denna modell
     """
@@ -441,6 +469,21 @@ class UserProfile(DirtyFieldsMixin, models.Model):
     def save(self, *args, **kwargs):
         # remove accidental whitespaces from city
         self.salon_city = self.salon_city.strip()
+
+        # check if the user is still valid
+        dirties = self.get_dirty_fields()
+        user_criterias = [
+                'salon_city',
+                'salon_adress',
+                'zip_adress',
+                'salon_phone_number',
+                'openhours',
+                'profile_text',
+                ]
+        for key in dirties.keys():
+            if key in user_criterias:
+                approved_user_criteria_changed.send(sender=self)
+                break
 
         return super(UserProfile, self).save(*args, **kwargs)
 
@@ -548,10 +591,3 @@ class ScheduledCheck(models.Model):
 
     def __unicode__(self):
         return self.user.__unicode__()
-
-    def check(self):
-        """
-        Validate all criterias for being approved
-        Return True if valid, otherwise False
-        """
-        return True

@@ -42,6 +42,7 @@ from accounts.forms import (UserProfileForm,
 class DisplayProfileView(DetailView):
     """
     Display a stylist profile
+
     """
     template_name = "profiles/profile_display.html"
     model = UserProfile
@@ -56,6 +57,7 @@ class DisplayProfileView(DetailView):
     def get_images(self, queryset):
         """
         Send back urls to the images, instead of Picture objects
+
         """
         images_lst = []
         for index, image in enumerate(queryset):
@@ -77,6 +79,7 @@ class DisplayProfileView(DetailView):
     def get_gallery_images(self, limit=0):
         """
         TODO: should have limit on number of imgs to display
+
         """
         queryset = GalleryImage.objects.filter(
             user__exact=self.object.user).filter(display_on_profile=True)
@@ -89,7 +92,7 @@ class DisplayProfileView(DetailView):
                         settings.STATIC_URL,
                         'img/default_image_profile_not_logged_in.jpg')]
         return queryset
-    
+
     def get_profile_image(self, user):
         userprofile = user.userprofile
 
@@ -106,6 +109,7 @@ class DisplayProfileView(DetailView):
         Helper function for opening hours.
         If no time has been selected in the dropdown, -1 will be  the value.
         This is then used in template to print "CLOSED".
+
         """
         time = format_minutes_to_hhmm(getattr(obj, attr_name))
         if time == '':
@@ -117,6 +121,7 @@ class DisplayProfileView(DetailView):
         """
         Helper function to create a dict with relevant day information.
         Extracts values from obj with attribute prefix DAY
+
         """
 
         attr_name = day
@@ -186,6 +191,7 @@ class DisplayProfileView(DetailView):
     def get_object(self, queryset=None):
         """
         Find the profile to display according to the slug field.
+
         """
         queryset = self.get_queryset()
 

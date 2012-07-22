@@ -309,6 +309,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'index.context_processors.jquery_script',
     'index.context_processors.galleria_urls',
+    'index.context_processors.google_analytics',
     # used to access STATIC_URL in templates
     'django.core.context_processors.media',
     'django.core.context_processors.static',
@@ -320,3 +321,6 @@ PATH_USER_IMGS = "user-imgs/"
 
 MAX_IMAGE_SIZE = 20 * 1024 * 1024
 FULL_PATH_USER_IMGS = os.path.join(MEDIA_URL, PATH_USER_IMGS)
+
+# Google analytics key
+GOOGLE_ANALYTICS_KEY = ""

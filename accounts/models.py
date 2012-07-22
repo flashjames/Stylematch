@@ -144,8 +144,8 @@ def check_profile(sender, request=None, userprofile=None, create_checks=True, **
                   'http://stylematch.se/admin/auth/user/%s\n'
                   'http://stylematch.se/%s/' % (userprofile.user.pk,
                             userprofile.profile_url),
-                  'noreply@stylematch.se',
-                  ['admin@stylematch.se'])
+                  settings.DEFAULT_FROM_EMAIL,
+                  ['martin@stylematch.se'])
     return True
 approved_user_criteria_changed.connect(check_profile)
 

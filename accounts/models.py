@@ -37,7 +37,7 @@ class ProfileValidationError(Exception):
         return repr(self.value)
 
 
-def check_profile(sender, **kwargs):
+def check_profile(sender, request=None, userprofile=None, **kwargs):
     """
     When a critical field on a profile has changed this function will be
     called to make sure the profile is still good.
@@ -51,8 +51,12 @@ def check_profile(sender, **kwargs):
     logger.debug("Checking %s" % sender)
 
     # Retrieve the correct ``userprofile`` profile
-    if sender.__class__ == UserProfile:
+    if userprofile.__class__ == UserProfile:
+        pass
+    elif sender.__class__ == UserProfile:
         userprofile = sender
+    elif request is not None:
+        userprofile = self.request.user.userprofile
     else:
         instance = kwargs.get('instance')
         if instance is not None and instance.__class__ == Service:

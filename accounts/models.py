@@ -37,7 +37,7 @@ class ProfileValidationError(Exception):
         return repr(self.value)
 
 
-def check_profile(sender, request=None, userprofile=None, **kwargs):
+def check_profile(sender, request=None, userprofile=None, create_checks=True, **kwargs):
     """
     When a critical field on a profile has changed this function will be
     called to make sure the profile is still good.
@@ -51,16 +51,9 @@ def check_profile(sender, request=None, userprofile=None, **kwargs):
     logger.debug("Checking %s" % sender)
 
     # Retrieve the correct ``userprofile`` profile
-    if userprofile.__class__ == UserProfile:
-        pass
-    elif sender.__class__ == UserProfile:
-        userprofile = sender
-    elif request is not None:
-        userprofile = self.request.user.userprofile
-    else:
-        instance = kwargs.get('instance')
-        if instance is not None and instance.__class__ == Service:
-            userprofile = instance.user.userprofile
+    if userprofile is None or userprofile.__class__ != UserProfile:
+        if sender.__class__ == UserProfile:
+            userprofile = sender
         else:
             instance = kwargs.get('instance')
             if (instance is not None and
@@ -75,12 +68,16 @@ def check_profile(sender, request=None, userprofile=None, **kwargs):
 
     try:
         # Check the information about salon. address, phone etc
-        if not (userprofile.salon_name or
-                userprofile.salon_city or
-                userprofile.salon_adress or
-                userprofile.zip_adress or
-                userprofile.salon_phone_number):
-            raise ProfileValidationError("Information about salon missing.")
+        if not userprofile.salon_name:
+            raise ProfileValidationError("Salon name missing.")
+        if not userprofile.salon_city:
+            raise ProfileValidationError("Salon city missing.")
+        if not userprofile.salon_adress:
+            raise ProfileValidationError("Salon adress missing.")
+        if not userprofile.zip_adress:
+            raise ProfileValidationError("Zip adress missing.")
+        if not userprofile.salon_phone_number:
+            raise ProfileValidationError("Salon phonenumber missing.")
 
         # There must be a profile image
         if not (userprofile.profile_image_cropped or

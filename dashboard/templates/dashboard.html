@@ -7,6 +7,7 @@
 {% block html-head %}
 <script src="{{ STATIC_URL }}js/d3.v2.min.js"></script>
 <script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
+<script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
 
 <script type="text/javascript">
   <!-- Visitor count statistics to chart -->
@@ -137,15 +138,6 @@
 </div>{# /.row #}
 {% endif %}{# /if GIS #}
 
-
-
-<!-- Google analytics visitor count chart, with D3js -->
-<script type="text/javascript" src="{{ STATIC_URL }}js/chart.js"></script>
-<script>
-  $('a.mpi').colorbox({rel:'group2', transition:"none", width:"75%", height:"90%"});
-</script>
-
-
 <div class="modal onpage-messages-modal fade" id="onpage-message" style="display:none;">
   <div class="modal-header">
     <button class="close" data-dismiss="modal">×</button>
@@ -161,7 +153,6 @@
         <p>Du kommer få ett meddelande HÄR när din profil blir synlig i söklistan!</p>
         <p>Du kan redan nu använda din profil genom att sprida den till vänner och kunder genom din personliga adress (<a href="{% url 'profile_display_with_profile_url' slug=user.userprofile.profile_url as profile_url %}{{ profile_url }}">http://stylematch.se{{ profile_url }}</a>).</p>
         <p>Glöm inte att du alltid kan göra din profil lite bättre, den blir ditt nya ansikte på internet! </p>
-        <p>/ Martin</p>
         {% endif %}
 
         {% if visibility_notification.visible %}
@@ -173,7 +164,6 @@
           <li>Du kommer högt upp i googlesökningar</li>
         </ul>
         <p>Fortsätt att hålla din profil på topp genom att ladda upp nya bilder på dina senaste jobb och kreationer, för att att styra din marknadsföring dit du vill!</p>
-        <p>/ Martin</p>
         {% endif %}
         <div class="onpage-message-sender">
           <span><img src="{{ STATIC_URL }}img/martin_liten.jpg"></span>

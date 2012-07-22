@@ -38,7 +38,7 @@
     <script type="text/javascript">
       $('.dropdown-toggle').dropdown({trigger:'hover'});
 
-      /* Only used on city_search page currently */
+      /* Only used on CITY_SEARCH page currently */
       /* Function to trigger tooltip when clicked and hide after a delay*/
       $(document).ready(function() {
       var defaultOption={trigger:'manual', delay: {hide: 500 }};
@@ -55,15 +55,7 @@
       $('.popover1').tooltip(defaultOption).click(showAndHidePopover);
 
       });
-
-      function indexredirect() {
-        {% url 'index_page' as index %}
-        {% if request.path != index %}
-        window.setTimeout(function() {
-          window.location = '{% url 'index_page' as index %}{{index}}';
-        }, 1500);
-        {% endif %}
-      };
+      /* END CITY-SEARCH */
       
       /* Login block at top of page */
       $(".collapse").collapse();

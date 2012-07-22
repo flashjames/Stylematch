@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic import View, ListView, CreateView, TemplateView
 from django.core.urlresolvers import reverse
 from accounts.models import UserProfile, GalleryImage
-from index.models import BetaEmail
+from index.models import BetaEmail, InspirationVote
 from index.forms import TipForm
 from accounts.api import ProfileResource
 import simplejson as json
@@ -69,6 +69,9 @@ def make_pagination_list(list, current):
 
 class SearchCityView(TemplateView):
     """
+    A search view for all cities. Enables static text instead of dynamically
+    loaded data via ajax. Google likes static text better.
+
     """
     template_name = "city_search.html"
     pr = ProfileResource()
@@ -117,6 +120,7 @@ class SearchCityView(TemplateView):
                 # sets the offset
                 json_request.GET['offset'] = '0'
                 offset = 0
+
                 resp = self.pr.get_list(json_request,
                                         salon_city__iexact=city,
                                         profile_image_size="100x100").content
@@ -219,6 +223,7 @@ class IndexPageView(TemplateView):
 class LikeView(View):
     """
     An API like view to handle like request via ajax
+
     """
     def post(self, request, *args, **kwargs):
         id = int(request.POST['id'])
@@ -226,17 +231,23 @@ class LikeView(View):
             image = GalleryImage.objects.get(pk=id)
         except:
             # wrong ID, couldn't find gallery image
-            return HttpResponse("The ID is WROOONG")
+            return HttpResponse("Couldn't find the ID for this gallery image")
 
         voted_images = request.session.get('has_voted', [])
         if id not in voted_images:
+            # create a vote object (for statistics) that saves
+            # the timestamp
+            vote = InspirationVote.objects.create(image=image)
+            vote.save()
+
+            # increase the votecount on the image
             image.votes += 1
             image.save()
             request.session['has_voted'] = voted_images + [id]
         return HttpResponse(str(image.votes))
 
 
-class StylistView(LoginRequiredMixin, StaffRequiredMixin, TemplateView):
+class StylistView(TemplateView):
     template_name = "frisor_page.html"
 
 

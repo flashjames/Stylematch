@@ -13,8 +13,6 @@ from index.views import (IndexPageView,
                          InspirationPageView,
                          LikeView,
                          error500)
-from dashboard.views import DashboardView
-
 from django.contrib import admin
 from django.views.generic.simple import redirect_to
 from registration.views import register
@@ -124,12 +122,7 @@ urlpatterns += patterns(
             TemplateView.as_view(template_name="contact_us.html"),
             {},
             'contact_page'),
-
-    (r'^features/',
-            TemplateView.as_view(template_name="features.html"),
-            {},
-            'features_page'),
-    (u'^frisor/',
+    (u'^frisör/',
             StylistView.as_view(),
             {},
             'frisor_page'),
@@ -149,6 +142,10 @@ urlpatterns += patterns(
             TemplateView.as_view(template_name="press.html"),
             {},
             'press_page'),
+    (r'^stylematch-i-media/',
+            TemplateView.as_view(template_name="in_media.html"),
+            {},
+            'in-media-page'),
     (r'^anvandarvillkor/',
             TemplateView.as_view(template_name="anvandarvillkor.html"),
             {},
@@ -159,13 +156,6 @@ urlpatterns += patterns(
             'salongsprofil'),
     url(r"^su/",
             include("django_su.urls")),
-
-    # tracking-code so google apps know we own the domain.
-    (r'^google66ca7050dfade3e4.html',
-                TemplateView.as_view(template_name="google66ca7050dfade3e4.html")),
-    # tracking-code google api
-    (r'^google134dd4a575584854.html',
-     TemplateView.as_view(template_name="google134dd4a575584854.html")),
     (r'^inspiration/',
             InspirationPageView.as_view(),
             {},
@@ -175,11 +165,10 @@ urlpatterns += patterns(
             {},
             'api_like_view'),
 
-    (r'^dashboard/$',
-            DashboardView.as_view(), {},
-            'dashboard'),
+    url(r'^',
+        include('dashboard.urls')),
 
-    (r'^search/',
+    (u'^sök/',
             TemplateView.as_view(template_name="search.html"),
             {},
             'search'),
@@ -192,6 +181,12 @@ urlpatterns += patterns(
     # overwrite it.
     url(r'^',
         include('accounts.urls')),
+     # tracking-code so google apps know we own the domain.
+    (r'^google66ca7050dfade3e4.html',
+                TemplateView.as_view(template_name="google66ca7050dfade3e4.html")),
+    # tracking-code google api
+    (r'^google134dd4a575584854.html',
+     TemplateView.as_view(template_name="google134dd4a575584854.html")),
     )
 
 if settings.DEVELOPMENT:

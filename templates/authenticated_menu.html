@@ -42,6 +42,8 @@
           {% url 'edit_images' as ei %}
           {% url 'profiles_edit_services' as pes %}
           {% url 'profiles_add_hours' as pah %}
+          {% url 'inspiration_page' as ip %}
+          {% url 'search' as sp %}
           <li class="dropdown {% active request pe pes pah %}">
 		    <a href="#"
 		          class="dropdown-toggle"
@@ -56,6 +58,8 @@
 		    </ul>
 		    </li>
 		    <li class="{% active request ei  %}"><a href="{{ ei  }}">Lägg upp bilder</a></li>
+		    <li class="{% active request ip  %}"><a href="{{ ip }}">Inspiration</a></li>
+		    <li class="{% active request sp  %}"><a href="{{ sp }}">Se andra frisörer</a></li>
           
           
 

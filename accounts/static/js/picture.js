@@ -188,7 +188,6 @@
                   {type: 'btn btn-success', text: 'Ja, ta bort den.', click: function($noty) {
                       image.model.destroy({
                           success:function() {
-                              vent.trigger('changeModelToEdit', new Service());
                           },
                           error:function() {
                               var noty_id = noty({

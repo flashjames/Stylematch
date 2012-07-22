@@ -21,9 +21,10 @@ from index.models import BetaEmail
 class SignupViewForm(ModelForm):
     """
     Form used in registration step 1, used to filter out wanted fields
+
     """
     salon_phone_number = forms.CharField(label='Telefonnummer för bokning')
-    
+
     def __init__(self, *args, **kwargs):
         super(SignupViewForm, self).__init__(*args, **kwargs)
 
@@ -39,6 +40,7 @@ class SignupView(LoginRequiredMixin, UpdateView):
     """
     Step 1 in the user registration, after the main user registration.
     The user is asked to fill in some of the other fields.
+
     """
     template_name = "accounts/signup_step1.html"
     form_class = SignupViewForm
@@ -108,6 +110,13 @@ class RegisterCustomBackend(DefaultBackend):
         user.is_active = True
 
         user.save()
+
+        # update the used invitecode (if any)
+        invite_code = kwargs['invite_code']
+        if invite_code is not None:
+            invite_code.reciever = user
+            invite_code.save()
+
         return user
 
 
@@ -142,19 +151,22 @@ class UserRegistrationForm(RegistrationForm):
         """
         Validates that the user have supplied a valid invite code.
         And marks the code as used, if the other fields are correctly filled.
+
+        NOTE: Match on invite code is case insensitive.
+
         """
         supplied_invite_code = self.cleaned_data['invite_code']
-        queryset = InviteCode.objects.filter(
-                        invite_code__iexact=supplied_invite_code).filter(
-                        used=False)
+        try:
+            invite_code = InviteCode.objects.get(
+                        invite_code__iexact=supplied_invite_code,
+                        used=False,
+                        reciever=None)
+        except InviteCode.DoesNotExist:
+            # a permanent key which can be used by us
+            if (supplied_invite_code == "permanent1" or
+                supplied_invite_code == "gxc347"):
+                return None
 
-        # a permanent key which can be used by us
-        if supplied_invite_code == "permanent1":
-            return supplied_invite_code
-
-        # check that the invite_code exists
-        invite_code = queryset[:1]
-        if not invite_code:
             raise forms.ValidationError(u'Din inbjudningskod (\'%s\') '
                                         u'var felaktig. Vänligen kontrollera '
                                         u'att du skrev rätt.'
@@ -166,11 +178,11 @@ class UserRegistrationForm(RegistrationForm):
         # this is run even if the passwords doesnt match in the clean()
         # method. since this function is run before clean()
         if self.is_valid():
-            invite_code = invite_code[0]
             invite_code.used = True
             invite_code.save()
+            return invite_code
 
-        return supplied_invite_code
+        return None
 
     def clean(self):
         """
@@ -189,14 +201,13 @@ class UserRegistrationForm(RegistrationForm):
                 error_msg = "Lösenorden stämmer ej överens"
                 self._errors['password1'] = self.error_class([error_msg])
                 raise ValidationError(error_msg)
-            
 
             MIN_LENGTH = 5
             if len(password1) < MIN_LENGTH:
                 error_msg = "Lösenordet är för kort, minst 5 tecken."
                 self._errors['password1'] = self.error_class([error_msg])
                 raise forms.ValidationError(error_msg)
-            
+
         return self.cleaned_data
 
     class Meta:

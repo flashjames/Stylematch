@@ -44,3 +44,6 @@ UPLOAD_PATH_USER_IMGS = PATH_USER_IMGS
 
 # reset, MEDIA_URL has changed
 FULL_PATH_USER_IMGS = os.path.join(MEDIA_URL, PATH_USER_IMGS)
+
+# Google analytics key
+GOOGLE_ANALYTICS_KEY = "UA-31224755-1"

@@ -61,17 +61,17 @@
 <script type="text/template" id="tpl-profile-list-item">
   <div style="position:relative; height:105px;">
     <div class="span profile-list-picture">
-      <a href="/<%= profile_url %>">
+      <a href="/<%= profile_url %>/">
         <img src="<%= profile_image %>" style="width:100px; height:100px;" />
       </a>
     </div>
 
-    <a href="/<%= profile_url %>">
+    <a href="/<%= profile_url %>/">
       <p class="city-search-profilename" style="display:inline-block"><%= first_name %> <%= last_name %></p>
     </a>
     <p class="profile-list-item-city-salon-name"><%= salon_name %></p>
     <p class="profile-list-item-city-salon-adress"> <%= salon_adress %>, <%= salon_city %></p>
-    <div class="profile-list-link-to-profile"><a class="search-page-view-on-map pull-right" href="<%= profile_url %>"> <i class="icon-user"></i>Visa Profil</a></div>
+    <div class="profile-list-link-to-profile"><a class="search-page-view-on-map pull-right" href="/<%= profile_url %>/"> <i class="icon-user"></i>Visa Profil</a></div>
   </div>
 </script>
 

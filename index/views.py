@@ -15,6 +15,7 @@ from braces.views import LoginRequiredMixin, StaffRequiredMixin
 from cities import *
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
+from accounts.views import DisplayProfileView
 
 
 class InspirationPageView(ListView):
@@ -166,18 +167,25 @@ class SearchCityView(TemplateView):
         return context
 
 
-class PromoteView(LoginRequiredMixin, DetailView):
+class PromoteView(LoginRequiredMixin, DisplayProfileView):
     """
     Access userprofile on promote page
     """
     template_name = "promote.html"
-    model = UserProfile
-    context_object_name = "profile"
     slug_field = "user"
         
     def get_object(self, queryset=None):
+        # display userprofile object for current logged in user
         self.kwargs['slug'] = self.request.user
-        return super(PromoteView, self).get_object(queryset)
+        return super(DetailView, self).get_object(queryset)
+
+    def get_context_data(self, **kwargs):
+        context = super(DisplayProfileView, self).get_context_data(**kwargs)
+        context['profile_image'] = self.get_profile_image_url()
+        return context
+
+    def get(self, request, **kwargs):
+        return super(DetailView, self).get(request, **kwargs)
 
 
 class BetaEmailView(CreateView):

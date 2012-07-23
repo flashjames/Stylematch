@@ -42,7 +42,7 @@ from accounts.forms import (UserProfileForm,
 class DisplayProfileView(DetailView):
     """
     Display a stylist profile
-
+    Remember that this class is subclassed in index.views.PromoteView.
     """
     template_name = "profiles/profile_display.html"
     model = UserProfile

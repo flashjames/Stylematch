@@ -10,9 +10,9 @@
       <li><a href="/admin/makevisible/{{ profile.id }}/?next={{ request.path }}">Gör synlig</a></li>
       {% endif %}
       {% if profile.approved %}
-      <li><a>Godkänd</a></li>
+      <li><a>Status: Godkänd</a></li>
       {% else %}
-      <li><a>Ej godkänd</a></li>
+      <li><a>Status: Ej godkänd</a></li>
       {% endif %}
     </ul>
   </div>

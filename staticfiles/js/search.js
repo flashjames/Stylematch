@@ -58,38 +58,32 @@
             // variable to the underscore method
             var self = this;
 
-            var geocoder = new google.maps.Geocoder();
-
             _.each(this.profileList.models, function(profile) {
 
-                // create an address string
-                var address = profile.attributes.salon_adress + ' ' +
-                              profile.attributes.zip_adress + ', ' +
-                              profile.attributes.salon_city;
+                // put a marker on the map
+                if (profile.attributes.latitude != null &&
+                    profile.attributes.longitude != null) {
 
-                // convert an address to a LatLng position and put a marker there
-                geocoder.geocode({ 'address': address }, function(result, status) {
-                    if (status === 'OK') {
-                        // create a location
-                        var loc = new google.maps.LatLng(result[0].geometry.location.lat(),
-                                                         result[0].geometry.location.lng());
+                    // create a location
+                    var loc = new google.maps.LatLng(profile.attributes.latitude,
+                                                     profile.attributes.longitude);
 
-                        // extend the markerBounds
-                        self.markerBounds.extend(loc);
+                    // Add the marker
+                    var marker = new google.maps.Marker({
+                        position: loc,
+                        map: self.map,
+                        title: profile.attributes.salon_name
+                    });
 
-                        // make sure the map fits all markers
-                        self.map.fitBounds(self.markerBounds);
+                    // extend the markerBounds
+                    self.markerBounds.extend(loc);
 
-                        // Add the marker
-                        var marker = new google.maps.Marker({
-                            position: loc,
-                            map: self.map,
-                            title: profile.attributes.salon_name
-                        });
-                    }
-                });
+                    // make sure the map fits all markers
+                    self.map.fitBounds(self.markerBounds);
+                }
             });
             return this;
+
         }
     });
 

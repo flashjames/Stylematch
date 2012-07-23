@@ -296,7 +296,6 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         Needs to be overridden because regular form_valid returns
         a HttpRedirectResponse() which cannot take context data
         """
-        self.object = form.save()
         messages.success(self.request, "Profilen uppdaterades!")
         return super(EditProfileView, self).form_valid(form)
 
@@ -349,7 +348,6 @@ class OpenHoursView(LoginRequiredMixin, UpdateView):
             self.object.reviewed = True
             self.object.save()
             approved_user_criteria_changed.send(sender=self,
-                                                request=self.request,
                                                 userprofile=self.request.user.userprofile)
         messages.success(self.request, "Uppdateringen lyckades!")
         return super(OpenHoursView, self).form_valid(form)
@@ -451,7 +449,6 @@ class EditImagesView(LoginRequiredMixin, CreateView):
         messages.success(self.request, "Uppladdningen lyckades!")
 
         approved_user_criteria_changed.send(sender=self,
-                                            request=self.request,
                                             userprofile=self.request.user.userprofile)
         return super(EditImagesView, self).form_valid(form)
 
@@ -501,7 +498,6 @@ class SaveProfileImageView(EditImagesView):
 
         messages.success(self.request, "Uppladdningen lyckades!")
         approved_user_criteria_changed.send(sender=self,
-                                            request=self.request,
                                             userprofile=self.request.user.userprofile)
         return HttpResponseRedirect(self.get_success_url())
 
@@ -613,7 +609,6 @@ class CropPictureView(LoginRequiredMixin, FormView):
         current_userprofile.save()
 
         approved_user_criteria_changed.send(sender=self,
-                                            request=self.request,
                                             userprofile=self.request.user.userprofile)
         return HttpResponseRedirect(self.get_success_url())
 

@@ -26,6 +26,7 @@ import uuid
 import os
 import re
 import logging
+import urllib
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +38,7 @@ class ProfileValidationError(Exception):
         return repr(self.value)
 
 
-def check_profile(sender, request=None, userprofile=None, create_checks=True, **kwargs):
+def check_profile(sender, userprofile, create_checks=True, **kwargs):
     """
     When a critical field on a profile has changed this function will be
     called to make sure the profile is still good.
@@ -48,23 +49,7 @@ def check_profile(sender, request=None, userprofile=None, create_checks=True, **
       ./manage.py check_profile
 
     """
-    logger.debug("Checking %s" % sender)
-
-    # Retrieve the correct ``userprofile`` profile
-    if userprofile is None or userprofile.__class__ != UserProfile:
-        if sender.__class__ == UserProfile:
-            userprofile = sender
-        else:
-            instance = kwargs.get('instance')
-            if (instance is not None and
-                   (instance.__class__ == Service or
-                    instance.__class__ == OpenHours)):
-                userprofile = instance.user.userprofile
-            else:
-                logger.error("Check_profile got called from an unexpected "
-                             "sender (%s)(class: %s)." % \
-                                    (sender, sender.__class__))
-                return False
+    logger.debug("Checking %s. Called from %s." % (userprofile, sender))
 
     try:
         # Check the information about salon. address, phone etc
@@ -134,7 +119,6 @@ def check_profile(sender, request=None, userprofile=None, create_checks=True, **
     # If the user passed the test, approve the user.
     if not userprofile.approved:
         userprofile.approved = True
-        userprofile.save()
         logger.debug("User %s just got approved!" % userprofile)
 
         # Send email notifying admin about this.
@@ -440,6 +424,15 @@ class UserProfile(DirtyFieldsMixin, models.Model):
                                   blank=True,
                                   null=True)
 
+    latitude = models.DecimalField(max_digits=18,
+                                   decimal_places=10,
+                                   null=True,
+                                   blank=True)
+    longitude = models.DecimalField(max_digits=18,
+                                    decimal_places=10,
+                                    null=True,
+                                    blank=True)
+
     url_online_booking = models.URLField("Adress till online bokningssystem",
                                          blank=True)
     show_booking_url = models.BooleanField("Min salong har online-bokning",
@@ -485,12 +478,49 @@ class UserProfile(DirtyFieldsMixin, models.Model):
                 'openhours',
                 'profile_text',
                 ]
+
+        # if the address changed, find new coordinates
+        if set(dirties).intersection(['salon_city', 'salon_adress', 'zip_adress']):
+            location = "%s, %s, %s" % (self.salon_adress, self.zip_adress, self.salon_city)
+            latlng = self.geocode(location)
+            self.latitude = latlng[0]
+            self.longitude = latlng[1]
+
         for key in dirties.keys():
             if key in user_criterias:
-                approved_user_criteria_changed.send(sender=self)
+                approved_user_criteria_changed.send(sender=self, userprofile=self)
                 break
 
         return super(UserProfile, self).save(*args, **kwargs)
+
+    def geocode(self, location):
+        """
+        Request Latitude/Longitude for a location from Google Maps API.
+
+        Return a tuple with string values. (Lat, Lng)
+        Example:
+            ('58.1234567', '16.23425')
+
+        """
+        logger.debug("Geocoding %s..." % location)
+        # make the location url-friendly, encode any inconvenient letters such
+        # as 'åäö'
+        location = urllib.quote_plus(location.encode('utf8'))
+
+        output = "csv"
+        request = "http://maps.google.com/maps/geo?q=%s&output=%s&key=%s" % (
+                    location, output, settings.GOOGLE_API_KEY
+                )
+        logger.debug("Opening request...")
+        data = urllib.urlopen(request).read()
+        logger.debug("Data returned: %s" % data)
+        dlist = data.split(',')
+        if dlist[0] == '200':
+            return (dlist[2], dlist[3])
+        else:
+            logger.warn("Could not retrieve coordinates for user '%s'" % self)
+            return (None, None)
+
 
     def __unicode__(self):
         return u'%s %s, %s' % (self.user.first_name,

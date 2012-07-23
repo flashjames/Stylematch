@@ -95,7 +95,6 @@ class ServiceResource(ModelResource):
 
         approved_user_criteria_changed.send(
                                 sender=self,
-                                request=request,
                                 userprofile=request.user.userprofile
         )
         return bundle
@@ -104,7 +103,6 @@ class ServiceResource(ModelResource):
         pre = super(ServiceResource, self).obj_delete(request, **kwargs)
         approved_user_criteria_changed.send(
                                 sender=self,
-                                request=request,
                                 userprofile=request.user.userprofile
         )
         return pre
@@ -157,7 +155,6 @@ class PictureResource(ModelResource):
 
         approved_user_criteria_changed.send(
                                 sender=self,
-                                request=request,
                                 userprofile=request.user.userprofile
         )
         return bundle
@@ -166,7 +163,6 @@ class PictureResource(ModelResource):
         pre = super(PictureResource, self).obj_delete(request, **kwargs)
         approved_user_criteria_changed.send(
                                 sender=self,
-                                request=request,
                                 userprofile=request.user.userprofile
         )
         return pre
@@ -364,7 +360,9 @@ class ProfileResource(ModelResource):
                   'salon_url',
                   'id',
                   'profile_url',
-                  'temporary_profile_url']
+                  'temporary_profile_url',
+                  'latitude',
+                  'longitude']
         filtering = {
                 'salon_city' : ['iexact',], # 'startswith','endswith'],
                 'show_booking_url' : ['exact',],

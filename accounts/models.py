@@ -38,7 +38,7 @@ class ProfileValidationError(Exception):
         return repr(self.value)
 
 
-def check_profile(sender, request=None, userprofile=None, create_checks=True, **kwargs):
+def check_profile(sender, userprofile, create_checks=True, **kwargs):
     """
     When a critical field on a profile has changed this function will be
     called to make sure the profile is still good.
@@ -49,26 +49,7 @@ def check_profile(sender, request=None, userprofile=None, create_checks=True, **
       ./manage.py check_profile
 
     """
-    logger.debug("Checking %s" % sender)
-
-    # Retrieve the correct ``userprofile`` profile
-    if userprofile is None or userprofile.__class__ != UserProfile:
-        if sender.__class__ == UserProfile:
-            logger.debug("Using sender as userprofile")
-            userprofile = sender
-        else:
-            instance = kwargs.get('instance')
-            if (instance is not None and
-                   (instance.__class__ == Service or
-                    instance.__class__ == OpenHours)):
-                userprofile = instance.user.userprofile
-            else:
-                logger.error("Check_profile got called from an unexpected "
-                             "sender (%s)(class: %s)." % \
-                                    (sender, sender.__class__))
-                return False
-    else:
-        logger.debug("Using userprofile as userprofile")
+    logger.debug("Checking %s. Called from %s." % (userprofile, sender))
 
     try:
         # Check the information about salon. address, phone etc

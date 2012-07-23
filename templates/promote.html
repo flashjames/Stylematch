@@ -22,7 +22,7 @@
   		<a onclick='postToFeed(); return false;'><img src="{{ STATIC_URL }}img/dela-knapp.png"></a>
     <p id='msg'></p>
 
-
+		
     <script> 
       FB.init({appId: "YOUR_APP_ID", status: true, cookie: true});
 
@@ -35,7 +35,7 @@
           picture: '{{ profile_image }}',
           name: '{{ user.first_name.title }} {{ user.last_name.title }}, frisör i {{ profile.salon_city.title }}',
           caption: 'http://www.stylematch.se/',
- 		  description: '{{ user.first_name }} {{ user.last_name }}, frisör i {{ profile.salon_city }}. Se bilder på tidigare klippningar och bli inspirerad.',
+ 		  description: '{{profile_description_formatted}}',
  		  redirect_uri: 'http://www.stylematch.se/'
         };
 

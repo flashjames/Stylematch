@@ -538,7 +538,7 @@ class UserProfile(DirtyFieldsMixin, models.Model):
             return (dlist[2], dlist[3])
         else:
             logger.warn("Could not retrieve coordinates for user '%s'" % self)
-            return ('','')
+            return (None, None)
 
 
     def __unicode__(self):

@@ -3,6 +3,9 @@
 {% load index_extras %}
 
 {% block title %}Marknadsför din profil{% endblock %}
+{% block meta-tag-image %}
+<meta property="og:image" content="{{ profile_image }}">
+{% endblock %}
 {% block content %}
 
 <div class="container">
@@ -18,11 +21,8 @@
   	<h3>Dela din profil på Facebook för att visa alla din vänner att dem nu kan hitta dig på StyleMatch</h3>
   		<a onclick='postToFeed(); return false;'><img src="{{ STATIC_URL }}img/dela-knapp.png/"></a>
     <p id='msg'></p>
-		{{profile.salon_name}}
-		{{profile.profile_text}}
 
-
-
+{{ profile.profile_text }}
 
 
     <script> 
@@ -33,11 +33,11 @@
         // calling the API ...
         var obj = {
           method: 'feed',
-          link: 'http://www.stylematch.se/',
+          link: 'http://www.stylematch.se/{{ profile.temporary_profile_url }}',
           picture: '{{ profile_image }}',
-          name: '{{ first_name.title }} {{ last_name.title }}{% if profile.salon_city %}, frisör i {{ profile.salon_city.title }}{% endif %}',
-          caption: '{{ first_name.title }} {{ last_name.title }}{% if profile.salon_city %}, frisör i {{ profile.salon_city.title }}{% endif %}',
-          description: '{{ profile.profile_text }}',
+          name: '{{ user.first_name.title }} {{ user.last_name.title }}, frisör i {{ profile.salon_city.title }}',
+          caption: 'http://www.stylematch.se/',
+ 		  description: '{{ user.first_name }} {{ user.last_name }}, frisör i {{ profile.salon_city }}. Se bilder på tidigare klippningar och bli inspirerad.',
  		  redirect_uri: 'http://www.stylematch.se/'
         };
 

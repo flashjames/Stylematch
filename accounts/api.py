@@ -364,7 +364,9 @@ class ProfileResource(ModelResource):
                   'salon_url',
                   'id',
                   'profile_url',
-                  'temporary_profile_url']
+                  'temporary_profile_url',
+                  'latitude',
+                  'longitude']
         filtering = {
                 'salon_city' : ['iexact',], # 'startswith','endswith'],
                 'show_booking_url' : ['exact',],

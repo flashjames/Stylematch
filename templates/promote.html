@@ -15,8 +15,13 @@
   	
   	<div id='fb-root'></div>
   	
-  		<p><a onclick='postToFeed(); return false;'>Post to Feed</a></p>
+  	<h3>Dela din profil på Facebook för att visa alla din vänner att dem nu kan hitta dig på StyleMatch</h3>
+  		<a onclick='postToFeed(); return false;'><img src="{{ STATIC_URL }}img/dela-knapp.png/"></a>
     <p id='msg'></p>
+
+
+
+
 
     <script> 
       FB.init({appId: "YOUR_APP_ID", status: true, cookie: true});
@@ -27,10 +32,10 @@
         var obj = {
           method: 'feed',
           link: 'http://www.stylematch.se/',
-          picture: 'http://fbrell.com/f8.jpg',
-          name: 'Facebook Dialogs',
-          caption: 'Reference Documentation',
-          description: 'Using Dialogs to interact with users.',
+          picture: '{{ profile_image }}',
+          name: '{{ first_name.title }} {{ last_name.title }}{% if profile.salon_city %}, frisör i {{ profile.salon_city.title }}{% endif %}',
+          caption: '{{ first_name.title }} {{ last_name.title }}{% if profile.salon_city %}, frisör i {{ profile.salon_city.title }}{% endif %}',
+          description: '{{ profile.profile_text }}',
  		  redirect_uri: 'http://www.stylematch.se/'
         };
 

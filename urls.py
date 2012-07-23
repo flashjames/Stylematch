@@ -117,7 +117,10 @@ urlpatterns += patterns(
      TemplateView.as_view(template_name="jobb.html"),
      {},
      'work_page'),
-
+    (u'^marknadsför/',
+     TemplateView.as_view(template_name="promote.html"),
+     {},
+     'promote_page'),
     (r'^kontakt/',
             TemplateView.as_view(template_name="contact_us.html"),
             {},

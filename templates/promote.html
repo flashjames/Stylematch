@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load index_extras %}
+
+{% block title %}Marknadsför din profil{% endblock %}
+{% block content %}
+
+<div class="container">
+  <div class="row promote">
+  	<div class="span12">
+  		<h1>Marknadsför din profil</h1>
+  	</div>
+  
+  	<div class="span12">
+  	
+  	<div id='fb-root'></div>
+  	
+  		<p><a onclick='postToFeed(); return false;'>Post to Feed</a></p>
+    <p id='msg'></p>
+
+    <script> 
+      FB.init({appId: "YOUR_APP_ID", status: true, cookie: true});
+
+      function postToFeed() {
+
+        // calling the API ...
+        var obj = {
+          method: 'feed',
+          link: 'http://www.stylematch.se/',
+          picture: 'http://fbrell.com/f8.jpg',
+          name: 'Facebook Dialogs',
+          caption: 'Reference Documentation',
+          description: 'Using Dialogs to interact with users.',
+ 		  redirect_uri: 'http://www.stylematch.se/'
+        };
+
+        function callback(response) {
+          document.getElementById('msg').innerHTML = "Post ID: " + response['post_id'];
+        }
+
+        FB.ui(obj, callback);
+      }
+    
+    </script>
+	</div>
+  
+  </div>
+</div>
+
+{% endblock %}

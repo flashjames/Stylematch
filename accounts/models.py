@@ -502,7 +502,6 @@ class UserProfile(DirtyFieldsMixin, models.Model):
         if set(dirties).intersection(['salon_city', 'salon_adress', 'zip_adress']):
             location = "%s, %s, %s" % (self.salon_adress, self.zip_adress, self.salon_city)
             latlng = self.geocode(location)
-            latlng = latlng.split(',')
             self.latitude = latlng[0]
             self.longitude = latlng[1]
 
@@ -514,8 +513,18 @@ class UserProfile(DirtyFieldsMixin, models.Model):
         return super(UserProfile, self).save(*args, **kwargs)
 
     def geocode(self, location):
-        location = urllib.quote_plus(location.encode('utf8'))
+        """
+        Request Latitude/Longitude for a location from Google Maps API.
+
+        Return a tuple with string values. (Lat, Lng)
+        Example:
+            ('58.1234567', '16.23425')
+
+        """
         logger.debug("Geocoding %s..." % location)
+        # make the location url-friendly, encode any inconvenient letters such
+        # as 'åäö'
+        location = urllib.quote_plus(location.encode('utf8'))
 
         output = "csv"
         request = "http://maps.google.com/maps/geo?q=%s&output=%s&key=%s" % (
@@ -526,9 +535,10 @@ class UserProfile(DirtyFieldsMixin, models.Model):
         logger.debug("Data returned: %s" % data)
         dlist = data.split(',')
         if dlist[0] == '200':
-            return "%s, %s" % (dlist[2], dlist[3])
+            return (dlist[2], dlist[3])
         else:
-            return ','
+            logger.warn("Could not retrieve coordinates for user '%s'" % self)
+            return ('','')
 
 
     def __unicode__(self):

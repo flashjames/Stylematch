@@ -16,6 +16,7 @@
 <script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
 <script src="{{ STATIC_URL }}js/backbone.modelbinding.js"></script>
 <script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
+<script src="{{ STATIC_URL }}js/bootstrap-popover.js"></script>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
 
@@ -85,8 +86,10 @@
           <h2>Galleribilder</h2>
           <p>Dra i en bild för att ändra ordning på den i galleriet</p>
         </div>
-	<div class="offset3 span2">
+	<div class="offset1 span3 image-theme-description-main">
 	  <a class="btn" data-toggle="modal" href="#image-upload-dialog-gallery">Ladda upp bild</a>
+	  
+	  <a id="image-type-info" data-content="För att personer som besöker din profil ska få en bra bild av hur du klipper och vad du gillar att klippa, bör du lägga upp bilder på klippningar du har utfört." data-original-title="Vad ska jag ladda upp för typ av bilder?" href="#">Vad ska jag ladda upp för typ av bilder?</a>
 	</div>
       </div>
 
@@ -134,7 +137,7 @@
       <form class="form-horizontal" method="post" enctype="multipart/form-data" action="{% url 'edit_images' %}">
 	<fieldset>
         {% csrf_token %}
-	<div class="control-group  ">
+	<div class="control-group">
 	  <label class="control-label" for="inputWarning">Bild</label>
 	  <div class="controls">
 	    <input style="padding-left:1px;border:solid 1px #CCC;color:#888;" type="file" name="file" id="id_file">
@@ -147,7 +150,8 @@
 	  <div class="controls ">
 	    <input id="id_comment" type="text" name="comment" maxlength="100">
 	    <span class="help-inline">Valfritt</span>
-	    <p class="help-block"></p>
+	    <p id="image-theme-description" class="help-block">Glöm inte att motiven på bilderna ska vara på personer du klippt <sup><a id="image-theme-description-sup" data-content="För att personer som besöker din profil ska få en bra bild av hur du klipper och vad du gillar att klippa, bör du lägga upp bilder på klippningar du har utfört." data-original-title="Vad ska jag ladda upp för typ av bilder?" href="#">?</a></sup></p>
+
 	  </div>
 	</div>	
 

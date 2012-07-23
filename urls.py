@@ -12,6 +12,7 @@ from index.views import (IndexPageView,
                          StylistView,
                          InspirationPageView,
                          LikeView,
+                         PromoteView,
                          error500)
 from django.contrib import admin
 from django.views.generic.simple import redirect_to
@@ -118,7 +119,7 @@ urlpatterns += patterns(
      {},
      'work_page'),
     (u'^marknadsför/',
-     TemplateView.as_view(template_name="promote.html"),
+     PromoteView.as_view(),
      {},
      'promote_page'),
     (r'^kontakt/',

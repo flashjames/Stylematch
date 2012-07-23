@@ -224,6 +224,8 @@
         el: $("body"),
         initialize:function () {
             //Glue code, that initialize's all views and models
+	    $('#image-type-info').popover({placement:'left', delay: { show: 500, hide: 100 }});
+	    $('#image-theme-description-sup').popover({delay: { show: 500, hide: 100 }});
 
             this.serviceList = new ServiceCollection();
 

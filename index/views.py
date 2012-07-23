@@ -3,7 +3,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib import auth, messages
 from django.http import HttpResponseRedirect, HttpResponse
-from django.views.generic import View, ListView, CreateView, TemplateView
+from django.views.generic import View, ListView, CreateView, TemplateView, DetailView
 from django.core.urlresolvers import reverse
 from accounts.models import UserProfile, GalleryImage
 from index.models import BetaEmail, InspirationVote
@@ -164,6 +164,20 @@ class SearchCityView(TemplateView):
             'standard_profile': standard_profile,
         })
         return context
+
+
+class PromoteView(LoginRequiredMixin, DetailView):
+    """
+    Access userprofile on promote page
+    """
+    template_name = "promote.html"
+    model = UserProfile
+    context_object_name = "profile"
+    slug_field = "user"
+        
+    def get_object(self, queryset=None):
+        self.kwargs['slug'] = self.request.user
+        return super(PromoteView, self).get_object(queryset)
 
 
 class BetaEmailView(CreateView):

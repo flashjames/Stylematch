@@ -132,7 +132,6 @@ def check_profile(sender, request=None, userprofile=None, create_checks=True, **
         return False
 
     # If the user passed the test, approve the user.
-    logger.debug("Userprofile approved? %s" % userprofile.approved)
     if not userprofile.approved:
         userprofile.approved = True
         userprofile.save()

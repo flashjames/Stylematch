@@ -296,7 +296,6 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         Needs to be overridden because regular form_valid returns
         a HttpRedirectResponse() which cannot take context data
         """
-        self.object = form.save()
         messages.success(self.request, "Profilen uppdaterades!")
         return super(EditProfileView, self).form_valid(form)
 

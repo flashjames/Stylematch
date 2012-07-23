@@ -26,6 +26,7 @@ import uuid
 import os
 import re
 import logging
+import urllib
 
 logger = logging.getLogger(__name__)
 
@@ -53,6 +54,7 @@ def check_profile(sender, request=None, userprofile=None, create_checks=True, **
     # Retrieve the correct ``userprofile`` profile
     if userprofile is None or userprofile.__class__ != UserProfile:
         if sender.__class__ == UserProfile:
+            logger.debug("Using sender as userprofile")
             userprofile = sender
         else:
             instance = kwargs.get('instance')
@@ -65,6 +67,8 @@ def check_profile(sender, request=None, userprofile=None, create_checks=True, **
                              "sender (%s)(class: %s)." % \
                                     (sender, sender.__class__))
                 return False
+    else:
+        logger.debug("Using userprofile as userprofile")
 
     try:
         # Check the information about salon. address, phone etc
@@ -134,7 +138,6 @@ def check_profile(sender, request=None, userprofile=None, create_checks=True, **
     # If the user passed the test, approve the user.
     if not userprofile.approved:
         userprofile.approved = True
-        userprofile.save()
         logger.debug("User %s just got approved!" % userprofile)
 
         # Send email notifying admin about this.
@@ -440,6 +443,15 @@ class UserProfile(DirtyFieldsMixin, models.Model):
                                   blank=True,
                                   null=True)
 
+    latitude = models.DecimalField(max_digits=18,
+                                   decimal_places=10,
+                                   null=True,
+                                   blank=True)
+    longitude = models.DecimalField(max_digits=18,
+                                    decimal_places=10,
+                                    null=True,
+                                    blank=True)
+
     url_online_booking = models.URLField("Adress till online bokningssystem",
                                          blank=True)
     show_booking_url = models.BooleanField("Min salong har online-bokning",
@@ -485,12 +497,39 @@ class UserProfile(DirtyFieldsMixin, models.Model):
                 'openhours',
                 'profile_text',
                 ]
+
+        # if the address changed, find new coordinates
+        if set(dirties).intersection(['salon_city', 'salon_adress', 'zip_adress']):
+            location = "%s, %s, %s" % (self.salon_adress, self.zip_adress, self.salon_city)
+            latlng = self.geocode(location)
+            latlng = latlng.split(',')
+            self.latitude = latlng[0]
+            self.longitude = latlng[1]
+
         for key in dirties.keys():
             if key in user_criterias:
-                approved_user_criteria_changed.send(sender=self)
+                approved_user_criteria_changed.send(sender=self, userprofile=self)
                 break
 
         return super(UserProfile, self).save(*args, **kwargs)
+
+    def geocode(self, location):
+        location = urllib.quote_plus(location.encode('utf8'))
+        logger.debug("Geocoding %s..." % location)
+
+        output = "csv"
+        request = "http://maps.google.com/maps/geo?q=%s&output=%s&key=%s" % (
+                    location, output, settings.GOOGLE_API_KEY
+                )
+        logger.debug("Opening request...")
+        data = urllib.urlopen(request).read()
+        logger.debug("Data returned: %s" % data)
+        dlist = data.split(',')
+        if dlist[0] == '200':
+            return "%s, %s" % (dlist[2], dlist[3])
+        else:
+            return ','
+
 
     def __unicode__(self):
         return u'%s %s, %s' % (self.user.first_name,

@@ -67,29 +67,37 @@
                               profile.attributes.zip_adress + ', ' +
                               profile.attributes.salon_city;
 
+                console.log(address);
                 // convert an address to a LatLng position and put a marker there
-                geocoder.geocode({ 'address': address }, function(result, status) {
-                    if (status === 'OK') {
-                        // create a location
-                        var loc = new google.maps.LatLng(result[0].geometry.location.lat(),
-                                                         result[0].geometry.location.lng());
+                try {
+                    geocoder.geocode({ 'address': address }, function(result, status) {
+                        if (status === google.maps.GeocoderStatus.OK) {
+                            // create a location
+                            var loc = new google.maps.LatLng(result[0].geometry.location.lat(),
+                                                             result[0].geometry.location.lng());
 
-                        // extend the markerBounds
-                        self.markerBounds.extend(loc);
+                            // Add the marker
+                            var marker = new google.maps.Marker({
+                                position: loc,
+                                map: self.map,
+                                title: profile.attributes.salon_name
+                            });
 
-                        // make sure the map fits all markers
-                        self.map.fitBounds(self.markerBounds);
+                            // extend the markerBounds
+                            self.markerBounds.extend(loc);
 
-                        // Add the marker
-                        var marker = new google.maps.Marker({
-                            position: loc,
-                            map: self.map,
-                            title: profile.attributes.salon_name
-                        });
-                    }
-                });
+                            // make sure the map fits all markers
+                            self.map.fitBounds(self.markerBounds);
+                        } else {
+                            console.log(status);
+                        }
+                    });
+                } catch (err) {
+                    console.log(err);
+                }
             });
             return this;
+
         }
     });
 

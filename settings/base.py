@@ -324,3 +324,6 @@ FULL_PATH_USER_IMGS = os.path.join(MEDIA_URL, PATH_USER_IMGS)
 
 # Google analytics key
 GOOGLE_ANALYTICS_KEY = ""
+
+# Google API Key
+GOOGLE_API_KEY = ""

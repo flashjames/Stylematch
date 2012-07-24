@@ -321,6 +321,13 @@ class Speciality(models.Model):
                                    null=True,
                                    blank=True)
 
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Specialité"
+        verbose_name_plural = "Specialitéer"
+
 # client side url to images, without image filename
 # used in the view that edit the images on the profile
 def get_image_url(filename):

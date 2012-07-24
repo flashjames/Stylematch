@@ -42,6 +42,7 @@
           {% url 'edit_images' as ei %}
           {% url 'profiles_edit_services' as pes %}
           {% url 'profiles_add_hours' as pah %}
+          {% url 'profiles_edit_specialities' as psp %}
           {% url 'inspiration_page' as ip %}
           {% url 'search' as sp %}
           {% url 'profile_display_with_profile_url' slug=user.get_profile.profile_url as pdr %}
@@ -59,6 +60,7 @@
 		          <li class="{% active request pe  %}"><a href="{{ pe  }}">Förändra kontaktinformation</a></li>
 		          <li class="{% active request pes %}"><a href="{{ pes }}">Förändra prislista</a></li>
 		          <li class="{% active request pah %}"><a href="{{ pah }}">Förändra öppettider</a></li>
+		          <li class="{% active request psp %}"><a href="{{ psp }}">Förändra specialitéer</a></li>
 		          <li class="{% active request pp %}"><a href="{{ pp }}">Marknadsför din profil</a></li>
 		    </ul>
 		    </li>

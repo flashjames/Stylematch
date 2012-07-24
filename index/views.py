@@ -272,11 +272,6 @@ class LikeView(View):
             request.session['has_voted'] = voted_images + [id]
         return HttpResponse(str(image.votes))
 
-
-class StylistView(StaffRequiredMixin, TemplateView):
-    template_name = "frisor_page.html"
-
-
 def logout_page(request):
     """
     Log users out and re-direct them to the main page.

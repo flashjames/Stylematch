@@ -331,7 +331,7 @@ class BaseImage(models.Model):
         return self.filename
 
     file = models.ImageField(upload_to=get_image_path,
-                             blank=True)
+                             blank=True, max_length=250)
     filename = models.CharField(max_length=50,
                                 blank=True)
     user = models.ForeignKey(User,

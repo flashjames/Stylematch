@@ -16,6 +16,7 @@ from cities import *
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from accounts.views import DisplayProfileView
+import re 
 
 
 class InspirationPageView(ListView):

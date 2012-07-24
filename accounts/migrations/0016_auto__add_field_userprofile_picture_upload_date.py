@@ -3,6 +3,7 @@ import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
+from accounts.models import GalleryImage
 
 class Migration(SchemaMigration):
 
@@ -11,11 +12,12 @@ class Migration(SchemaMigration):
         # Adding field 'UserProfile.picture_upload_date'
         db.add_column('accounts_userprofile', 'picture_upload_date', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, default=datetime.date(2012, 7, 24), blank=True), keep_default=False)
         for user in orm.UserProfile.objects.all():
-            img = orm.GalleryImage.objects.filter(user=user.user).latest()
-            if img:
+            try:
+                img = orm['accounts.GalleryImage'].objects.filter(user=user.user).latest("upload_date")
                 date = img.upload_date
-            else:
+            except:
                 date = datetime.datetime.now() - datetime.timedelta(days=3*365)
+
             user.picture_upload_date = date
             user.save()
 

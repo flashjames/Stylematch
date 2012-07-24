@@ -341,7 +341,7 @@ class BaseImage(models.Model):
 
     class Meta:
         abstract = True
-        get_latest_by = 'upload_date'
+        #get_latest_by = 'upload_date'
 
 
 class ProfileImage(BaseImage):
@@ -363,7 +363,7 @@ class GalleryImage(BaseImage):
         # deliver the images sorted on the order field
         # needs to be here, or the edit_images ui will break
         ordering = ['order']
-        get_latest_by = 'upload_date'
+        #get_latest_by = 'upload_date'
 
 
 class UserProfile(DirtyFieldsMixin, models.Model):
@@ -469,8 +469,8 @@ class UserProfile(DirtyFieldsMixin, models.Model):
     # we sort profiles in searches on latest uploaded picture
     # so to make it easier to sort, we save the latest uploaded
     # picture date here
-    #picture_upload_date = models.DateTimeField(auto_now_add=True,
-    #                                   editable=False)
+    picture_upload_date = models.DateTimeField(auto_now_add=True,
+                                       editable=False)
 
     def save(self, *args, **kwargs):
         # remove accidental whitespaces from city

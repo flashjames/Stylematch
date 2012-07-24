@@ -446,6 +446,12 @@ class EditImagesView(LoginRequiredMixin, CreateView):
         self.object.save()
         form.save_m2m()
 
+        
+        # save latest galleryimage upload date in userprofile object
+        userprofile = self.request.user.userprofile
+        userprofile.picture_upload_date = self.object.upload_date
+        userprofile.save()
+
         messages.success(self.request, "Uppladdningen lyckades!")
 
         approved_user_criteria_changed.send(sender=self,

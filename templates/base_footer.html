@@ -6,7 +6,7 @@
  	<div class="span3">
 	 	<ul>
 	 	<li class="title">StyleMatch</li>
-	 	<li><a href="/accounts/register">Gå med som Frisör</a></li>	
+	 	<li><a href="{% url 'frisor_page' as frisor %}{{ frisor }}">Gå med som Frisör</a></li>	
 	 	<li><a href="{% url 'in-media-page' as media %}{{ media }}">StyleMatch i Media</a></li>
 	 	<li><a href="{% url 'about_page' as about %}{{ about }}">Om Oss</a></li>
 	 	<li><a href="http://blogg.stylematch.se/">Blogg</a></li>

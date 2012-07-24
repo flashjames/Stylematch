@@ -331,11 +331,11 @@ class EditSpecialitiesView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         messages.success(self.request, "Uppdateringen lyckades!")
-        return super(EditProfileView, self).form_valid(form)
+        return super(EditSpecialitiesView, self).form_valid(form)
 
     def form_invalid(self, form):
         messages.error(self.request, "Oops! Något gick fel.")
-        return super(EditProfileView, self).form_invalid(form)
+        return super(EditSpecialitiesView, self).form_invalid(form)
 
     def get_object(self):
         return self.request.user.userprofile

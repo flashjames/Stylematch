@@ -164,8 +164,17 @@ class SpecialitiesForm(ModelForm):
     """
     specialities = forms.ModelMultipleChoiceField(
                         queryset=Speciality.objects.all(),
-                        label="Specialitéer"
+                        label="Specialitéer",
+                        widget=forms.CheckboxSelectMultiple
                     )
+
+    def clean_specialities(self):
+        specialities = self.cleaned_data['specialities']
+        if len(specialities) > 5:
+            raise ValidationError("Du får inte välja fler än 5 specialitéer. "
+                                  "Avmarkera så att du har max 5 st.")
+        else:
+            return specialities
 
     class Meta:
         model = UserProfile

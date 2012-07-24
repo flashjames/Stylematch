@@ -311,6 +311,16 @@ class OpenHours(models.Model):
     reviewed = models.BooleanField(default=False)
 
 
+class Speciality(models.Model):
+    name = models.CharField("Specialité",
+                            max_length=40,
+                            null=False,
+                            blank=False)
+    description = models.CharField("Beskrivning",
+                                   max_length=255,
+                                   null=True,
+                                   blank=True)
+
 # client side url to images, without image filename
 # used in the view that edit the images on the profile
 def get_image_url(filename):
@@ -434,6 +444,8 @@ class UserProfile(DirtyFieldsMixin, models.Model):
                                     decimal_places=10,
                                     null=True,
                                     blank=True)
+
+    specialities = models.ManyToManyField(Speciality)
 
     url_online_booking = models.URLField("Adress till online bokningssystem",
                                          blank=True)

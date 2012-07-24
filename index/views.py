@@ -182,10 +182,9 @@ class PromoteView(LoginRequiredMixin, DisplayProfileView):
     def get_context_data(self, **kwargs):
         context = super(DisplayProfileView, self).get_context_data(**kwargs)
         context['profile_image'] = self.get_profile_image_url()
+
         profile_description = self.request.user.userprofile.profile_text
-        print profile_description
-        # weirdest expression ever to remove newline and only have one whitespace between every word
-        context['profile_description_formatted'] = ' '.join(profile_description.replace("\r\n"," ").split())
+        context['profile_description_formatted'] = re.sub(r"\r?\n"," ",profile_description)
         return context
 
     def get(self, request, **kwargs):

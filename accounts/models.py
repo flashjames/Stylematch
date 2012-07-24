@@ -341,6 +341,7 @@ class BaseImage(models.Model):
 
     class Meta:
         abstract = True
+        get_latest_by = 'upload_date'
 
 
 class ProfileImage(BaseImage):
@@ -362,6 +363,7 @@ class GalleryImage(BaseImage):
         # deliver the images sorted on the order field
         # needs to be here, or the edit_images ui will break
         ordering = ['order']
+        get_latest_by = 'upload_date'
 
 
 class UserProfile(DirtyFieldsMixin, models.Model):
@@ -379,9 +381,9 @@ class UserProfile(DirtyFieldsMixin, models.Model):
     profile_url = models.CharField("http://stylematch.se/",
                                    max_length=40,
                                    blank=True)
-    
+
     # dont remove this, it's this url that all facebook likes
-    # for a profile are tied to 
+    # for a profile are tied to
     temporary_profile_url = models.CharField(editable=False,
                                              unique=True,
                                              max_length=36)
@@ -463,6 +465,12 @@ class UserProfile(DirtyFieldsMixin, models.Model):
     # to be displayed in search results'.
     approved = models.BooleanField("Profilen är komplett", default=False)
     approved_message_read = models.BooleanField(default=False)
+
+    # we sort profiles in searches on latest uploaded picture
+    # so to make it easier to sort, we save the latest uploaded
+    # picture date here
+    #picture_upload_date = models.DateTimeField(auto_now_add=True,
+    #                                   editable=False)
 
     def save(self, *args, **kwargs):
         # remove accidental whitespaces from city

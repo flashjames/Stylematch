@@ -6,7 +6,8 @@ from django.conf import settings
 from accounts.models import (Service,
                              UserProfile,
                              GalleryImage,
-                             ProfileImage)
+                             ProfileImage,
+                             Speciality)
 from django.forms import ModelForm, ValidationError, Textarea
 from django.utils.translation import ugettext as _
 
@@ -156,4 +157,17 @@ class CropCoordsForm(forms.Form):
     height = forms.IntegerField(widget=forms.HiddenInput())
 
 
+class SpecialitiesForm(ModelForm):
+    """
+    Let users select 5 specialities
+
+    """
+    specialities = forms.ModelMultipleChoiceField(
+                        queryset=Speciality.objects.all(),
+                        label="Specialitéer"
+                    )
+
+    class Meta:
+        model = UserProfile
+        fields = ('specialities',)
 

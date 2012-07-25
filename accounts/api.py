@@ -335,6 +335,11 @@ class ProfileResource(ModelResource):
         # obj is a userprofile
         bundle.data['first_name'] = bundle.obj.user.first_name
         bundle.data['last_name'] = bundle.obj.user.last_name
+
+        # get the specialities, since they are obviously left out (??)
+        bundle.data['specialities'] = [s['name']
+                                       for s
+                                       in bundle.obj.specialities.values()]
         return bundle
 
     class Meta:
@@ -358,7 +363,8 @@ class ProfileResource(ModelResource):
                   'profile_url',
                   'temporary_profile_url',
                   'latitude',
-                  'longitude']
+                  'longitude',
+                  'specialities']
         filtering = {
                 'salon_city' : ['iexact',], # 'startswith','endswith'],
                 'show_booking_url' : ['exact',],

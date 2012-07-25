@@ -76,6 +76,9 @@
     <h3>Antal besökare på din profil</h3>
     <div>
       <div id="profile-visitor-statistics"></div>
+      {% if statistics_is_down %}
+      <p class="error">Något är fel med statistiken, titta hit igen senare.</p>
+      {% endif %}
     </div>
   </div>{# /.span6 #}
   <div class="span3">

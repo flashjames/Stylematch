@@ -195,6 +195,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         # if the google api authentication key is missing
         except:
             context['visitor_count_data'] = []
+            context['statistics_is_down'] = True
 
         # Gallery images statistics
         context['GIS'] = self.get_gallery_image_statistics()

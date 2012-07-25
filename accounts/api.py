@@ -291,7 +291,16 @@ class ProfileResource(ModelResource):
             self.profile_image_size = filters['profile_image_size']
             del filters['profile_image_size']
 
-        return super(ProfileResource, self).build_filters(filters)
+        # build the rest of the filters
+        orm = super(ProfileResource, self).build_filters(filters)
+
+        if 'speciality' in filters:
+            users = UserProfile.objects.filter(specialities__in=filters['speciality'])
+            filter = {'user__in': [i.pk for i in users]}
+
+            # update the filter with our userprofiles
+            orm.update(filter)
+        return orm
 
     def dehydrate(self, bundle):
         """
@@ -337,9 +346,7 @@ class ProfileResource(ModelResource):
         bundle.data['last_name'] = bundle.obj.user.last_name
 
         # get the specialities, since they are obviously left out (??)
-        bundle.data['specialities'] = [s['name']
-                                       for s
-                                       in bundle.obj.specialities.values()]
+        bundle.data['specialities'] = [s for s in bundle.obj.specialities.values()]
         return bundle
 
     class Meta:
@@ -364,11 +371,12 @@ class ProfileResource(ModelResource):
                   'temporary_profile_url',
                   'latitude',
                   'longitude',
-                  'specialities']
+                  'speciality']
         filtering = {
                 'salon_city' : ['iexact',], # 'startswith','endswith'],
                 'show_booking_url' : ['exact',],
                 'profile_image_size': ['exact',],
+                'specialities': ['iexact',],
                 }
         resource_name = "profiles"
         model = UserProfile

@@ -14,7 +14,10 @@ class Command(BaseCommand):
             location = "%s, %s, %s" % (user.salon_adress, user.zip_adress, user.salon_city)
             logger.debug("Giving latlng to \"%s\"" % location)
             latlng = user.geocode(location)
-            logger.debug("Coordinates returned: %s" % ", ".join(latlng))
-            user.latitude = latlng[0]
-            user.longitude = latlng[1]
-            user.save()
+            if latlng is None:
+                logger.error("Couldn't geocode location: %s" % location)
+            else:
+                logger.debug("Coordinates returned: %s" % ", ".join(latlng))
+                user.latitude = latlng[0]
+                user.longitude = latlng[1]
+                user.save()

@@ -193,7 +193,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             # the python list needs to be converted to JSON
             context['visitor_count_data'] = json.dumps(profile_statistics.get_profile_visits(profile_url))
         # if the google api authentication key is missing
-        except AttributeError:
+        except:
             context['visitor_count_data'] = []
 
         # Gallery images statistics

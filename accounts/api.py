@@ -332,13 +332,9 @@ class ProfileResource(ModelResource):
             bundle.data['profile_url'] = bundle.data['temporary_profile_url']
         del bundle.data['temporary_profile_url']
 
-        try:
-            user = User.objects.get(pk=bundle.data['id'])
-            bundle.data['first_name'] = user.first_name
-            bundle.data['last_name'] = user.last_name
-        except User.DoesNotExist:
-            bundle.data['first_name'] = ""
-            bundle.data['last_name'] = ""
+        # obj is a userprofile
+        bundle.data['first_name'] = bundle.obj.user.first_name
+        bundle.data['last_name'] = bundle.obj.user.last_name
         return bundle
 
     class Meta:

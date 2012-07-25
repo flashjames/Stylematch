@@ -15,7 +15,7 @@ class Command(BaseCommand):
             logger.debug("Giving latlng to \"%s\"" % location)
             latlng = user.geocode(location)
             if latlng[0] is None or latlng[1] is None:
-                logger.error("Couldn't geocode location: %s" % location)
+                logger.warn("Couldn't geocode location: %s" % location)
             else:
                 logger.debug("Coordinates returned: %s" % ", ".join(latlng))
                 user.latitude = latlng[0]

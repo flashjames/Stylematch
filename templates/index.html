@@ -132,7 +132,10 @@
       return false;
     });
     $('#city-select').change(function() {
-      $('#find-stylist').submit();
+      if ($('#city-select').val()) {
+        window.location = '/' + $('#city-select').val().toLowerCase();
+      }
+      return false;
     });
   </script>
   <!-- the code that does the magic on the page -->

@@ -132,11 +132,11 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         gallery_images = GalleryImage.objects\
                                 .filter(user=self.request.user,
                                         display_on_profile=True)\
-                                .order_by('votes')
+                                .order_by('-votes')
         if not gallery_images:
             return {}
         keys = [x.pk for x in gallery_images]
-        all_votes = InspirationVote.objects.filter(id__in=keys)
+        all_votes = InspirationVote.objects.filter(image__in=keys)
 
         # get data from all images
         GIS['likes'] = self.get_likes_data(all_votes)
@@ -147,7 +147,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         GIS['mpi']['image'] = mpi
 
         # get all votes for that image
-        mpi_votes = all_votes.filter(id=mpi.pk)
+        mpi_votes = all_votes.filter(image=mpi.pk)
 
         # get data for image
         GIS['mpi']['likes'] = self.get_likes_data(mpi_votes)

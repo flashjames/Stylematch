@@ -83,6 +83,7 @@
     </div>
     <div class="span3 join-now-block-frontpage">
         <h2>Är du frisör?</h2>
+        <a id="stylematch_video" title="StyleMatch - Marknadsföring för utbildade frisörer" href="http://www.youtube.com/watch?v=DvLuZVCj-6g&fs=0&showinfo=0&rel=0&autoplay=1"> <img src="{{ STATIC_URL }}img/Filmpåförstasidan.jpg"/> </a>
         <a href="{% url 'frisor_page' %}" class="btn btn-large btn-info">Skapa din profil</a>
     </div>
     <div class="pull-right fb-like-box fb-like-box-edited" data-href="http://www.facebook.com/StyleMatch.SE" data-width="232" data-height="280" data-show-faces="true" data-stream="false" data-header="true"></div>
@@ -136,6 +137,37 @@
   </script>
   <!-- the code that does the magic on the page -->
   <script src="{{ STATIC_URL }}js/featured.js"></script>
+  
+  <!-- fanybox -->
+  
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL}}js/jquery.fancybox-1.3.4/fancybox/jquery.fancybox-1.3.4.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL}}js/jquery.fancybox-1.3.4/fancybox/jquery.fancybox-1.3.4.css" media="screen" />   
+    
+<script type="text/javascript">
+jQuery(document).ready(function() {
+		$("#stylematch_video").click(function() {
+		$.fancybox({
+			'padding'		: 0,
+			'autoScale'		: false,
+			'transitionIn'	: 'none',
+			'transitionOut'	: 'none',
+			'title'			: this.title,
+			'width'			: 640,
+			'height'		: 385,
+			'href'			: this.href.replace(new RegExp("watch\\?v=", "i"), 'v/'),
+			'type'			: 'swf',
+			'swf'			: {
+			    'wmode'				: 'transparent',
+				'allowfullscreen'	: 'true'
+			}
+		});
+
+		return false;
+	});
+});
+	
+	</script>
 
   {% endblock %}
 

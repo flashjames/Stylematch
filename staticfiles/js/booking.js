@@ -1,19 +1,19 @@
 (function($){
-    var login_url = "http://sffbokning.extenda.se/boka/CJStudioUnique/login.aspx";
-    var login_name = "n0rdics@hotmail.com";
-    var login_password = "dinmamma";
-
     var input_uname = $('#ctl02_teUserName');
     var input_password = $('#ctl02_tePassword');
 
     var viewstate = '__VIEWSTATE';
-    var viewstate_val;
+    var viewstate_reg = /(__VIEWSTATE\|)(\/[A-Za-z0-9\/\+\=]*)/;
     var eventvalidation = '__EVENTVALIDATION';
-    var eventvalidation_val;
+    var eventvalid_reg = /(__EVENTVALIDATION\|)(\/[A-Za-z0-9\/\+\=]*)/;
 
     function login() {
         $.get('http://sffbokning.extenda.se/boka/cjstudiounique/login.aspx', function(response, status, xhr) {
 	    console.log("got login page");
+
+	    var login_name = "n0rdics@hotmail.com";
+	    var login_password = "dinmamma";
+
             var eventvalidation_val = $(response).find('#__EVENTVALIDATION').val();
             var viewstate_val = $(response).find('#__VIEWSTATE').val();
             //console.log(eventvalidation_val, viewstate_val);
@@ -64,10 +64,8 @@
 
     }
     function get_services(employee_page) {
-        var viewstate_reg = /(__VIEWSTATE\|)(\/[A-Za-z0-9\/\+]*)/;
         var result = employee_page.match(viewstate_reg);
         viewstate_val = result[2];
-        eventvalid_reg = /(__EVENTVALIDATION\|)(\/[A-Za-z0-9\/\+]*)/;
         result = employee_page.match(eventvalid_reg);
         eventvalidation_val = result[2];
         //console.log('get_services - viewstate and eventvalidation', eventvalidation_val, viewstate_val);
@@ -88,10 +86,180 @@
             '__EVENTARGUMENT':''
         }, function(success) {
             console.log("got services");
-            console.log(success);
+            select_service(success);
         });
 
     }
+    function select_service(service_page) {
+	var result = service_page.match(viewstate_reg);
+        viewstate_val = result[2];
+        result = service_page.match(eventvalid_reg);
+        eventvalidation_val = result[2];
+        //console.log('get_services - viewstate and eventvalidation', eventvalidation_val, viewstate_val);
+
+        $.post('http://sffbokning.extenda.se/boka/cjstudiounique/services.aspx?sname=cjstudiounique', {
+	    'smScriptManager':'ctl04$upServices|ctl04$gvServices',
+	    'ctl04$teEmployeeDetailsDivPos':'',
+	    'ctl04$gvServices$ctl02$CheckBoxButton':'on',
+	    'ctl04$teHelpTextDivPos':'',
+	    '__EVENTTARGET':'ctl04$gvServices',
+	    '__EVENTARGUMENT':'Select$0',
+	    '__LASTFOCUS':'',
+            '__VIEWSTATE':viewstate_val,
+            '__EVENTVALIDATION':eventvalidation_val,
+            '__ASYNCPOST':'true',
+        }, function(success) {
+            console.log("selected service");
+	    get_choose_date_page(success);
+        });
+
+    }
+    function get_choose_date_page(selected_services) {
+	var result = selected_services.match(viewstate_reg);
+        viewstate_val = result[2];
+        result = selected_services.match(eventvalid_reg);
+        eventvalidation_val = result[2];
+        //console.log('get_services - viewstate and eventvalidation', eventvalidation_val, viewstate_val);
+
+        $.post('http://sffbokning.extenda.se/boka/cjstudiounique/services.aspx?sname=cjstudiounique', {
+	    'smScriptManager':'ctl04$upNavButtons|ctl04$bNextPage',
+	    'ctl04$gvServices$ctl02$CheckBoxButton':'on',
+	    'ctl04$teEmployeeDetailsDivPos':'',
+	    'ctl04$teHelpTextDivPos':'',
+	    '__EVENTTARGET':'',
+	    '__EVENTARGUMENT':'',
+	    '__LASTFOCUS':'',
+            '__VIEWSTATE':viewstate_val,
+            '__EVENTVALIDATION':eventvalidation_val,
+            '__ASYNCPOST':'true',
+	    'ctl04$bNextPage':'Nästa sida >>'
+        }, function(success) {
+            console.log("got date page");
+            open_calendar(success);
+        });
+
+	
+    }
+
+    /*
+      Need to get the calendar, and get first value for __EVENTARGUMENT.
+      This number is a int that is increased for every day
+      Eg. okt 1 - 4500, okt 2, 4501 and so on.
+      
+      For the next requests (for next dates), this should be increased automatically, 
+      so we dont need to do a extra XHR request for every single date, to get this number.
+     */
+
+    function open_calendar(date_page) {
+	var result = date_page.match(viewstate_reg);
+        viewstate_val = result[2];
+        result = date_page.match(eventvalid_reg);
+        eventvalidation_val = result[2];
+        //console.log('open calendar - viewstate and eventvalidation', eventvalidation_val, viewstate_val);
+
+        $.post('http://sffbokning.extenda.se/boka/cjstudiounique/services.aspx?sname=cjstudiounique', {
+	    'smScriptManager':'ctl04$upMultiView|ctl04$bBookingDateChoicePicker',
+	    'ctl04%24teBookingDateChoiceText':'2012-07-26', //current-date - get from date_page request
+	    'ctl04%24rblBookingDateChoiceOptions':'1',
+	    'ctl04%24teEmployeeDetailsDivPos':'',
+	    'ctl04%24teHelpTextDivPos':'',
+	    '__EVENTTARGET':'',
+	    '__EVENTARGUMENT':'',
+	    '__LASTFOCUS':'',
+            '__VIEWSTATE':viewstate_val,
+            '__EVENTVALIDATION':eventvalidation_val,
+            '__ASYNCPOST':'true',
+	    'ctl04$bBookingDateChoicePicker.x':'22',
+	    'ctl04$bBookingDateChoicePicker.y':'19'
+        }, function(success) {
+            console.log("open_calendar");
+            get_next_month(success);
+        });
+    }
+    
+    function get_next_month(open_calendar) {
+	var result = open_calendar.match(viewstate_reg);
+        viewstate_val = result[2];
+        result = open_calendar.match(eventvalid_reg);
+        eventvalidation_val = result[2];
+        //console.log('get next month - viewstate and eventvalidation', eventvalidation_val, viewstate_val);
+
+        $.post('http://sffbokning.extenda.se/boka/cjstudiounique/services.aspx?sname=cjstudiounique', {
+	    'smScriptManager':'ctl04$upMultiView|ctl04$clBookingDateChoice',
+	    'ctl04%24teBookingDateChoiceText':'2012-07-26', //current-date
+	    'ctl04%24rblBookingDateChoiceOptions':'1',
+	    'ctl04%24teEmployeeDetailsDivPos':'',
+	    'ctl04%24teHelpTextDivPos':'',
+	    '__EVENTTARGET':'ctl04$clBookingDateChoice',
+	    '__EVENTARGUMENT':'V4596', // 
+	    '__LASTFOCUS':'',
+            '__VIEWSTATE':viewstate_val,
+            '__EVENTVALIDATION':eventvalidation_val,
+            '__ASYNCPOST':'true',
+        }, function(success) {
+            console.log("get_next_month");
+            select_date(success);
+        });
+    }
+
+
+
+    function select_date(date_page) {
+	var result = date_page.match(viewstate_reg);
+        viewstate_val = result[2];
+        result = date_page.match(eventvalid_reg);
+        eventvalidation_val = result[2];
+        //console.log('get_services - viewstate and eventvalidation', eventvalidation_val, viewstate_val);
+
+        $.post('http://sffbokning.extenda.se/boka/cjstudiounique/services.aspx?sname=cjstudiounique', {
+	    'smScriptManager':'ctl04$upMultiView|ctl04$clBookingDateChoice',
+	    'ctl04$teBookingDateChoiceText':'2012-10-18', // dynamic
+	    'ctl04$chkBookingDateNextAvailableTime':'on',
+	    'ctl04$rblBookingDateChoiceOptions':'1',
+	    'ctl04$teEmployeeDetailsDivPos':'',
+	    'ctl04$teHelpTextDivPos':'',
+	    '__EVENTTARGET':'ctl04$clBookingDateChoice',
+	    '__EVENTARGUMENT':'4626',
+	    '__LASTFOCUS':'',
+            '__VIEWSTATE':viewstate_val,
+            '__EVENTVALIDATION':eventvalidation_val,
+            '__ASYNCPOST':'true',
+        }, function(success) {
+            console.log("selected date");
+            get_timeslots_for_date(success);
+        });
+
+	
+    }
+    
+    function get_timeslots_for_date(selected_date) {
+	var result = selected_date.match(viewstate_reg);
+        viewstate_val = result[2];
+        result = selected_date.match(eventvalid_reg);
+        eventvalidation_val = result[2];
+        //console.log('get_services - viewstate and eventvalidation', eventvalidation_val, viewstate_val);
+
+        $.post('http://sffbokning.extenda.se/boka/cjstudiounique/services.aspx?sname=cjstudiounique', {
+	    'smScriptManager':'ctl04$upNavButtons|ctl04$bNextPage',
+	    'ctl04$teBookingDateChoiceText':'2012-08-31',
+	    'ctl04$rblBookingDateChoiceOptions':'1',
+	    'ctl04$teEmployeeDetailsDivPos':'',
+	    'ctl04$teHelpTextDivPos':'',
+	    '__EVENTTARGET':'',
+	    '__EVENTARGUMENT':'',
+	    '__LASTFOCUS':'',
+            '__VIEWSTATE':viewstate_val,
+            '__EVENTVALIDATION':eventvalidation_val,
+            '__ASYNCPOST':'true',
+	    'ctl04$bNextPage':'Nästa sida >>'
+        }, function(success) {
+            console.log("get timeslots for date");
+            console.log(success);
+        });
+
+	
+    }
+
 
     $(document).ready(function() {
 	login();

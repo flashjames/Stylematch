@@ -342,8 +342,11 @@ class ProfileResource(ModelResource):
         del bundle.data['temporary_profile_url']
 
         # obj is a userprofile
-        bundle.data['first_name'] = bundle.obj.user.first_name
-        bundle.data['last_name'] = bundle.obj.user.last_name
+        try:
+            bundle.data['first_name'] = bundle.obj.user.first_name
+            bundle.data['last_name'] = bundle.obj.user.last_name
+        except User.DoesNotExist:
+            bundle.data['first_name'] = bundle.data['last_name'] = ""
 
         # get the specialities, since they are obviously left out (??)
         bundle.data['specialities'] = [s for s in bundle.obj.specialities.values()]

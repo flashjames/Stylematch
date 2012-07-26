@@ -1,4 +1,4 @@
-from accounts.models import UserProfile, GalleryImage, ProfileImage, InviteCode, Featured, ScheduledCheck
+from accounts.models import UserProfile, GalleryImage, ProfileImage, InviteCode, Featured, ScheduledCheck, Speciality
 from django import forms
 from django.contrib import admin
 from django.contrib.auth.models import User
@@ -90,3 +90,4 @@ admin.site.register(GalleryImage, ImageAdmin)
 admin.site.register(InviteCode)
 admin.site.register(Featured, FeaturedAdmin)
 admin.site.register(ScheduledCheck)
+admin.site.register(Speciality)

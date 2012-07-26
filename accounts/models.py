@@ -452,7 +452,7 @@ class UserProfile(DirtyFieldsMixin, models.Model):
                                     null=True,
                                     blank=True)
 
-    specialities = models.ManyToManyField(Speciality)
+    specialities = models.ManyToManyField(Speciality, null=True, blank=True)
 
     url_online_booking = models.URLField("Adress till online bokningssystem",
                                          blank=True)

@@ -119,14 +119,26 @@
             this.filter();
         },
         events:{
-            "click .submit":"filter"
+            "click .submit":"filter",
+            "change #speciality":"filter"
         },
         filter: function() {
+            /*
+             *  Possible data arguments:
+             *   - limit
+             *   - offset
+             *   - salin_city__iexact
+             *   - speciality(an ID, not the name)
+             */
 
-            data = {};
-            city = $('#city').val();
+            var data = {};
+            var city = $('#city').val();
             if (city !== 'Alla') {
-                data = { 'salon_city__iexact' : $('#city').val() };
+                data['salon_city__iexact'] = $('#city').val();
+            }
+            var speciality = $('#speciality option:selected').val();
+            if (speciality > 0) {
+                data['speciality'] = speciality;
             }
             data['limit'] = 0; // list ALL stylists
             this.profileList.fetch({

@@ -11,6 +11,7 @@ from index.views import (IndexPageView,
                          TipView,
                          InspirationPageView,
                          LikeView,
+                         SearchView,
                          PromoteView,
                          error500)
 from django.contrib import admin
@@ -171,10 +172,9 @@ urlpatterns += patterns(
     url(r'^',
         include('dashboard.urls')),
 
-    (u'^sök/',
-            TemplateView.as_view(template_name="search.html"),
-            {},
-            'search'),
+    url(u'^sök/',
+            SearchView.as_view(),
+            name='search'),
     url(r'^',
             include('cities_urls')),
     (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap',

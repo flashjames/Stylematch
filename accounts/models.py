@@ -119,6 +119,11 @@ def check_profile(sender, userprofile, create_checks=True, **kwargs):
     # If the user passed the test, approve the user.
     if not userprofile.approved:
         userprofile.approved = True
+
+        # if we arrived from a userprofile save will be called later.
+        if sender != userprofile:
+            userprofile.save()
+
         logger.debug("User %s just got approved!" % userprofile)
 
         # Send email notifying admin about this.

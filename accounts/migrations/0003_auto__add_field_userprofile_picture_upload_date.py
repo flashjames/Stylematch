@@ -10,15 +10,16 @@ class Migration(SchemaMigration):
         
         # Adding field 'UserProfile.picture_upload_date'
         db.add_column('accounts_userprofile', 'picture_upload_date', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True), keep_default=False)
-        for user in orm.UserProfile.objects.all():
-            try:
-                img = orm['accounts.GalleryImage'].objects.filter(user=user.user).latest("upload_date")
-                date = img.upload_date
-            except:
-                date = datetime.datetime.now() - datetime.timedelta(days=3*365)
+        if not db.dry_run:
+            for user in orm.UserProfile.objects.all():
+                try:
+                    img = orm['accounts.GalleryImage'].objects.filter(user=user.user).latest("upload_date")
+                    date = img.upload_date
+                except:
+                    date = datetime.datetime.now() - datetime.timedelta(days=3*365)
 
-            user.picture_upload_date = date
-            user.save()
+                user.picture_upload_date = date
+                user.save()
 
 
     def backwards(self, orm):

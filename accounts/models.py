@@ -607,6 +607,11 @@ class InviteCode(models.Model):
                                  blank=True,
                                  on_delete=models.SET_NULL)
 
+    @classmethod
+    def generate_code(cls):
+        import code_generation
+        return code_generation.encode_url(cls.objects.all().count() +1)
+
     def __unicode__(self):
         if self.inviter is None:
             inviter = "-"

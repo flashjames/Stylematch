@@ -489,7 +489,7 @@ class UserProfile(DirtyFieldsMixin, models.Model):
     # so to make it easier to sort, we save the latest uploaded
     # picture date here
     picture_upload_date = models.DateTimeField(auto_now_add=True,
-                                       editable=False)
+                                       editable=False, null=True)
 
     def save(self, *args, **kwargs):
         # remove accidental whitespaces from city

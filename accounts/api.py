@@ -291,7 +291,16 @@ class ProfileResource(ModelResource):
             self.profile_image_size = filters['profile_image_size']
             del filters['profile_image_size']
 
-        return super(ProfileResource, self).build_filters(filters)
+        # build the rest of the filters
+        orm = super(ProfileResource, self).build_filters(filters)
+
+        if 'speciality' in filters:
+            users = UserProfile.objects.filter(specialities__in=filters['speciality'])
+            filter = {'user__in': [i.pk for i in users]}
+
+            # update the filter with our userprofiles
+            orm.update(filter)
+        return orm
 
     def dehydrate(self, bundle):
         """
@@ -332,13 +341,12 @@ class ProfileResource(ModelResource):
             bundle.data['profile_url'] = bundle.data['temporary_profile_url']
         del bundle.data['temporary_profile_url']
 
-        try:
-            user = User.objects.get(pk=bundle.data['id'])
-            bundle.data['first_name'] = user.first_name
-            bundle.data['last_name'] = user.last_name
-        except User.DoesNotExist:
-            bundle.data['first_name'] = ""
-            bundle.data['last_name'] = ""
+        # obj is a userprofile
+        bundle.data['first_name'] = bundle.obj.user.first_name
+        bundle.data['last_name'] = bundle.obj.user.last_name
+
+        # get the specialities, since they are obviously left out (??)
+        bundle.data['specialities'] = [s for s in bundle.obj.specialities.values()]
         return bundle
 
     class Meta:
@@ -362,11 +370,13 @@ class ProfileResource(ModelResource):
                   'profile_url',
                   'temporary_profile_url',
                   'latitude',
-                  'longitude']
+                  'longitude',
+                  'speciality']
         filtering = {
                 'salon_city' : ['iexact',], # 'startswith','endswith'],
                 'show_booking_url' : ['exact',],
                 'profile_image_size': ['exact',],
+                'specialities': ['iexact',],
                 }
         resource_name = "profiles"
         model = UserProfile

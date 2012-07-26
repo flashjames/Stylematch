@@ -19,7 +19,10 @@
       "number_on_profile": false,
       "salon_url": "",
       "profile_url": "testuser1",
-      "salon_name": "Testsalon1"
+      "salon_name": "Testsalon1",
+      "latitude": 58.41234,
+      "longitude": 16.445647,
+      "specialities": [1, 2]
     }
   },
   {
@@ -42,7 +45,10 @@
       "number_on_profile": false,
       "salon_url": "",
       "profile_url": "testuser2",
-      "salon_name": "Testsalon2"
+      "salon_name": "Testsalon2",
+      "latitude": 58.41234,
+      "longitude": 16.445647,
+      "specialities": [1, 2]
     }
   },
   {
@@ -65,7 +71,10 @@
       "number_on_profile": false,
       "salon_url": "",
       "profile_url": "testuser3",
-      "salon_name": "Testsalon3"
+      "salon_name": "Testsalon3",
+      "latitude": 58.41234,
+      "longitude": 16.445647,
+      "specialities": [1, 2]
     }
   },
   {
@@ -88,7 +97,10 @@
       "number_on_profile": false,
       "salon_url": "",
       "profile_url": "testuser4",
-      "salon_name": "Testsalon4"
+      "salon_name": "Testsalon4",
+      "latitude": 58.41234,
+      "longitude": 16.445647,
+      "specialities": [1, 2]
     }
   },
   {
@@ -111,7 +123,10 @@
       "number_on_profile": false,
       "salon_url": "",
       "profile_url": "testuser5",
-      "salon_name": "Testsalon5"
+      "salon_name": "Testsalon5",
+      "latitude": 58.41234,
+      "longitude": 16.445647,
+      "specialities": [1, 2]
     }
   },
   {
@@ -134,7 +149,10 @@
       "number_on_profile": false,
       "salon_url": "",
       "profile_url": "testuser6",
-      "salon_name": "Testsalon6"
+      "salon_name": "Testsalon6",
+      "latitude": 58.41234,
+      "longitude": 16.445647,
+      "specialities": [1, 2]
     }
   }
 ]

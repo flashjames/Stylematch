@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load index_extras %}
+{% load url from future %}
+
+{% block content %}
+
+<div class="main-content row" >
+  <div class="span12" >
+  <h1>Förändra specialitéer</h1>
+    Välj 5 specialitéer
+    <div>
+      <form id="specialities-form" action="" method="post" class="form-horizontal">
+        {% csrf_token %}
+        <fieldset>
+
+          {% for field in form %}
+          <div class="control-group{% if field.errors %} error{% endif %}">
+            <label class="control-label{% if field.errors %} error{% endif %}" for="inputWarning">
+              {{ field.label }}
+            </label>
+            <div class="controls">
+              {{ field }}
+              <span class="help-inline">{{ field.errors.as_text }}</span>
+            </div>
+          </div>
+          {% endfor %}
+
+          <div class="form-actions well">
+            <input type="submit" class="btn-large btn-info" value="Spara ändringar" />
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

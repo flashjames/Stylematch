@@ -101,10 +101,6 @@ urlpatterns += patterns(
             BetaEmailView.as_view(),
             {},
             'get_invite'),
-    (r'^start/',
-            TemplateView.as_view(template_name="betaemail_index.html"),
-            {},
-            'beta_index_page'),
     # 'Tipsa frisör'-page. Template in index/templates
     (r'^tip/',
      TipView.as_view(),

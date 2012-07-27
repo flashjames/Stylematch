@@ -2,58 +2,51 @@
 {% block footer %}
 <div class="base-footer-div">
   <div class="container">
-   <div class="row">
- 	<div class="span3">
-	 	<ul>
-	 	<li class="title">StyleMatch</li>
-	 	<li><a href="{% url 'frisor_page' as frisor %}{{ frisor }}">Gå med som Frisör</a></li>	
-	 	<li><a href="{% url 'in-media-page' as media %}{{ media }}">StyleMatch i Media</a></li>
-	 	<li><a href="{% url 'about_page' as about %}{{ about }}">Om Oss</a></li>
-	 	<li><a href="http://blogg.stylematch.se/">Blogg</a></li>
-	 	<li id="press"><a href="{% url 'press_page' as press %}{{ press }}">Press</a></li>
-	 
-	 	<li id="jobb"><a href="{% url 'work_page' as work %}{{ work }}">Jobb</a></li>
-	 	</ul>
- 	</div> 	
- 	<div class="span3">
-	 	<ul>
-	 		<li class="title">Städer</li>
-	 		<li><a href="/stockholm/">Stockholm</a></li>
-	 		<li><a href="/linköping/">Linköping</a></li>
-	 		<li><a href="/norrköping/">Norrköping</a></li>
-	 	</ul>
- 	</div>  
- 	<div class="span3">
-	 	<ul>
-	 		<li class="title">Hjälp</li>
-	 		<li><a href="{% url 'faq-page' as faq %}{{ faq }}">Vanliga Frågor</a></li>
-	 		<li><a href="/kontakt/">Kontakta Oss</a></li>
-	 		<li><a href="/anvandarvillkor/">Användarvillkor</a></li>
-	 	</ul>
- 	</div>  
- 	<div class="span3">
-	 		<ul>
-		 		<li class="title">Kontakta Oss</li>
-		 		<li>0733 - 88 50 88</li>
-		 		<li><a href="mailto:hej@stylematch.se">
-hej@stylematch.se</a></li>
-		 		<li></li>
-		 	</ul>
-	 		<ul>
-		 		<li class="title">Socialt</li>
-		 		<li class="social"><a href="http://www.facebook.com/StyleMatch.SE" rel="nofollow"><div><img src="{{ STATIC_URL }}img/glyphicons/png/glyphicons_390_facebook.png"/><span>Facebook</span></div></a></li>
-		 		<li class="social"><a href="http://www.twitter.com/stylematch_SE" rel="nofollow"><div><img src="{{ STATIC_URL }}img/glyphicons/png/glyphicons_391_twitter_t.png"/><span>Twitter</span></div></a></li>
-		 	</ul>
-	</div>
-	<div class="span12" id="copyright">
-		<p>© 2012 Copyright Avizera AB </p></div>
-	
- 	</div>  
- 
- 
+    <div class="row">
+      <div class="span3">
+        <ul>
+        <li class="title">StyleMatch</li>
+        <li><a href="{% url 'frisor_page' as frisor %}{{ frisor }}">Gå med som Frisör</a></li>  
+        <li><a href="{% url 'in-media-page' as media %}{{ media }}">StyleMatch i Media</a></li>
+        <li><a href="{% url 'about_page' as about %}{{ about }}">Om Oss</a></li>
+        <li><a href="http://blogg.stylematch.se/">Blogg</a></li>
+        <li id="press"><a href="{% url 'press_page' as press %}{{ press }}">Press</a></li>
+        <li id="jobb"><a href="{% url 'work_page' as work %}{{ work }}">Jobb</a></li>
+        </ul>
+      </div>
+      <div class="span3">
+        <ul>
+          <li class="title">Städer</li>
+          <li><a href="/stockholm/">Stockholm</a></li>
+          <li><a href="/linköping/">Linköping</a></li>
+          <li><a href="/norrköping/">Norrköping</a></li>
+        </ul>
+      </div>
+      <div class="span3">
+        <ul>
+          <li class="title">Hjälp</li>
+          <li><a href="{% url 'faq-page' as faq %}{{ faq }}">Vanliga Frågor</a></li>
+          <li><a href="/kontakt/">Kontakta Oss</a></li>
+          <li><a href="/anvandarvillkor/">Användarvillkor</a></li>
+        </ul>
+      </div>
+      <div class="span3">
+          <ul>
+            <li class="title">Kontakta Oss</li>
+            <li>0733 - 88 50 88</li>
+            <li><a href="mailto:hej@stylematch.se">hej@stylematch.se</a></li>
+          </ul>
+          <ul>
+            <li class="title">Socialt</li>
+            <li class="social"><a href="http://www.facebook.com/StyleMatch.SE" rel="nofollow"><div><img src="{{ STATIC_URL }}img/glyphicons/png/glyphicons_390_facebook.png"/><span>Facebook</span></div></a></li>
+            <li class="social"><a href="http://www.twitter.com/stylematch_SE" rel="nofollow"><div><img src="{{ STATIC_URL }}img/glyphicons/png/glyphicons_391_twitter_t.png"/><span>Twitter</span></div></a></li>
+          </ul>
+      </div>
+      <div class="span12" id="copyright">
+        <p>© 2012 Copyright Avizera AB </p>
+      </div>
     </div>
- </div>
-
-</div> <!-- END what? -->
+  </div>
+</div>
 
 {% endblock %}

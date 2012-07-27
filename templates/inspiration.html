@@ -4,26 +4,21 @@
 
 {% block title %}Inspiration{% endblock %}
 
-{% block html-head %}
+{% block head-javascripts %}
+{{ block.super }}
 <script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
 <script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
 <script src="{{ STATIC_URL }}js/backbone_paginator/lib/backbone.paginator.js"></script>
+<script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
+{% endblock %}
 
+{% block html-head %}
 <script>
   <!-- used in the service.js file, to know where the service api is located -> doesnt need to hardcode the url -->
   var INSPIRATION_API_URL = "{% url 'api_dispatch_list' api_name="profile" resource_name="inspiration" %}";
   <!-- used to send likes for a picture -->
   var CSRF_TOKEN = "{{ csrf_token }}";
 </script>
-
-<script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/sv_SE/all.js#xfbml=1&appId=309825002426259";
-  fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));</script>
 
 <!-- Underscore.js Templates -->
 <script type="text/template" id="tpl-inspiration-image-list-item">
@@ -82,9 +77,10 @@
   </div>
 </script>
 
-<link rel="stylesheet" href="{{ STATIC_URL}}js/lightbox/example3/colorbox.css" />
+<link rel="stylesheet" href="{{ STATIC_URL }}js/lightbox/example3/colorbox.css" />
 <script type="text/javascript" src="{{ STATIC_URL}}js/lightbox/colorbox/jquery.colorbox.js"></script>
-{% endblock %}
+
+{% endblock %} {# html-head #}
 {% block content %}
 <div class="row main-content">
   <div class="span11 offset1">
@@ -93,9 +89,12 @@
       <div class="span1 offset4">
 	<img id="loading-animation" src="{{ STATIC_URL }}img/loading-animation.gif">
       </div>
-      <div id="fb-root"></div>
     </div>
   </div>
 
+  {% endblock %}
+
+  {% block javascript-block %}
+  {{ block.super }}
   <script src="{{ STATIC_URL }}js/inspiration.js"></script>
   {% endblock %}

@@ -2,17 +2,19 @@
 {% load url from future %}
 {% load index_extras %}
 
+{% block head-javascripts %}
+{{ block.super }}
+<script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
+<script src="{{ STATIC_URL }}js/bootstrap-collapse.js"></script>
+{% endblock %}
+
 {% block html-head %}
 
 <meta property="og:title" content="StyleMatch.se: Hitta en frisör som passar dig">
 <meta name="description" content="På StyleMatch hittar du din nästa frisör i {{ city }}. Bläddra bland bilder på tidigare klippningar och uppsättningar för att hitta en som passar dig och din hårtyp.">
 
-<script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
-<script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
-<script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
-
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
-<script src="{{ STATIC_URL }}js/bootstrap-collapse.js"></script>
 <script type="text/javascript"
       src="http://maps.googleapis.com/maps/api/js?key=AIzaSyACqrBMuk4aRYqv8mAb-d-Z1k-QOct9sW0&sensor=false">
 </script>

@@ -6,10 +6,8 @@
     <meta charset="utf-8" />
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
-    {% bootstrap_js all %}
     {% bootstrap_less %}
     {# Used to load js that's specific to a page #}
-    {% block html-head %}{% endblock %}
     <title>{% block title %}Användarvillkor | StyleMatch{% endblock %}</title>
 
     {% if settings.GOOGLE_ANALYTICS_KEY %}
@@ -48,8 +46,6 @@
               <h1>Användarvillkor StyleMatch</h1>
 
               <p>
-
-
                 <h2>1. Godkännande av användarvillkor</h2>
 
                 StyleMatch (Organisationsnummer: 556871-7689 Adress: Rydsvägen 8A, 584 31 Linköping, Östergötlands län<br>
@@ -174,17 +170,11 @@
                 Tolkning och tillämpning av Användarvillkoren ska ske enligt svensk lag.
                 Tvist i anledning av Användarvillkoren avgörs av svensk allmän domstol, med uteslutande av annat tvistelösningsforum.</p>
 
-
-
-
               <!-- stop -->
-
             </div>
-	    
-            {% endblock %}
+          {% endblock %}
       </section>
       {% block footer %} {% endblock %}
       </div>
-      {# analytics #}
   </body>
 </html>

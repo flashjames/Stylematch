@@ -4,16 +4,17 @@
 
 {% block title %}Förändra prislista{% endblock %}
 
-{% block html-head %}
-<!-- used in the service.js file, to know where the service api is located -> doesnt need to hardcode the url -->
-<script> SERVICE_API_URL = "{% url 'api_dispatch_list' api_name="profile" resource_name="service" %}"; </script>
-
+{% block head-javascripts %}
+{{ block.super }}
 <script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
 <script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
 <script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
 <script src="{{ STATIC_URL }}js/backbone.modelbinding.js"></script>
+{% endblock %}
 
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+{% block html-head %}
+<!-- used in the service.js file, to know where the service api is located -> doesnt need to hardcode the url -->
+<script> SERVICE_API_URL = "{% url 'api_dispatch_list' api_name="profile" resource_name="service" %}"; </script>
 
 {% endblock %}
 

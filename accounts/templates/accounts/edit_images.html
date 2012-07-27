@@ -5,6 +5,16 @@
 
 {% block title %}Lägg upp bilder{% endblock %}
 
+{% block head-javascripts %}
+{{ block.super }}
+<script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
+<script src="{{ STATIC_URL }}js/backbone.modelbinding.js"></script>
+<script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
+<script src="{{ STATIC_URL }}js/bootstrap-popover.js"></script>
+{% endblock %}
+
 {% block html-head %}
 <script>
   <!-- used in the service.js file, to know where the service api is located -> doesnt need to hardcode the url -->
@@ -12,15 +22,6 @@
   <!-- used in the service.js file, to know the full image path -->
   PICTURE_PATH = "{{ user_images_path }}";
 </script>
-
-<script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
-<script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
-<script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
-<script src="{{ STATIC_URL }}js/backbone.modelbinding.js"></script>
-<script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
-<script src="{{ STATIC_URL }}js/bootstrap-popover.js"></script>
-
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
 
 <style>
   /* remove background around twitter bootstrap modal, on this page */
@@ -197,8 +198,11 @@
     </form>
 </div>
 
+  {% block javascripts-block %}
+  {{ block.super }}
   <!-- the code that does the magic on the page -->
   <script src="{{ STATIC_URL }}js/picture.js"></script>
+  {% endblock %}
   
 </div>
 

@@ -84,6 +84,7 @@ def do_active(parser, token):
         raise TemplateSyntaxError, "%r takes at least two arguments" % bits[0]
     return ActiveIfInListNode(bits[1], bits[2:])
 
+
 def active(parser, token):
     """
     Given an item and an arbitrary number of arguments
@@ -94,6 +95,7 @@ def active(parser, token):
 
     return do_active(parser, token)
 active = register.tag(active)
+
 
 class ActiveIfInListNode(Node):
     def __init__(self, master, comparables):
@@ -117,7 +119,7 @@ class ActiveIfInListNode(Node):
             except VariableDoesNotExist:
                 var = None
             comparables.append(var)
-            
+
         path = request.path
         # need to urllencode the path, else it wont match swedish-chars
         path = urllib.quote(path.encode('utf-8'))

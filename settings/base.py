@@ -306,7 +306,6 @@ GALLERIA_URL = STATIC_URL + "js/galleria/src/"
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
     'django.contrib.auth.context_processors.auth',
-    'index.context_processors.jquery_script',
     'index.context_processors.galleria_urls',
     'index.context_processors.django_settings',
     # used to access STATIC_URL in templates
@@ -329,3 +328,6 @@ GOOGLE_API_KEY = ""
 
 # Kissmetrics Key
 KISSMETRICS_KEY = ""
+
+# InterCom Key
+INTERCOM_KEY = ""

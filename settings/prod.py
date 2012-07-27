@@ -52,3 +52,6 @@ GOOGLE_API_KEY = "AIzaSyDA3wWYlEqxN178D42MBkL2wcZwZCCtqwk"
 
 # Kissmetrics Key
 KISSMETRICS_KEY = "6baa0dd7f1e6af4d6ab136449204547afab5afaf"
+
+# InterCom Key
+INTERCOM_KEY = "k27ag4y"

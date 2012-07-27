@@ -14,39 +14,12 @@ def pdb(element):
     import ipdb; ipdb.set_trace()
     return element
 
+
 @register.simple_tag
 def current_url(request, url):
    from django.core.urlresolvers import resolve
    current_url = resolve(request.get_full_path()).url_name
    return current_url
-
-
-@register.simple_tag
-def google_analytics():
-    if settings.PRODUCTION:
-        return '<script src="%sjs/google_analytics.js" type="text/javascript"></script>' % settings.STATIC_URL
-
-    return ""
-
-@register.simple_tag
-def kissmetrics():
-    if settings.PRODUCTION:
-        return '<script src="%sjs/kissmetrics.js" type="text/javascript"></script>' % settings.STATIC_URL
-
-    return ""
-
-
-@register.simple_tag
-def intercom_analytics():
-    if settings.PRODUCTION:
-        return '<script src="%sjs/intercom_analytics.js" type="text/javascript"></script>' % settings.STATIC_URL
-
-    return ""
-
-
-@register.simple_tag
-def facebook():
-        return '<script src="%sjs/facebook.js" type="text/javascript"></script>' % settings.STATIC_URL
 
 
 @register.filter

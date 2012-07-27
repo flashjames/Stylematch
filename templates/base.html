@@ -27,6 +27,9 @@
     <script src="{{ STATIC_URL }}js/jquery.noty.custom.js" type="text/javascript"></script>
     {% intercom_analytics %}
     {% kissmetrics %}
+    <script type="text/javascript">
+      _kmq.push(['identify', '{{ user.email }}']);
+    </script>
     <script id="IntercomSettingsScriptTag">
       {% comment %} Intercom.io settings {% endcomment %}
       var intercomSettings = {

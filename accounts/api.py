@@ -239,9 +239,9 @@ class PictureResource(ModelResource):
             logger.error(filename)
             image = default_storage.open(filename)
 
-            rotated_image = self.rotate_image(image)
-            default_storage.delete(filename)
-            default_storage.save(filename, rotated_image)
+#            rotated_image = self.rotate_image(image)
+#            default_storage.delete(filename)
+#            default_storage.save(filename, rotated_image)
 
         
         # Save the main object.

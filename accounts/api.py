@@ -185,7 +185,7 @@ class PictureResource(ModelResource):
         original_image.seek(0)
 
         image = Image.open(original_image)
-        image = image.rotate(90)
+        image = image.rotate(-90)
 
         # Return cropped image as ContentFile
         tempfile_io = StringIO.StringIO()
@@ -264,6 +264,9 @@ class PictureResource(ModelResource):
         authorization = PerUserAuthorization()
         queryset = GalleryImage.objects.all()
 
+        # ``file`` is required to be excluded for obj_update
+        # otherwise that field will be overwritten with an unusable
+        # path.
         excludes = ['user','file']
         limit = 50
         max_limit = 0

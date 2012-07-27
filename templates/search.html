@@ -19,26 +19,27 @@
 
 <script type="text/javascript">
   function moveScroller() {
-    var a = function() {
-      var b = $(window).scrollTop(){% if user.is_authenticated %} + 40{% endif %};
-      var d = $("#scroller-anchor").offset().top;
-      var c = $("#scroller");
+    var scrollTrigger = function() {
+      var windowTop = $(window).scrollTop(){% if user.is_authenticated %} + 40{% endif %};
+      var anchor = $("#scroller-anchor").offset().top;
+      var scroller = $("#scroller");
       var footer = $('.base-footer-div').offset().top;
       var profile_list_height = $('#profile-list').height();
-      if (b>d && profile_list_height > 510) {
-        pos = footer - (b+600);
+      if ( (windowTop > scroller) && (profile_list_height > 510) ) {
+        pos = footer - (windowTop + 600);
         if (pos > 0) {
           pos = 0;
         }
         {% if user.is_authenticated %}pos += 40;{% endif %}
-        c.css({position:"fixed",top:pos+"px"})
+        scroller.css({ position:"fixed",top:pos+"px" })
       } else {
-        if (b<=d) {
-          c.css({position:"relative",top:""})
+        if (windowTop <= anchor) {
+          scroller.css({position:"relative",top:""})
         }
       }
     };
-    $(window).scroll(a);a();
+    $(window).scroll(scrollTrigger);
+    scrollTrigger();
   }
 </script>
 

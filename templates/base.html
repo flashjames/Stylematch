@@ -66,11 +66,6 @@
     {% endif %}
     {% if settings.INTERCOM_KEY %}
     <script id="IntercomSettingsScriptTag">
-      var intercomSettings = {
-        app_id: '{{ settings.INTERCOM_KEY }}',
-        email: '{{ user.email }}',
-        created_at: '{{ user.date_joined }}',
-      };
       (function() {
           function async_load() {
             var s = document.createElement('script');
@@ -85,6 +80,11 @@
             window.addEventListener('load', async_load, false);
           }
         })();
+      var intercomSettings = {
+        app_id: '{{ settings.INTERCOM_KEY }}',
+        email: '{{ user.email }}',
+        created_at: '{{ user.date_joined }}',
+      };
     </script>
     {% endif %}
     {% if settings.GOOGLE_ANALYTICS_KEY %}

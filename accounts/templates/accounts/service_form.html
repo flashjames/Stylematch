@@ -2,6 +2,8 @@
 {% load index_extras %}
 {% load url from future %}
 
+{% block title %}Förändra prislista{% endblock %}
+
 {% block html-head %}
 <!-- used in the service.js file, to know where the service api is located -> doesnt need to hardcode the url -->
 <script> SERVICE_API_URL = "{% url 'api_dispatch_list' api_name="profile" resource_name="service" %}"; </script>

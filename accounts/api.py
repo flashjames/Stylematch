@@ -232,18 +232,16 @@ class PictureResource(ModelResource):
         self.save_related(bundle)
 
         # rotate the image if rotate key is defined in the client request
-#        if bundle.data.has_key('rotate'):
-#            image_unrotated = bundle.obj.file
+        if bundle.data.has_key('rotate'):
+            image_unrotated = bundle.obj.file
             # for some reason the filename isnt like it should
-#            filename = os.path.join(settings.PATH_USER_IMGS, image_unrotated.instance.filename)
-#            logger.error(filename)
-#            image = default_storage.open(filename)
+            filename = os.path.join(settings.PATH_USER_IMGS, image_unrotated.instance.filename)
+            image = default_storage.open(filename)
 
-#            rotated_image = self.rotate_image(image)
-#            default_storage.delete(filename)
-#            default_storage.save(filename, rotated_image)
+            rotated_image = self.rotate_image(image)
+            default_storage.delete(filename)
+            default_storage.save(filename, rotated_image)
 
-        
         # Save the main object.
         bundle.obj.save()
 

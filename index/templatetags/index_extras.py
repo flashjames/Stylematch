@@ -28,6 +28,13 @@ def google_analytics():
 
     return ""
 
+@register.simple_tag
+def kissmetrics():
+    if settings.PRODUCTION:
+        return '<script src="%sjs/kissmetrics.js" type="text/javascript"></script>' % settings.STATIC_URL
+
+    return ""
+
 
 @register.simple_tag
 def intercom_analytics():

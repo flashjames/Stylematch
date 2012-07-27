@@ -165,7 +165,8 @@ class SpecialitiesForm(ModelForm):
     specialities = forms.ModelMultipleChoiceField(
                         queryset=Speciality.objects.all(),
                         label="Specialitéer",
-                        widget=forms.CheckboxSelectMultiple
+                        widget=forms.CheckboxSelectMultiple,
+                        required=False
                     )
 
     def clean_specialities(self):

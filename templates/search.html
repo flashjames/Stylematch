@@ -2,6 +2,7 @@
 {% load url from future %}
 
 {% block head-javascripts %}
+{{ block.super }}
 <script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
 <script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
 <script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>

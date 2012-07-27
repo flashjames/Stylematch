@@ -17,6 +17,12 @@ from tastypie.authentication import BasicAuthentication
 from sorl.thumbnail import get_thumbnail
 from django.http import QueryDict
 from datetime import datetime
+from tools import get_unique_filename
+from django.core.files.storage import default_storage
+from PIL import Image
+import imghdr
+import StringIO
+from django.core.files.base import ContentFile
 
 
 class PerUserAuthorization(Authorization):
@@ -172,6 +178,85 @@ class PictureResource(ModelResource):
         bundle.data['image_url'] = get_image_url(bundle.data['filename'])
         return bundle
 
+    def rotate_image(self, original_image):
+        file_extension = imghdr.what("", original_image.read(2048))
+        original_image.seek(0)
+
+        image = Image.open(original_image)
+        image = image.rotate(90)
+
+        # Return cropped image as ContentFile
+        tempfile_io = StringIO.StringIO()
+        image.save(tempfile_io, format=file_extension)
+
+        tempfile_io.seek(0)
+        return ContentFile(tempfile_io.read())
+
+
+    def obj_update(self, bundle, request=None, **kwargs):
+        """
+        A ORM-specific implementation of ``obj_update``.
+        """
+        if not bundle.obj or not bundle.obj.pk:
+            # Attempt to hydrate data from kwargs before doing a lookup for the object.
+            # This step is needed so certain values (like datetime) will pass model validation.
+            try:
+                bundle.obj = self.get_object_list(request).model()
+                bundle.data.update(kwargs)
+                bundle = self.full_hydrate(bundle)
+                lookup_kwargs = kwargs.copy()
+
+                for key in kwargs.keys():
+                    if key == 'pk':
+                        continue
+                    elif getattr(bundle.obj, key, NOT_AVAILABLE) is not NOT_AVAILABLE:
+                        lookup_kwargs[key] = getattr(bundle.obj, key)
+                    else:
+                        del lookup_kwargs[key]
+            except:
+                # if there is trouble hydrating the data, fall back to just
+                # using kwargs by itself (usually it only contains a "pk" key
+                # and this will work fine.
+                lookup_kwargs = kwargs
+
+            try:
+                bundle.obj = self.obj_get(request, **lookup_kwargs)
+            except ObjectDoesNotExist:
+                raise NotFound("A model instance matching the provided arguments could not be found.")
+
+        bundle = self.full_hydrate(bundle)
+
+        # Save FKs just in case.
+        self.save_related(bundle)
+
+        # rotate the image if rotate key is defined in the client request
+        if bundle.data.has_key('rotate'):
+            image_unrotated = bundle.obj.file
+
+            # for some reason the filename isnt like it should
+            filename = image_unrotated.name.replace("/media/","")
+            image = default_storage.open(filename)
+
+            rotated_image = self.rotate_image(image)
+            default_storage.delete(filename)
+            default_storage.save(filename, rotated_image)
+
+        
+        # Save the main object.
+        bundle.obj.save()
+
+        # Now pick up the M2M bits.
+        m2m_bundle = self.hydrate_m2m(bundle)
+        self.save_m2m(m2m_bundle)
+        return bundle
+
+    
+    def hydrate(self, bundle):
+        #import pdb;pdb.set_trace()
+        if bundle.data.has_key('rotate'):
+            pass
+        return bundle
+
     class Meta:
         resource_name = 'picture'
         pass_request_user_to_django = True
@@ -179,7 +264,7 @@ class PictureResource(ModelResource):
         authorization = PerUserAuthorization()
         queryset = GalleryImage.objects.all()
 
-        excludes = ['file', 'user']
+        excludes = ['user']
         limit = 50
         max_limit = 0
         validation = FormValidation(form_class=PictureForm)

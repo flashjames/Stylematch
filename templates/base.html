@@ -64,7 +64,7 @@
     _kmq.push(['identify', '{{ user.email }}']);
     </script>
     {% endif %}
-    {% if settings.INTERCOM_KEY %}
+    {% if user.is_authenticated and settings.INTERCOM_KEY %}
     <script id="IntercomSettingsScriptTag">
       (function() {
           function async_load() {

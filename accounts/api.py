@@ -232,9 +232,9 @@ class PictureResource(ModelResource):
         # rotate the image if rotate key is defined in the client request
         if bundle.data.has_key('rotate'):
             image_unrotated = bundle.obj.file
-
+            #import pdb;pdb.set_trace()
             # for some reason the filename isnt like it should
-            filename = image_unrotated.name.replace("/media/","")
+            filename = os.path.join(settings.PATH_USER_IMGS, image_unrotated.instance.filename)
             image = default_storage.open(filename)
 
             rotated_image = self.rotate_image(image)

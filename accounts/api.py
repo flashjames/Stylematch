@@ -266,7 +266,7 @@ class PictureResource(ModelResource):
         authorization = PerUserAuthorization()
         queryset = GalleryImage.objects.all()
 
-        excludes = ['user']
+        excludes = ['user','file']
         limit = 50
         max_limit = 0
         validation = FormValidation(form_class=PictureForm)

@@ -26,8 +26,8 @@
       var scroller = $("#scroller");
       var footer = $('.base-footer-div').offset().top;
       var profile_list_height = $('#profile-list').height();
-      if ( (windowTop > scroller) && (profile_list_height > 510) ) {
-        pos = footer - (windowTop + 600);
+      if ( (windowTop > anchor) && (profile_list_height > 210) ) {
+        pos = footer - (windowTop + 300);
         if (pos > 0) {
           pos = 0;
         }

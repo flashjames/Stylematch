@@ -195,6 +195,12 @@ def create_user_profile(sender, instance, created, **kwargs):
                                    )
         OpenHours.objects.create(user=instance)
 
+        # create 5 invitecodes for this user
+        for i in range(5):
+            code = InviteCode(invite_code=InviteCode.generate_code(),
+                              inviter=instance)
+            code.save()
+
 
 class DirtyFieldsMixin(object):
     """

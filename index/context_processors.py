@@ -1,10 +1,6 @@
 from django.conf import settings  # import the settings file
 
 
-def jquery_script(context):
-    return {'JQUERY_SCRIPT': settings.JQUERY_SCRIPT}
-
-
 def galleria_urls(request):
     """links to gelleria jquery library"""
     static_url = getattr(settings, 'STATIC_URL')
@@ -20,6 +16,7 @@ def galleria_urls(request):
         'GALLERIA_SCRIPT': galleria_script,
         'GALLERIA_THEME': galleria_theme,
     }
+
 
 def django_settings(context):
     return { 'settings': settings }

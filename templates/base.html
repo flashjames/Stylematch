@@ -42,25 +42,6 @@
     <script type="text/javascript">
       $('.dropdown-toggle').dropdown({trigger:'hover'});
 
-      /* Only used on CITY_SEARCH page currently */
-      /* Function to trigger tooltip when clicked and hide after a delay*/
-      $(document).ready(function() {
-      var defaultOption={trigger:'manual', delay: {hide: 500 }};
-      function showAndHidePopover() {
-      $(this).tooltip('toggle');
-      var self = this;
-      setTimeout(function() {
-      $(self).tooltip('hide');
-      }, 4000);
-      };
-
-      {# TODO: Move this to where it is actually needed. #}
-      {# It's throwing exceptions in pages where .popover1 doesn't exists. #}
-      $('.popover1').tooltip(defaultOption).click(showAndHidePopover);
-
-      });
-      /* END CITY-SEARCH */
-      
       /* Login block at top of page */
       $(".collapse").collapse();
     </script>

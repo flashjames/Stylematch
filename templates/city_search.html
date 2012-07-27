@@ -53,6 +53,23 @@
     };
     $(window).scroll(a);a();
   }
+
+  /* This is used for "Tipsa din frisör" while that functionality */
+  /* doesn't exist.
+  /* Function to trigger tooltip when clicked and hide after a delay*/
+  $(document).ready(function() {
+    var defaultOption={trigger:'manual', delay: {hide: 500 }};
+    function showAndHidePopover() {
+      $(this).tooltip('toggle');
+      var self = this;
+      setTimeout(function() {
+        $(self).tooltip('hide');
+      }, 4000);
+    };
+    $('.popover1').tooltip(defaultOption).click(showAndHidePopover);
+
+  });
+  /* END CITY-SEARCH */
 </script>
 
 {% endblock %} {# html-head #}

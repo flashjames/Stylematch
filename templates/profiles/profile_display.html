@@ -32,7 +32,14 @@
 </script>
 {% endblock %} {# html-head #}
 
-{% block title %}{{ first_name.title }} {{ last_name.title }}{% if profile.salon_city %}, frisör i {{ profile.salon_city.title }} {% endif %}{% endblock %}
+{% block title %}
+{% if user.is_staff %}
+{{ first_name.title }} {{ last_name.title }}, Grundare
+{% else %}
+{{ first_name.title }} {{ last_name.title }}{% if profile.salon_city %}, frisör i {{ profile.salon_city.title }} {% endif %}
+{% endif %}
+{% endblock %}
+
 
 {% block content %}
 <div id="fb-root"></div>

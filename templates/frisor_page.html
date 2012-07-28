@@ -26,10 +26,64 @@
 		
 		
 	</div>
+	<!--
+Create an empty div where the video will live.
+Note the video ID is added at the end to prevent conflicts
+  and allow multiple videos being tracked.
+-->
+<div id="player_uU6U-8LP1DY"></div>
+ 
+<!-- Include the YouTube JS API -->
+<script type='text/javascript'
+  src='http://www.youtube.com/player_api'></script>
+<script>
+  var players = [];
+   
+  /** 
+   * Helper function for loading KM trackable videos.
+   * 
+   * id     - The YouTube video ID
+   * width  - The player width
+   * height - The player height
+   * name   - The name of the video. This can be anything and
+       will be appended to the event logged in KM.
+   */
+  function loadKMTrackedVideo (id, width, height, name)
+  {
+    players[id] = new YT.Player('player_' + id, {
+      videoId: id,
+      width: width,
+      height: height,
+      events: { onStateChange: function (event)
+      {
+        switch(event.data)
+        {
+          case YT.PlayerState.PLAYING:
+            return _kmq.push(
+              ['record', 'Played video - ' + name]);
+          case YT.PlayerState.PAUSED:
+            return _kmq.push(
+              ['record', 'Paused video - ' + name]);
+          case YT.PlayerState.ENDED:
+            return _kmq.push(
+              ['record', 'Finished video - ' + name]);
+        }
+      }}
+    });
+  }
+   
+  /**
+   * When the Youtube API is ready start loading in our
+     KM trackable videos
+   */
+  function onYouTubePlayerAPIReady ()
+  {
+    loadKMTrackedVideo('DvLuZVCj-6g', 560, 405, 'Frisor page - video');
+  }
+ 
+</script>
 	<div class="span6 offset1" >
-		<div class="frisor-page-video">
-      <iframe width="540" height="405" src="http://www.youtube.com/embed/DvLuZVCj-6g?rel=0" frameborder="0" allowfullscreen></iframe>
-    </div>
+	  <div class="frisor-page-video" id="player_DvLuZVCj-6g"></div>
 	</div>
 </div>
 <div class="row">

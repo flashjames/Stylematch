@@ -47,25 +47,29 @@
     <meta property="fb:app_id" content="309825002426259" />
 
     {# ------------------VARIOUS ANALYTICS --------------------------#}
-    {% if settings.KISSMETRICS_KEY %}
+
     <script type="text/javascript">
-    var _kmq = _kmq || [];
-    var _kmk = _kmk || '{{ settings.KISSMETRICS_KEY }}';
-    function _kms(u){
+      // needed to be defined even if we dont track, since we still let 
+      // special KMS tracked events be triggered in DEV mode
+      var _kmq = _kmq || [];
+      {% if settings.KISSMETRICS_KEY %}
+      var _kmk = _kmk || '{{ settings.KISSMETRICS_KEY }}';
+      function _kms(u){
         setTimeout(function(){
             var d = document, f = d.getElementsByTagName('script')[0],
             s = d.createElement('script');
             s.type = 'text/javascript'; s.async = true; s.src = u;
             f.parentNode.insertBefore(s, f);
         }, 1);
-    }
-    _kms('//i.kissmetrics.com/i.js');
-    _kms('//doug1izaerwt3.cloudfront.net/' + _kmk + '.1.js');
-    {% if user.is_authenticated %}
-    _kmq.push(['identify', '{{ user.email }}']);
-    {% endif %}
+      }
+      _kms('//i.kissmetrics.com/i.js');
+      _kms('//doug1izaerwt3.cloudfront.net/' + _kmk + '.1.js');
+      {% if user.is_authenticated %}
+      _kmq.push(['identify', '{{ user.email }}']);
+      {% endif %}
+      {% endif %} 
     </script>
-    {% endif %}
+
     {% if user.is_authenticated and settings.INTERCOM_KEY %}
     <script id="IntercomSettingsScriptTag">
       (function() {

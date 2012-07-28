@@ -180,6 +180,13 @@
   </div>
 </div>
 
+{% if visibility_notification.approved %}
+<script type="text/javascript">
+  _kmq.push(['record', 'completed profile']);
+</script>
+{% endif %}
+
+
 {# Code to toogle the message modal, if any visibility notification should be displayed. #}
 {% if visibility_notification.approved or visibility_notification.visible %}
 <script>

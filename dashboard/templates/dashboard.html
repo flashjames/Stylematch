@@ -159,8 +159,8 @@
         <h2>Hej! </h2>
         <p>Nu har du gjort klart alla de steg som krävs för att få vara med i söklistan. Vi kommer inom de närmaste 24 timmarna att se över din profil och sedan lägga in den i vår söklista! </p>
         <p>Du kommer få ett meddelande HÄR när din profil blir synlig i söklistan!</p>
-        <p>Du kan redan nu använda din profil genom att sprida den till vänner och kunder genom din personliga adress (<a href="{% url 'profile_display_with_profile_url' slug=user.userprofile.profile_url as profile_url %}{{ profile_url }}">http://stylematch.se{{ profile_url }}</a>).</p>
-        <p>Glöm inte att du alltid kan göra din profil lite bättre, den blir ditt nya ansikte på internet! </p>
+        <p>Du kan redan nu börja sprida din profil, genom att sprida den till vänner och kunder genom din personliga adress (<a href="{% url 'profile_display_with_profile_url' slug=user.userprofile.profile_url as profile_url %}{{ profile_url }}">http://stylematch.se{{ profile_url }}</a>).</p>
+	<p>Du kan även få smarta tips på hur du marknadsför din profil genom att trycka på knappen marknadsför din profil nu!</p>
         {% endif %}
 
         {% if visibility_notification.visible %}
@@ -176,9 +176,11 @@
         <div class="onpage-message-sender">
           <span><img src="{{ STATIC_URL }}img/martin_liten.jpg"></span>
           <span class="sender-name">Martin från StyleMatch</span>
+	  <a href="{% url 'promote_page' as promote_page %}{{ promote_page }}" class="btn btn-info btn-large">Marknads för din profil nu</a>
+		
         </div>
 	<div class="modal-footer">
-	  <a href="#" class="btn" data-dismiss="modal">Stäng</a>
+	  
 	</div>
       </div>
     </div>
@@ -198,7 +200,7 @@
   /* Toggle modal if any message incomming */
   setTimeout(function() {
   $('#onpage-message').modal('show')
-  }, 3000);
+  }, 500);
   
 </script>
 {% endif %}

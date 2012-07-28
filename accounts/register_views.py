@@ -116,10 +116,10 @@ class RegisterCustomBackend(DefaultBackend):
         user.save()
 
         # update the used invitecode (if any)
-        invite_code = kwargs['invite_code']
-        if invite_code is not None:
-            invite_code.reciever = user
-            invite_code.save()
+        #invite_code = kwargs['invite_code']
+        #if invite_code is not None:
+        #    invite_code.reciever = user
+        #    invite_code.save()
 
         return user
 
@@ -132,9 +132,9 @@ class UserRegistrationForm(RegistrationForm):
     email = forms.CharField(required=False)
     first_name = forms.CharField(label="Förnamn")
     last_name = forms.CharField(label="Efternamn")
-    invite_code = forms.CharField(label="Inbjudningskod "
-                                        "(just nu behövs en inbjudan "
-                                        "för att gå med)")
+    #invite_code = forms.CharField(label="Inbjudningskod "
+    #                                    "(just nu behövs en inbjudan "
+    #                                    "för att gå med)")
 
     username = forms.EmailField(max_length=64, label="Emailadress")
 
@@ -151,7 +151,7 @@ class UserRegistrationForm(RegistrationForm):
 
         return email
 
-    def clean_invite_code(self):
+    def UNUSED_clean_invite_code(self):
         """
         Validates that the user have supplied a valid invite code.
         And marks the code as used, if the other fields are correctly filled.

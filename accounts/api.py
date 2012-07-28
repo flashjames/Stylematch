@@ -472,7 +472,7 @@ class ProfileResource(ModelResource):
         resource_name = "profiles"
         model = UserProfile
         limit = 10
-        queryset = UserProfile.objects.filter(visible=True).order_by('?')
+        queryset = UserProfile.objects.filter(visible=True).order_by('-picture_upload_date')
 
 
 class FeaturedProfileResource(ProfileResource):

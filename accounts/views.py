@@ -417,6 +417,10 @@ class EditImagesView(LoginRequiredMixin, CreateView):
 
         context['crop_coords_form'] = CropCoordsForm()
 
+        # used to know if user came from profile page and want to edit profile image
+        if self.kwargs.has_key('change_profileimage'):
+            context['change_profileimage'] = True
+
         return context
 
     def resize_image(self, original_image):

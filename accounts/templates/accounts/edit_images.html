@@ -206,7 +206,12 @@
   <!-- the code that does the magic on the page -->
   <script src="{{ STATIC_URL }}js/picture.js"></script>
   {% endblock %}
-  
+
+  {# Toogle upload profileimage modal, if user came from display profile page #}
+  {% if change_profileimage %}
+  <script>$('#image-upload-dialog-profileimage').modal('toggle')</script>
+  {% endif %}
+    
 </div>
 
 </div>

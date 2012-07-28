@@ -61,7 +61,9 @@
     }
     _kms('//i.kissmetrics.com/i.js');
     _kms('//doug1izaerwt3.cloudfront.net/' + _kmk + '.1.js');
+    {% if user.is_authenticated %}
     _kmq.push(['identify', '{{ user.email }}']);
+    {% endif %}
     </script>
     {% endif %}
     {% if user.is_authenticated and settings.INTERCOM_KEY %}

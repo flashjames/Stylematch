@@ -6,7 +6,7 @@
 
 {% block head-javascripts %}
 {{ block.super }}
-<script src="{{ GALLERIA_SCRIPT }}" type="text/javascript" />
+<script src="{{ GALLERIA_SCRIPT }}" type="text/javascript"></script>
 <script src="{{ STATIC_URL }}js/bootstrap-modal.js" type="text/javascript"></script>
 {% endblock %}
 
@@ -81,7 +81,9 @@
     <blockquote><p>{{ profile.profile_text|linebreaksbr }}</p></blockquote>
 
     {% include "book_me_modal_snippet.html" %}
-    <a class="btn btn-large btn-info pull-right book-me-btn"  data-toggle="modal" href="#bookmemodal" onclick="_gaq.push(['_trackEvent', 'Privatperson - Profil', 'Boka frisör', '{{ first_name }} {{ last_name }}'])">Boka mig!</a>
+    <a class="btn btn-large btn-info pull-right book-me-btn"  data-toggle="modal" href="#bookmemodal"
+    {% if settings.GOOGLE_ANALYTICS_KEY %}
+        onclick="_gaq.push(['_trackEvent', 'Privatperson - Profil', 'Boka frisör', '{{ first_name }} {{ last_name }}'])"{% endif %}>Boka mig!</a>
 
   </div>
   <div class="span3" id="salon-information">

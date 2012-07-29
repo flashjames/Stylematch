@@ -110,7 +110,7 @@ urlpatterns += patterns(
      TipView.as_view(),
      {},
      'tip'),
-    (r'^om-oss/',
+    (r'^om-stylematch/',
      TemplateView.as_view(template_name="about_us.html"),
      {},
      'about_page'),

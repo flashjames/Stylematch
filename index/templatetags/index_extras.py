@@ -14,32 +14,12 @@ def pdb(element):
     import ipdb; ipdb.set_trace()
     return element
 
+
 @register.simple_tag
 def current_url(request, url):
    from django.core.urlresolvers import resolve
    current_url = resolve(request.get_full_path()).url_name
    return current_url
-
-
-@register.simple_tag
-def google_analytics():
-    if settings.PRODUCTION:
-        return '<script src="%sjs/google_analytics.js" type="text/javascript"></script>' % settings.STATIC_URL
-
-    return ""
-
-
-@register.simple_tag
-def intercom_analytics():
-    if settings.PRODUCTION:
-        return '<script src="%sjs/intercom_analytics.js" type="text/javascript"></script>' % settings.STATIC_URL
-
-    return ""
-
-
-@register.simple_tag
-def facebook():
-        return '<script src="%sjs/facebook.js" type="text/javascript"></script>' % settings.STATIC_URL
 
 
 @register.filter
@@ -104,6 +84,7 @@ def do_active(parser, token):
         raise TemplateSyntaxError, "%r takes at least two arguments" % bits[0]
     return ActiveIfInListNode(bits[1], bits[2:])
 
+
 def active(parser, token):
     """
     Given an item and an arbitrary number of arguments
@@ -114,6 +95,7 @@ def active(parser, token):
 
     return do_active(parser, token)
 active = register.tag(active)
+
 
 class ActiveIfInListNode(Node):
     def __init__(self, master, comparables):
@@ -137,7 +119,7 @@ class ActiveIfInListNode(Node):
             except VariableDoesNotExist:
                 var = None
             comparables.append(var)
-            
+
         path = request.path
         # need to urllencode the path, else it wont match swedish-chars
         path = urllib.quote(path.encode('utf-8'))

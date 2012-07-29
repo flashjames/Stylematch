@@ -21,7 +21,6 @@ MEDIA_URL = 'http://dev-jens.s3-website-eu-west-1.amazonaws.com/'
 
 # reset, STATIC_URL has changed
 ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
-JQUERY_SCRIPT = STATIC_URL + "js/jquery/jquery-1.7.1.js"
 GALLERIA_URL = STATIC_URL + "js/galleria/src/"
 
 DEFAULT_FILE_STORAGE = STATICFILES_STORAGE = ('storages.backends'

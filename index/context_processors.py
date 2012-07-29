@@ -1,10 +1,6 @@
 from django.conf import settings  # import the settings file
 
 
-def jquery_script(context):
-    return {'JQUERY_SCRIPT': settings.JQUERY_SCRIPT}
-
-
 def galleria_urls(request):
     """links to gelleria jquery library"""
     static_url = getattr(settings, 'STATIC_URL')
@@ -21,5 +17,6 @@ def galleria_urls(request):
         'GALLERIA_THEME': galleria_theme,
     }
 
-def google_analytics(context):
-    return { 'GOOGLE_ANALYTICS_KEY' : settings.GOOGLE_ANALYTICS_KEY }
+
+def django_settings(context):
+    return { 'settings': settings }

@@ -32,7 +32,6 @@ MEDIA_URL = 'http://stylematch.s3-website-eu-west-1.amazonaws.com/'
 
 # reset, STATIC_URL has changed
 ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
-JQUERY_SCRIPT = STATIC_URL + "js/jquery/jquery-1.7.1.js"
 GALLERIA_URL = STATIC_URL + "js/galleria/src/"
 
 DEFAULT_FILE_STORAGE = STATICFILES_STORAGE = ('storages.backends'
@@ -50,3 +49,9 @@ GOOGLE_ANALYTICS_KEY = "UA-31224755-1"
 
 # Google API key
 GOOGLE_API_KEY = "AIzaSyDA3wWYlEqxN178D42MBkL2wcZwZCCtqwk"
+
+# Kissmetrics Key
+KISSMETRICS_KEY = "6baa0dd7f1e6af4d6ab136449204547afab5afaf"
+
+# InterCom Key
+INTERCOM_KEY = "k27ag4y"

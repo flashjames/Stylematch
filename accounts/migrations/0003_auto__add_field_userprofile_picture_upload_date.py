@@ -8,26 +8,24 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         
-        # Adding field 'InviteCode.inviter'
-        db.add_column('accounts_invitecode', 'inviter', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='invitecode_inviter', null=True, to=orm['auth.User']), keep_default=False)
+        # Adding field 'UserProfile.picture_upload_date'
+        db.add_column('accounts_userprofile', 'picture_upload_date', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, null=True, blank=True), keep_default=False)
+        if not db.dry_run:
+            for user in orm.UserProfile.objects.all():
+                try:
+                    img = orm['accounts.GalleryImage'].objects.filter(user=user.user).latest("upload_date")
+                    date = img.upload_date
+                except:
+                    date = datetime.datetime.now() - datetime.timedelta(days=3*365)
 
-        # Adding field 'InviteCode.reciever'
-        db.add_column('accounts_invitecode', 'reciever', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='invitecode_reciever', null=True, to=orm['auth.User']), keep_default=False)
-
-        # Changing field 'InviteCode.comment'
-        db.alter_column('accounts_invitecode', 'comment', self.gf('django.db.models.fields.CharField')(max_length=500, null=True))
+                user.picture_upload_date = date
+                user.save()
 
 
     def backwards(self, orm):
         
-        # Deleting field 'InviteCode.inviter'
-        db.delete_column('accounts_invitecode', 'inviter_id')
-
-        # Deleting field 'InviteCode.reciever'
-        db.delete_column('accounts_invitecode', 'reciever_id')
-
-        # Changing field 'InviteCode.comment'
-        db.alter_column('accounts_invitecode', 'comment', self.gf('django.db.models.fields.CharField')(default='default', max_length=500))
+        # Deleting field 'UserProfile.picture_upload_date'
+        db.delete_column('accounts_userprofile', 'picture_upload_date')
 
 
     models = {
@@ -41,7 +39,7 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "['order']", 'object_name': 'GalleryImage'},
             'comment': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'display_on_profile': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'file': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'}),
+            'file': ('django.db.models.fields.files.ImageField', [], {'max_length': '250', 'blank': 'True'}),
             'filename': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'order': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
@@ -81,7 +79,7 @@ class Migration(SchemaMigration):
         'accounts.profileimage': {
             'Meta': {'object_name': 'ProfileImage'},
             'cropped': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'file': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'}),
+            'file': ('django.db.models.fields.files.ImageField', [], {'max_length': '250', 'blank': 'True'}),
             'filename': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'upload_date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
@@ -104,12 +102,22 @@ class Migration(SchemaMigration):
             'price': ('django.db.models.fields.IntegerField', [], {'max_length': '6'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
         },
+        'accounts.speciality': {
+            'Meta': {'object_name': 'Speciality'},
+            'description': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '40'})
+        },
         'accounts.userprofile': {
             'Meta': {'object_name': 'UserProfile'},
             'approved': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'approved_message_read': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'latitude': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '18', 'decimal_places': '10', 'blank': 'True'}),
+            'longitude': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '18', 'decimal_places': '10', 'blank': 'True'}),
             'number_on_profile': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'max_length': '1'}),
             'personal_phone_number': ('django.db.models.fields.CharField', [], {'max_length': '30', 'null': 'True', 'blank': 'True'}),
+            'picture_upload_date': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
             'profile_image_cropped': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'profile_image_cropped'", 'unique': 'True', 'null': 'True', 'to': "orm['accounts.ProfileImage']"}),
             'profile_image_uncropped': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'profile_image_uncropped'", 'unique': 'True', 'null': 'True', 'to': "orm['accounts.ProfileImage']"}),
             'profile_text': ('django.db.models.fields.CharField', [], {'max_length': '500', 'blank': 'True'}),
@@ -120,10 +128,12 @@ class Migration(SchemaMigration):
             'salon_phone_number': ('django.db.models.fields.CharField', [], {'max_length': '30', 'null': 'True', 'blank': 'True'}),
             'salon_url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
             'show_booking_url': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'specialities': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['accounts.Speciality']", 'null': 'True', 'blank': 'True'}),
             'temporary_profile_url': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '36'}),
             'url_online_booking': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
             'user': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['auth.User']", 'unique': 'True'}),
             'visible': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'visible_message_read': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'zip_adress': ('django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'})
         },
         'auth.group': {

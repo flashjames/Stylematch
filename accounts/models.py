@@ -119,6 +119,11 @@ def check_profile(sender, userprofile, create_checks=True, **kwargs):
     # If the user passed the test, approve the user.
     if not userprofile.approved:
         userprofile.approved = True
+
+        # if we arrived from a userprofile save will be called later.
+        if sender != userprofile:
+            userprofile.save()
+
         logger.debug("User %s just got approved!" % userprofile)
 
         # Send email notifying admin about this.
@@ -452,7 +457,7 @@ class UserProfile(DirtyFieldsMixin, models.Model):
                                     null=True,
                                     blank=True)
 
-    specialities = models.ManyToManyField(Speciality)
+    specialities = models.ManyToManyField(Speciality, null=True, blank=True)
 
     url_online_booking = models.URLField("Adress till online bokningssystem",
                                          blank=True)
@@ -489,7 +494,7 @@ class UserProfile(DirtyFieldsMixin, models.Model):
     # so to make it easier to sort, we save the latest uploaded
     # picture date here
     picture_upload_date = models.DateTimeField(auto_now_add=True,
-                                       editable=False)
+                                       editable=False, null=True)
 
     def save(self, *args, **kwargs):
         # remove accidental whitespaces from city
@@ -606,6 +611,11 @@ class InviteCode(models.Model):
                                  null=True,
                                  blank=True,
                                  on_delete=models.SET_NULL)
+
+    @classmethod
+    def generate_code(cls):
+        import code_generation
+        return code_generation.encode_url(cls.objects.all().count() +1)
 
     def __unicode__(self):
         if self.inviter is None:

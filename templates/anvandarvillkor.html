@@ -1,17 +1,34 @@
-{# load google_analytics #}
 {% load bootstrap %}
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <script type="text/javascript" src="{{ JQUERY_SCRIPT }}"></script>
-    
-    {% bootstrap_js all %}
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
     {% bootstrap_less %}
     {# Used to load js that's specific to a page #}
-    {% block html-head %}{% endblock %}
     <title>{% block title %}Användarvillkor | StyleMatch{% endblock %}</title>
+
+    {% if settings.GOOGLE_ANALYTICS_KEY %}
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', '{{ settings.GOOGLE_ANALYTICS_KEY }}']);
+      // custom variables  
+      _gaq.push(['_setCustomVar', 1, 'Current User', '{{ user.first_name }}', 1]);
+      _gaq.push(['_setCustomVar', 2, 'Current User ID', '{{ user.id }}', 1]);
+      _gaq.push(['_setCustomVar', 3, 'Record Owner ID', '101', 3]);
+      _gaq.push(['_setCustomVar', 4, 'Record Type', 'Job', 3]);
+      _gaq.push(['_setCustomVar', 5, 'Record ID', '87', 3]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    {% endif %}
   </head>
   <body class="body-padding-zero body-beta-background">
 
@@ -29,8 +46,6 @@
               <h1>Användarvillkor StyleMatch</h1>
 
               <p>
-
-
                 <h2>1. Godkännande av användarvillkor</h2>
 
                 StyleMatch (Organisationsnummer: 556871-7689 Adress: Rydsvägen 8A, 584 31 Linköping, Östergötlands län<br>
@@ -155,17 +170,11 @@
                 Tolkning och tillämpning av Användarvillkoren ska ske enligt svensk lag.
                 Tvist i anledning av Användarvillkoren avgörs av svensk allmän domstol, med uteslutande av annat tvistelösningsforum.</p>
 
-
-
-
               <!-- stop -->
-
             </div>
-	    
-            {% endblock %}
+          {% endblock %}
       </section>
       {% block footer %} {% endblock %}
       </div>
-      {# analytics #}
   </body>
 </html>

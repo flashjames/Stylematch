@@ -300,16 +300,14 @@ SENTRY_LOGGING = {
 # django-registration - dont remove or stuff will break
 ACCOUNT_ACTIVATION_DAYS = 7
 
-# Galleria, jquery - should use some cdn in production
-JQUERY_SCRIPT = STATIC_URL + "js/jquery/jquery-1.7.1.js"
+# Galleria - should use some cdn in production
 GALLERIA_URL = STATIC_URL + "js/galleria/src/"
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
     'django.contrib.auth.context_processors.auth',
-    'index.context_processors.jquery_script',
     'index.context_processors.galleria_urls',
-    'index.context_processors.google_analytics',
+    'index.context_processors.django_settings',
     # used to access STATIC_URL in templates
     'django.core.context_processors.media',
     'django.core.context_processors.static',
@@ -327,3 +325,9 @@ GOOGLE_ANALYTICS_KEY = ""
 
 # Google API Key
 GOOGLE_API_KEY = ""
+
+# Kissmetrics Key
+KISSMETRICS_KEY = ""
+
+# InterCom Key
+INTERCOM_KEY = ""

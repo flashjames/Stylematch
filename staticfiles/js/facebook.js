@@ -1,5 +1,4 @@
 // Used to load like button and like widget on first page
-// included with tag from index_extras templatetag
 
 (function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];

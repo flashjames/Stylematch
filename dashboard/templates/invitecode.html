@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load url from future %}
 
+{% block title %}Inbjudningskoder{% endblock %}
+
 {% block html-head %}
 <script type="text/javascript" href="{{ STATIC_URL }}js/bootstrap-collapse.js"></script>
 {% endblock %}
@@ -11,10 +13,9 @@
   <small>Bjud in kollegorna till StyleMatch!</small>
   </h1>
 </div>
-<div class="row">
-  <div class="span12">
-    Lorem ipsum om varför detta är bra och vad de tjänar på det osv osv
-  </div>
+<div class="alert alert-warning">
+  <strong>Hoppsan!</strong>
+  Detta är fortfarande under utveckling. Inbjudningskoder kommer snart!
 </div>
 
 <div class="row">
@@ -31,7 +32,7 @@
       {% endfor %}
     </table>
     {% else %}
-    <div class="alert alert-error">Du har inga koder kvar. Bravo!</div>
+    <div class="alert alert-error">Du har inga koder!</div>
     {#<a href="#">Behöver du fler?</a>#}
     {% endif %}
   </div>

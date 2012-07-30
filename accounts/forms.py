@@ -103,7 +103,9 @@ class UserProfileForm(ModelForm):
 
     class Meta:
         model = UserProfile
-        exclude = ('visible','approved',)
+        exclude = ('visible','approved',
+                   'approved_message_read', 'visible_message_read',
+                  )
         widgets = {
             'profile_text': Textarea(attrs={'cols': 120, 'rows': 10}),
             }

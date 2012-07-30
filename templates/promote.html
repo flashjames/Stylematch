@@ -6,50 +6,91 @@
 {% block meta-tag-image %}
 <meta property="og:image" content="{{ profile_image }}">
 {% endblock %}
-{% block content %}
 
+
+{% block content %}
+<script src="{{ STATIC_URL }}js/bootstrap-modal.js" type="text/javascript"></script>
 <div class="container">
   <div class="row promote">
   	<div class="span12">
   		<h1>Marknadsför din profil</h1>
+  		<h2>Smarta tips på hur du gör för att marknadsföra din StyleMatch profil</h2>
   	</div>
   
   	<div class="span12">
   	
   	<div id='fb-root'></div>
-  	<img src="{{ profile_image }}">
-  	<h3>Dela din profil på Facebook för att visa alla din vänner att dem nu kan hitta dig på StyleMatch</h3>
-  		<a onclick='postToFeed(); return false;'><img src="{{ STATIC_URL }}img/dela-knapp.png"></a>
-    <p id='msg'></p>
+  	<ol>
+  		<li>
+  			<h3>Dela din profil på Facebook   <a id="share-facebook" onclick='postToFeed(); return false;'><img src="{{ STATIC_URL }}img/dela-knapp.png"></a></h3>
+  			<h4>Det kommer se ut såhär: </h4>
+    <p id='msg'></p>
+			 <img src="{{ STATIC_URL }}img/promote/Faacebookprintlinn.jpg"/> 		
+		</li>
+ 		
+ 		<li>
+ 			<h3>Be dina vänner och kunder att rekommendera dig på StyleMatch</h3>
+ 			<p>Genom att be dina vänner och kunder att rekommendera dig på StyleMatch så ser din profil bättre ut för nya kunder. En frisör med många rekommendationer vill fler boka! Varje gång någon rekommenderar dig så kommer det upp på deras på Facebook-Wall(om de vill) vilket också gör att du få fler besökare till din profil.</p>
+ 			<img src="{{ STATIC_URL }}img/promote/rekommenderaexempel.jpg"/>
+ 		</li>
+ 		
+ 		
+ 		<li>
+	 		<h3>Lägg upp din StyleMatch-adress på din blogg eller hemsida</h3>
+	 		<p>Genom att lägga upp din StyleMatch-adress på din blogg eller på din salongs hemsida så gör du dig själv en tjänst. Dina kunder får automatiskt ett mer personligt intryck av dig och kan se dina bilder och läsa om dig vilket ökar chansen att de ringer och bokar en tid.</p>
+	 		
+	 		<textarea id="promoteUrlText"  rows="5">http://www.stylematch.se/{{ profile.profile_url }}</textarea>
+	 		
+ 		</li>
+ 		
+ 		<li>
+	 		<h3>Beställ hem StyleMatch-visitkort</h3>
+	 		<p>Du kan beställa hem visitkort för att dela ut till kunder och vänner. Detta är bra sätt att få dina kunder att hitta till din StyleMatch Nu kan du beställa hem visitkort för att dela ut till dina kunder! På så sätt blir det enklare för dina kunder att hitta din profil där de kan ta del av din kontaktinformation och bilder inför nästa gång de klipper sig hos dig!</p>
+	 		
+	 		<img src="{{ STATIC_URL }}img/promote/Visitkort-baksida.png"/><img src="{{ STATIC_URL }}img/promote/Visitkort-framsida.png"/>
+	 		
+	 		<h4 id="offer-visitkort">Eftersom du har valt att gå med i StyleMatch tidigt så bjuder vi på de första 25 visitkorten, <span>helt gratis!</span></h4>
+	 		{% include "order_visitkort_modal_snippet.html" %}
+    <a class="btn btn-large btn-info order-visitkort-btn"  data-toggle="modal" href="#ordervisitkort">Beställ visitkort</a>
 
+ 		</li>
+ 		
+ 	</ol>
 		
-    <script> 
-      FB.init({appId: "YOUR_APP_ID", status: true, cookie: true});
+<script> 
+      FB.init({appId: "YOUR_APP_ID", status: true, cookie: true});
 
-      function postToFeed() {
+      function postToFeed() {
 
-        // calling the API ...
-        var obj = {
-          method: 'feed',
-          link: 'http://www.stylematch.se/{{ profile.temporary_profile_url }}',
-          picture: '{{ profile_image }}',
-          name: '{{ user.first_name.title }} {{ user.last_name.title }}, frisör i {{ profile.salon_city.title }}',
-          caption: 'http://www.stylematch.se/',
+        // calling the API ...
+        var obj = {
+          method: 'feed',
+          link: 'http://www.stylematch.se/{{ profile.temporary_profile_url }}',
+          picture: '{{ profile_image }}',
+          name: '{{ user.first_name.title }} {{ user.last_name.title }}, frisör i {{ profile.salon_city.title }}',
+          caption: 'http://www.stylematch.se/',
  		  description: '{{profile_description_formatted}}',
  		  redirect_uri: 'http://www.stylematch.se/'
-        };
+        };
 
-        function callback(response) {
-          document.getElementById('msg').innerHTML = "Post ID: " + response['post_id'];
-        }
+        function callback(response) {
+          document.getElementById('msg').innerHTML = "Post ID: " + response['post_id'];
+        }
 
-        FB.ui(obj, callback);
-      }
-    
-    </script>
-	</div>
+        FB.ui(obj, callback);
+      }
+    
+    </script>
+    
+
+    
+    	</div>
   
   </div>
 </div>
+
+<script type="text/javascript">
+	$('#ordervisitkort').modal(options);
+</script>
 
 {% endblock %}

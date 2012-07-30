@@ -1,0 +1,77 @@
+<div class="modal hide fade no-underline-links" id="ordervisitkort">
+ 
+ <div class="modal-header">
+    <button class="close" data-dismiss="modal">×</button>
+    <h3>Beställ Visitkort</h3>
+  </div>
+ 
+ <div class="modal-body">
+
+ 	<p>Vänligen fyll i den information du vill ha på ditt visitkort.</p>
+ 	
+ 	 	<form class="form-horizontal">
+  <fieldset>
+       <div class="control-group">
+       
+       	 <legend>På Visitkortet</legend>
+       	
+	      <label class="control-label" for="input01">Namn</label>
+	      <div class="controls">
+	        <input type="text" class="input-xlarge" id="input01" placeholder="{{ user.first_name.title }} {{ user.last_name.title }}">
+	        <p class="help-block"></p>
+	      </div>
+	      
+	      <label class="control-label" for="input02">Salongsnamn</label>
+	      <div class="controls">
+	        <input type="text" class="input-xlarge" id="input02" placeholder="{{ profile.salon_name.title }}">
+	        <p class="help-block"></p>
+	      </div>
+	      
+	      <label class="control-label" for="input03">Telefonnummer</label>
+	      <div class="controls">
+	        <input type="text" class="input-xlarge" id="input03" placeholder="{% if profile.number_on_profile %}{{ profile.personal_phone_number }}{% else %}{{ profile.salon_phone_number }}{% endif %}">
+	        <p class="help-block"></p>
+	      </div>
+	      
+	      	      <label class="control-label" for="input08">StyleMatch-adress</label>
+	      <div class="controls">
+	        <input type="text" class="input-xlarge" id="input08" placeholder="http://www.stylematch.se/{{ profile.profile_url }}">
+	        <p class="help-block"></p>
+	      </div>
+	      
+	      <legend>Leveransinformation</legend>
+	      
+	       <label class="control-label" for="input05">Adress</label>
+	      <div class="controls">
+	        <input type="text" class="input-xlarge" id="input05" placeholder="{{ profile.salon_adress.title }}">
+	        <p class="help-block"></p>
+	      </div>
+      
+	      <label class="control-label" for="input06">Stad</label>
+	      <div class="controls">
+	        <input type="text" class="input-xlarge" id="input06" placeholder="{{ profile.salon_city.title }}">
+	        <p class="help-block"></p>
+	      </div>
+	      
+	      	      <label class="control-label" for="input07">Postnummer</label>
+	      <div class="controls">
+	        <input type="text" class="input-xlarge" id="input07" placeholder="{{ profile.zip_adress }}">
+	        <p class="help-block"></p>
+	      </div>
+      
+    </div>
+    <button class="btn btn-primary btn-large" type="submit">Skicka Beställning</button>
+  </fieldset>
+</form>
+ 	
+ 	
+ 	 
+ </div>
+
+ <div class="modal-footer">
+<button class=" btn " data-dismiss="modal" style="margin-right:40px;">Stäng</button>
+</div>
+ 
+ 
+
+</div>

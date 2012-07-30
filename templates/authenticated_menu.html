@@ -48,27 +48,35 @@
           {% url 'search' as sp %}
           {% url 'profile_display_with_profile_url' slug=user.get_profile.profile_url as pdr %}
           {% url 'promote_page' as pp %}
-          <li class="{% active request ei  %}"><a href="{{ ei  }}">Lägg upp bilder</a></li>
-          <li class="dropdown {% active request pe pes pah pdr pp %}">
-		    <a href="#"
+            <li class="{% active request pdr %}"><a href="{{ pdr }}">Visa profil</a></li>
+            <li class="{% active request ei  %}"><a href="{{ ei  }}">Lägg upp bilder</a></li>
+            <li class="{% active request pp %}"><a href="{{ pp }}">Marknadsför</a></li>
+
+		    <li class="dropdown {% active request pe pes pah %}"> <a href="#"
 		          class="dropdown-toggle"
 		          data-toggle="dropdown">
-		          Min Profil
+		          Förändra profil
 		          <b class="caret"></b>
 		    </a>
 		    <ul class="dropdown-menu">
-		    <li class="{% active request pdr %}"><a href="{{ pdr }}">Visa profil</a></li>
+		 
 		          <li class="{% active request pe  %}"><a href="{{ pe  }}">Förändra kontaktinformation</a></li>
 		          <li class="{% active request pes %}"><a href="{{ pes }}">Förändra prislista</a></li>
 		          <li class="{% active request pah %}"><a href="{{ pah }}">Förändra öppettider</a></li>
 		          <li class="{% active request psp %}" style="display:none;"><a href="{{ psp }}">Förändra specialitéer</a></li>
-		          <li class="{% active request pp %}"><a href="{{ pp }}">Marknadsför din profil</a></li>
 		    </ul>
 		    </li>
 		    
+		    <li class="dropdown {% active request ip sp %}"> <a href="#"
+		          class="dropdown-toggle"
+		          data-toggle="dropdown">
+		          Andra frisörer
+		          <b class="caret"></b>
+		    </a>
+		        <ul class="dropdown-menu">
 		    <li class="{% active request ip  %}"><a href="{{ ip }}">Inspiration</a></li>
 		    <li class="{% active request sp  %}"><a href="{{ sp }}">Se andra frisörer</a></li>
-          
+		    </ul>
           
 
         </ul>

@@ -1,0 +1,24 @@
+{% load url from future %}
+<div id="fb-root"></div>
+<!--Some facebook code requires the fb-root div -->
+<script src="{{ STATIC_URL }}js/facebook.js" type="text/javascript"></script>
+<script>
+  /* LOAD FACEBOOK's JS SDK */
+  (function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/sv_SE/all.js";
+  fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+  /* END JS SDK */
+
+  facebookAppId = '{{ settings.FACEBOOK_APP_ID }}';
+  staticUrl = '{{ STATIC_URL }}';
+  authenticationUrl = "{% url "socialauth_begin" "facebook" %}";
+  function facebookJSLoaded(){
+       FB.init({appId: facebookAppId, status: false, cookie: true, xfbml: true, oauth: true});
+       F = new facebookClass(facebookAppId);
+  }
+  window.fbAsyncInit = facebookJSLoaded;
+</script>

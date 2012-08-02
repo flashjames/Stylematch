@@ -11,6 +11,7 @@ from django.db.models.signals import post_save, post_delete
 from django.core.files.storage import default_storage
 from django.template.loader import render_to_string
 from registration.signals import user_registered
+from social_auth.signals import socialauth_registered
 from accounts.signals import approved_user_criteria_changed
 
 from tools import list_with_time_interval, format_minutes_to_pretty_format
@@ -139,48 +140,6 @@ def check_profile(sender, userprofile, create_checks=True, **kwargs):
 approved_user_criteria_changed.connect(check_profile)
 
 
-def create_temporary_profile_url(sender, user, request, **kwargs):
-    """
-    Create a standard profile url at signup step using first name and
-    last name. Add number if the url is already taken.
-
-    John Nelson       -> /john-nelson
-    John Nelson again -> /john-nelson2
-
-    If, for some reason, first name isn't in POST data, bail out.
-    """
-
-    if 'first_name' not in request.POST:
-        return
-    first_name = request.POST['first_name']
-    last_name = request.POST['last_name']
-
-    # Get all users with the same name
-    users = User.objects.filter(first_name=first_name,
-                                last_name=last_name)
-
-    # This forces a double name to be separate in the list.
-    # Eva Marie Johnson => ['Eva', 'Marie', 'Johnson']
-    names = (first_name + " " + last_name).split(' ')
-
-    # Join them together using hyphen
-    # ['Eva', 'Marie', 'Johnson'] => "Eva-Marie-Johnson"
-    tmp_url = "-".join(names).lower()
-    tmp_url = re.sub(r'\s', '', tmp_url)
-
-    # Append a number depending on how many that has the exact name before
-    # ex. 2 users before have the exact same name:
-    # "Eva-Marie-Johnson" => "Eva-Marie-Johnson3"
-    if len(users) > 1:
-        tmp_url += "%d" % (len(users))
-
-    # Save the URL
-    userprofile = user.userprofile
-    userprofile.profile_url = tmp_url
-    userprofile.save()
-user_registered.connect(create_temporary_profile_url)
-
-
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     """
@@ -194,6 +153,68 @@ def create_user_profile(sender, instance, created, **kwargs):
                 temporary_profile_url=uuid.uuid4().hex,
                                    )
         OpenHours.objects.create(user=instance)
+
+        
+def create_temporary_profile_url(first_name, last_name, userprofile):
+    """
+    Create a standard profile url at signup step using first name and
+    last name. Add number if the url is already taken.
+
+    John Nelson       -> /john-nelson
+    John Nelson again -> /john-nelson2
+    """
+
+    # Get all users with the same name
+    users = User.objects.filter(first_name=first_name,
+                                last_name=last_name)
+
+    # This forces a double name to be separate in the list.
+    # Eva Marie Johnson => ['Eva', 'Marie', 'Johnson']
+    names = (first_name + " " + last_name).split(' ')
+
+    # Join them together using hyphen
+    # ['Eva', 'Marie', 'Johnson'] => "eva-marie-johnson"
+    tmp_url = "-".join(names).lower()
+    tmp_url = re.sub(r'\s', '', tmp_url)
+
+    # Append a number depending on how many that has the exact name before
+    # ex. 2 users before have the exact same name:
+    # "Eva-Marie-Johnson" => "Eva-Marie-Johnson3"
+    if len(users) > 1:
+        tmp_url += "%d" % (len(users))
+
+    # Save the URL
+    userprofile.profile_url = tmp_url
+    userprofile.save()
+    
+
+def create_url_regular_registration(sender, user, request, **kwargs):
+    """
+    Call create create_temporary_profile_url with right parameters,
+    when user registrated manually ie. not with facebook
+
+    If, for some reason, first name isn't in POST data, bail out.
+    """
+    if 'first_name' not in request.POST:
+        logger.error('Regular user registration: Couldnt get first_name')
+        return
+
+    first_name = request.POST['first_name']
+    last_name = request.POST['last_name']
+    create_temporary_profile_url(first_name, last_name, user.userprofile)
+user_registered.connect(create_url_regular_registration)
+
+
+def create_url_fb_registration(sender, user, response, details, **kwargs):
+    """
+    Call create create_temporary_profile_url with right parameters,
+    when user registrated with Facebook
+    """
+    import pdb;pdb.set_trace()
+    first_name = user.first_name
+    last_name = user.last_name
+    create_temporary_profile_url(first_name, last_name, user.userprofile)
+socialauth_registered.connect(create_url_fb_registration)
 
 
 class DirtyFieldsMixin(object):

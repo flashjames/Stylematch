@@ -9,6 +9,8 @@
 
 {% block title %}Registrera konto{% endblock %}
 {% block content %}
+
+{# facebook login/register overlay css #}
 <script type="text/javascript">
   _kmq.push(['record', 'viewed signup form']);
 </script>
@@ -16,12 +18,18 @@
 
   <div class="row">
     <div class="span6">
-      <form method="post" action="">
-        {% csrf_token %}
-        <fieldset>
-          <div class="beta-signup-banner shadow-beta well">
 
-            <center><h1 class="beta-banner">G&aring; med nu!</h1></center>
+      <div class="beta-signup-banner shadow-beta well">
+
+        <center><h1 class="beta-banner">G&aring; med nu!</h1></center>
+        <div id="facebook_login_js">
+          <input onclick="F.connect(); return false;" type="image" src="{{ STATIC_URL }}img/registrera_med_facebook.png" />
+	  
+        </div>
+	<h4>Eller registrera med mail</h4>
+        <form method="post" action="">
+          {% csrf_token %}
+          <fieldset>
             <div class="beta-signup-left control-group" style="float: left; {% if form.first_name.errors %} color: red; {% endif %} ">
 
               <label class="control-label" style="{% if form.first_name.errors %} color: red; {% endif %} " >{{ form.first_name.label }}</label>
@@ -76,27 +84,23 @@
 
             <p style="clear: left;" />
             <center>
-              <button type="submit" name="register" class="btn-large btn-info">Skapa konto</button>
-              <p style="margin-top:10px;font-size:12px;">Genom att klicka på "Skapa konto" bekräftar du att du är en utbildad frisör, samt att du läst och accepterat våra <a target="_blank" href="{% url 'anvandarvillkor' as av %}{{ av }}">användarvillkor</a></p>
+              <button type="submit" name="register" class="btn-large btn-info">Registrera</button>
+              <p style="margin-top:10px;font-size:12px;">Genom att klicka på "Registrera" bekräftar du att du är en utbildad frisör, samt att du läst och accepterat våra <a target="_blank" href="{% url 'anvandarvillkor' as av %}{{ av }}">användarvillkor</a></p>
 
             </center>
-        </fieldset>
-      </form>
+          </fieldset>
+        </form>
 
       </div>
+    </div>
 
       <div class="span6 account-register-info">
         <img src="{{ STATIC_URL }}img/printscreen-sign-up-2.png">
 
       </div>
 
-
     </div>
   </div>
-
-
-  <br><br>
-
 
 
   {% endblock %}

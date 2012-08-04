@@ -247,37 +247,53 @@ input, button, select, textarea {
 
 
 
-#loginCollapse{
+#loginCollapse {
 	  background-color:@content-color;  
-	  label{
+	  label {
 	  		display:inline;
 	  }
-	  input{
+	  input {
 	  		display:inline;
 	  		margin-left:10px;
 	  }
-	  .container{
+	  .container {
 	  		background-color: transparent;  
 	  }
-	  span{
+	  span {
 	  		font-size:30px;
 	  		font-weight: 100;
 	  		margin-right:50px;
+			display:block;
 	  }
-	  .btn{
+	  .btn {
 	   		vertical-align: top;
 	   		margin-left:10px;
 	  }
-	  form{
-	  		margin-top:25px;
+	  form {
+	      display:inline-block;
+	      margin-top:25px;
+	      margin-left:49px;
 	  }
-	  a{
+	  a {
 	   		font-size: 10px;
-	   		margin-left: 10px; 
+	   		margin-left: 5px; 
 	  }
-	  img{
+	  img.pull-right  {
+	      margin-left:49px;
+	  }
+	  img {
 	   		display:inline;
 	   		height:29px;
+			
+	  }
+	  .facebook-login { 
+	      display:inline-block;
+	      position:relative;
+	      top:-4px;
+	      input {
+		  margin:0px 0px 0px 0px;
+		  width:185px;
+	      }
 	  }
 }
 

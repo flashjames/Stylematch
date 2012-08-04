@@ -125,15 +125,18 @@
     <div id="loginCollapse" class="accordion-body collapse" style="height: 0px; ">
       <div class="container">
         <div class="accordion-inner">
+	  <div class="facebook-login">
+	    <input onclick="F.connect(); return false;" type="image" src="{{ STATIC_URL }}img/logga_in_med_facebook.png" />
+	  </div>
           <form  action="/login/" method="post">
             {% csrf_token %}
-            <span>Logga in</span>
             <input type="text" name="username" value="" id="username" placeholder="Emailadress" />
             <input  type="password" name="password" value="" id="password" placeholder="Lösenord" />
             <input type="submit" value="Logga in" class="btn btn-info" />
             <a href="{% url 'auth_password_reset' %}">Glömt lösenord?</a>
             <a href="#" data-toggle="collapse" data-target="#loginCollapse"><img class="pull-right" src="{{ STATIC_URL }}img/closeButton.png"/></a>
             <input type="hidden" name="next" value="{{ next|escape }}" />
+	    
           </form>
         </div>
       </div>

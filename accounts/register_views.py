@@ -94,6 +94,30 @@ class SignupStep2View(SaveProfileImageView):
         return context
 
 
+def handle_invite_code(request, new_user):
+    """
+    Check if the user uses an invite code, if it's a valid invite cod,
+    set the invite code as used by this user.
+    
+    ´new user´ is the user that was created with the invite code
+    """
+    if request.GET.get('kod'):
+        supplied_invite_code = request.GET.get('kod')
+        try:
+            invite_code = InviteCode.objects.get(
+                        invite_code__iexact=supplied_invite_code,
+                        used=False,
+                        reciever=None)
+        except InviteCode.DoesNotExist:
+            logger.debug('New user registered: Supplied invite code'
+                         ' but it wasnt valid')
+        else:
+            logger.info('New user registered: Used a valid invite code')
+            invite_code.used = True
+            invite_code.reciever = new_user
+            invite_code.save()
+
+
 class RegisterCustomBackend(DefaultBackend):
     """
     Extends django registration DefaultBackend, since we want
@@ -118,6 +142,8 @@ class RegisterCustomBackend(DefaultBackend):
         user.is_active = True
 
         user.save()
+
+        #handle_invite_code(request, user)
 
         # update the used invitecode (if any)
         #invite_code = kwargs['invite_code']

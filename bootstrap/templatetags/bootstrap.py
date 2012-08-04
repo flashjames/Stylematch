@@ -54,7 +54,7 @@ def bootstrap_less():
         output = '\n'.join(output)
 
     else:
-        output = '<link charset="utf-8" rel="stylesheet" type="text/css" href="%scss/style.css">' % (settings.STATIC_URL)
+        output = '<link charset="utf-8" rel="stylesheet" type="text/css" href="%scss/styl.css">' % (settings.STATIC_URL)
 
     return output
 

@@ -7,7 +7,7 @@ Werkzeug==0.8.3
 boto==2.3.0
 commonware==0.2.4
 distribute==0.6.24
--e git@github.com:Jenso/django-braces.git@608c8704e49bb40f1610213f58621a3fdd26bf5c#egg=django_braces-dev
+-e git+git@github.com:Jenso/django-braces.git@608c8704e49bb40f1610213f58621a3fdd26bf5c#egg=django_braces-dev
 django-debug-toolbar==0.9.4
 django-defaultsite==1.1
 django-extensions==0.9

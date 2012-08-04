@@ -197,6 +197,7 @@ SOCIAL_AUTH_SESSION_EXPIRATION = False
 SOCIAL_AUTH_ERROR_KEY = 'socialauth_error'
 SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
 FACEBOOK_AUTH_EXTRA_ARGUMENTS = {'display': 'popup'}
+SOCIAL_AUTH_ASSOCIATE_BY_MAIL = True
 # END social_auth
 
 # inform where user profile model is defined

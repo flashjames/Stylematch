@@ -150,7 +150,7 @@ def create_user_profile(sender, instance, created, **kwargs):
         UserProfile.objects.create(
                 user=instance,
                 temporary_profile_url=uuid.uuid4().hex,
-                #referrer_key=encode_url(instance.id),
+                referrer_key=encode_url(instance.id),
                                    )
         OpenHours.objects.create(user=instance)
 
@@ -430,6 +430,10 @@ class UserProfile(DirtyFieldsMixin, models.Model):
                                              unique=True,
                                              max_length=36)
 
+    # used to track who invited who
+    referrer_key = models.CharField(editable=False,
+                                    max_length=15)
+
     # select phone number to display on profile
     DISPLAY_NUMBER_CHOICES = (
         (True, 'Personligt telefonnummer'),
@@ -609,21 +613,14 @@ post_delete.connect(delete_filefield, ProfileImage)
 post_delete.connect(delete_filefield, GalleryImage)
 
 
-class InviteCode(models.Model):
+class SentFriendInvite(models.Model):
     """
     NOTE: Keep the ``used`` boolean, because if the reciever gets
     deleted, there is no other way to know if the code has been
     used or not.
-
     """
     used = models.BooleanField("Have the invite code been used?",
                                default=False)
-    invite_code = models.CharField("The string to use as invite code",
-                                   max_length=30)
-    comment = models.CharField("To who was the invitecode given? And so on..",
-                               max_length=500,
-                               null=True,
-                               blank=True)
     inviter = models.ForeignKey(User, related_name='invitecode_inviter',
                                 null=True,
                                 blank=True)
@@ -632,10 +629,6 @@ class InviteCode(models.Model):
                                  blank=True,
                                  on_delete=models.SET_NULL)
 
-    @classmethod
-    def generate_code(cls):
-        import code_generation
-        return code_generation.encode_url(cls.objects.all().count() +1)
 
     def __unicode__(self):
         if self.inviter is None:

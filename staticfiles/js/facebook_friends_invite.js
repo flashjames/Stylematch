@@ -43,19 +43,6 @@
             url += " ORDER BY name LIMIT " + this.options.limit + " OFFSET " + this.options.page * this.options.limit;
             return url
         },
-
-        initialize: function(appId, app_token) {
-            facebookAppId = '279761435376574';
-            facebookDefaultScope = ["email", "user_birthday"];
-            staticUrl = '/static/';
-            FB.init({appId: facebookAppId, status: false, cookie: true, xfbml: true, oauth: true});
-            // Initialize the facebook api
-            /*FB.init
-              appId : appId
-              app_token : app_token
-              status : true*/
-        },
-
         // A custom fetch method that uses the facebook api
         // instead of backbones fetch()
         fetch: function(options) {
@@ -141,8 +128,9 @@
         el: $("body"),
         initialize:function () {
 	    _.bindAll(this, 'realInit', 'addAll', 'addOne');
+
             // need to wait for Facebook JS to be initialized
-            window.fbAsyncInit = this.realInit;
+	    fbEnsureInit(this.realInit);
         },
         realInit: function(){
             this.facebookFriendsList = new FacebookFriendsCollection();

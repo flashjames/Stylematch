@@ -18,7 +18,9 @@
   authenticationUrl = "{% url "socialauth_begin" "facebook" %}";
   function facebookJSLoaded(){
        FB.init({appId: facebookAppId, status: false, cookie: true, xfbml: true, oauth: true});
+       window.fbApiInit = true; //init flag
        F = new facebookClass(facebookAppId);
   }
   window.fbAsyncInit = facebookJSLoaded;
+ 
 </script>

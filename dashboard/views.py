@@ -1,16 +1,13 @@
 # coding:utf-8
 import json
 import logging
-from django.views.generic import TemplateView, View
-from django.core.urlresolvers import reverse
-from accounts.models import Service, OpenHours, GalleryImage, InviteCode
-from index.models import InspirationVote
 from django.views.generic import TemplateView
+from django.core.urlresolvers import reverse
+from accounts.models import Service, GalleryImage
+from index.models import InspirationVote
 from braces.views import LoginRequiredMixin
 from dashboard.google_analytics import profile_statistics
-from accounts.models import UserProfile
 from datetime import datetime, timedelta
-from django.http import HttpResponse
 
 logger = logging.getLogger(__name__)
 
@@ -203,18 +200,10 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class InviteCodeView(LoginRequiredMixin, TemplateView):
+class InviteFriendsView(LoginRequiredMixin, TemplateView):
     template_name = "invitecode.html"
 
     def get_context_data(self, **kwargs):
-        context = super(InviteCodeView, self).get_context_data(**kwargs)
-
-        # only hit the database once
-        all_codes = InviteCode.objects.filter(inviter=self.request.user)
-        unused_codes = all_codes.filter(reciever=None)
-        used_codes = all_codes.exclude(reciever=None)
-
-        context['codes'] = unused_codes
-        context['used_codes'] = used_codes
+        context = super(InviteFriendsView, self).get_context_data(**kwargs)
 
         return context

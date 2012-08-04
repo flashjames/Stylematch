@@ -1,3 +1,14 @@
+// http://stackoverflow.com/questions/3548493/how-to-detect-when-facebooks-fb-init-is-complete
+function fbEnsureInit(callback) {
+    if(!window.fbApiInit) {
+        setTimeout(function() {fbEnsureInit(callback);}, 50);
+    } else {
+        if(callback) {
+            callback();
+        }
+    }
+}
+
 facebookClass = function() {};
 facebookClass.prototype = {
     connect: function () {

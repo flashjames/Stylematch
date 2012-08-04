@@ -1,5 +1,5 @@
 #-*- coding:utf-8 -*-
-from accounts.models import InviteCode, UserProfile
+from accounts.models import UserProfile
 from braces.views import LoginRequiredMixin
 from django import forms
 from django.forms import ModelForm, ValidationError
@@ -103,19 +103,20 @@ def handle_invite_code(request, new_user):
     """
     if request.GET.get('kod'):
         supplied_invite_code = request.GET.get('kod')
-        try:
-            invite_code = InviteCode.objects.get(
-                        invite_code__iexact=supplied_invite_code,
-                        used=False,
-                        reciever=None)
-        except InviteCode.DoesNotExist:
-            logger.debug('New user registered: Supplied invite code'
-                         ' but it wasnt valid')
-        else:
-            logger.info('New user registered: Used a valid invite code')
-            invite_code.used = True
-            invite_code.reciever = new_user
-            invite_code.save()
+        #try:
+        #    pass
+        #invite_code = InviteCode.objects.get(
+        #            invite_code__iexact=supplied_invite_code,
+        #            used=False,
+        #            reciever=None)
+        #except InviteCode.DoesNotExist:
+        #    logger.debug('New user registered: Supplied invite code'
+        #                 ' but it wasnt valid')
+        #else:
+        #    logger.info('New user registered: Used a valid invite code')
+        #    invite_code.used = True
+        #    invite_code.reciever = new_user
+        #    invite_code.save()
 
 
 class RegisterCustomBackend(DefaultBackend):

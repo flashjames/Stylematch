@@ -14,7 +14,7 @@ from registration.signals import user_registered
 from social_auth.signals import socialauth_registered
 from accounts.signals import approved_user_criteria_changed
 
-from tools import list_with_time_interval, format_minutes_to_pretty_format
+from tools import list_with_time_interval, format_minutes_to_pretty_format, encode_url
 
 weekdays_model = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun']
 
@@ -139,7 +139,6 @@ def check_profile(sender, userprofile, create_checks=True, **kwargs):
     return True
 approved_user_criteria_changed.connect(check_profile)
 
-
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     """
@@ -151,6 +150,7 @@ def create_user_profile(sender, instance, created, **kwargs):
         UserProfile.objects.create(
                 user=instance,
                 temporary_profile_url=uuid.uuid4().hex,
+                #referrer_key=encode_url(instance.id),
                                    )
         OpenHours.objects.create(user=instance)
 
@@ -210,7 +210,6 @@ def create_url_fb_registration(sender, user, response, details, **kwargs):
     Call create create_temporary_profile_url with right parameters,
     when user registrated with Facebook
     """
-    import pdb;pdb.set_trace()
     first_name = user.first_name
     last_name = user.last_name
     create_temporary_profile_url(first_name, last_name, user.userprofile)

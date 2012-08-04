@@ -4,10 +4,36 @@
 {% block title %}Inbjudningskoder{% endblock %}
 
 {% block html-head %}
-<script type="text/javascript" href="{{ STATIC_URL }}js/bootstrap-collapse.js"></script>
+<script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-collapse.js"></script>
+<script>
+/* Facebook widget */
+
+      (function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/sv_SE/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+    </script>
 {% endblock %}
 
 {% block content %}
+<style>
+.friend-name-highlighted { 
+font-weight:bold;
+}
+</style>
+<input type="text" id="filter-friends" name="filter-friends">
+<!-- Underscore.js Templates -->
+<script type="text/template" id="tpl-facebook-friend-item">
+  <p><% if(highlighted_name) { %> <%= highlighted_name %> <% } else { %> <%= name %> <% } %> <p>
+  <img src="<%= pic_square %>">
+  <button>Bjud in</button>
+</script>
 <div class="page-header">
   <h1>Inbjudningskoder
   <small>Bjud in kollegorna till StyleMatch!</small>
@@ -67,6 +93,25 @@
     </div>
   </div>
 </div>
+
+
 {% endif %}{# if used_codes #}
+
+<style>
+.fb-friend {
+display:block;
+}
+.fb-friend p {
+display:inline-block;
+}
+</style>
+
+
+<div class="facebook-friends">
+  <ul>
+  </ul>
+</div>
+<script type="text/javascript" src="{{ STATIC_URL }}js/facebook_friends_invite.js"></script>
+
 {% endblock %}
 

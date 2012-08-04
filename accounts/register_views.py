@@ -17,13 +17,17 @@ from accounts.views import (OpenHoursView,
 
 from index.models import BetaEmail
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 class SignupViewForm(ModelForm):
     """
     Form used in registration step 1, used to filter out wanted fields
 
     """
-    salon_phone_number = forms.CharField(label='Telefonnummer för bokning')
+    salon_phone_number = forms.CharField(label='Telefonnummer för bokning',
+                                         required=False)
 
     def __init__(self, *args, **kwargs):
         super(SignupViewForm, self).__init__(*args, **kwargs)

@@ -7,12 +7,12 @@ Werkzeug==0.8.3
 boto==2.3.0
 commonware==0.2.4
 distribute==0.6.24
--e git://github.com/trew/django-braces@608c8704e49bb40f1610213f58621a3fdd26bf5c#egg=django_braces-dev
+-e git@github.com:Jenso/django-braces.git@608c8704e49bb40f1610213f58621a3fdd26bf5c#egg=django_braces-dev
 django-debug-toolbar==0.9.4
 django-defaultsite==1.1
 django-extensions==0.9
 django-liveserver==0.1a-2
--e git+git@github.com:trew/django-registration@346823d4df5db902dffe1ec2f447d38a52889c47#egg=django_registration-dev
+-e git+git@github.com:Jenso/django-registration@346823d4df5db902dffe1ec2f447d38a52889c47#egg=django_registration-dev
 django-ses==0.4.1
 django-social-auth==0.6.6
 django-storages==1.1.4

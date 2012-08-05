@@ -6,6 +6,7 @@
     var viewstate_reg = /(__VIEWSTATE\|)(\/[A-Za-z0-9\/\+\=]*)/;
     var eventvalidation = '__EVENTVALIDATION';
     var eventvalid_reg = /(__EVENTVALIDATION\|)(\/[A-Za-z0-9\/\+\=]*)/;
+    var current_date_val = '';
 
     function login() {
         $.get('http://sffbokning.extenda.se/boka/cjstudiounique/login.aspx', function(response, status, xhr) {
@@ -103,7 +104,7 @@
 	    'ctl04$gvServices$ctl02$CheckBoxButton':'on',
 	    'ctl04$teHelpTextDivPos':'',
 	    '__EVENTTARGET':'ctl04$gvServices',
-	    '__EVENTARGUMENT':'Select$0',
+	    '__EVENTARGUMENT':'Select$0', // select first service in list
 	    '__LASTFOCUS':'',
             '__VIEWSTATE':viewstate_val,
             '__EVENTVALIDATION':eventvalidation_val,
@@ -142,10 +143,12 @@
     }
 
     /*
+      --DONE--
       Need to get the calendar, and get first value for __EVENTARGUMENT.
       This number is a int that is increased for every day
       Eg. okt 1 - 4500, okt 2, 4501 and so on.
       
+      --TODO--
       For the next requests (for next dates), this should be increased automatically, 
       so we dont need to do a extra XHR request for every single date, to get this number.
      */
@@ -155,11 +158,14 @@
         viewstate_val = result[2];
         result = date_page.match(eventvalid_reg);
         eventvalidation_val = result[2];
+	current_date_reg = /\<input.*name="ctl04\$teBookingDateChoiceText".*value\=\"([0-9-]+)\"/;
+	var date_result = date_page.match(current_date_reg);
+	current_date_val = date_result[1];
         //console.log('open calendar - viewstate and eventvalidation', eventvalidation_val, viewstate_val);
 
         $.post('http://sffbokning.extenda.se/boka/cjstudiounique/services.aspx?sname=cjstudiounique', {
 	    'smScriptManager':'ctl04$upMultiView|ctl04$bBookingDateChoicePicker',
-	    'ctl04%24teBookingDateChoiceText':'2012-07-26', //current-date - get from date_page request
+	    'ctl04%24teBookingDateChoiceText': current_date_val, //current-date - get from date_page request
 	    'ctl04%24rblBookingDateChoiceOptions':'1',
 	    'ctl04%24teEmployeeDetailsDivPos':'',
 	    'ctl04%24teHelpTextDivPos':'',
@@ -182,16 +188,25 @@
         viewstate_val = result[2];
         result = open_calendar.match(eventvalid_reg);
         eventvalidation_val = result[2];
+
+	var event_arg_reg = /<a href=\s?\s?\"\s?javascript\s?\:\s?\_\_doPostBack\(\'ctl04\$clBookingDateChoice\'\s?,\'(V[0-9]{2,4})\s?\'/g;
+ 
+	// we have two matches with the regex, previous and next month
+	// therefor we use exec() to get the second one.
+	while( res = event_arg_reg.exec(open_calendar) ) {
+	    event_arg = res[1];
+	}
+
         //console.log('get next month - viewstate and eventvalidation', eventvalidation_val, viewstate_val);
 
         $.post('http://sffbokning.extenda.se/boka/cjstudiounique/services.aspx?sname=cjstudiounique', {
 	    'smScriptManager':'ctl04$upMultiView|ctl04$clBookingDateChoice',
-	    'ctl04%24teBookingDateChoiceText':'2012-07-26', //current-date
+	    'ctl04%24teBookingDateChoiceText': current_date_val, //current-date
 	    'ctl04%24rblBookingDateChoiceOptions':'1',
 	    'ctl04%24teEmployeeDetailsDivPos':'',
 	    'ctl04%24teHelpTextDivPos':'',
 	    '__EVENTTARGET':'ctl04$clBookingDateChoice',
-	    '__EVENTARGUMENT':'V4596', // 
+	    '__EVENTARGUMENT': event_arg, // this could be a future problem, when does it reset? should have a logger return information on problems here.
 	    '__LASTFOCUS':'',
             '__VIEWSTATE':viewstate_val,
             '__EVENTVALIDATION':eventvalidation_val,
@@ -201,7 +216,6 @@
             select_date(success);
         });
     }
-
 
 
     function select_date(date_page) {
@@ -219,7 +233,7 @@
 	    'ctl04$teEmployeeDetailsDivPos':'',
 	    'ctl04$teHelpTextDivPos':'',
 	    '__EVENTTARGET':'ctl04$clBookingDateChoice',
-	    '__EVENTARGUMENT':'4626',
+	    '__EVENTARGUMENT':'4626', // dynamic
 	    '__LASTFOCUS':'',
             '__VIEWSTATE':viewstate_val,
             '__EVENTVALIDATION':eventvalidation_val,
@@ -233,6 +247,9 @@
     }
     
     function get_timeslots_for_date(selected_date) {
+	/* There can be more pages with times for a date, need to implement
+	   functionality to get those */
+	
 	var result = selected_date.match(viewstate_reg);
         viewstate_val = result[2];
         result = selected_date.match(eventvalid_reg);
@@ -241,7 +258,7 @@
 
         $.post('http://sffbokning.extenda.se/boka/cjstudiounique/services.aspx?sname=cjstudiounique', {
 	    'smScriptManager':'ctl04$upNavButtons|ctl04$bNextPage',
-	    'ctl04$teBookingDateChoiceText':'2012-08-31',
+	    'ctl04$teBookingDateChoiceText':'2012-09-31',
 	    'ctl04$rblBookingDateChoiceOptions':'1',
 	    'ctl04$teEmployeeDetailsDivPos':'',
 	    'ctl04$teHelpTextDivPos':'',
@@ -262,7 +279,9 @@
 
 
     $(document).ready(function() {
+	console.log("start");
 	login();
+	console.log("end");
     });
 
 

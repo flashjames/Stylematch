@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% load url from future %}
 
+{% block head-javascripts %}
+{{ block.super }}
+<script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
+{% endblock %}
+
 {% block html-head %}
 {% comment %}
 <meta name="keywords" content="frisör {{ profile.salon_city }},hitta frisör {{ profile.salon_city }},boka frisör,boka frisör {{ profile.salon_city }},frisör">
@@ -10,34 +17,32 @@
 <script>
   PROFILE_API_URL = "{% url 'api_dispatch_list' api_name="profile" resource_name="profiles" %}";
 </script>
-<script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
-<script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
-<script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
-
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
 
 <script type="text/javascript">
   function moveScroller() {
-  var a = function() {
-  var b = $(window).scrollTop(){% if user.is_authenticated %} + 40{% endif %};
-  var d = $("#scroller-anchor").offset().top;
-  var c=$("#scroller");
-  var footer = $('.base-footer-div').offset().top;
-  var profile_list_height = $('#profile-list').height();
-  if (b>d && profile_list_height > 510) {
-  pos = footer - (b+600);
-  if (pos > 0) pos = 0;
-  {% if user.is_authenticated %}pos += 40;{% endif %}
-  c.css({position:"fixed",top:pos+"px"})
-  } else {
-  if (b<=d) {
-            c.css({position:"relative",top:""})
-            }
-            }
-            };
-            $(window).scroll(a);a();
-            }
-            </script>
+    var scrollTrigger = function() {
+      var windowTop = $(window).scrollTop(){% if user.is_authenticated %} + 40{% endif %};
+      var anchor = $("#scroller-anchor").offset().top;
+      var scroller = $("#scroller");
+      var footer = $('.base-footer-div').offset().top;
+      var profile_list_height = $('#profile-list').height();
+      if ( (windowTop > anchor) && (profile_list_height > 210) ) {
+        pos = footer - (windowTop + 300);
+        if (pos > 0) {
+          pos = 0;
+        }
+        {% if user.is_authenticated %}pos += 40;{% endif %}
+        scroller.css({ position:"fixed",top:pos+"px" })
+      } else {
+        if (windowTop <= anchor) {
+          scroller.css({position:"relative",top:""})
+        }
+      }
+    };
+    $(window).scroll(scrollTrigger);
+    scrollTrigger();
+  }
+</script>
 
 <script type="text/javascript"
         src="http://maps.googleapis.com/maps/api/js?key=AIzaSyACqrBMuk4aRYqv8mAb-d-Z1k-QOct9sW0&sensor=false">
@@ -92,34 +97,21 @@
           <option value="norrköping">Norrköping</option>
         </select>
 
-        {% comment %}
-        <input type="text" name="city" id="city" value="Linköping">
-        {% endcomment %}
         <button id="search-button" class="btn btn-primary submit">Sök frisör</button>
-      </div><!--<a href="/">Tillbaka till förstasidan</a>-->
-      {% comment %}
-      <div id="filter-container">
+      </div>
+      <div id="filter-container" style="display:none;">
 
-        <span class="filter-text">Prisklass:</span>
-        <select id="price">
-          <option value="any">Alla
-          <option value="1">$
-          <option value="2">$$
-          <option value="3">$$$
-          <option value="4">$$$$
+        {% if specialities %}
+        <span class="filter-text">Specialité:</span>
+        <select id="speciality">
+          <option value="">Ingen vald</option>
+          <option value="">----------</option>
+          {% for speciality in specialities %}
+          <option value="{{ speciality.id }}">{{ speciality.name }}</option>
+          {% endfor %}
         </select>
-        {% endcomment %}
-        {% comment %}
-        <label class="checkbox filter-text">
-          <input type="checkbox" name="online-booking" id="online-booking">
-          Har online-bokning
-        </label>
-        {% endcomment %}
-        {% comment %}
-        <input type="checkbox" name="available" id="available">
-        <span class="filter-text">Har öppet nu</span>
-
-      </div>{% endcomment %}
+        {% endif %}
+      </div>
     </div>
   </div>
 </div>

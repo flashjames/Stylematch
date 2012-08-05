@@ -1,4 +1,4 @@
-# Django settings
+# coding:utf-8
 import os
 import iptools
 
@@ -180,12 +180,15 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-FACEBOOK_APP_ID     = '279761435376574'
-FACEBOOK_API_SECRET = 'c3325b623f9f09303004b77aed231a71'
+FACEBOOK_APP_ID     = '309825002426259'
+FACEBOOK_API_SECRET = 'd22e35493d901a90fafb05ae6e26fe7c'
 
+# when we upgrade to django 1.4,
+#these should be evaluated with reverse_lazy() and url_name
 LOGIN_URL          = '/login/'
-LOGIN_REDIRECT_URL = '/'
-LOGIN_ERROR_URL    = '/login-error/'
+LOGIN_REDIRECT_URL = u'/översikt/'
+LOGIN_ERROR_URL    = '/login/'
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/konto/registrering-steg1/'
 
 SOCIAL_AUTH_DEFAULT_USERNAME = 'new_social_auth_user'
 SOCIAL_AUTH_EXTRA_DATA = False
@@ -193,6 +196,8 @@ SOCIAL_AUTH_EXPIRATION = 'expires'
 SOCIAL_AUTH_SESSION_EXPIRATION = False
 SOCIAL_AUTH_ERROR_KEY = 'socialauth_error'
 SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
+FACEBOOK_AUTH_EXTRA_ARGUMENTS = {'display': 'popup'}
+SOCIAL_AUTH_ASSOCIATE_BY_MAIL = True
 # END social_auth
 
 # inform where user profile model is defined
@@ -300,16 +305,14 @@ SENTRY_LOGGING = {
 # django-registration - dont remove or stuff will break
 ACCOUNT_ACTIVATION_DAYS = 7
 
-# Galleria, jquery - should use some cdn in production
-JQUERY_SCRIPT = STATIC_URL + "js/jquery/jquery-1.7.1.js"
+# Galleria - should use some cdn in production
 GALLERIA_URL = STATIC_URL + "js/galleria/src/"
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
     'django.contrib.auth.context_processors.auth',
-    'index.context_processors.jquery_script',
     'index.context_processors.galleria_urls',
-    'index.context_processors.google_analytics',
+    'index.context_processors.django_settings',
     # used to access STATIC_URL in templates
     'django.core.context_processors.media',
     'django.core.context_processors.static',
@@ -327,3 +330,9 @@ GOOGLE_ANALYTICS_KEY = ""
 
 # Google API Key
 GOOGLE_API_KEY = ""
+
+# Kissmetrics Key
+KISSMETRICS_KEY = ""
+
+# InterCom Key
+INTERCOM_KEY = ""

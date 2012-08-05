@@ -36,7 +36,8 @@ from accounts.forms import (UserProfileForm,
                             ServiceForm,
                             GalleryImageForm,
                             ProfileImageForm,
-                            CropCoordsForm)
+                            CropCoordsForm,
+                            SpecialitiesForm)
 
 
 class DisplayProfileView(DetailView):
@@ -318,6 +319,28 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         return self.request.user.userprofile
 
 
+class EditSpecialitiesView(LoginRequiredMixin, UpdateView):
+    """
+    Edit a stylist profile
+    """
+    template_name = "accounts/edit_specialities.html"
+    form_class = SpecialitiesForm
+
+    def get_success_url(self):
+        return reverse('profiles_edit_specialities')
+
+    def form_valid(self, form):
+        messages.success(self.request, "Uppdateringen lyckades!")
+        return super(EditSpecialitiesView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Oops! Något gick fel.")
+        return super(EditSpecialitiesView, self).form_invalid(form)
+
+    def get_object(self):
+        return self.request.user.userprofile
+
+
 class ServicesView(LoginRequiredMixin, TemplateView):
     """
     Display edit services page
@@ -393,6 +416,10 @@ class EditImagesView(LoginRequiredMixin, CreateView):
         context['profile'] = self.request.user.userprofile
 
         context['crop_coords_form'] = CropCoordsForm()
+
+        # used to know if user came from profile page and want to edit profile image
+        if self.kwargs.has_key('change_profileimage'):
+            context['change_profileimage'] = True
 
         return context
 

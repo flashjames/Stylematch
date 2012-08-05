@@ -6,7 +6,8 @@ from django.conf import settings
 from accounts.models import (Service,
                              UserProfile,
                              GalleryImage,
-                             ProfileImage)
+                             ProfileImage,
+                             Speciality)
 from django.forms import ModelForm, ValidationError, Textarea
 from django.utils.translation import ugettext as _
 
@@ -102,7 +103,9 @@ class UserProfileForm(ModelForm):
 
     class Meta:
         model = UserProfile
-        exclude = ('visible','approved',)
+        exclude = ('visible','approved',
+                   'approved_message_read', 'visible_message_read',
+                  )
         widgets = {
             'profile_text': Textarea(attrs={'cols': 120, 'rows': 10}),
             }
@@ -156,4 +159,27 @@ class CropCoordsForm(forms.Form):
     height = forms.IntegerField(widget=forms.HiddenInput())
 
 
+class SpecialitiesForm(ModelForm):
+    """
+    Let users select 5 specialities
+
+    """
+    specialities = forms.ModelMultipleChoiceField(
+                        queryset=Speciality.objects.all(),
+                        label="Specialitéer",
+                        widget=forms.CheckboxSelectMultiple,
+                        required=False
+                    )
+
+    def clean_specialities(self):
+        specialities = self.cleaned_data['specialities']
+        if len(specialities) > 5:
+            raise ValidationError("Du får inte välja fler än 5 specialitéer. "
+                                  "Avmarkera så att du har max 5 st.")
+        else:
+            return specialities
+
+    class Meta:
+        model = UserProfile
+        fields = ('specialities',)
 

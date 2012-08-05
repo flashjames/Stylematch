@@ -4,12 +4,18 @@
 
 {% block title %}Hitta frisör{% endblock %}
 
-{% block pre-bootstrap-less %}
+{% block css-pre-bootstrap-less %}
 <link rel="stylesheet" href="{{ STATIC_URL }}js/chosen/chosen/chosen.css">
 {% endblock %}
 
-{% block html-head %}
+{% block head-javascripts %}
+{{ block.super }}
+<script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
+{% endblock %}
 
+{% block html-head %}
 <meta name="keywords" content="frisör,hitta frisör,boka frisör,hårmode,frisyr,styling"/>
 <meta name="description" content="Hitta en frisör som passar just dig. Låt dig inspireras av frisyrer och uppsättningar frisörer gjort."/>
 <!--Lägg till sen "Vi har frisörer i Sveriges alla städer.-->
@@ -17,14 +23,9 @@
 <script>
     FEATURED_PROFILE_API_URL = "{% url 'api_dispatch_list' api_name="profile" resource_name="featured_profiles" %}";
 </script>
-
-<script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
-<script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
-<script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
-
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
-
 {% endblock %}
+
+{% block body_class %}{{ block.super }} bg-firstpage{% endblock %}
 
   {% block content %}
   
@@ -83,6 +84,7 @@
     </div>
     <div class="span3 join-now-block-frontpage">
         <h2>Är du frisör?</h2>
+        <a id="stylematch_video" title="StyleMatch - Marknadsföring för utbildade frisörer" href="http://www.youtube.com/watch?v=DvLuZVCj-6g&fs=0&showinfo=0&rel=0&autoplay=1"> <img src="{{ STATIC_URL }}img/filmpaforstasidan.jpg"/> </a>
         <a href="{% url 'frisor_page' %}" class="btn btn-large btn-info">Skapa din profil</a>
     </div>
     <div class="pull-right fb-like-box fb-like-box-edited" data-href="http://www.facebook.com/StyleMatch.SE" data-width="232" data-height="280" data-show-faces="true" data-stream="false" data-header="true"></div>
@@ -100,8 +102,6 @@
 	</script>
 
 <script type="text/javascript">
-
-
       /* 
       SlideDown beta-header banner 
       This should be added on every page where we want it.
@@ -111,17 +111,7 @@
 
       $('.beta-header').slideDown();
       }, 3000);
-     
-      /* Facebook widget */
-
-      (function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/sv_SE/all.js#xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
-    </script>
+</script>
 
   <script type="text/javascript">
     $('#find-stylist').submit(function() {
@@ -131,11 +121,46 @@
       return false;
     });
     $('#city-select').change(function() {
-      $('#find-stylist').submit();
+      if ($('#city-select').val()) {
+        window.location = '/' + $('#city-select').val().toLowerCase();
+      }
+      return false;
     });
   </script>
   <!-- the code that does the magic on the page -->
   <script src="{{ STATIC_URL }}js/featured.js"></script>
+  
+  <!-- fanybox -->
+  
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL}}js/jquery.fancybox-1.3.4/fancybox/jquery.fancybox-1.3.4.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL}}js/jquery.fancybox-1.3.4/fancybox/jquery.fancybox-1.3.4.css" media="screen" />   
+    
+<script type="text/javascript">
+jQuery(document).ready(function() {
+		$("#stylematch_video").click(function() {
+                _kmq.push(['record', 'watched video - first page']);
+		$.fancybox({
+			'padding'		: 0,
+			'autoScale'		: false,
+			'transitionIn'	: 'none',
+			'transitionOut'	: 'none',
+			'title'			: this.title,
+			'width'			: 640,
+			'height'		: 385,
+			'href'			: this.href.replace(new RegExp("watch\\?v=", "i"), 'v/'),
+			'type'			: 'swf',
+			'swf'			: {
+			    'wmode'				: 'transparent',
+				'allowfullscreen'	: 'true'
+			}
+		});
+
+		return false;
+	});
+});
+	
+	</script>
 
   {% endblock %}
 

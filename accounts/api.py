@@ -17,7 +17,15 @@ from tastypie.authentication import BasicAuthentication
 from sorl.thumbnail import get_thumbnail
 from django.http import QueryDict
 from datetime import datetime
+from tools import get_unique_filename
+from django.core.files.storage import default_storage
+from PIL import Image
+import imghdr
+import StringIO
+from django.core.files.base import ContentFile
+import logging
 
+logger = logging.getLogger(__name__)
 
 class PerUserAuthorization(Authorization):
     """
@@ -172,6 +180,83 @@ class PictureResource(ModelResource):
         bundle.data['image_url'] = get_image_url(bundle.data['filename'])
         return bundle
 
+    def rotate_image(self, original_image):
+        file_extension = imghdr.what("", original_image.read(2048))
+        original_image.seek(0)
+
+        image = Image.open(original_image)
+        image = image.rotate(-90)
+
+        # Return cropped image as ContentFile
+        tempfile_io = StringIO.StringIO()
+        image.save(tempfile_io, format=file_extension)
+
+        tempfile_io.seek(0)
+        return ContentFile(tempfile_io.read())
+
+
+    def obj_update(self, bundle, request=None, **kwargs):
+        """
+        A ORM-specific implementation of ``obj_update``.
+        """
+        if not bundle.obj or not bundle.obj.pk:
+            # Attempt to hydrate data from kwargs before doing a lookup for the object.
+            # This step is needed so certain values (like datetime) will pass model validation.
+            try:
+                bundle.obj = self.get_object_list(request).model()
+                bundle.data.update(kwargs)
+                bundle = self.full_hydrate(bundle)
+                lookup_kwargs = kwargs.copy()
+
+                for key in kwargs.keys():
+                    if key == 'pk':
+                        continue
+                    elif getattr(bundle.obj, key, NOT_AVAILABLE) is not NOT_AVAILABLE:
+                        lookup_kwargs[key] = getattr(bundle.obj, key)
+                    else:
+                        del lookup_kwargs[key]
+            except:
+                # if there is trouble hydrating the data, fall back to just
+                # using kwargs by itself (usually it only contains a "pk" key
+                # and this will work fine.
+                lookup_kwargs = kwargs
+
+            try:
+                bundle.obj = self.obj_get(request, **lookup_kwargs)
+            except ObjectDoesNotExist:
+                raise NotFound("A model instance matching the provided arguments could not be found.")
+
+        bundle = self.full_hydrate(bundle)
+
+        # Save FKs just in case.
+        self.save_related(bundle)
+
+        # rotate the image if rotate key is defined in the client request
+        if bundle.data.has_key('rotate'):
+            image_unrotated = bundle.obj.file
+            # for some reason the filename isnt like it should
+            filename = os.path.join(settings.PATH_USER_IMGS, image_unrotated.instance.filename)
+            image = default_storage.open(filename)
+
+            rotated_image = self.rotate_image(image)
+            default_storage.delete(filename)
+            default_storage.save(filename, rotated_image)
+
+        # Save the main object.
+        bundle.obj.save()
+
+        # Now pick up the M2M bits.
+        m2m_bundle = self.hydrate_m2m(bundle)
+        self.save_m2m(m2m_bundle)
+        return bundle
+
+    
+    def hydrate(self, bundle):
+        #import pdb;pdb.set_trace()
+        if bundle.data.has_key('rotate'):
+            pass
+        return bundle
+
     class Meta:
         resource_name = 'picture'
         pass_request_user_to_django = True
@@ -179,7 +264,10 @@ class PictureResource(ModelResource):
         authorization = PerUserAuthorization()
         queryset = GalleryImage.objects.all()
 
-        excludes = ['file', 'user']
+        # ``file`` is required to be excluded for obj_update
+        # otherwise that field will be overwritten with an unusable
+        # path.
+        excludes = ['user','file']
         limit = 50
         max_limit = 0
         validation = FormValidation(form_class=PictureForm)
@@ -291,7 +379,16 @@ class ProfileResource(ModelResource):
             self.profile_image_size = filters['profile_image_size']
             del filters['profile_image_size']
 
-        return super(ProfileResource, self).build_filters(filters)
+        # build the rest of the filters
+        orm = super(ProfileResource, self).build_filters(filters)
+
+        if 'speciality' in filters:
+            users = UserProfile.objects.filter(specialities__in=filters['speciality'])
+            filter = {'user__in': [i.pk for i in users]}
+
+            # update the filter with our userprofiles
+            orm.update(filter)
+        return orm
 
     def dehydrate(self, bundle):
         """
@@ -332,13 +429,15 @@ class ProfileResource(ModelResource):
             bundle.data['profile_url'] = bundle.data['temporary_profile_url']
         del bundle.data['temporary_profile_url']
 
+        # obj is a userprofile
         try:
-            user = User.objects.get(pk=bundle.data['id'])
-            bundle.data['first_name'] = user.first_name
-            bundle.data['last_name'] = user.last_name
+            bundle.data['first_name'] = bundle.obj.user.first_name
+            bundle.data['last_name'] = bundle.obj.user.last_name
         except User.DoesNotExist:
-            bundle.data['first_name'] = ""
-            bundle.data['last_name'] = ""
+            bundle.data['first_name'] = bundle.data['last_name'] = ""
+
+        # get the specialities, since they are obviously left out (??)
+        bundle.data['specialities'] = [s for s in bundle.obj.specialities.values()]
         return bundle
 
     class Meta:
@@ -362,11 +461,13 @@ class ProfileResource(ModelResource):
                   'profile_url',
                   'temporary_profile_url',
                   'latitude',
-                  'longitude']
+                  'longitude',
+                  'speciality']
         filtering = {
                 'salon_city' : ['iexact',], # 'startswith','endswith'],
                 'show_booking_url' : ['exact',],
                 'profile_image_size': ['exact',],
+                'specialities': ['iexact',],
                 }
         resource_name = "profiles"
         model = UserProfile

@@ -1,5 +1,5 @@
 #-*- coding:utf-8 -*-
-from accounts.models import InviteCode, UserProfile
+from accounts.models import UserProfile
 from braces.views import LoginRequiredMixin
 from django import forms
 from django.forms import ModelForm, ValidationError
@@ -17,13 +17,17 @@ from accounts.views import (OpenHoursView,
 
 from index.models import BetaEmail
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 class SignupViewForm(ModelForm):
     """
     Form used in registration step 1, used to filter out wanted fields
 
     """
-    salon_phone_number = forms.CharField(label='Telefonnummer för bokning')
+    salon_phone_number = forms.CharField(label='Telefonnummer för bokning',
+                                         required=False)
 
     def __init__(self, *args, **kwargs):
         super(SignupViewForm, self).__init__(*args, **kwargs)
@@ -90,6 +94,31 @@ class SignupStep2View(SaveProfileImageView):
         return context
 
 
+def handle_invite_code(request, new_user):
+    """
+    Check if the user uses an invite code, if it's a valid invite cod,
+    set the invite code as used by this user.
+    
+    ´new user´ is the user that was created with the invite code
+    """
+    if request.GET.get('kod'):
+        supplied_invite_code = request.GET.get('kod')
+        #try:
+        #    pass
+        #invite_code = InviteCode.objects.get(
+        #            invite_code__iexact=supplied_invite_code,
+        #            used=False,
+        #            reciever=None)
+        #except InviteCode.DoesNotExist:
+        #    logger.debug('New user registered: Supplied invite code'
+        #                 ' but it wasnt valid')
+        #else:
+        #    logger.info('New user registered: Used a valid invite code')
+        #    invite_code.used = True
+        #    invite_code.reciever = new_user
+        #    invite_code.save()
+
+
 class RegisterCustomBackend(DefaultBackend):
     """
     Extends django registration DefaultBackend, since we want
@@ -115,11 +144,13 @@ class RegisterCustomBackend(DefaultBackend):
 
         user.save()
 
+        #handle_invite_code(request, user)
+
         # update the used invitecode (if any)
-        invite_code = kwargs['invite_code']
-        if invite_code is not None:
-            invite_code.reciever = user
-            invite_code.save()
+        #invite_code = kwargs['invite_code']
+        #if invite_code is not None:
+        #    invite_code.reciever = user
+        #    invite_code.save()
 
         return user
 
@@ -132,9 +163,9 @@ class UserRegistrationForm(RegistrationForm):
     email = forms.CharField(required=False)
     first_name = forms.CharField(label="Förnamn")
     last_name = forms.CharField(label="Efternamn")
-    invite_code = forms.CharField(label="Inbjudningskod "
-                                        "(just nu behövs en inbjudan "
-                                        "för att gå med)")
+    #invite_code = forms.CharField(label="Inbjudningskod "
+    #                                    "(just nu behövs en inbjudan "
+    #                                    "för att gå med)")
 
     username = forms.EmailField(max_length=64, label="Emailadress")
 
@@ -151,7 +182,7 @@ class UserRegistrationForm(RegistrationForm):
 
         return email
 
-    def clean_invite_code(self):
+    def UNUSED_clean_invite_code(self):
         """
         Validates that the user have supplied a valid invite code.
         And marks the code as used, if the other fields are correctly filled.

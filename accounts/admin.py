@@ -1,4 +1,4 @@
-from accounts.models import UserProfile, GalleryImage, ProfileImage, InviteCode, Featured, ScheduledCheck
+from accounts.models import UserProfile, GalleryImage, ProfileImage, Featured, ScheduledCheck, Speciality
 from django import forms
 from django.contrib import admin
 from django.contrib.auth.models import User
@@ -82,11 +82,11 @@ class UserProfileAdmin(UserAdmin):
     list_display = ('username', 'email', 'first_name', 'last_name', 'date_joined', 'last_login')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'userprofile__salon_city',)
 
-
 admin.site.unregister(User)
 admin.site.register(User, UserProfileAdmin)
 admin.site.register(ProfileImage, ImageAdmin)
 admin.site.register(GalleryImage, ImageAdmin)
-admin.site.register(InviteCode)
+#admin.site.register(InviteCode)
 admin.site.register(Featured, FeaturedAdmin)
 admin.site.register(ScheduledCheck)
+admin.site.register(Speciality)

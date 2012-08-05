@@ -34,3 +34,7 @@ except ImportError:
 
 # store sorl-thumbnail cache under /media dir
 UPLOAD_PATH_USER_IMGS = PATH_USER_IMGS
+
+# facebook schoolproj app (dev)
+FACEBOOK_APP_ID = '279761435376574'
+FACEBOOK_API_SECRET = 'c3325b623f9f09303004b77aed231a71'

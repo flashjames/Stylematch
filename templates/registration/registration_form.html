@@ -2,111 +2,105 @@
 {% load url from future %}
 {% load index_extras %}
 
+{% block remove-links-top %}
+{% include "no_links_on_top_snippet.html" %}
+{% endblock %}
+
+
 {% block title %}Registrera konto{% endblock %}
 {% block content %}
 
+{# facebook login/register overlay css #}
+<script type="text/javascript">
+  _kmq.push(['record', 'viewed signup form']);
+</script>
 <div class="container">
 
   <div class="row">
-    <div class="span11 alert-error alert">
-      <h1 style="padding:15px 0px;" >StyleMatch öppnar upp för alla den 30e juli, håll ut!</h1> 
+    <div class="span6">
+
+      <div class="beta-signup-banner shadow-beta well">
+
+        <center><h1 class="beta-banner">G&aring; med nu!</h1></center>
+        <div id="facebook_login_js">
+          <input onclick="F.connect(); return false;" type="image" src="{{ STATIC_URL }}img/registrera_med_facebook.png" />
+	  
+        </div>
+	<h4>Eller registrera med mail</h4>
+        <form method="post" action="">
+          {% csrf_token %}
+          <fieldset>
+            <div class="beta-signup-left control-group" style="float: left; {% if form.first_name.errors %} color: red; {% endif %} ">
+
+              <label class="control-label" style="{% if form.first_name.errors %} color: red; {% endif %} " >{{ form.first_name.label }}</label>
+              <div class="beta-signup-left-form">
+                {{ form.first_name }}
+              </div>
+              <div style="{% if form.first_name.errors %} color: red; {% endif %} " class="control-group {% if form.first_name.errors %} error {% endif %}">{{ form.first_name.errors.as_text }}</div>
+            </div>
+            <div class="beta-signup-right pull-right beta-signup-right">
+
+
+              <label class="control-label" style="{% if form.last_name.errors %} color: red; {% endif %} " >{{ form.last_name.label }}</label>
+
+              <div class="beta-signup-left-form ">
+                {{ form.last_name }}
+              </div>
+
+              <div style="{% if form.last_name.errors %} color: red; {% endif %} " class="control-group {% if form.last_name.errors %} error {% endif %}">{{ form.last_name.errors.as_text }}</div>
+
+            </div>
+            <p style="clear: left;" />
+            <div class="span3 beta-signup-email">
+
+              <label class="control-label" style="{% if form.username.errors %} color: red; {% endif %} " >{{ form.username.label }}</label>
+
+              <div class="beta-signup-left-form">
+                {{ form.username }}
+              </div>
+
+              <div style="{% if form.username.errors %} color: red; {% endif %} " class="control-group {% if form.username.errors %} error {% endif %}">{{ form.username.errors.as_text }}</div>
+            </div>
+
+
+            <div class="beta-signup-left" style="float:left;">
+
+              <label class="control-label" style="{% if form.password1.errors %} color: red; {% endif %} " >{{ form.password1.label }}</label>
+              <div class="beta-signup-left-form">
+                {{ form.password1 }}
+              </div>
+              <div style="{% if form.password1.errors %} color: red; {% endif %} " class="control-group {% if form.password1.errors %} error {% endif %}">{{ form.password1.errors.as_text }}</div>
+            </div>
+
+            <div class="beta-signup-right pull-right beta-signup-right">
+
+              <label class="control-label" style="{% if form.password1.errors %} color: red; {% endif %} " >{{ form.password2.label }}</label>
+
+              <div class="beta-signup-left-form">
+                {{ form.password2 }}
+              </div>
+              <div style="{% if form.password2.errors %} color: red; {% endif %} " class="control-group {% if form.password2.errors %} error {% endif %}">{{ form.password2.errors.as_text }}</div>
+            </div>
+
+            <p style="clear: left;" />
+            <center>
+              <button type="submit" name="register" class="btn-large btn-info">Registrera</button>
+              <p style="margin-top:10px;font-size:12px;">Genom att klicka på "Registrera" bekräftar du att du är en utbildad frisör, samt att du läst och accepterat våra <a target="_blank" href="{% url 'anvandarvillkor' as av %}{{ av }}">användarvillkor</a></p>
+
+            </center>
+          </fieldset>
+        </form>
+
+      </div>
     </div>
-<div class="span6">
-  <form method="post" action="">
-    {% csrf_token %}
-    <fieldset>
-    <div class="beta-signup-banner shadow-beta well">
 
-      <center><h1 class="beta-banner">G&aring; med nu!</h1></center>
-      <div class="beta-signup-left control-group" style="float: left; {% if form.first_name.errors %} color: red; {% endif %} ">
-
-        <label class="control-label" style="{% if form.first_name.errors %} color: red; {% endif %} " >{{ form.first_name.label }}</label>        
-        <div class="beta-signup-left-form">
-          {{ form.first_name }}
-        </div>
-        <div style="{% if form.first_name.errors %} color: red; {% endif %} " class="control-group {% if form.first_name.errors %} error {% endif %}">{{ form.first_name.errors.as_text }}</div>
-      </div>
-      <div class="beta-signup-right pull-right beta-signup-right">
-
-
-        <label class="control-label" style="{% if form.last_name.errors %} color: red; {% endif %} " >{{ form.last_name.label }}</label> 
-        
-        <div class="beta-signup-left-form ">
-          {{ form.last_name }}
-        </div>
-        
-        <div style="{% if form.last_name.errors %} color: red; {% endif %} " class="control-group {% if form.last_name.errors %} error {% endif %}">{{ form.last_name.errors.as_text }}</div>
+      <div class="span6 account-register-info">
+        <img src="{{ STATIC_URL }}img/printscreen-sign-up-2.png">
 
       </div>
-      <p style="clear: left;" />
-      <div class="span3 beta-signup-email">
-      
-        <label class="control-label" style="{% if form.username.errors %} color: red; {% endif %} " >{{ form.username.label }}</label>        
-        
-        <div class="beta-signup-left-form">
-          {{ form.username }}
-        </div>
-        
-        <div style="{% if form.username.errors %} color: red; {% endif %} " class="control-group {% if form.username.errors %} error {% endif %}">{{ form.username.errors.as_text }}</div>
-      </div>
 
-
-      <div class="beta-signup-left" style="float:left;">
-
-        <label class="control-label" style="{% if form.password1.errors %} color: red; {% endif %} " >{{ form.password1.label }}</label>        
-        <div class="beta-signup-left-form">
-          {{ form.password1 }}
-        </div>
-        <div style="{% if form.password1.errors %} color: red; {% endif %} " class="control-group {% if form.password1.errors %} error {% endif %}">{{ form.password1.errors.as_text }}</div>
-      </div>
-
-      <div class="beta-signup-right pull-right beta-signup-right">
-      
-        <label class="control-label" style="{% if form.password1.errors %} color: red; {% endif %} " >{{ form.password2.label }}</label>        
-       
-        <div class="beta-signup-left-form">
-          {{ form.password2 }}
-        </div>
-        <div style="{% if form.password2.errors %} color: red; {% endif %} " class="control-group {% if form.password2.errors %} error {% endif %}">{{ form.password2.errors.as_text }}</div>
-      </div>
-
-      <p style="clear: left;" />
-      <center>
- 
-        <label class="control-label" style="{% if form.invite_code.errors %} color: red; {% endif %} " >{{ form.invite_code.label }}</label>        
-       
-        <div class="beta-signup-invite-form">
-          {{ form.invite_code }}
-        </div>
-        <div style="{% if form.invite_code.errors %} color: red; {% endif %} " class="control-group {% if form.invite_code.errors %} error {% endif %}">{{ form.invite_code.errors.as_text }}</div>
-      </center>
-      <p style="clear: left;" />
-      <center>
-        <button type="submit" name="register" class="btn-large btn-info">Skapa konto</button>
-	<p style="margin-top:10px;font-size:12px;">Genom att klicka på "Skapa konto" bekräftar du att du är en utbildad frisör, samt att du läst och accepterat våra <a target="_blank" href="{% url 'anvandarvillkor' as av %}{{ av }}">användarvillkor</a></p>
-
-      </center>
-        </fieldset>
-  </form>
-  
+    </div>
   </div>
-  
-  <div class="span6 account-register-info">
-	 <img src="{{ STATIC_URL }}img/printscreen-sign-up-2.png">	
-	
-	{% include "invite_modal_snippet.html" %}
-         <a href="{% url 'get_invite' as gi %}{{ gi }}" class="btn btn-large btn-info">Jag vill ha en inbjudningskod!</button></a></h3>
-	
-	
-</div>
-
-
-	</div>
-  </div>
-
-
-  <br><br>
-
 
 
   {% endblock %}

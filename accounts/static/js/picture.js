@@ -97,7 +97,7 @@
         template:_.template($('#tpl-image-list-item').html()),
 
         initialize:function () {
-            _.bindAll(this, "updateModelOrder");
+            _.bindAll(this, "updateModelOrder", 'rotateImage');
             $(this.el).bind('updateOrder', this.updateModelOrder);
             this.model.bind("change", this.render, this);
             this.model.bind("destroy", this.close, this);
@@ -109,8 +109,30 @@
         events:{
             "click .delete-image":"deleteImage",
             "click .show_image_on_profile":"switchDisplayOnProfile",
-            "click .save": "saveComment"
+            "click .save": "saveComment",
+	    "click .rotate-image": "rotateImage"
         },
+	rotateImage: function() {
+	    this.model.set({rotate:true, silent:true});
+	    var self = this;
+            this.model.save({}, {
+                success:function () {
+		    // reload image from server (since it have been rotated)
+		    $(self.el).find('img')[0].src = $(self.el).find('img')[0].src + "?"  + new Date().getTime();
+                    var noty_id = noty({
+                        text: 'Din bild roterades!',
+                        type: 'success'
+                    });
+                },
+                error:function() {
+                    var noty_id = noty({
+                        text: 'Bilden kunde inte roteras!',
+                        type: 'error'
+                    });
+                }
+            });
+        
+	},
         saveComment: function() {
             var new_comment = $(this.el).find("textarea").val();
             new_comment = new_comment.replace(/\s+$/,''); //remove all trailing whitespaces
@@ -119,7 +141,6 @@
             // comment have been changed
             if(new_comment != comment) {
                 this.model.set({comment:new_comment, silent:true});
-
                 this.model.save({}, {
                     success:function () {
                         var noty_id = noty({

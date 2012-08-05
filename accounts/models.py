@@ -11,9 +11,10 @@ from django.db.models.signals import post_save, post_delete
 from django.core.files.storage import default_storage
 from django.template.loader import render_to_string
 from registration.signals import user_registered
+from social_auth.signals import socialauth_registered
 from accounts.signals import approved_user_criteria_changed
 
-from tools import list_with_time_interval, format_minutes_to_pretty_format
+from tools import list_with_time_interval, format_minutes_to_pretty_format, encode_url
 
 weekdays_model = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun']
 
@@ -119,6 +120,11 @@ def check_profile(sender, userprofile, create_checks=True, **kwargs):
     # If the user passed the test, approve the user.
     if not userprofile.approved:
         userprofile.approved = True
+
+        # if we arrived from a userprofile save will be called later.
+        if sender != userprofile:
+            userprofile.save()
+
         logger.debug("User %s just got approved!" % userprofile)
 
         # Send email notifying admin about this.
@@ -133,49 +139,6 @@ def check_profile(sender, userprofile, create_checks=True, **kwargs):
     return True
 approved_user_criteria_changed.connect(check_profile)
 
-
-def create_temporary_profile_url(sender, user, request, **kwargs):
-    """
-    Create a standard profile url at signup step using first name and
-    last name. Add number if the url is already taken.
-
-    John Nelson       -> /john-nelson
-    John Nelson again -> /john-nelson2
-
-    If, for some reason, first name isn't in POST data, bail out.
-    """
-
-    if 'first_name' not in request.POST:
-        return
-    first_name = request.POST['first_name']
-    last_name = request.POST['last_name']
-
-    # Get all users with the same name
-    users = User.objects.filter(first_name=first_name,
-                                last_name=last_name)
-
-    # This forces a double name to be separate in the list.
-    # Eva Marie Johnson => ['Eva', 'Marie', 'Johnson']
-    names = (first_name + " " + last_name).split(' ')
-
-    # Join them together using hyphen
-    # ['Eva', 'Marie', 'Johnson'] => "Eva-Marie-Johnson"
-    tmp_url = "-".join(names).lower()
-    tmp_url = re.sub(r'\s', '', tmp_url)
-
-    # Append a number depending on how many that has the exact name before
-    # ex. 2 users before have the exact same name:
-    # "Eva-Marie-Johnson" => "Eva-Marie-Johnson3"
-    if len(users) > 1:
-        tmp_url += "%d" % (len(users))
-
-    # Save the URL
-    userprofile = user.userprofile
-    userprofile.profile_url = tmp_url
-    userprofile.save()
-user_registered.connect(create_temporary_profile_url)
-
-
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     """
@@ -187,8 +150,70 @@ def create_user_profile(sender, instance, created, **kwargs):
         UserProfile.objects.create(
                 user=instance,
                 temporary_profile_url=uuid.uuid4().hex,
+                referrer_key=encode_url(instance.id),
                                    )
         OpenHours.objects.create(user=instance)
+
+        
+def create_temporary_profile_url(first_name, last_name, userprofile):
+    """
+    Create a standard profile url at signup step using first name and
+    last name. Add number if the url is already taken.
+
+    John Nelson       -> /john-nelson
+    John Nelson again -> /john-nelson2
+    """
+
+    # Get all users with the same name
+    users = User.objects.filter(first_name=first_name,
+                                last_name=last_name)
+
+    # This forces a double name to be separate in the list.
+    # Eva Marie Johnson => ['Eva', 'Marie', 'Johnson']
+    names = (first_name + " " + last_name).split(' ')
+
+    # Join them together using hyphen
+    # ['Eva', 'Marie', 'Johnson'] => "eva-marie-johnson"
+    tmp_url = "-".join(names).lower()
+    tmp_url = re.sub(r'\s', '', tmp_url)
+
+    # Append a number depending on how many that has the exact name before
+    # ex. 2 users before have the exact same name:
+    # "Eva-Marie-Johnson" => "Eva-Marie-Johnson3"
+    if len(users) > 1:
+        tmp_url += "%d" % (len(users))
+
+    # Save the URL
+    userprofile.profile_url = tmp_url
+    userprofile.save()
+    
+
+def create_url_regular_registration(sender, user, request, **kwargs):
+    """
+    Call create create_temporary_profile_url with right parameters,
+    when user registrated manually ie. not with facebook
+
+    If, for some reason, first name isn't in POST data, bail out.
+    """
+    if 'first_name' not in request.POST:
+        logger.error('Regular user registration: Couldnt get first_name')
+        return
+
+    first_name = request.POST['first_name']
+    last_name = request.POST['last_name']
+    create_temporary_profile_url(first_name, last_name, user.userprofile)
+user_registered.connect(create_url_regular_registration)
+
+
+def create_url_fb_registration(sender, user, response, details, **kwargs):
+    """
+    Call create create_temporary_profile_url with right parameters,
+    when user registrated with Facebook
+    """
+    first_name = user.first_name
+    last_name = user.last_name
+    create_temporary_profile_url(first_name, last_name, user.userprofile)
+socialauth_registered.connect(create_url_fb_registration)
 
 
 class DirtyFieldsMixin(object):
@@ -311,6 +336,23 @@ class OpenHours(models.Model):
     reviewed = models.BooleanField(default=False)
 
 
+class Speciality(models.Model):
+    name = models.CharField("Specialité",
+                            max_length=40,
+                            null=False,
+                            blank=False)
+    description = models.CharField("Beskrivning",
+                                   max_length=255,
+                                   null=True,
+                                   blank=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Specialité"
+        verbose_name_plural = "Specialitéer"
+
 # client side url to images, without image filename
 # used in the view that edit the images on the profile
 def get_image_url(filename):
@@ -388,6 +430,10 @@ class UserProfile(DirtyFieldsMixin, models.Model):
                                              unique=True,
                                              max_length=36)
 
+    # used to track who invited who
+    referrer_key = models.CharField(editable=False,
+                                    max_length=15)
+
     # select phone number to display on profile
     DISPLAY_NUMBER_CHOICES = (
         (True, 'Personligt telefonnummer'),
@@ -435,6 +481,8 @@ class UserProfile(DirtyFieldsMixin, models.Model):
                                     null=True,
                                     blank=True)
 
+    specialities = models.ManyToManyField(Speciality, null=True, blank=True)
+
     url_online_booking = models.URLField("Adress till online bokningssystem",
                                          blank=True)
     show_booking_url = models.BooleanField("Min salong har online-bokning",
@@ -470,7 +518,7 @@ class UserProfile(DirtyFieldsMixin, models.Model):
     # so to make it easier to sort, we save the latest uploaded
     # picture date here
     picture_upload_date = models.DateTimeField(auto_now_add=True,
-                                       editable=False)
+                                       editable=False, null=True)
 
     def save(self, *args, **kwargs):
         # remove accidental whitespaces from city
@@ -565,21 +613,14 @@ post_delete.connect(delete_filefield, ProfileImage)
 post_delete.connect(delete_filefield, GalleryImage)
 
 
-class InviteCode(models.Model):
+class SentFriendInvite(models.Model):
     """
     NOTE: Keep the ``used`` boolean, because if the reciever gets
     deleted, there is no other way to know if the code has been
     used or not.
-
     """
     used = models.BooleanField("Have the invite code been used?",
                                default=False)
-    invite_code = models.CharField("The string to use as invite code",
-                                   max_length=30)
-    comment = models.CharField("To who was the invitecode given? And so on..",
-                               max_length=500,
-                               null=True,
-                               blank=True)
     inviter = models.ForeignKey(User, related_name='invitecode_inviter',
                                 null=True,
                                 blank=True)
@@ -587,6 +628,7 @@ class InviteCode(models.Model):
                                  null=True,
                                  blank=True,
                                  on_delete=models.SET_NULL)
+
 
     def __unicode__(self):
         if self.inviter is None:

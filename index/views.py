@@ -5,7 +5,7 @@ from django.contrib import auth, messages
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic import View, ListView, CreateView, TemplateView, DetailView
 from django.core.urlresolvers import reverse
-from accounts.models import UserProfile, GalleryImage
+from accounts.models import UserProfile, GalleryImage, Speciality
 from index.models import BetaEmail, InspirationVote
 from index.forms import TipForm
 from accounts.api import ProfileResource
@@ -165,6 +165,15 @@ class SearchCityView(TemplateView):
             'getvars': getvars,
             'standard_profile': standard_profile,
         })
+        return context
+
+
+class SearchView(TemplateView):
+    template_name = "search.html"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(SearchView, self).get_context_data(*args, **kwargs)
+        context['specialities'] = Speciality.objects.all()
         return context
 
 

@@ -1,71 +1,57 @@
 {% extends 'base.html' %}
 {% load url from future %}
 
+{% block title %}Inbjudningskoder{% endblock %}
+
 {% block html-head %}
-<script type="text/javascript" href="{{ STATIC_URL }}js/bootstrap-collapse.js"></script>
+<script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-collapse.js"></script>
 {% endblock %}
 
 {% block content %}
+<style>
+.friend-name-highlighted { 
+font-weight:bold;
+}
+.fb-friend {
+display:block;
+}
+.fb-friend p {
+display:inline-block;
+}
+</style>
+
+<input type="text" id="filter-friends" name="filter-friends">
+<!-- Underscore.js Templates -->
+<script type="text/template" id="tpl-facebook-friend-item">
+  <p><% if(highlighted_name) { %> <%= highlighted_name %> <% } else { %> <%= name %> <% } %> <p>
+  <img src="<%= pic_square %>">
+  <button>Bjud in</button>
+</script>
+
 <div class="page-header">
   <h1>Inbjudningskoder
   <small>Bjud in kollegorna till StyleMatch!</small>
   </h1>
 </div>
-<div class="row">
-  <div class="span12">
-    Lorem ipsum om varför detta är bra och vad de tjänar på det osv osv
-  </div>
+
+<div class="alert alert-warning">
+  <strong>Hoppsan!</strong>
+  Detta är fortfarande under utveckling. Inbjudningskoder kommer snart!
 </div>
 
 <div class="row">
   <div class="span6 offset2">
     <h2>Dina koder</h2>
-    {% if codes %}
-    <table class="table code-table">
-      {% for code in codes %}
-      <tr>
-        <td class="code">
-          {{ code.invite_code }}
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
-    {% else %}
-    <div class="alert alert-error">Du har inga koder kvar. Bravo!</div>
-    {#<a href="#">Behöver du fler?</a>#}
-    {% endif %}
   </div>
 </div>
-{% if used_codes %}
-<div class="row">
-  <div class="span6 offset2">
-    <a id="show-used-codes" data-toggle="collapse" href="#used-codes">Visa använda koder</a>
-    <div id="used-codes" class="collapse">
-      <table class="table code-table">
-        <tr>
-          <td>
-            <b>Kod</b>
-          </td>
-          <td>
-            <b>Använd av</b>
-          </td>
-        </tr>
-        {% for code in used_codes %}
-        <tr>
-          <td class="code used-code">
-            {{ code.invite_code }}
-          </td>
-          <td>
-            <a href="{% url 'profile_display_with_profile_url' slug=code.reciever.userprofile.profile_url %}">
-              {{ code.reciever.first_name }} {{ code.reciever.last_name }}
-            </a>
-          </td>
-        </tr>
-        {% endfor %}
-      </table>
-    </div>
-  </div>
+
+<div class="facebook-friends">
+  <ul>
+  </ul>
 </div>
-{% endif %}{# if used_codes #}
+<script type="text/javascript" src="{{ STATIC_URL }}js/facebook_friends_invite.js"></script>
+
 {% endblock %}
 

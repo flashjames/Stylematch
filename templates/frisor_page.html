@@ -8,6 +8,9 @@
 {% endblock %}
 
 {% block content %}
+<script>
+  _kmq.push(['record', 'Viewed Frisor Page']);
+</script>
 <div class="frisor-page">
 <div class="row">
 	<div class="span12 frisor-page-header"><h1>Framtidens marknadsföringsverktyg för dig som utbildad frisör</h1></div>
@@ -26,16 +29,70 @@
 		
 		
 	</div>
+	<!--
+Create an empty div where the video will live.
+Note the video ID is added at the end to prevent conflicts
+  and allow multiple videos being tracked.
+-->
+<div id="player_uU6U-8LP1DY"></div>
+ 
+<!-- Include the YouTube JS API -->
+<script type='text/javascript'
+  src='http://www.youtube.com/player_api'></script>
+<script>
+  var players = [];
+   
+  /** 
+   * Helper function for loading KM trackable videos.
+   * 
+   * id     - The YouTube video ID
+   * width  - The player width
+   * height - The player height
+   * name   - The name of the video. This can be anything and
+       will be appended to the event logged in KM.
+   */
+  function loadKMTrackedVideo (id, width, height, name)
+  {
+    players[id] = new YT.Player('player_' + id, {
+      videoId: id,
+      width: width,
+      height: height,
+      events: { onStateChange: function (event)
+      {
+        switch(event.data)
+        {
+          case YT.PlayerState.PLAYING:
+            return _kmq.push(
+              ['record', 'Played video - ' + name]);
+          case YT.PlayerState.PAUSED:
+            return _kmq.push(
+              ['record', 'Paused video - ' + name]);
+          case YT.PlayerState.ENDED:
+            return _kmq.push(
+              ['record', 'Finished video - ' + name]);
+        }
+      }}
+    });
+  }
+   
+  /**
+   * When the Youtube API is ready start loading in our
+     KM trackable videos
+   */
+  function onYouTubePlayerAPIReady ()
+  {
+    loadKMTrackedVideo('DvLuZVCj-6g', 560, 405, 'Frisor page - video');
+  }
+ 
+</script>
 	<div class="span6 offset1" >
-		<div class="frisor-page-video">
-      <iframe width="540" height="405" src="http://www.youtube.com/embed/DvLuZVCj-6g?rel=0" frameborder="0" allowfullscreen></iframe>
-    </div>
+	  <div class="frisor-page-video" id="player_DvLuZVCj-6g"></div>
 	</div>
 </div>
 <div class="row">
   <div class="span12 frisor-page-try-stylematch">
     <h2>Prova hela StyleMatch gratis i 30 dagar. Det bjuder vi på!</h2>
-    <h4>Efter 30 dagar kostar det endast 299kr/månad. Ingen bindningstid, är du inte nöjd avslutar du ditt konto med ett klick!</h4>
+    <h4>Efter 30 dagar kostar det endast 99kr/månad. Ingen bindningstid, är du inte nöjd avslutar du ditt konto med ett klick!</h4>
     <a href="/accounts/register/" class="btn btn-large btn-info">Skapa din profil</a>
   </div>
 </div>
@@ -78,12 +135,12 @@ Du kan hela tiden se över hur väl din profil syns på StyleMatch genom enkel <
 Vi tror på att ta betalt av våra kunder först när vi vet att vår tjänst levererar mer värde än vad man betalar för att använda den och vid den filosofin står vi fast! </p>
 		      </div>
 				<div class="span5 offset1"><h4>Jag har facebook, behöver jag då ha StyleMatch?</h4>
-<p>Kunder besöker StyleMatch för att dem är intresserade av hår och att klippa sig. Det som skiljer StyleMatch från Facebook är vår unika <strong>söksida för privatpersoner</strong>. På Facebook ingår man inte i någon söklista för vilket gör att dina kunder aktivt måste söka upp dig vilket oftast är komplicerat. På StyleMatch har du en helt egen profilsida samt plats på söksidan som gör det enkelt för nya och gamla kunder att hitta dig.<br><br>
+<p>Kunder besöker StyleMatch för att de är intresserade av hår och att klippa sig. Det som skiljer StyleMatch från Facebook är vår unika <strong>söksida för privatpersoner</strong>. På Facebook ingår man inte i någon söklista för vilket gör att dina kunder aktivt måste söka upp dig vilket oftast är komplicerat. På StyleMatch har du en helt egen profilsida samt plats på söksidan som gör det enkelt för nya och gamla kunder att hitta dig.<br><br>
 
 Hela grundidén är att du ska få rätt kunder som passar dig. Med StyleMatch får kunden en bild av dig redan innan besöket vilket ökar chansen att hon kommer att trivas.</p>
 				
 				<h4>Min salong har en hemsida, behöver jag då ha StyleMatch?</h4>
-				<p>Precis som med Facebook så måste kunden veta om vad salongen du arbetar på heter. På StyleMatch ökar chanserna till att <strong>nya kunder hittar dig</strong> eftersom de aktivit är ute och letar efter en bra frisör. Med hjälp av både en söklista och inspirationssida så kommer du nu få helt nya möjligheter att synas på internet. </p>  </div>
+				<p>Precis som med Facebook så måste kunden veta om vad salongen du arbetar på heter. På StyleMatch ökar chanserna till att <strong>nya kunder hittar dig</strong> eftersom de aktivt är ute och letar efter en bra frisör. Med hjälp av både en söklista och inspirationssida så kommer du nu få helt nya möjligheter att synas på internet. </p>  </div>
 		      
 	      
 		     
@@ -104,7 +161,7 @@ Hela grundidén är att du ska få rätt kunder som passar dig. Med StyleMatch f
 	      </div>
 	         <div class="citat2 span3 offset1">
 	             <div class="citatet"><blockquote>
-      <p>"Äntligen finns det en tjänst som arbetar för att jag som ny utbildad frisör ska synas bättre på internet."</p>
+      <p>"Äntligen finns det en tjänst som arbetar för att jag som nyutbildad frisör ska synas bättre på internet."</p>
       <small>Malin Avetun, Frisör Hårvårdsbaren Norrköping</small>
   </blockquote></div>
 		      <img src="{{ STATIC_URL }}img/citat_bilder/malin_citatbild.png"/>

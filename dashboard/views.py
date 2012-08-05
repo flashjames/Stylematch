@@ -1,16 +1,13 @@
 # coding:utf-8
 import json
 import logging
-from django.views.generic import TemplateView, View
-from django.core.urlresolvers import reverse
-from accounts.models import Service, OpenHours, GalleryImage, InviteCode
-from index.models import InspirationVote
 from django.views.generic import TemplateView
-from braces.views import LoginRequiredMixin, StaffRequiredMixin
+from django.core.urlresolvers import reverse
+from accounts.models import Service, GalleryImage
+from index.models import InspirationVote
+from braces.views import LoginRequiredMixin
 from dashboard.google_analytics import profile_statistics
-from accounts.models import UserProfile
 from datetime import datetime, timedelta
-from django.http import HttpResponse
 
 logger = logging.getLogger(__name__)
 
@@ -132,11 +129,11 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         gallery_images = GalleryImage.objects\
                                 .filter(user=self.request.user,
                                         display_on_profile=True)\
-                                .order_by('votes')
+                                .order_by('-votes')
         if not gallery_images:
             return {}
         keys = [x.pk for x in gallery_images]
-        all_votes = InspirationVote.objects.filter(id__in=keys)
+        all_votes = InspirationVote.objects.filter(image__in=keys)
 
         # get data from all images
         GIS['likes'] = self.get_likes_data(all_votes)
@@ -147,7 +144,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         GIS['mpi']['image'] = mpi
 
         # get all votes for that image
-        mpi_votes = all_votes.filter(id=mpi.pk)
+        mpi_votes = all_votes.filter(image=mpi.pk)
 
         # get data for image
         GIS['mpi']['likes'] = self.get_likes_data(mpi_votes)
@@ -203,18 +200,10 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class InviteCodeView(LoginRequiredMixin, StaffRequiredMixin, TemplateView):
+class InviteFriendsView(LoginRequiredMixin, TemplateView):
     template_name = "invitecode.html"
 
     def get_context_data(self, **kwargs):
-        context = super(InviteCodeView, self).get_context_data(**kwargs)
-
-        # only hit the database once
-        all_codes = InviteCode.objects.filter(inviter=self.request.user)
-        unused_codes = all_codes.filter(reciever=None)
-        used_codes = all_codes.exclude(reciever=None)
-
-        context['codes'] = unused_codes
-        context['used_codes'] = used_codes
+        context = super(InviteFriendsView, self).get_context_data(**kwargs)
 
         return context

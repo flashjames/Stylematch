@@ -160,7 +160,7 @@ div.edit-images-image-border {
 }
 
 .edit-images-image-bottom {
-    padding: 10px 20px 10px 20px;
+    padding: 10px 10px 10px 10px;
     background-color: #F2F2F2;
     border: 1px solid grey;
 }
@@ -189,7 +189,13 @@ div.edit-images-image-border {
     cursor: move;
 }
 
-.delete-image:hover {
+.delete-image, .rotate-image {
+    display:inline-block;
+    position:relative;
+    top:2px;
+    margin-left:6px;
+}
+.delete-image:hover, .rotate-image:hover {
     cursor: pointer;
 }
 
@@ -225,3 +231,26 @@ div.edit-images-image-border {
 }
 
 /* END CROP IMAGE */
+
+/* EDIT SPECIALITIES */
+
+#specialities-form {
+  .control-group {
+    label {
+
+    }
+    .controls {
+      ul {
+        list-style: none;
+        li {
+          label {
+            font-size: 1.2em;
+          }
+          margin: 5px 0 5px 0;
+        }
+      }
+    }
+  }
+}
+
+/* END SPECIALITES */

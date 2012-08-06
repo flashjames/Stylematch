@@ -150,7 +150,7 @@ def create_user_profile(sender, instance, created, **kwargs):
         UserProfile.objects.create(
                 user=instance,
                 temporary_profile_url=uuid.uuid4().hex,
-                referrer_key=encode_url(instance.id),
+                #referrer_key=encode_url(instance.id),
                                    )
         OpenHours.objects.create(user=instance)
 
@@ -431,8 +431,8 @@ class UserProfile(DirtyFieldsMixin, models.Model):
                                              max_length=36)
 
     # used to track who invited who
-    referrer_key = models.CharField(editable=False,
-                                    max_length=15)
+    #referrer_key = models.CharField(editable=False,
+    #                                max_length=15)
 
     # select phone number to display on profile
     DISPLAY_NUMBER_CHOICES = (
@@ -612,13 +612,13 @@ def delete_filefield(sender, **kwargs):
 post_delete.connect(delete_filefield, ProfileImage)
 post_delete.connect(delete_filefield, GalleryImage)
 
-
+"""
 class SentFriendInvite(models.Model):
-    """
+
     NOTE: Keep the ``used`` boolean, because if the reciever gets
     deleted, there is no other way to know if the code has been
     used or not.
-    """
+
     used = models.BooleanField("Have the invite code been used?",
                                default=False)
     inviter = models.ForeignKey(User, related_name='invitecode_inviter',
@@ -648,7 +648,7 @@ class SentFriendInvite(models.Model):
         return u'(%s) - %s invited %s - %s' % (
                 self.invite_code, inviter, reciever, self.comment
                 )
-
+"""
 
 class Featured(models.Model):
     user = models.ForeignKey(UserProfile, null=False, blank=False)

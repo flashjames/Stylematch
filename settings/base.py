@@ -186,8 +186,8 @@ FACEBOOK_API_SECRET = 'd22e35493d901a90fafb05ae6e26fe7c'
 # when we upgrade to django 1.4,
 #these should be evaluated with reverse_lazy() and url_name
 LOGIN_URL          = '/login/'
-LOGIN_REDIRECT_URL = u'/översikt/'
-LOGIN_ERROR_URL    = '/login/'
+LOGIN_REDIRECT_URL = '/'
+#LOGIN_ERROR_URL    = '/login-error/'
 SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/konto/registrering-steg1/'
 
 SOCIAL_AUTH_DEFAULT_USERNAME = 'new_social_auth_user'

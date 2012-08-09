@@ -50,16 +50,15 @@
 	 		<img src="{{ STATIC_URL }}img/promote/Visitkort-baksida.png"/><img src="{{ STATIC_URL }}img/promote/Visitkort-framsida.png"/>
 	 		
 	 		<h4 id="offer-visitkort">Eftersom du har valt att gå med i StyleMatch tidigt så bjuder vi på de första 25 visitkorten, <span>helt gratis!</span></h4>
-	 		{% include "order_visitkort_modal_snippet.html" %}
-    <a class="btn btn-large btn-info order-visitkort-btn"  data-toggle="modal" href="#ordervisitkort">Beställ visitkort</a>
+			<h4 style="margin-top:8px;">Skicka bara ett mail till <a href="mailto:hampus@stylematch.se?Subject=Jag vill ha visitkort">hampus@stylematch.se</a>, så skickar vi det till dig!</h4>
+<!--	 		{% include "order_visitkort_modal_snippet.html" %}
+    <a class="btn btn-large btn-info order-visitkort-btn"  data-toggle="modal" href="#ordervisitkort">Beställ visitkort</a>-->
 
  		</li>
  		
  	</ol>
 		
 <script> 
-      FB.init({appId: "YOUR_APP_ID", status: true, cookie: true});
-
       function postToFeed() {
 
         // calling the API ...

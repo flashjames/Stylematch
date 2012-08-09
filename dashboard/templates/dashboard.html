@@ -39,11 +39,13 @@
 {% endblock %}
 
 {% if tasks_to_be_done %}
+{% if not user_visible %}
 <div class="row dashboard">
   <div class="span12 alert-error alert">
     <h1>Just nu syns inte din profil i söklistan, gör klart alla steg för att synas</h1> 
   </div>
 </div>
+{% endif %}
 <div class="tabbable tabs-left">
   <ul class="nav nav-tabs" id="infotabs">
     <li class="active">Du har<span>{{ actual_tasks_to_do }}</span>steg kvar till en perfekt profil!</li>

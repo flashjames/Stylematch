@@ -158,6 +158,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['tasks_to_be_done'] = self.get_tasks_to_be_done(
                             self.request.user.userprofile)
 
+        context['user_visible'] = userprofile.visible
+        
         # any tasks left to be done?
         if context['tasks_to_be_done']:
             context['actual_tasks_to_do'] = len(

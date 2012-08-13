@@ -154,9 +154,9 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(DashboardView, self).get_context_data(**kwargs)
-
+        userprofile = self.request.user.userprofile
         context['tasks_to_be_done'] = self.get_tasks_to_be_done(
-                            self.request.user.userprofile)
+                            userprofile)
 
         context['user_visible'] = userprofile.visible
         
@@ -167,7 +167,6 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                      in context['tasks_to_be_done']
                      if not x['passed']])
         else:
-            userprofile = self.request.user.userprofile
             # display 'you're now displayed in search directory' message
             if (userprofile.visible and
                 userprofile.approved and not

@@ -1,13 +1,15 @@
 #client-booking-container {
+    width:720px;
     table {
-	border-spacing:2px 10px; // should be dynamically adjusted
+	border-spacing:0px 10px; // should be dynamically adjusted
 	border-collapse:separate;
+	display:inline-block;
     }
 
     .block {
 	background-color:grey;
 	width:25px;
-	height:30px;
+	height:20px;
     }
 
     .block-hover {
@@ -21,5 +23,35 @@
     .highlight {
 	background-color:orange;
     }
+
+    .right {
+	border-right: 1px solid #F3F3F3;
+    }
+
+    .left {
+	border-right: 1px dashed #DDD !important;
+    }
+    div {
+	display:inline-block;
+    }
+    ul {
+	display:inline-block;
+	list-style-type:none;
+    }
+    li {
+	margin-bottom:12px;
+	font-size:16px;
+    }
+
+table {
+    padding: 0;
+border: 0;
+}    
+    #table-container {
+	width: 600px;
+	display:inline-block;
+
+    }
+    
 
 }

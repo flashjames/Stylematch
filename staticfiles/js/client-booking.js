@@ -16,11 +16,10 @@
 
     window.BlockTableItemView = Backbone.View.extend({
         tagName:"td",
-        className: "block",
 	busy: false,
 	blockViewsIndex: 0,
         //template:_.template($('#tpl-inspiration-image-list-item').html()),
-        initialize:function (parent) {
+        initialize:function() {
             _.bindAll(this, 'mouseover');
         },
         render:function (eventName) {
@@ -35,11 +34,19 @@
 	    this.busy = true;
 	    $(this.el).addClass("busy");
 	},
+	removeBusy: function() {
+	    this.busy = false;
+	    $(this.el).removeClass("busy");
+	},
 	highlight: function() {
 	    $(this.el).addClass("highlight");
 	},
 	unHighlight: function() {
 	    $(this.el).removeClass("highlight");
+	},
+	reset: function() {
+	    this.removeBusy();
+	    this.unHighlight();
 	},
 	mouseover: function() {
 	    this.options.parent.trigger('possibleToBook', this.blockViewsIndex, this.options.blockViewsRow);
@@ -57,36 +64,65 @@
 
     window.EventView = Backbone.View.extend({
         el: $("body"),
-	currentTopDate: '2012-08-22', //the date that is displayed in the first row , 08-22
+	currentTopDate: DATE_TODAY, //the date that is displayed in the first row, starts at the todays date
 	cutNumberOfBlocks: 4, //this is the number of time-blocks the choosed cut/cuts take
 	weekDay: {0: "mån", 1: "tis", 2: "ons", 3: "tors", 4: "fre", 5: "lör", 6: "sön"},
         initialize:function () {
             //Glue code, that initialize's all views and models
             this.eventList = new EventCollection();
-            //this.eventList.bind('add', this.addOne, this);
-            //this.eventList.bind('reset', this.addAll, this);
 	    this.on('possibleToBook', this.possibleToBook, this);
 	    this.on('unHighlightBlocks', this.unHighlightBlocks, this);
-	    var _this = this;
-	    //		data: {start_time: "2012-01-01", end_time: "2012-08-24",},
-	    this.eventList.fetch({
+	    _.bindAll(this, 'success');
 
-		success: function(collection, response) {
-		    console.log(collection);
-                    if(!response) {
-                        var noty_id = noty({
-                            text: 'Frisörens schema kunde inte hämtas för tillfället-',
-                            type: 'error'
-                        });
-                    }
-		    _this.fillBusyBlocks();
-		    _this.displayDates();
-                }
-            });
+	    this.fetch();
 	    this.createBlocks();
 	    //_.bindAll(this, 'loadData', 'fetchSuccess'); 
 	    
         },
+	events: {
+	    'click #but': 'fetchNextWeek',
+	    'click #but2': 'fetchPreviousWeek',
+	},
+	fetch: function() {
+	    var data = {_start_time: this.currentTopDate};
+	    // end_time needs to be the date + 1, or django will filter the last date
+	    var date_next_week = this.getDateDaysAhead(this.parseDate(this.currentTopDate), 7)
+	    var date_formatted = this.formatDate(date_next_week);
+	    data['_end_time'] = date_formatted;
+		
+	    this.eventList.fetch({
+		data: data,
+		success: this.success
+	    });
+	  
+	},
+	success: function(collection, response) {
+	    console.log("a",collection);
+            if(!response) {
+                var noty_id = noty({
+                    text: 'Frisörens schema kunde inte hämtas för tillfället-',
+                    type: 'error'
+                });
+            }
+	    this.fillBusyBlocks();
+	    this.displayDates();
+        },
+	formatDate: function(date) {
+	    //YYYY-MM-DD
+	    return date.getFullYear() + "-" + this.padZeros(date.getMonth() + 1) + "-" + date.getDate();
+	},
+	fetchNextWeek: function() {
+	    var date_next_week = this.getDateDaysAhead(this.parseDate(this.currentTopDate), 7);
+	    this.currentTopDate = this.formatDate(date_next_week);
+	    this.resetBlocks();
+	    this.fetch();
+	},
+	fetchPreviousWeek: function() {
+	    var date_next_week = this.getDateDaysAhead(this.parseDate(this.currentTopDate), -7);
+	    this.currentTopDate = this.formatDate(date_next_week);
+	    this.resetBlocks();
+	    this.fetch();
+	},
 	possibleToBook: function(blockViewsIndex, blockViewsRow) {
 	    // TODO: check exceptions - when at first or last block (or near)
 	    
@@ -137,23 +173,16 @@
 	    }
 	    
 	},
+	resetBlocks: function() {
+	    _.each(_.flatten(this.blockViews), function(view) {
+		view.reset();
+	    });
+	},
 	unHighlightBlocks: function() {
 	    _.each(this.not_busy_blocks, function(block) {
 		block.unHighlight();
 	    });
 	},
-        addOne: function(inspiration_image) {
-            //this.$('#inspiration-list').append(new InspirationListItemView({model:inspiration_image}).render().el);
-        },
-        addAll: function() {
-	    //console.log("addAll");
-            // render each model object as a li object
-            _.each( this.eventList.models, function (event) {
-		//console.log(event);
-                //this.$('#inspiration-list').append(new InspirationListItemView({model:inspiration_image}).render().el);
-            }, this);
-            return this;
-        },
 	padZeros: function(number) {
 	    length = 2;
 	    var str = '' + number;
@@ -163,9 +192,15 @@
 	    return str;
 	},
 	displayDates: function() {
-	    var start_date = this.parseDate(this.currentTopDate);
-	    var readable_date = this.weekDay[start_date.getDay()] + " " + this.padZeros(start_date.getMonth() + 1) + " / " + start_date.getDate();
-	    console.log(readable_date);
+	    var start_date = this.parseDate(this.currentTopDate); var date_formatted; var date;
+	    var unordered_list = $('#dates').html("");
+	    for(i = 0; i < 7; i++) {
+		date_formatted = this.weekDay[start_date.getDay()] + " " + this.padZeros(start_date.getMonth() + 1) + "/" + start_date.getDate();
+		unordered_list.append("<li>" + date_formatted + "</li>");
+		start_date = this.getDateDaysAhead(start_date, 1)
+	    }
+	    
+	    //console.log(readable_date);
 	},
 	getOpeningTime: function() {
 	    // should be fetched from profile's openinghours 
@@ -180,10 +215,21 @@
 	    var block_views_row = []; var current_block;
 	    var current_tr = $("<tr></tr>");
 	    $('table').append(current_tr);
+	    var right_block = false
 	    while(number_of_blocks-- > 0) {
 	 	//sum = ++sum;
 		//console.log("hi", current_tr);
-		current_block = new BlockTableItemView({parent: this, blockViewsRow: block_views_row});
+		var className;
+		// this should be decided on the time level, i.e. if starttime is 8.15 this should be the right block
+		if(right_block) {
+		    className = "block right";
+		    right_block = false;
+		}
+		else {
+		    right_block = true;
+		    className = "block left";
+		}
+		current_block = new BlockTableItemView({parent: this, blockViewsRow: block_views_row, className: className});
 		current_tr.append(current_block.render().el);
 		var i = block_views_row.push(current_block) - 1;
 		current_block.blockViewsIndex = i;
@@ -204,8 +250,10 @@
 	    }
 
 	},
-	getNextDate: function(date_object) {
-	    date_object.setTime(date_object.getTime() + 1000*3600*24);
+	getDateDaysAhead: function(date_object, days_ahead) {
+	    // get the date x days forward from date_object
+	    if(days_ahead == null) { days_ahead = 0}
+	    date_object.setTime(date_object.getTime() + days_ahead * 1000 * 3600 * 24);
 	    return date_object;
 	},
 	getBlockRow: function(event_date) {
@@ -224,7 +272,7 @@
 	    return number_of_blocks;
 	},
 	parseDate: function(str) {
-	    //YYYYmmdd
+	    //YYYYmmdd or YYYY-mm-dd
 	    
 	    // remove all non digits
 	    str = str.replace(/\D/g,'');

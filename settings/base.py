@@ -151,6 +151,7 @@ INSTALLED_APPS = (
     'braces',
     'index',
     'accounts',
+    'booking',
     'dashboard',
     'storages',
     'defaultsite',

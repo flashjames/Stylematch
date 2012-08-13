@@ -168,10 +168,10 @@ urlpatterns += patterns(
             LikeView.as_view(),
             {},
             'api_like_view'),
-
     url(r'^',
         include('dashboard.urls')),
-
+    url(r'^',
+        include('booking.urls')),
     url(u'^sök/',
             SearchView.as_view(),
             name='search'),

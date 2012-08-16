@@ -16,7 +16,7 @@ div.profile-image-border {
 }
 
 .margin-to-top-profile-display{
-	height:25px;
+    height:25px;
 }
 
 .profile-image img  {
@@ -112,10 +112,14 @@ div.profile-image-border {
     margin-bottom: 5px;
 }
 
+.margin-top-service {
+    margin-top:7px;
+}
 
 .profile-service-name {
-    display: inline-block;
-    width: 250px;
+    .margin-top-service;
+    display:inline-block;
+    width: 100px;
     margin-right: 60px;
     padding-left: 10px;
     font-width:100;
@@ -123,22 +127,31 @@ div.profile-image-border {
 }
 
 .profile-service-description {
-   	font-style: italic;
+    font-style: italic;
     font-size:12px;
 }
 
 .profile-service-length {
-    display: inline-block;
+    .margin-top-service;
+    display:inline-block;
     width: 150px;
-    text-align: right;
-    margin-left:30px;
+    xtext-align: right;
+    margin-left:100px;
 }
 
 .profile-service-price {
-    display: inline-block;
+    .margin-top-service;
+    display:inline-block;
     width: 70px;
-    margin-right: 10px;
+    xmargin-right: 10px;
     margin-left:50px;
+}
+
+.service-booking-button {
+    .margin-top-service;
+    display:inline-block;
+    xmargin-left:10px;
+    float:right;
 }
 
 .open-hours-profile {

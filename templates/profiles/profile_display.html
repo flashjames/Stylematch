@@ -199,4 +199,53 @@
   {% endif %}
 
 
+
+{# Client booking #}
+<script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
+<!-- include this or backbone collection's wont be parsed correctly -->
+<script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
+<script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
+<!-- used in the service.js file, to know where the service api is located -> doesnt need to hardcode the url -->
+<script>
+  var CALENDAREVENTS_API_URL = "{% url 'api_dispatch_list' api_name="booking" resource_name="calendar_event" %}";
+  var DATE_TODAY = "{{ date_today }}";
+</script>
+<h1>Client booking</h1>
+    <div id="client-booking-container">
+      <div id="dates-container">
+        <ul>
+          <li>
+            <a id="but2" class="btn" href="#">
+              <i class="icon-chevron-up"></i>
+            </a>
+          </li>
+          <div id="dates">
+          </div>
+          <li>
+            <a id="but" class="btn">
+              <i class="icon-chevron-down"></i>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+      <div id="table-container">
+        <table>
+        </table>
+      </div>
+    </div>
+
+<script src="{{ STATIC_URL }}js/client-booking.js"></script>
+
+<ul id="service-dropdown" style="display:none">
+{% for service in services %}
+<li id="service-dropdown-id-{{ service.id }}">
+  <div class="service-dropdown-name">{{ service.name }}</div>
+  <div class="service-dropdown-length">{{ service.length }}</div>
+</li>
+{% endfor %}
+</ul>
+
+
 {% endblock %}

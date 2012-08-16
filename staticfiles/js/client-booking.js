@@ -72,7 +72,7 @@
             this.eventList = new EventCollection();
 	    this.on('possibleToBook', this.possibleToBook, this);
 	    this.on('unHighlightBlocks', this.unHighlightBlocks, this);
-	    _.bindAll(this, 'success');
+	    _.bindAll(this, 'success', 'selectService');
 
 	    this.fetch();
 	    this.createBlocks();
@@ -82,6 +82,7 @@
 	events: {
 	    'click #but': 'fetchNextWeek',
 	    'click #but2': 'fetchPreviousWeek',
+	    'click .service-book-me': 'selectService',
 	},
 	fetch: function() {
 	    var data = {_start_time: this.currentTopDate};
@@ -107,6 +108,18 @@
 	    this.fillBusyBlocks();
 	    this.displayDates();
         },
+	selectService: function(event) {
+	    var service_id = $(event.currentTarget).attr('id');
+
+	    // same service but in the clientbooking service list
+	    var service_in_dropdown = $('#service-dropdown').find('#service-dropdown-id-' + service_id);
+	    var service_length = service_in_dropdown.find('.service-dropdown-length').text();
+	    console.log(service_length);
+	    var length_in_blocks = service_length / 15;
+	    this.cutNumberOfBlocks = length_in_blocks;
+
+	    return false;
+	},
 	formatDate: function(date) {
 	    //YYYY-MM-DD
 	    return date.getFullYear() + "-" + this.padZeros(date.getMonth() + 1) + "-" + date.getDate();
@@ -116,14 +129,21 @@
 	    this.currentTopDate = this.formatDate(date_next_week);
 	    this.resetBlocks();
 	    this.fetch();
+	    return false;
 	},
 	fetchPreviousWeek: function() {
 	    var date_next_week = this.getDateDaysAhead(this.parseDate(this.currentTopDate), -7);
 	    this.currentTopDate = this.formatDate(date_next_week);
 	    this.resetBlocks();
 	    this.fetch();
+	    return false;
 	},
 	possibleToBook: function(blockViewsIndex, blockViewsRow) {
+	    /*
+	     * Responsible for filling the nearest not busy blocks
+	     * when hovering over a block.
+	     */
+
 	    // TODO: check exceptions - when at first or last block (or near)
 	    
 	    // the current select block need to be free, else we dont need to check more blocks
@@ -237,6 +257,10 @@
 	    return block_views_row;
 	},
 	createBlocks: function() {
+	    /*
+	     * Creates all blocks on a page
+	     */
+
 	    //TODO: this is okay if opening/closing time is a integer, i.e. 8, but not if it's 8.30
 	    var number_of_openhours = this.getClosingTime() - this.getOpeningTime();
 	    // four blocks for each hour
@@ -283,6 +307,10 @@
 	    return (D.getFullYear() == y && D.getMonth() == m && D.getDate() == d) ? D : 'invalid date';
 	},
 	setBlocksBusy: function(start_time, number_of_blocks, block_row) {    
+	    /*
+	     * Marks blocks as busy starting at block that corresponds to start_time and x number_of_blocks ahead
+	     */
+
 	    // should use this.numberOfBlocksToFill, when getOpeningTIme returns string
 	    var opening_time = this.getOpeningTime();
 	    start_time = start_time.split(":")[0];
@@ -294,6 +322,11 @@
 	    }
 	},
 	fillBusyBlocks: function() {
+	    /*
+	     * Takes every calendarEvent for the current week
+	     * and marks the corresponding timeblocks as busy
+	     */
+
 	    l(this.EventList);
 	    var start_time; var end_time;
 	    _.each( this.eventList.models, function (event) {
@@ -309,6 +342,18 @@
 
             }, this);
 	},
+	inactiveBlocks: function() {
+	    /*
+	     * Marks groups of blocks as inactive. If there's not enough following 'not busy blocks'
+	     * for the currently select cut, they are marked as inactive and greyed out.
+	     */
+	    _.each(this.blockViews, function(blockRow) {
+		_.each(blockRow, function(block) {
+		    console.log(block);
+		});
+	    });
+	},
+
         render:function (eventName) {
             return this;
         },

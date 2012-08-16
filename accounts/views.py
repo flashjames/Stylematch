@@ -15,6 +15,7 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.template.loader import render_to_string
 from django.http import HttpResponseRedirect
+from datetime import datetime
 from django.views.generic import (TemplateView,
                                   UpdateView,
                                   DetailView,
@@ -162,6 +163,10 @@ class DisplayProfileView(DetailView):
         # used to only display edit-profile menu, if at the user's profile
         context['logged_in_user_profile'] = self.request.user == self.object.user
 
+        # used for client booking, dont want to take todays date from user's computer
+        context['date_today'] = datetime.now().strftime("%Y-%m-%d")
+        context['got_onlinebooking'] = True
+
         context['site_domain'] = settings.SITE_DOMAIN
 
         # get images displayed on profile
@@ -172,9 +177,6 @@ class DisplayProfileView(DetailView):
         context['services'] = Service.objects.filter(
                                     user=self.object.user).filter(
                                     display_on_profile=True)
-
-        for i in context['services']:
-            i.length = format_minutes_to_pretty_format(i.length)
 
         context['first_name'] = self.object.user.first_name
         context['last_name'] = self.object.user.last_name

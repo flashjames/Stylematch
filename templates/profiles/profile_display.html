@@ -82,13 +82,13 @@
 
     {% include "book_me_modal_snippet.html" %}
     <a class="btn btn-large btn-info pull-right book-me-btn"  data-toggle="modal" href="#bookmemodal"
-    {% if settings.GOOGLE_ANALYTICS_KEY %}
-        onclick="_gaq.push(['_trackEvent', 'Privatperson - Profil', 'Boka frisör', '{{ first_name }} {{ last_name }}'])"{% endif %}>Boka mig!</a>
+       {% if settings.GOOGLE_ANALYTICS_KEY %}
+       onclick="_gaq.push(['_trackEvent', 'Privatperson - Profil', 'Boka frisör', '{{ first_name }} {{ last_name }}'])"{% endif %}>Boka mig!</a>
 
   </div>
   <div class="span3" id="salon-information">
-     <div>
-      <img class="salong-map-profile" 
+    <div>
+      <img class="salong-map-profile"
            src="http://maps.googleapis.com/maps/api/staticmap?center={{ profile.salon_adress }}, {{ profile.salon_city }},sweden&zoom=13&size=220x220&maptype=roadmap&markers=color:red%7Ccolor:red%7C{{ profile.salon_adress }}, {{ profile.salon_city }},sweden&sensor=false">
       </img>
     </div>
@@ -97,11 +97,11 @@
 
     <p>{{ profile.salon_adress.title }}, {{ profile.salon_city.title }}</p>
     <p>Tele:
-    {% if profile.number_on_profile %}
-    {{ profile.personal_phone_number }}
-    {% else %}
-    {{ profile.salon_phone_number }}
-    {% endif %}
+      {% if profile.number_on_profile %}
+      {{ profile.personal_phone_number }}
+      {% else %}
+      {{ profile.salon_phone_number }}
+      {% endif %}
     </p>
   </div>
 </div>
@@ -109,7 +109,7 @@
 <hr class="soften">
 <div class="row">
   <div class="span10 offset1" id="gallery">
-  {% if gallery_images %}
+    {% if gallery_images %}
     {% include "profiles/display_images_snippet.html" with images=gallery_images css_class='gallery-image' %}
   </div>
   <script>
@@ -120,29 +120,29 @@
     });
   </script>
   {% else %}
-    <div class="alert alert-error" style="text-align:center;">
-      <p style="font-size: 18px;">
-        <strong>Du har inga bilder i galleriet.</strong>
-      </p>
-      <a href="{% url 'edit_images' %}">
+  <div class="alert alert-error" style="text-align:center;">
+    <p style="font-size: 18px;">
+      <strong>Du har inga bilder i galleriet.</strong>
+    </p>
+    <a href="{% url 'edit_images' %}">
       Ladda upp din första galleribild här!
-      </a>
-      </div>
+    </a>
   </div>
-  {% endif %}
+</div>
+{% endif %}
 </div>
 
 <hr class="soften">
 
 <div class="row" >
   <div class="span8">
-{% if services %}
+    {% if services %}
     <h3>Prislista</h3>
     {% for service in services %}
     {% include "profiles/display_service_snippet.html" with service=service %}
     {% endfor %}
-{% else %}
-  {% if user.is_authenticated and logged_in_user_profile %}
+    {% else %}
+    {% if user.is_authenticated and logged_in_user_profile %}
     <h3>Prislista</h3>
     <div class="alert alert-error">
       <p><strong>Du har inte fyllt i någon prislista än!</strong></p>
@@ -150,8 +150,8 @@
         Fyll i din prislista här!
       </a>
     </div>
-  {% endif %}
-{% endif %} {# services #}
+    {% endif %}
+    {% endif %} {# services #}
   </div>
 
   <div class="span3 pull-right">
@@ -177,16 +177,16 @@
           {% endfor %}
         </tbody>
       </table>
-    {% else %}
+      {% else %}
       {% if user.is_authenticated and logged_in_user_profile %}
       <div class="alert alert-error">
         <p><strong>Du har inte fyllt i dina öppettider!</strong></p>
         <a href="{% url 'profiles_add_hours' %}">Fyll i dina öppettider här</a>
       </div>
       {% endif %}
-    {% endif %}
+      {% endif %}
+    </div>
   </div>
-</div>
 
   {# Display a red bar over navigation if the user just have registered #}
   {% if extra_user_guidance %}
@@ -200,52 +200,52 @@
 
 
 
-{# Client booking #}
-<script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
-<script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
-<!-- include this or backbone collection's wont be parsed correctly -->
-<script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
-<script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
-<!-- used in the service.js file, to know where the service api is located -> doesnt need to hardcode the url -->
-<script>
-  var CALENDAREVENTS_API_URL = "{% url 'api_dispatch_list' api_name="booking" resource_name="calendar_event" %}";
-  var DATE_TODAY = "{{ date_today }}";
-</script>
-<h1>Client booking</h1>
-    <div id="client-booking-container">
-      <div id="dates-container">
-        <ul>
-          <li>
-            <a id="but2" class="btn" href="#">
-              <i class="icon-chevron-up"></i>
-            </a>
-          </li>
-          <div id="dates">
-          </div>
-          <li>
-            <a id="but" class="btn">
-              <i class="icon-chevron-down"></i>
-            </a>
-          </li>
+  {# Client booking #}
+  <script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
+  <script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
+  <!-- include this or backbone collection's wont be parsed correctly -->
+  <script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
+  <script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
+  <!-- used in the service.js file, to know where the service api is located -> doesnt need to hardcode the url -->
+  <script>
+    var CALENDAREVENTS_API_URL = "{% url 'api_dispatch_list' api_name="booking" resource_name="calendar_event" %}";
+    var DATE_TODAY = "{{ date_today }}";
+  </script>
 
-        </ul>
-      </div>
-      <div id="table-container">
-        <table>
-        </table>
-      </div>
+  <div id="client-booking-container">
+    <div id="dates-container">
+      <ul>
+        <li>
+          <a id="but2" class="btn" href="#">
+            <i class="icon-chevron-up"></i>
+          </a>
+        </li>
+        <div id="dates">
+        </div>
+        <li>
+          <a id="but" class="btn">
+            <i class="icon-chevron-down"></i>
+          </a>
+        </li>
+
+      </ul>
     </div>
+    <div id="table-container">
+      <table>
+      </table>
+    </div>
+  </div>
 
-<script src="{{ STATIC_URL }}js/client-booking.js"></script>
+  <script src="{{ STATIC_URL }}js/client-booking.js"></script>
 
-<ul id="service-dropdown" style="display:none">
-{% for service in services %}
-<li id="service-dropdown-id-{{ service.id }}">
-  <div class="service-dropdown-name">{{ service.name }}</div>
-  <div class="service-dropdown-length">{{ service.length }}</div>
-</li>
-{% endfor %}
-</ul>
+  <ul id="service-dropdown" style="display:none">
+    {% for service in services %}
+    <li id="service-dropdown-id-{{ service.id }}">
+      <div class="service-dropdown-name">{{ service.name }}</div>
+      <div class="service-dropdown-length">{{ service.length }}</div>
+    </li>
+    {% endfor %}
+  </ul>
 
 
-{% endblock %}
+  {% endblock %}

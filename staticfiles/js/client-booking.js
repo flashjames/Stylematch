@@ -17,6 +17,7 @@
     window.BlockTableItemView = Backbone.View.extend({
         tagName:"td",
 	busy: false,
+	inactive: false,
 	blockViewsIndex: 0,
         //template:_.template($('#tpl-inspiration-image-list-item').html()),
         initialize:function() {
@@ -44,9 +45,18 @@
 	unHighlight: function() {
 	    $(this.el).removeClass("highlight");
 	},
+	setInactive: function() {
+	    this.inactive = true;
+	    $(this.el).addClass("inactive");
+	},
+	removeInactive: function() {
+	    this.inactive = false;
+	    $(this.el).removeClass("inactive");
+	},
 	reset: function() {
 	    this.removeBusy();
 	    this.unHighlight();
+	    this.removeInactive();
 	},
 	mouseover: function() {
 	    this.options.parent.trigger('possibleToBook', this.blockViewsIndex, this.options.blockViewsRow);
@@ -64,8 +74,8 @@
 
     window.EventView = Backbone.View.extend({
         el: $("body"),
-	currentTopDate: DATE_TODAY, //the date that is displayed in the first row, starts at the todays date
-	cutNumberOfBlocks: 4, //this is the number of time-blocks the choosed cut/cuts take
+	currentTopDate: "2012-08-23",//DATE_TODAY, //the date that is displayed in the first row, starts at the todays date
+	cutNumberOfBlocks: 8, //this is the number of time-blocks the choosed cut/cuts take
 	weekDay: {0: "mån", 1: "tis", 2: "ons", 3: "tors", 4: "fre", 5: "lör", 6: "sön"},
         initialize:function () {
             //Glue code, that initialize's all views and models
@@ -107,6 +117,7 @@
             }
 	    this.fillBusyBlocks();
 	    this.displayDates();
+	    this.setInactiveBlocks();
         },
 	selectService: function(event) {
 	    var service_id = $(event.currentTarget).attr('id');
@@ -117,7 +128,7 @@
 	    console.log(service_length);
 	    var length_in_blocks = service_length / 15;
 	    this.cutNumberOfBlocks = length_in_blocks;
-
+	    this.setInactiveBlocks();
 	    return false;
 	},
 	formatDate: function(date) {
@@ -169,7 +180,6 @@
 	    }
 	    
 	    for(i=1; i<this.cutNumberOfBlocks;) {
-		console.log('t',i,blockViewsIndex-i);
 		// if true, we have enough consquent free time-blocks
 		if(sum_not_busy_blocks == this.cutNumberOfBlocks) {
 		    break;
@@ -177,11 +187,9 @@
 		var view = blockViewsRow[blockViewsIndex-i]
 		if(view == null || view.busy == true) {
 		    break;
-		    console.log("busy");
 		} else {
 		    sum_not_busy_blocks = ++sum_not_busy_blocks;
 		    this.not_busy_blocks.push(view);
-		    console.log("not busy");
 		}
 		i=++i;
 	    }
@@ -287,13 +295,17 @@
 	    var days_later = milliseconds_later / day_in_milliseconds;
 	    return days_later;
 	},
+	blocksForMinutes: {'15': 1, '30': 2, '45': 3, '00': 0},
 	numberOfBlocksToFill: function(start_time, end_time) {
-	    // TODO: this function need to handle: 13.00, 13.15, 13.30, 13.45
-	    // currently it only cares about the first part: 13, 14 etc
 	    var start_time_parts =  start_time.split(":");
 	    var end_time_parts =  end_time.split(":");
-	    var number_of_blocks = (end_time_parts[0] - start_time_parts[0]) * 4;
-	    return number_of_blocks;
+	    
+	    // add blocks for minutes
+	    
+	    var blocks_minutes = this.blocksForMinutes[end_time_parts[1]] - this.blocksForMinutes[start_time_parts[1]];
+	    var blocks_hours = (end_time_parts[0] - start_time_parts[0]) * 4;
+
+	    return blocks_hours + blocks_minutes;
 	},
 	parseDate: function(str) {
 	    //YYYYmmdd or YYYY-mm-dd
@@ -342,18 +354,45 @@
 
             }, this);
 	},
-	inactiveBlocks: function() {
+	setBlocksInactive: function(blocks) {
+	    _.each(blocks, function(block) {
+		block.setInactive();
+	    });
+	},
+	setInactiveBlocks: function() {
 	    /*
 	     * Marks groups of blocks as inactive. If there's not enough following 'not busy blocks'
 	     * for the currently select cut, they are marked as inactive and greyed out.
 	     */
+	    _this = this;
 	    _.each(this.blockViews, function(blockRow) {
+		var needed_empty_blocks = _this.cutNumberOfBlocks;
+		var current_blocks = []
 		_.each(blockRow, function(block) {
-		    console.log(block);
+		    // since we may have selected a new Cut with shorter length
+		    // we need to remove the inactive class for all blocks
+		    block.removeInactive();
+
+		    if(!block.busy) {
+			needed_empty_blocks = --needed_empty_blocks;
+			current_blocks.push(block);
+		    } else {
+			if(needed_empty_blocks > 0) {
+			    _this.setBlocksInactive(current_blocks);
+			}
+			needed_empty_blocks = _this.cutNumberOfBlocks;
+			current_blocks = []
+		    }
 		});
+
+		// the last block on the row may not be a busy block
+		// since the if-case above only set's inactive when a busy block is found
+		// we need to check if enough 'not busy' blocks were found or not
+		if(needed_empty_blocks > 0) {
+		    _this.setBlocksInactive(current_blocks);
+		}
 	    });
 	},
-
         render:function (eventName) {
             return this;
         },

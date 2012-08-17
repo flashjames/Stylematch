@@ -1,5 +1,7 @@
 from tastypie.resources import ModelResource
 from booking.models import CalendarEvent
+from accounts.api_auth import PerUserAuthorization, DjangoBasicAuthentication
+from tastypie.authorization import Authorization
 import re
 
 # filter on dates - http://stackoverflow.com/questions/1317714/how-can-i-filter-a-date-of-a-datetimefield-in-django
@@ -23,4 +25,7 @@ class CalendarEventResource(ModelResource):
     class Meta:
         queryset = CalendarEvent.objects.all()
         resource_name = 'calendar_event'
+        authorization = Authorization()
+        authentication = DjangoBasicAuthentication()
         # should be sorted after date and maybe return a list for each date
+        # also limit permissions

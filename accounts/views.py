@@ -16,6 +16,7 @@ from django.core.files.storage import default_storage
 from django.template.loader import render_to_string
 from django.http import HttpResponseRedirect
 from datetime import datetime
+from django.middleware.csrf import get_token
 from django.views.generic import (TemplateView,
                                   UpdateView,
                                   DetailView,
@@ -148,14 +149,34 @@ class DisplayProfileView(DetailView):
 
         openinghours_list = []
         for index, day in enumerate(weekday_list):
-
             # Important:  weekdays_model[index] must be exactly same as in
             # OpenHours model. Should not be a problem now but this could be
             # a future source of bugs.
 
             day_dict = self.weekday_factory(obj, weekdays_model[index], day)
             openinghours_list.append(day_dict)
+            
         return openinghours_list
+
+    def get_max_openingshours(self, openinghours_list):
+        """
+        Returns earliest opening hour and latest closing hours
+        """
+        def get_value(dictionary, key):
+            try:
+                value = int(dictionary[key].split(":")[0])
+                # we dont return the value -1, since this is a day that is closed
+            except AttributeError:
+                if key == "open":
+                    return 99999
+                else:
+                    return -9999
+            return value
+
+        earliest_opening = min(openinghours_list, key=lambda obj: get_value(obj, 'open'))['open']
+        latest_closing =  max(openinghours_list, key=lambda obj: get_value(obj, 'closed'))['closed']
+
+        return earliest_opening, latest_closing
 
     def get_context_data(self, **kwargs):
         context = super(DisplayProfileView, self).get_context_data(**kwargs)
@@ -166,6 +187,7 @@ class DisplayProfileView(DetailView):
         # used for client booking, dont want to take todays date from user's computer
         context['date_today'] = datetime.now().strftime("%Y-%m-%d")
         context['got_onlinebooking'] = True
+        context['CSRF_TOKEN'] = get_token(self.request)
 
         context['site_domain'] = settings.SITE_DOMAIN
 
@@ -186,6 +208,7 @@ class DisplayProfileView(DetailView):
             obj = OpenHours.objects.get(user=self.object.user)
             context['openhours_reviewed'] = obj.reviewed
             context['weekdays'] = self.get_openinghours(obj)
+            context['earliest_opening'], context['latest_closing'] = self.get_max_openingshours(context['weekdays'])
         except:
             pass
 

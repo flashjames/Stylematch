@@ -19,9 +19,9 @@
 	busy: false,
 	inactive: false,
 	blockViewsIndex: 0,
-        //template:_.template($('#tpl-inspiration-image-list-item').html()),
+	highlighted: false,
         initialize:function() {
-            _.bindAll(this, 'mouseover');
+            _.bindAll(this, 'mouseover', 'book');
         },
         render:function (eventName) {
             $(this.el).html();
@@ -30,7 +30,77 @@
         events:{
 	    'mouseover': 'mouseover',
 	    'mouseleave': 'mouseleave',
+	    'click': 'book',
         },
+	findStartBlock: function() {
+	    /*
+	     * Finds the start block index, of the group of blocks, which represents the event, client want to book
+	     */
+	    var i = this.blockViewsIndex;
+	    while(true) {
+		i = --i;
+		console.log("here",i);
+		
+		// we may already be at the first block, then return that index. because then it's our start block
+		if(i < 0) {console.log("crap");return 0};
+		
+		//if the tested block was not highlighted, we now the block before was our start block
+		if(!this.options.blockViewsRow[i].highlighted) return i+1;
+	    }
+	},
+	blocksToMinutes: {0: "00", 1: "15", 2: "30", 3: "45"},
+	getTimesForEvent: function() {
+	    /*
+	     * Returns the start_time and end_time the selected blocks represent
+	     */
+	    var opening_time_hour = parseInt(EARLIEST_OPENING.split(":")[0], 10),
+	    start_block_index = this.findStartBlock();
+
+	    // start time
+	    var block_hours_start = Math.floor(start_block_index / 4);
+	    var hours_start = opening_time_hour + block_hours_start;
+	    var minutes_start = start_block_index % 4;
+	    var minutes_formatted_start = this.blocksToMinutes[minutes_start];
+
+	    // end_time
+	    var block_hours_end = Math.floor((start_block_index + this.options.parent.cutNumberOfBlocks) / 4);
+	    var hours_end = opening_time_hour + block_hours_end;
+	    var minutes_end = (start_block_index + this.options.parent.cutNumberOfBlocks) % 4;
+	    var minutes_formatted_end = this.blocksToMinutes[minutes_end];
+
+	    return [hours_start + ":" + minutes_formatted_start, hours_end + ":" + minutes_formatted_end]
+	},
+	getDate: function() {
+	    var parent = this.options.parent;
+	    var start_date = parent.parseDate(parent.currentTopDate);
+	    date = parent.getDateDaysAhead(start_date, this.options.blockViewsRowIndex)
+	    date_formatted = date.getFullYear() + "-" + parent.padZeros(date.getMonth() + 1) + "-" + date.getDate();
+	    console.log(date_formatted, this.options.blockViewsRowIndex);
+	    return date_formatted;
+	},
+	book: function() {
+	    var parent = this.options.parent;
+	    if(this.inactive || this.busy) return false
+
+	    // get start- and end-time for the calendarevent the client want to book
+	    var time = this.getTimesForEvent(),
+	    start_time = time[0],
+	    end_time = time[1],
+	    date = this.getDate(),
+	    django_formatted_starttime = date + "T" + start_time,
+	    django_formatted_endtime = date + "T" + end_time;
+	    
+	    if(!parent.selectedServices) {
+		l("no service selected");
+	    }
+
+	    //TODO: handle booking of multiple services
+	    var service_id = parent.selectedServices[0];
+	    console.log(django_formatted_starttime, django_formatted_endtime);
+	    parent.eventList.create({start_time: django_formatted_starttime, 
+				     end_time: django_formatted_endtime, 
+				     title: 'booked_online'});
+	},
 	setBusy: function() {
 	    this.busy = true;
 	    $(this.el).addClass("busy");
@@ -40,9 +110,11 @@
 	    $(this.el).removeClass("busy");
 	},
 	highlight: function() {
+	    this.highlighted = true;
 	    $(this.el).addClass("highlight");
 	},
 	unHighlight: function() {
+	    this.highlighted = false;
 	    $(this.el).removeClass("highlight");
 	},
 	setInactive: function() {
@@ -74,18 +146,20 @@
 
     window.EventView = Backbone.View.extend({
         el: $("body"),
-	currentTopDate: "2012-08-23",//DATE_TODAY, //the date that is displayed in the first row, starts at the todays date
+	currentTopDate: "2012-08-23",//DATE_TODAY, //the date that is displayed in the first row, starts at the todays date  TODO: remove the wrong default
 	cutNumberOfBlocks: 8, //this is the number of time-blocks the choosed cut/cuts take
 	weekDay: {0: "mån", 1: "tis", 2: "ons", 3: "tors", 4: "fre", 5: "lör", 6: "sön"},
+	selectedServices: [1], //TODO: Remove this default
         initialize:function () {
             //Glue code, that initialize's all views and models
             this.eventList = new EventCollection();
 	    this.on('possibleToBook', this.possibleToBook, this);
 	    this.on('unHighlightBlocks', this.unHighlightBlocks, this);
 	    _.bindAll(this, 'success', 'selectService');
-
+	    
 	    this.fetch();
 	    this.createBlocks();
+	    this.displayTimes();
 	    //_.bindAll(this, 'loadData', 'fetchSuccess'); 
 	    
         },
@@ -108,7 +182,6 @@
 	  
 	},
 	success: function(collection, response) {
-	    console.log("a",collection);
             if(!response) {
                 var noty_id = noty({
                     text: 'Frisörens schema kunde inte hämtas för tillfället-',
@@ -124,8 +197,8 @@
 
 	    // same service but in the clientbooking service list
 	    var service_in_dropdown = $('#service-dropdown').find('#service-dropdown-id-' + service_id);
+	    this.selectedServices = [service_id];
 	    var service_length = service_in_dropdown.find('.service-dropdown-length').text();
-	    console.log(service_length);
 	    var length_in_blocks = service_length / 15;
 	    this.cutNumberOfBlocks = length_in_blocks;
 	    this.setInactiveBlocks();
@@ -225,21 +298,38 @@
 	    for(i = 0; i < 7; i++) {
 		date_formatted = this.weekDay[start_date.getDay()] + " " + this.padZeros(start_date.getMonth() + 1) + "/" + start_date.getDate();
 		unordered_list.append("<li>" + date_formatted + "</li>");
-		start_date = this.getDateDaysAhead(start_date, 1)
+		start_date = this.getDateDaysAhead(start_date, 1);
 	    }
 	    
 	    //console.log(readable_date);
 	},
+	displayTimes: function() {
+	    // TODO: fix so it can handle 8:15, 8:30..
+	    var opening_time = parseInt(this.getOpeningTime().split(":")[0], 10);
+	    var closing_time = parseInt(this.getClosingTime().split(":")[0], 10);
+	    var hours = closing_time - opening_time;
+	    for(var i = 0; i < hours;) {
+		if(i == 0) {
+		    var first_part = "<li class='first'>";
+		} else {
+		    var first_part = "<li>";
+		}
+		$('#times').append(first_part + (opening_time + i) +"</li>");
+		i = ++i;
+
+	    }
+	},
 	getOpeningTime: function() {
 	    // should be fetched from profile's openinghours 
-	    return 8;
+	    return EARLIEST_OPENING;
 	},
 	getClosingTime: function() {
 	    // should be fetched from profile's openinghours 
 	    // dont forget it may be a string
-	    return 17;
+	    //return 17;
+	    return LATEST_CLOSING;
 	},
-	createBlockRow: function(number_of_blocks) {
+	createBlockRow: function(number_of_blocks, blockViewsRowIndex) {
 	    var block_views_row = []; var current_block;
 	    var current_tr = $("<tr></tr>");
 	    $('table').append(current_tr);
@@ -257,7 +347,7 @@
 		    right_block = true;
 		    className = "block left";
 		}
-		current_block = new BlockTableItemView({parent: this, blockViewsRow: block_views_row, className: className});
+		current_block = new BlockTableItemView({parent: this, blockViewsRow: block_views_row, className: className, blockViewsRowIndex: blockViewsRowIndex});
 		current_tr.append(current_block.render().el);
 		var i = block_views_row.push(current_block) - 1;
 		current_block.blockViewsIndex = i;
@@ -268,17 +358,13 @@
 	    /*
 	     * Creates all blocks on a page
 	     */
-
-	    //TODO: this is okay if opening/closing time is a integer, i.e. 8, but not if it's 8.30
-	    var number_of_openhours = this.getClosingTime() - this.getOpeningTime();
-	    // four blocks for each hour
-	    var number_of_blocks = number_of_openhours * 4;
-	    
+	    var number_of_blocks = this.numberOfBlocksBetween(this.getOpeningTime(), this.getClosingTime());
 	    this.blockViews = [];
 	    i = 7;
 	    // display 7 days
-	    while(i-- > 0) {
-		this.blockViews.push(this.createBlockRow(number_of_blocks));
+	    for(i = 0; i < 7;) {
+		this.blockViews.push(this.createBlockRow(number_of_blocks, i));
+		i = ++i;
 	    }
 
 	},
@@ -296,7 +382,7 @@
 	    return days_later;
 	},
 	blocksForMinutes: {'15': 1, '30': 2, '45': 3, '00': 0},
-	numberOfBlocksToFill: function(start_time, end_time) {
+	numberOfBlocksBetween: function(start_time, end_time) {
 	    var start_time_parts =  start_time.split(":");
 	    var end_time_parts =  end_time.split(":");
 	    
@@ -323,14 +409,11 @@
 	     * Marks blocks as busy starting at block that corresponds to start_time and x number_of_blocks ahead
 	     */
 
-	    // should use this.numberOfBlocksToFill, when getOpeningTIme returns string
-	    var opening_time = this.getOpeningTime();
-	    start_time = start_time.split(":")[0];
-	    var start_block = (start_time - opening_time) * 4;
+	    var start_block = this.numberOfBlocksBetween(this.getOpeningTime(), start_time);
+	    console.log(start_block);
 	    var block_views_row = this.blockViews[block_row];
-	    while(number_of_blocks > 0) {
-		block_views_row[start_block + number_of_blocks].setBusy();
-		number_of_blocks = --number_of_blocks;
+	    for(i=0; i < number_of_blocks; ++i) {
+		block_views_row[start_block + i].setBusy();
 	    }
 	},
 	fillBusyBlocks: function() {
@@ -346,7 +429,7 @@
 		start_time = event.get('start_time').split("T")[1]
 		end_time = event.get('end_time').split("T")[1]
 
-		number_of_blocks = this.numberOfBlocksToFill(start_time, end_time);
+		number_of_blocks = this.numberOfBlocksBetween(start_time, end_time);
 
 		var block_row = this.getBlockRow(event.get('start_time').split("T")[0]);
 		l('fillbusyblocks', start_time, end_time, number_of_blocks, block_row);
@@ -367,8 +450,9 @@
 	    _this = this;
 	    _.each(this.blockViews, function(blockRow) {
 		var needed_empty_blocks = _this.cutNumberOfBlocks;
-		var current_blocks = []
-		_.each(blockRow, function(block) {
+		current_blocks = [],
+
+		_.each(blockRow, function(block, index) {
 		    // since we may have selected a new Cut with shorter length
 		    // we need to remove the inactive class for all blocks
 		    block.removeInactive();

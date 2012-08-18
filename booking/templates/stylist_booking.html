@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load index_extras %}
+
+{% block title %}Hitta frisör{% endblock %}
+{% block head-javascripts %}
+{{ block.super }}
+<script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
+<!-- include this or backbone collection's wont be parsed correctly -->
+<script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
+<script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
+<!-- used in the service.js file, to know where the service api is located -> doesnt need to hardcode the url -->
+<script>
+  var CALENDAREVENTS_API_URL = "{% url 'api_dispatch_list' api_name="booking" resource_name="calendar_event" %}";
+  var DATE_TODAY = "{{ date_today }}";
+</script>
+{% endblock %}
+{% block content %}
+ <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <title>Demo - jQuery Week Calendar</title>
+
+  <link rel='stylesheet' type='text/css' href='{{ STATIC_URL }}js/jquery-week-calendar/libs/css/smoothness/jquery-ui-1.8.11.custom.css' />
+  <link rel='stylesheet' type='text/css' href='{{ STATIC_URL }}js/jquery-week-calendar/jquery.weekcalendar.css' />
+
+  <script type='text/javascript' src='{{ STATIC_URL }}js/jquery-week-calendar/libs/jquery-1.4.4.min.js'></script>
+  <script type='text/javascript' src='{{ STATIC_URL }}js/jquery-week-calendar/libs/jquery-ui-1.8.11.custom.min.js'></script>
+
+  <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-week-calendar/libs/date.js"></script>
+  <script type='text/javascript' src='{{ STATIC_URL }}js/jquery-week-calendar/jquery.weekcalendar.js'></script>
+  <script type='text/javascript'>
+  var year = new Date().getFullYear();
+  var month = new Date().getMonth();
+  var day = new Date().getDate();
+
+  var eventData = {
+    events : [
+      {'id':1, 'start': new Date(year, month, day, 12), 'end': new Date(year, month, day, 13, 35),'title':'Lunch with Mike'},
+      {'id':2, 'start': new Date(year, month, day, 14), 'end': new Date(year, month, day, 14, 45),'title':'Dev Meeting'},
+      {'id':3, 'start': new Date(year, month, day + 1, 18), 'end': new Date(year, month, day + 1, 18, 45),'title':'Hair cut'},
+      {'id':4, 'start': new Date(year, month, day - 1, 8), 'end': new Date(year, month, day - 1, 9, 30),'title':'Team breakfast'},
+      {'id':5, 'start': new Date(year, month, day + 1, 14), 'end': new Date(year, month, day + 1, 15),'title':'Product showcase'}
+    ]
+  };
+
+  $(document).ready(function() {
+  
+ 
+    $('<div id="message" class="ui-corner-all"></div>').prependTo($('body'));
+  });
+
+</script>
+
+
+  <h1>Week Calendar Demo</h1>
+
+  <p class="description">
+    This calendar demonstrates a basic calendar. Events triggered are
+    displayed in the message area. Appointments in the past are shaded grey.
+  </p>
+
+  <div id='calendar'></div>
+  <script src="{{ STATIC_URL }}js/stylist_booking_frontend.js"></script>
+
+{% endblock%}

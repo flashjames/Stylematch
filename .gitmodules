@@ -22,3 +22,6 @@
 [submodule "staticfiles/js/underscore"]
 	path = staticfiles/js/underscore
 	url = git://github.com/documentcloud/underscore.git
+[submodule "staticfiles/js/jquery-week-calendar"]
+	path = staticfiles/js/jquery-week-calendar
+	url = git://github.com/themouette/jquery-week-calendar.git

@@ -146,7 +146,7 @@
 
     window.EventView = Backbone.View.extend({
         el: $("body"),
-	currentTopDate: "2012-08-23",//DATE_TODAY, //the date that is displayed in the first row, starts at the todays date  TODO: remove the wrong default
+	currentTopDate: DATE_TODAY, //the date that is displayed in the first row, starts at the todays date  TODO: remove the wrong default
 	cutNumberOfBlocks: 8, //this is the number of time-blocks the choosed cut/cuts take
 	weekDay: {0: "mån", 1: "tis", 2: "ons", 3: "tors", 4: "fre", 5: "lör", 6: "sön"},
 	selectedServices: [1], //TODO: Remove this default

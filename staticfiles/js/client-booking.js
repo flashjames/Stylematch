@@ -148,7 +148,7 @@
         el: $("body"),
 	currentTopDate: DATE_TODAY, //the date that is displayed in the first row, starts at the todays date  TODO: remove the wrong default
 	cutNumberOfBlocks: 8, //this is the number of time-blocks the choosed cut/cuts take
-	weekDay: {0: "mån", 1: "tis", 2: "ons", 3: "tors", 4: "fre", 5: "lör", 6: "sön"},
+	weekDay: {0: "sön", 1: "mån", 2: "tis", 3: "ons", 4: "tors", 5: "fre", 6: "lör"}, // start of week is sunday, in Date()
 	selectedServices: [1], //TODO: Remove this default
         initialize:function () {
             //Glue code, that initialize's all views and models

@@ -114,6 +114,7 @@ class DisplayProfileView(DetailView):
         This is then used in template to print "CLOSED".
 
         """
+        
         time = format_minutes_to_hhmm(getattr(obj, attr_name))
         if time == '':
             time = -1
@@ -134,7 +135,7 @@ class DisplayProfileView(DetailView):
         closed_time = self.get_opening_time(obj, attr_name)
 
         day = {'day': pretty_dayname, 'open': open_time, 'closed': closed_time}
-
+        #import pdb;pdb.set_trace()
         return day
 
     def get_openinghours(self, obj):
@@ -152,7 +153,7 @@ class DisplayProfileView(DetailView):
             # Important:  weekdays_model[index] must be exactly same as in
             # OpenHours model. Should not be a problem now but this could be
             # a future source of bugs.
-
+            
             day_dict = self.weekday_factory(obj, weekdays_model[index], day)
             openinghours_list.append(day_dict)
             
@@ -205,10 +206,10 @@ class DisplayProfileView(DetailView):
 
         # opening hours the displayed userprofile have
         try:
-            obj = OpenHours.objects.get(user=self.object.user)
-            context['openhours_reviewed'] = obj.reviewed
-            context['weekdays'] = self.get_openinghours(obj)
-            context['earliest_opening'], context['latest_closing'] = self.get_max_openingshours(context['weekdays'])
+            openhours_list, openhours_object = OpenHours.objects.get_openinghours(self.object.user)
+            context['weekdays'] = openhours_list
+            context['openhours_reviewed'] = openhours_object.reviewed
+            context['earliest_opening'], context['latest_closing'] = OpenHours.objects.get_max_openingshours(openhours_list=openhours_list)
         except:
             pass
 

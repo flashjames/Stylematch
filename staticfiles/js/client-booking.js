@@ -191,6 +191,7 @@
 	    this.fillBusyBlocks();
 	    this.displayDates();
 	    this.setInactiveBlocks();
+	    this.blocksOutsideOpenhours();
         },
 	selectService: function(event) {
 	    var service_id = $(event.currentTarget).attr('id');
@@ -354,11 +355,17 @@
 	    }
 	    return block_views_row;
 	},
+	getMaxBlocks: function() {
+	    /*
+	     * Returns number of blocks between earliest OpeningTime and  latest ClosingTime
+	     */
+	    return this.numberOfBlocksBetween(this.getOpeningTime(), this.getClosingTime())
+	},
 	createBlocks: function() {
 	    /*
 	     * Creates all blocks on a page
 	     */
-	    var number_of_blocks = this.numberOfBlocksBetween(this.getOpeningTime(), this.getClosingTime());
+	    var number_of_blocks = this.getMaxBlocks();
 	    this.blockViews = [];
 	    i = 7;
 	    // display 7 days
@@ -476,6 +483,61 @@
 		    _this.setBlocksInactive(current_blocks);
 		}
 	    });
+	},
+	blocksOutsideOpenhours: function() {
+	    /* 
+	     * Set blocks outside openhours as inactive.
+	     * This is needed since we show blocks for all days according to earliest opening/closing
+	     * and days can have different openhours + can be closed.
+	     */
+	    var date = this.parseDate(this.currentTopDate);
+	    // total number of blocks on a row
+	    var number_of_blocks = this.getMaxBlocks();
+
+	    for(i = 0; i < 7; i++) {
+		var openhours = this.getOpenHours(date);
+		console.log("here",openhours, date);
+		if(openhours.success) {
+		    var index_block_opening = this.numberOfBlocksBetween(EARLIEST_OPENING, openhours.open_times)
+		    for(x=0; x < index_block_opening;x++) {
+			this.blockViews[i][x].setInactive();
+		    }
+		    var index_block_closing = this.numberOfBlocksBetween(EARLIEST_OPENING, openhours.closed_times);
+		    for(x=index_block_closing; x < number_of_blocks; x++) {
+			this.blockViews[i][x].setInactive();
+		    }
+		} else {
+		    // whole day closed
+		    this.setBlocksInactive(this.blockViews[i]);
+		}
+		date = this.getDateDaysAhead(date, 1);
+	    }
+	},
+	/* COMMON FUNCTIONS WITH STYLIST BOOKING */
+
+	getOpenHours: function(date_object) {
+	    /*
+	     * Returns opening and closing hours for supplied date (the weekday for the date)
+	     */
+
+	    /* WARNING!! .split() IS REMOVED IN THIS FUNCTION. IF ILL REFACTOR OUT COMMON FUNCTIONS */
+
+	    // in OPENING_HOURS, monday have index 0. but in Date.getDay() sunday have 0 -> convert it
+	    var weekday_integer = (date_object.getDay() + 6) % 7
+	    
+	    // it's possible the day is closed
+	    try {
+		//debugger;
+		var success = true;
+		var open_times = OPENING_HOURS[weekday_integer].open;
+		var closed_times = OPENING_HOURS[weekday_integer].closed;
+
+		// test if it's closed
+		OPENING_HOURS[weekday_integer].open.split(":");
+	    } catch(TypeError) {
+		var success = false;
+	    }
+	    return {success: success, open_times: open_times, closed_times: closed_times}
 	},
         render:function (eventName) {
             return this;

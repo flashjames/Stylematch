@@ -57,7 +57,7 @@ $(function(){
                 shortMonths:  ['Jan', 'Feb', 'Mar', 'Apr', 'Maj', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'],
                 shortDays: ['Sön', 'Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör'],
                 useShortDayNames: true,
-                businessHours: {start: 8, end: 18, limitDisplay: true}, //TODO: these times should be set with openhours
+                //businessHours: {start: 8, end: 18, limitDisplay: true}, //TODO: these times should be set with openhours
                 height: function($calendar) {
                     return $(window).height() - $('.navbar-inner').outerHeight(true) - $('#padding').outerHeight(true);
                 },
@@ -69,16 +69,7 @@ $(function(){
                 eventClick: this.editEvent,
 		displayFreeBusys: true,
 		defaultFreeBusy: {free: true},
-		freebusys: [
-		    {"start": new Date(year, month, day+0, 00, 01), "end": new Date(year, month, day+3, 23, 00), "free": false},
-		    {"start": new Date(year, month, day+0, 08), "end": new Date(year, month, day+0, 12, 00), "free": false},
-		    {"start": new Date(year, month, day+1, 08), "end": new Date(year, month, day+1, 12, 00), "free": false},
-		    {"start": new Date(year, month, day+2, 08), "end": new Date(year, month, day+2, 12, 00), "free": true},
-		    {"start": new Date(year, month, day+1, 14), "end": new Date(year, month, day+1, 18, 00), "free": true},
-		    {"start": new Date(year, month, day+2, 08), "end": new Date(year, month, day+2, 12, 00), "free": true},
-		    {"start": new Date(year, month, day+2, 14), "end": new Date(year, month, day+2, 18, 00), "free": true}
-
-],
+		
 
             });
 
@@ -87,8 +78,43 @@ $(function(){
 
         },
         data: function(start, end, callback) {
-            callback(this.eventList.models);
+	    var data = {events: this.eventList.models,
+			freebusys: this.getFreeBusys(start, end)
+		       };
+	    
+            callback(data);
+	    
         },
+	getFreeBusys: function(start, end) {
+	    // need to copy start date, or we'll move the calendar forward
+	    var current_day = new Date(start.getTime());
+
+	    var freeBusys = [{"start": start, "end": end,"free": false}];
+	    do {
+		var weekday_integer = (current_day.getDay() + 6) % 7
+
+	
+		var openhours = this.getOpenHours(current_day);
+		
+		// found openhours for the day, mark the time block as free
+		if(openhours.success) {
+		    var open = new Date(current_day.getTime());
+		    open.setHours(openhours.open_times[0]);
+		    open.setMinutes(openhours.open_times[1]);
+		    var close = new Date(current_day.getTime());
+		    close.setHours(openhours.closed_times[0]);
+		    close.setMinutes(openhours.closed_times[1]);
+
+		    freeBusys.push({"start": open, "end": close, "free": true});
+		}
+		
+		// one day forward
+		current_day = this.getDateDaysAhead(current_day, 1);
+	    } while(current_day.getDay() != end.getDay());
+
+	    return freeBusys;
+
+	},
         fetch: function() {
             var end_date = this.$calendar.weekCalendar('getCurrentLastDay');
 
@@ -217,6 +243,8 @@ $(function(){
         },
 	createEventSuccess: function(model, resp, options) {
 	    //TODO: check for error and then use notify
+
+	    // set the calEvent which the calendar use, to the backbone object instead
 	    this.calEventWaiting = model;
 	    this.$calendar.weekCalendar("removeUnsavedEvents");
             this.$calendar.weekCalendar("updateEvent", this.calEventWaiting);
@@ -319,6 +347,32 @@ $(function(){
             //YYYY-MM-DD
             return date.getFullYear() + "-" + this.padZeros(date.getMonth() + 1) + "-" + date.getDate();
         },
+	getDateDaysAhead: function(date_object, days_ahead) {
+	    // get the date x days forward from date_object
+	    if(days_ahead == null) { days_ahead = 0}
+	    date_object.setTime(date_object.getTime() + days_ahead * 1000 * 3600 * 24);
+	    return date_object;
+	},
+	getOpenHours: function(date_object) {
+	    /*
+	     * Returns opening and closing hours for supplied date
+	     */
+
+	    // in OPENING_HOURS, monday have index 0. but in Date.getDay() sunday have 0 -> convert it
+	    var weekday_integer = (date_object.getDay() + 6) % 7
+	    
+	    // it's possible the day is closed
+	    try {
+		var success = true;
+		var open_times = OPENING_HOURS[weekday_integer].open.split(":");
+		var closed_times = OPENING_HOURS[weekday_integer].closed.split(":");
+	    } catch(TypeError) {
+		var success = false;
+	    }
+	    return {success: success, open_times: open_times, closed_times: closed_times}
+	},
+
+
 
 
     });

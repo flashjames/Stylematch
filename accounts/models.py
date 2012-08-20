@@ -14,7 +14,7 @@ from registration.signals import user_registered
 from social_auth.signals import socialauth_registered
 from accounts.signals import approved_user_criteria_changed
 
-from tools import list_with_time_interval, format_minutes_to_pretty_format, encode_url
+from tools import list_with_time_interval, format_minutes_to_pretty_format, encode_url, weekday_factory
 
 weekdays_model = ['mon', 'tues', 'wed', 'thurs', 'fri', 'sat', 'sun']
 
@@ -280,11 +280,65 @@ class Service(models.Model):
         ordering = ['order']
 
 
+class OpenHoursManager(models.Manager):
+    def get_openinghours(self, user):
+
+        weekday_list = ['Måndag',
+                        'Tisdag',
+                        'Onsdag',
+                        'Torsdag',
+                        'Fredag',
+                        'Lördag',
+                        'Söndag']
+
+        openhours_object = self.get(user=user)
+        openinghours_list = []
+        for index, day in enumerate(weekday_list):
+            # Important:  weekdays_model[index] must be exactly same as in
+            # OpenHours model. Should not be a problem now but this could be
+            # a future source of bugs.
+
+            day_dict = weekday_factory(openhours_object, index, weekdays_model[index], day)
+            openinghours_list.append(day_dict)
+            
+        return openinghours_list, openhours_object
+
+    def get_max_openingshours(self, user=None, openhours_list=None):
+        """
+        Returns earliest opening hour and latest closing hours
+        """
+
+        # This is a hack, since openhours needs REFACTORING
+        if not openhours_list and user:
+            openhours_list, openhours_object = self.get_openinghours(user=user)
+        elif openhours_list:
+            pass
+        else:
+            raise Exception("You need to supply either a user object or a user object")
+            
+        def get_value(dictionary, key):
+
+            try:
+                value = int(dictionary[key].split(":")[0])
+                # we dont return the value -1, since this is a day that is closed
+            except AttributeError:
+                if key == "open":
+                    return 99999
+                else:
+                    return -9999
+            return value
+
+        earliest_opening = min(openhours_list, key=lambda obj: get_value(obj, 'open'))['open']
+        latest_closing =  max(openhours_list, key=lambda obj: get_value(obj, 'closed'))['closed']
+
+        return earliest_opening, latest_closing
+
+    
 class OpenHours(models.Model):
     """
-    TODO: Fix model description
+    THIS MODEL NEEDS SOME SERIOUS REFACTORING, INCLUDING THE MANAGER
     """
-
+    objects = OpenHoursManager()
     # Do not change if you dont know what you're doing!!
     closed_value = -1
 
@@ -334,6 +388,9 @@ class OpenHours(models.Model):
         exec(code)
 
     reviewed = models.BooleanField(default=False)
+
+    
+
 
 
 class Speciality(models.Model):

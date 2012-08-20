@@ -1,3 +1,4 @@
+# coding:utf-8
 import uuid
 
 def format_minutes_to_hhmm(minutes):
@@ -91,6 +92,39 @@ def convert_bytes(bytes):
     else:
         size = '%.iB' % bytes
     return size
+
+def get_opening_time(obj, attr_name):
+    """
+    Helper function for opening hours.
+    If no time has been selected in the dropdown, -1 will be  the value.
+    This is then used in template to print "CLOSED".
+    
+    """
+    time = format_minutes_to_hhmm(getattr(obj, attr_name))
+    if time == '':
+        time = -1
+        
+    return time
+
+def weekday_factory(obj, index, day='mon', pretty_dayname='Måndag'):
+    """
+    Helper function to create a dict with relevant day information.
+    Extracts values from obj with attribute prefix DAY
+
+    """
+    attr_name = day
+    open_time = get_opening_time(obj, attr_name)
+
+    attr_name = day + "_closed"
+    closed_time = get_opening_time(obj, attr_name)
+
+    day = {'day': pretty_dayname,
+           'open': open_time,
+           'closed': closed_time,
+           'day_integer': index # used in stylist_booking to know which day it is
+           }
+
+    return day
 
 """
 Generate short URL

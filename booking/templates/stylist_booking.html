@@ -14,6 +14,7 @@
 <script>
   var CALENDAREVENTS_API_URL = "{% url 'api_dispatch_list' api_name="booking" resource_name="calendar_event" %}";
   var DATE_TODAY = "{{ date_today }}";
+  var OPENING_HOURS = {{ opening_hours|safe }};
 </script>
 {% endblock %}
 {% block content %}

@@ -150,6 +150,7 @@
 	cutNumberOfBlocks: 8, //this is the number of time-blocks the choosed cut/cuts take
 	weekDay: {0: "sön", 1: "mån", 2: "tis", 3: "ons", 4: "tors", 5: "fre", 6: "lör"}, // start of week is sunday, in Date()
 	selectedServices: [1], //TODO: Remove this default
+	blocksPerRow: null, // number of blocks each row is
         initialize:function () {
             //Glue code, that initialize's all views and models
             this.eventList = new EventCollection();
@@ -157,6 +158,7 @@
 	    this.on('unHighlightBlocks', this.unHighlightBlocks, this);
 	    _.bindAll(this, 'success', 'selectService');
 	    
+	    this.blocksPerRow = this.getBlocksPerRow();
 	    this.fetch();
 	    this.createBlocks();
 	    this.displayTimes();
@@ -355,7 +357,7 @@
 	    }
 	    return block_views_row;
 	},
-	getMaxBlocks: function() {
+	getBlocksPerRow: function() {
 	    /*
 	     * Returns number of blocks between earliest OpeningTime and  latest ClosingTime
 	     */
@@ -365,12 +367,11 @@
 	    /*
 	     * Creates all blocks on a page
 	     */
-	    var number_of_blocks = this.getMaxBlocks();
 	    this.blockViews = [];
 	    i = 7;
 	    // display 7 days
 	    for(i = 0; i < 7;) {
-		this.blockViews.push(this.createBlockRow(number_of_blocks, i));
+		this.blockViews.push(this.createBlockRow(this.blocksPerRow, i));
 		i = ++i;
 	    }
 
@@ -420,7 +421,17 @@
 	    console.log(start_block);
 	    var block_views_row = this.blockViews[block_row];
 	    for(i=0; i < number_of_blocks; ++i) {
-		block_views_row[start_block + i].setBusy();
+		var index_in_array = start_block + i
+		console.log("ye",index_in_array);
+		// an event can have an end/start time, that's outside openinghours.
+		// this if-case makes sure we dont try to set blocks that should correspond to
+		// these blocks (which do not exist)
+		if(index_in_array >= this.blocksPerRow) return
+		
+		// we can also get value's that's lower than zero -> skip ahead to next index
+		if(index_in_array < 0) continue;
+
+		block_views_row[index_in_array].setBusy();
 	    }
 	},
 	fillBusyBlocks: function() {
@@ -491,19 +502,17 @@
 	     * and days can have different openhours + can be closed.
 	     */
 	    var date = this.parseDate(this.currentTopDate);
-	    // total number of blocks on a row
-	    var number_of_blocks = this.getMaxBlocks();
 
+	    // total number of blocks on a row
 	    for(i = 0; i < 7; i++) {
 		var openhours = this.getOpenHours(date);
-		console.log("here",openhours, date);
 		if(openhours.success) {
 		    var index_block_opening = this.numberOfBlocksBetween(EARLIEST_OPENING, openhours.open_times)
 		    for(x=0; x < index_block_opening;x++) {
 			this.blockViews[i][x].setInactive();
 		    }
 		    var index_block_closing = this.numberOfBlocksBetween(EARLIEST_OPENING, openhours.closed_times);
-		    for(x=index_block_closing; x < number_of_blocks; x++) {
+		    for(x=index_block_closing; x < this.blocksPerRow; x++) {
 			this.blockViews[i][x].setInactive();
 		    }
 		} else {

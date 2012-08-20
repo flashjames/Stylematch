@@ -13,19 +13,19 @@
 </script>
 <div class="frisor-page">
 <div class="row">
-	<div class="span12 frisor-page-header"><h1>Framtidens marknadsföringsverktyg för dig som utbildad frisör</h1></div>
+	<div class="span12 frisor-page-header"><h1>Här skapar du din egen profil på 3 minuter!</h1></div>
 </div>
 <div class="row">
-	<div class="span5 frisor-page-list" >
+	<div class="span6 frisor-page-list" >
 		<ul style="margin-left:0px;">
-			<li style="margin-top:0px;"><img src="{{ STATIC_URL }}img/glyphicons/png/glyphicons_003_user.png"/> <span>Skapa din egna StyleMatch-profil (stylematch.se/dittnamn)</span></li>
-			<li><img src="{{ STATIC_URL }}img/glyphicons/png/glyphicons_027_search.png"/> <span>Bli sökbar i StyleMatch exklusiva sökmotor</span></li>
-			<li><img src="{{ STATIC_URL }}img/glyphicons/png/glyphicons_037_credit.png"/> <span>Slipp dyr marknadsföring som inte ger resultat</span></li>
-			<li><img src="{{ STATIC_URL }}img/glyphicons/png/glyphicons_012_heart.png"/> <span>Stärk relationen med dina befintliga kunder</span></li>
-			<li><img src="{{ STATIC_URL }}img/glyphicons/png/glyphicons_390_facebook.png"/> <span>Sprid din hemsida via Facebook och få nya kunder</span></li>
-			<li style="border-bottom:0px solid black"><img src="{{ STATIC_URL }}img/glyphicons/png/glyphicons_049_star.png"/> <span>Lägg upp bilder och visa dina kunder hur duktig du är</span></li>
+			<li style="margin-top:0px;"><img src="{{ STATIC_URL }}img/checkbox.png"/><span>Få hjälp att bygga upp en stabil kundkrets</span></li>
+			<li><img src="{{ STATIC_URL }}img/checkbox.png"/><span>Få nya kunder du trivs med</span></li>
+			<li><img src="{{ STATIC_URL }}img/checkbox.png"/><span>Visa upp vem du är som frisör</span></li>
+			<li><img src="{{ STATIC_URL }}img/checkbox.png"/><span>Ingen bindningstid</span></li>
 			
 		</ul>
+		
+		<h4>99kr/månad</h4>
 		
 		
 	</div>
@@ -57,6 +57,7 @@ Note the video ID is added at the end to prevent conflicts
       videoId: id,
       width: width,
       height: height,
+      framborder:0,
       events: { onStateChange: function (event)
       {
         switch(event.data)
@@ -85,16 +86,15 @@ Note the video ID is added at the end to prevent conflicts
   }
  
 </script>
-	<div class="span6 offset1" >
+	<div class="span6 frisor-page-video-div" >
 	  <div class="frisor-page-video" id="player_DvLuZVCj-6g"></div>
 	</div>
 </div>
 <div class="row">
   <div class="span12 frisor-page-try-stylematch">
-    <h2>Prova hela StyleMatch gratis i 30 dagar. Det bjuder vi på!</h2>
-    <h4>Efter 30 dagar kostar det endast 99kr/månad. Ingen bindningstid, är du inte nöjd avslutar du ditt konto med ett klick!</h4>
-    <a href="/accounts/register/" class="btn btn-large btn-info">Skapa din profil</a>
-  </div>
+    <h2>Prova gratis i 30 dagar!</h2>
+    <a href="/accounts/register/" class="btn btn-large btn-info">Skapa en profil</a>        
+    </div>
 </div>
 
 
@@ -104,86 +104,50 @@ Note the video ID is added at the end to prevent conflicts
   <div style="background-color:white">
     <div class="container frisor-page-second-page">
       <div class="row" style="margin-top:50px;">
-        <div class="span5 frisor-page-undefinied-picture" style="height:200px;">
-
-          <img src="{{ STATIC_URL }}img/printscreen-sign-up-2.png">
-        </div>
-        <div class="span7" frisor-page-longer-text>
-          <p>Vi på StyleMatch tror på att förenkla vardagen för dig som hårt arbetande frisör och att lyfta fram din kreativa sida. Vi vill ge dig möjlighet att stärka ditt personliga varumärke då vi vet att det är relationen mellan dig och dina kunder som är avgörande. </p>
-          <p>StyleMatch är en tjänst där du som frisör kan skapa en egen professionell profilsida med endast några klick. Sidan kan sedan anpassas efter din egen personlighet i form av text, bilder och layout. Med ett kraftfullt sökverktyg kan kunder nu på ett nytt och roligt sätt hitta och boka just dig. Efter besöket kan dina kunder rekommendera dig till sina vänner via mail eller på sociala medier så som Facebook.
-          </p>
-          <p>Vad som gör StyleMatch unikt jämfört med andra tjänster på marknaden är att vi lyfter fram dig och din personlighet istället för den salong du jobbar på. StyleMatch är ett enkelt och modernt verktyg som låter dig få ta del av de otroliga möjligheterna som finns på internet.</p>
-        </div>
+      	<h3>Vad kan jag göra med StyleMatch?</h3>
+      	<div class="span12 citat1">
+	      	<div class="span3">
+	      		<img src="{{ STATIC_URL }}img/Linnprofil.png"/>
+	      	</div>
+		    <div class="span6">
+		    	<h4>Få hjälp att bygga upp en stabil kundkrets</h4>
+		      	<p>Linn är nyutbildad frisör och lärling. Hon vet att det är viktigt med en stabil kundkrets. StyleMatch hjälper henne att nå ut och synas där nya kunder letar.</p>
+	      </div>
+	   </div>      	
+	<div class="span12 citat2">
+		<div class="span3 pull-right">
+	      		<img src="{{ STATIC_URL }}img/Carroprofil.png"/>
+	      	</div>
+		    <div class="span6 pull-right">
+		    	<h4>Få nya kunder du trivs med</h4>
+		      	<p>Carro använder StyleMatch för att få fler kunder som passar hennes stil. Hon vill ha rätt kunder. Rätt kunder kommer hon bra överens med och det är större chans att de blir återkommande.</p>
+	      </div>
+	</div>
+	    
+	    
+	    <div class="span12 citat3">
+	      	<div class="span3">
+	      		<img src="{{ STATIC_URL }}img/Malinprofil.png"/>
+	      	</div>
+		    <div class="span6">
+		    	<h4>Lägg upp bilder och visa vem du är som frisör</h4>
+		      	<p>Malin använder StyleMatch för att lägga upp bilder på frisyrer hon har klippt. Hon vet att hennes kunder vill se hennes bilder samlade på ett ställe.</p>
+	      </div>
+	   </div>    
       </div>
       
       
       
-      <div class="row frisor-page-vanliga-fragor">
-      <hr class="soften" style="margin:25px 0px;">
-	      
-		      <h2>Vanliga frågor</h2>
-		      <div class="span5">
-		     	<h4>Hur hittar kunder till StyleMatch?</h4>
-				<p>Precis som din uppgift är att klippa hår och skapa grymma kreationer är vår uppgift att få privatpersoner att hitta till StyleMatch.  Detta gör vi ständigt genom vårt arbete med google’s sökmotor, press, tidningar, sociala medier och kontakt med rätt personer i branchen. Kort sagt gör vi allt vi kan för att folk ska besöka StyleMatch när de ska hitta en frisör. 
-				</p>	
-				<h4>Vad får jag ut av StyleMatch?</h4>
 
-<p>Först och främst kommer din StyleMatchprofil leda till att du syns där dina kunder vill hitta dig. Vi ser till att din profil syns och det enda du behöver tänka på är att hålla din profil så levande och uppdaterad som möjligt! <br><br>
-
-Du kan hela tiden se över hur väl din profil syns på StyleMatch genom enkel <strong>besöksstatistik</strong> och antal rekommendationer din profil fått av dina kunder. Självklart vill vi se att du har en så bra profil som möjligt och därför hjälper vi dig mer än gärna att framhäva dig på det sätt du önskar! <br><br>
-
-Vi tror på att ta betalt av våra kunder först när vi vet att vår tjänst levererar mer värde än vad man betalar för att använda den och vid den filosofin står vi fast! </p>
-		      </div>
-				<div class="span5 offset1"><h4>Jag har facebook, behöver jag då ha StyleMatch?</h4>
-<p>Kunder besöker StyleMatch för att de är intresserade av hår och att klippa sig. Det som skiljer StyleMatch från Facebook är vår unika <strong>söksida för privatpersoner</strong>. På Facebook ingår man inte i någon söklista för vilket gör att dina kunder aktivt måste söka upp dig vilket oftast är komplicerat. På StyleMatch har du en helt egen profilsida samt plats på söksidan som gör det enkelt för nya och gamla kunder att hitta dig.<br><br>
-
-Hela grundidén är att du ska få rätt kunder som passar dig. Med StyleMatch får kunden en bild av dig redan innan besöket vilket ökar chansen att hon kommer att trivas.</p>
-				
-				<h4>Min salong har en hemsida, behöver jag då ha StyleMatch?</h4>
-				<p>Precis som med Facebook så måste kunden veta om vad salongen du arbetar på heter. På StyleMatch ökar chanserna till att <strong>nya kunder hittar dig</strong> eftersom de aktivt är ute och letar efter en bra frisör. Med hjälp av både en söklista och inspirationssida så kommer du nu få helt nya möjligheter att synas på internet. </p>  </div>
-		      
-	      
-		     
-	      </div>
-	      
       
       
-      
-      <div class="row citat">
-      
-        <hr class="soften" style="margin:25px 0px;">
-	      <div class="citat1 span3">
-	      		    <div class="citatet"><blockquote>
-      <p>"Stylematch hjälper mig att nå ut till alla olika kunder som är noga med sitt val av frisör."</p>
-      <small>Caroline Bergholm, Frisör Proffs & Lärling City Linköping</small>
-  </blockquote></div>
-		      <img src="{{ STATIC_URL }}img/citat_bilder/carro_citatbild.png"/>
-	      </div>
-	         <div class="citat2 span3 offset1">
-	             <div class="citatet"><blockquote>
-      <p>"Äntligen finns det en tjänst som arbetar för att jag som nyutbildad frisör ska synas bättre på internet."</p>
-      <small>Malin Avetun, Frisör Hårvårdsbaren Norrköping</small>
-  </blockquote></div>
-		      <img src="{{ STATIC_URL }}img/citat_bilder/malin_citatbild.png"/>
-	      </div>
-	      
-	         <div class="citat3 span3 offset1">
-	             <div class="citatet"><blockquote>
-      <p>"Nu när jag flyttat till Linköping måste jag hitta en ny frisör, och jag vet inte vart jag ska börja leta."</p>
-      <small>Per Nibleus, Student Linköping</small>
-  </blockquote>
-</div>		      <img src="{{ STATIC_URL }}img/citat_bilder/per_citatbild.png"/>
-	      </div>
-	      
-      </div>
-      
+           
 <div class="row">
   <hr class="soften" style="margin:25px 0px;">
   <div class="span12 frisor-page-final-arguments">
 
-    <h3>StyleMatch är framtidens sätt att marknadsföra sig som frisör.</h3>
-    <h4>Sätt igång idag, skapa din profil och prova gratis i 30 dagar!</h4>
-    <a href="/accounts/register/" class="btn btn-large btn-info">Skapa din profil</a>
+    <h3>StyleMatch hjälper dig med din marknadsföring online</h3>
+        <a href="/accounts/register/" class="btn btn-large btn-info">Gå med!</a>
   </div>
 </div>
 

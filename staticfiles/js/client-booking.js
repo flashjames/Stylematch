@@ -20,6 +20,7 @@
 	inactive: false,
 	blockViewsIndex: 0,
 	highlighted: false,
+	closed: false,
         initialize:function() {
             _.bindAll(this, 'mouseover', 'book');
         },
@@ -123,8 +124,22 @@
 	},
 	removeInactive: function() {
 	    this.inactive = false;
+	    if(!this.closed) {
+		$(this.el).removeClass("inactive");
+	    }
+	},
+	setClosed: function() {
+	    this.closed = true;
+	    $(this.el).addClass("inactive");
+	},
+	removeClosed: function() {
+	    this.closed = false;
+	    if(!this.inactive) {
+		$(this.el).removeClass("inactive");
+	    }
 	    $(this.el).removeClass("inactive");
 	},
+
 	reset: function() {
 	    this.removeBusy();
 	    this.unHighlight();
@@ -192,8 +207,9 @@
             }
 	    this.fillBusyBlocks();
 	    this.displayDates();
-	    this.setInactiveBlocks();
+
 	    this.blocksOutsideOpenhours();
+	    this.setInactiveBlocks();
         },
 	selectService: function(event) {
 	    var service_id = $(event.currentTarget).attr('id');
@@ -235,7 +251,7 @@
 	    
 	    // the current select block need to be free, else we dont need to check more blocks
 	    var view = blockViewsRow[blockViewsIndex];
-	    if(view.busy == true) { return false }
+	    if(view.busy == true || view.closed == true) { return false }
 	    
 	    var sum_not_busy_blocks = 1;
 	    this.not_busy_blocks = [];	    
@@ -244,7 +260,7 @@
 	    for(i=1; i<this.cutNumberOfBlocks;) {
 		//console.log('t',i,blockViewsIndex+parseInt(i));
 		var view = blockViewsRow[blockViewsIndex+i]
-		if(view == null || view.busy == true) {
+		if(view == null || view.busy == true || view.closed == true) {
 		    //should only count consequent empty time-blocks
 		    break;
 		} else {
@@ -261,7 +277,7 @@
 		    break;
 		}
 		var view = blockViewsRow[blockViewsIndex-i]
-		if(view == null || view.busy == true) {
+		if(view == null || view.busy == true || this.closed == true) {
 		    break;
 		} else {
 		    sum_not_busy_blocks = ++sum_not_busy_blocks;
@@ -422,12 +438,12 @@
 	    var block_views_row = this.blockViews[block_row];
 	    for(i=0; i < number_of_blocks; ++i) {
 		var index_in_array = start_block + i
-		console.log("ye",index_in_array);
+		
 		// an event can have an end/start time, that's outside openinghours.
 		// this if-case makes sure we dont try to set blocks that should correspond to
 		// these blocks (which do not exist)
 		if(index_in_array >= this.blocksPerRow) return
-		
+                
 		// we can also get value's that's lower than zero -> skip ahead to next index
 		if(index_in_array < 0) continue;
 
@@ -466,7 +482,7 @@
 	     * for the currently select cut, they are marked as inactive and greyed out.
 	     */
 	    _this = this;
-	    _.each(this.blockViews, function(blockRow) {
+	    _.each(this.blockViews, function(blockRow, outer_index) {
 		var needed_empty_blocks = _this.cutNumberOfBlocks;
 		current_blocks = [],
 
@@ -475,7 +491,8 @@
 		    // we need to remove the inactive class for all blocks
 		    block.removeInactive();
 
-		    if(!block.busy) {
+		    // we can have set, block as inactive before with blocksOutsideOpenhours
+		    if(!block.busy && !block.closed) {
 			needed_empty_blocks = --needed_empty_blocks;
 			current_blocks.push(block);
 		    } else {
@@ -485,6 +502,10 @@
 			needed_empty_blocks = _this.cutNumberOfBlocks;
 			current_blocks = []
 		    }
+		    if(outer_index == 5 && index > 10) {
+			debugger;
+		    }
+
 		});
 
 		// the last block on the row may not be a busy block
@@ -509,15 +530,17 @@
 		if(openhours.success) {
 		    var index_block_opening = this.numberOfBlocksBetween(EARLIEST_OPENING, openhours.open_times)
 		    for(x=0; x < index_block_opening;x++) {
-			this.blockViews[i][x].setInactive();
+			this.blockViews[i][x].setClosed();
 		    }
 		    var index_block_closing = this.numberOfBlocksBetween(EARLIEST_OPENING, openhours.closed_times);
 		    for(x=index_block_closing; x < this.blocksPerRow; x++) {
-			this.blockViews[i][x].setInactive();
+			this.blockViews[i][x].setClosed();
 		    }
 		} else {
 		    // whole day closed
-		    this.setBlocksInactive(this.blockViews[i]);
+		    _.each(this.blockViews[i], function(block) {
+			block.setClosed();
+		    });
 		}
 		date = this.getDateDaysAhead(date, 1);
 	    }

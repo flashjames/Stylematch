@@ -17,70 +17,160 @@
 </script>
 {% endblock %}
 {% block content %}
- <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-  <title>Demo - jQuery Week Calendar</title>
 
-  <link rel='stylesheet' type='text/css' href='{{ STATIC_URL }}js/jquery-week-calendar/libs/css/smoothness/jquery-ui-1.8.11.custom.css' />
-  <link rel='stylesheet' type='text/css' href='{{ STATIC_URL }}js/jquery-week-calendar/jquery.weekcalendar.css' />
+<link rel='stylesheet' type='text/css' href='{{ STATIC_URL }}js/jquery-week-calendar/libs/css/smoothness/jquery-ui-1.8.11.custom.css' />
+<link rel='stylesheet' type='text/css' href='{{ STATIC_URL }}js/jquery-week-calendar/jquery.weekcalendar.css' />
 
-  <script type='text/javascript' src='{{ STATIC_URL }}js/jquery-week-calendar/libs/jquery-ui-1.8.11.custom.min.js'></script>
+<script type='text/javascript' src='{{ STATIC_URL }}js/jquery-week-calendar/libs/jquery-ui-1.8.11.custom.min.js'></script>
+<style>
+  .content {
+  padding-top:0px !important;
+  padding-bottom:0px !important;
+  }
+</style>
 
-  <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-week-calendar/libs/date.js"></script>
-  <script type='text/javascript' src='{{ STATIC_URL }}js/jquery-week-calendar/jquery.weekcalendar.js'></script>
-  <script type='text/javascript'>
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-week-calendar/libs/date.js"></script>
+<script type='text/javascript' src='{{ STATIC_URL }}js/jquery-week-calendar/jquery.weekcalendar.js'></script>
+
+<script type='text/javascript'>
   var year = new Date().getFullYear();
   var month = new Date().getMonth();
   var day = new Date().getDate();
 
   var eventData = {
-    events : [
-      {'id':1, 'start': new Date(year, month, day, 12), 'end': new Date(year, month, day, 13, 35),'title':'Lunch with Mike'},
-      {'id':2, 'start': new Date(year, month, day, 14), 'end': new Date(year, month, day, 14, 45),'title':'Dev Meeting'},
-      {'id':3, 'start': new Date(year, month, day + 1, 18), 'end': new Date(year, month, day + 1, 18, 45),'title':'Hair cut'},
-      {'id':4, 'start': new Date(year, month, day - 1, 8), 'end': new Date(year, month, day - 1, 9, 30),'title':'Team breakfast'},
-      {'id':5, 'start': new Date(year, month, day + 1, 14), 'end': new Date(year, month, day + 1, 15),'title':'Product showcase'}
-    ]
+  events : [
+  {'id':1, 'start': new Date(year, month, day, 12), 'end': new Date(year, month, day, 13, 35),'title':'Lunch with Mike'},
+  {'id':2, 'start': new Date(year, month, day, 14), 'end': new Date(year, month, day, 14, 45),'title':'Dev Meeting'},
+  {'id':3, 'start': new Date(year, month, day + 1, 18), 'end': new Date(year, month, day + 1, 18, 45),'title':'Hair cut'},
+  {'id':4, 'start': new Date(year, month, day - 1, 8), 'end': new Date(year, month, day - 1, 9, 30),'title':'Team breakfast'},
+  {'id':5, 'start': new Date(year, month, day + 1, 14), 'end': new Date(year, month, day + 1, 15),'title':'Product showcase'}
+  ]
   };
 
   $(document).ready(function() {
-  
- 
-    $('<div id="message" class="ui-corner-all"></div>').prependTo($('body'));
+
+
+  $('<div id="message" class="ui-corner-all"></div>').prependTo($('body'));
   });
 
 </script>
 
+<style type="text/css">
+		body {
+			font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+			margin: 0;
+		}
+		
+		h1 {
+      margin:0 0 2em;
+			padding: 0.5em;
+			font-size: 1.3em;
+		} 
+		
+		p.description {
+			font-size: 0.8em;
+			padding: 1em;
+			position: absolute;
+			top: 1.2em;
+			margin-right: 400px;
+		}
+		
+		#calendar_selection {
+			font-size: 0.7em;
+			position: absolute;
+			top: 1em; 
+			right: 1em;
+			padding: 1em;
+			background: #ffc;
+			border: 1px solid #dda;
+			width: 270px;
+		}
+		
+		#message {
+			font-size: 0.7em;
+			position: absolute;
+			top: 1em; 
+			right: 320px;
+			padding: 1em;
+			background: #ddf;
+			border: 1px solid #aad;
+			width: 270px;
+		}
+.wc-toolbar{font-size:12px;padding:2px 5px;margin:0}
+.wc-toolbar h1{font-size:14px;font-weight:bold;}
+.wc-toolbar .ui-buttonset{font-size:0.8em;}
+.wc-toolbar .wc-title{text-align:left;}
+.wc-header{font-size:11px;}
+.wc-grid-timeslot-header, 
+.wc-header .wc-time-column-header{width:45px;}
+.wc-time-header-cell{font-size:11px;}
+.wc-business-hours .wc-time-header-cell{font-weight:bold;}
+.wc-am-pm,
+.wc-business-hours .wc-am-pm {font-size:1em;}
+.wc-header .wc-today  {font-weight: bold;}
 
-  <h1>Week Calendar Demo</h1>
+/* colors */
+.wc-container{border-left:5px solid #BBCCFF;}
+.wc-toolbar{background:#BBCCFF;border:none;}
+.wc-header{background:#E3E9FF;border:none;}
+.wc-header{border-bottom:2px solid #BBCCFF;}
+.wc-hour-end, .wc-hour-header{color:#666666;border-color:#ccc}
+.wc-hour-header,
+.wc-grid-timeslot-header,
+.wc-business-hours{background:#F6F9FC;}
+.wc-column-odd{background:transparent;}
+.wc-column-even{background:#ddddbe;}
+.wc-time-slots .wc-today {background-color: #ffffcc;}
+.wc-scrollable-grid .wc-day-column-last,
+.wc-scrollable-grid .wc-day-column-middle,
+.wc-scrollable-grid .wc-day-column-first{border-color:#ddd;}
+/*calendar*/
+.wc-day-column-first,
+.wc-day-column-last,
+.wc-day-column-middle,
+.wc-time-slot{border-color: #ccc;}
+.wc-header .wc-day-column-header.wc-today{background-color:#FAD163;border-color:#FAD163;}
+.wc-header .wc-today.wc-user-header{font-weight:normal;}
+.wc-today.wc-day-column-last{border-right:3px double #FAD163;}
+.wc-today.wc-day-column-first{border-left:3px double #FAD163;}
 
-  <p class="description">
-    This calendar demonstrates a basic calendar. Events triggered are
-    displayed in the message area. Appointments in the past are shaded grey.
-  </p>
+	</style>
+
+
+<!-- Underscore.js Templates -->
+<script type="text/template" id="event-edit-template">
   <div id="event_edit_container">
-		<form>
-			<input type="hidden" />
-			<ul>
-				<li>
-					<span>Date: </span><span class="date_holder"></span> 
-				</li>
-				<li>
-					<label for="start">Start Time: </label><select name="start"><option value="">Select Start Time</option></select>
-				</li>
-				<li>
-					<label for="end">End Time: </label><select name="end"><option value="">Select End Time</option></select>
-				</li>
-				<li>
-					<label for="title">Title: </label><input type="text" name="title" />
-				</li>
-				<li>
-					<label for="body">Body: </label><textarea name="body"></textarea>
-				</li>
-			</ul>
-		</form>
-	</div>
+    <form>
+      <input type="hidden" />
+      <ul>
+        <li>
+          <span>Date: </span><span class="date_holder"></span>
+        </li>
+        <li>
+          <label for="start">Start Time: </label><select name="start"><option value="">Select Start Time</option></select>
+        </li>
+        <li>
+          <label for="end">End Time: </label><select name="end" ><option value="">Select End Time</option></select>
+        </li>
+        <li>
+          <label for="title">Title: </label><input type="text" name="title" value="<%= title %>" />
+        </li>
+        <li>
+          <label for="body">Body: </label><textarea name="body"></textarea>
+        </li>
+      </ul>
+    </form>
+  </div>
+</script>
 
-  <div id='calendar'></div>
-  <script src="{{ STATIC_URL }}js/stylist_booking_frontend.js"></script>
+<div id="calendar">
+  <!-- adds padding at the top since it has a fixed width -->
+  <div id="padding"></div>
+</div>
+<div id="dialog-content-holder"></div>
+<script src="{{ STATIC_URL }}js/stylist_booking_frontend.js"></script>
 
 {% endblock%}
+
+{# no footer#}
+{% block footer %}{% endblock %}

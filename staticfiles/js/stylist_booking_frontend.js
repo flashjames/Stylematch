@@ -17,8 +17,17 @@ $(function(){
         url: CALENDAREVENTS_API_URL
     });
 
+    var EventOverlayView = Backbone.View.extend({
+
+        initialize: function(){
+	},
+	events: {},
+
+    });
+
     var EventsView = Backbone.View.extend({
         el: $("#calendar"),
+	template: _.template($('#event-edit-template').html()),
         initialize: function(){
             _.bindAll(this);
 
@@ -28,6 +37,13 @@ $(function(){
             //this.collection.bind('destroy', this.destroy);
             this.eventList = new EventCollection();
 
+	    var d = new Date();
+		d.setDate(d.getDate() - d.getDay());
+		var year = d.getFullYear();
+		var month = d.getMonth();
+		var day = d.getDate();
+	    //console.log({"start": new Date(year, month, day+0, 00), "end": new Date(year, month, day+3, 00, 00), "free": false});
+	    console.log($(this.el));
             this.$calendar = $(this.el).weekCalendar({
                 timeslotsPerHour: 4,
                 timeslotHeigh: 30,
@@ -43,7 +59,7 @@ $(function(){
                 useShortDayNames: true,
                 businessHours: {start: 8, end: 18, limitDisplay: true}, //TODO: these times should be set with openhours
                 height: function($calendar) {
-                    return $(window).height(); //- $('h1').outerHeight(true);
+                    return $(window).height() - $('.navbar-inner').outerHeight(true) - $('#padding').outerHeight(true);
                 },
                 //eventNew: this.createEvent,
                 changedate: this.fetch,
@@ -51,9 +67,21 @@ $(function(){
                 eventResize: this.changedEvent,
                 eventNew: this.createEvent,
                 eventClick: this.editEvent,
+		displayFreeBusys: true,
+		defaultFreeBusy: {free: true},
+		freebusys: [
+		    {"start": new Date(year, month, day+0, 00, 01), "end": new Date(year, month, day+3, 23, 00), "free": false},
+		    {"start": new Date(year, month, day+0, 08), "end": new Date(year, month, day+0, 12, 00), "free": false},
+		    {"start": new Date(year, month, day+1, 08), "end": new Date(year, month, day+1, 12, 00), "free": false},
+		    {"start": new Date(year, month, day+2, 08), "end": new Date(year, month, day+2, 12, 00), "free": true},
+		    {"start": new Date(year, month, day+1, 14), "end": new Date(year, month, day+1, 18, 00), "free": true},
+		    {"start": new Date(year, month, day+2, 08), "end": new Date(year, month, day+2, 12, 00), "free": true},
+		    {"start": new Date(year, month, day+2, 14), "end": new Date(year, month, day+2, 18, 00), "free": true}
 
+],
 
             });
+
             this.fetch();
             //_.bindAll(this,'createEvent');
 
@@ -79,22 +107,19 @@ $(function(){
             });
 
         },
-        test: function() {
-            console.log("triggered");
-        },
         editEvent: function(calEvent, $event) {
 
             if (calEvent.readOnly) {
                 return;
             }
+	    //TODO: if it's a new event, calEvent wont have toJSON()
+	    var $dialogContent = $('#dialog-content-holder').append(this.template(calEvent.toJSON()));
 
-            var $dialogContent = $("#event_edit_container");
-            //resetForm($dialogContent);
             var startField = $dialogContent.find("select[name='start']").val(calEvent.start);
             var endField = $dialogContent.find("select[name='end']").val(calEvent.end);
             var titleField = $dialogContent.find("input[name='title']").val(calEvent.title);
             var bodyField = $dialogContent.find("textarea[name='body']");
-            bodyField.val(calEvent.body);
+            
 	    var _this = this;
             $dialogContent.dialog({
                 modal: true,
@@ -103,6 +128,7 @@ $(function(){
                     $dialogContent.dialog("destroy");
                     $dialogContent.hide();
                     $('#calendar').weekCalendar("removeUnsavedEvents");
+		    $dialogContent.html("");
                 },
                 buttons: {
                     save : function() {
@@ -115,16 +141,18 @@ $(function(){
 			_this.changedEvent(calEvent);
                         _this.$calendar.weekCalendar("updateEvent", calEvent);
                         $dialogContent.dialog("close");
+			$dialogContent.html("");
                     },
                     "delete" : function() {
 			var event_model = _this.getOriginalModel(calEvent);
-			console.log(event_model);
 			event_model.destroy();
                         _this.$calendar.weekCalendar("removeEvent", calEvent.id);
 
                         $dialogContent.dialog("close");
+			$dialogContent.html("");
                     },
                     cancel : function() {
+			$dialogContent.html("");
                         $dialogContent.dialog("close");
                     }
                 }
@@ -138,7 +166,7 @@ $(function(){
 
         },
         createEvent: function(calEvent, $event) {
-            var $dialogContent = $("#event_edit_container");
+	    var $dialogContent = $('#dialog-content-holder').append(this.template(calEvent));
             //resetForm($dialogContent);
             var startField = $dialogContent.find("select[name='start']").val(calEvent.start);
             var endField = $dialogContent.find("select[name='end']").val(calEvent.end);
@@ -153,6 +181,7 @@ $(function(){
                     $dialogContent.dialog("destroy");
                     $dialogContent.hide();
                     $('#calendar').weekCalendar("removeUnsavedEvents");
+		    $dialogContent.html("");
                 },
                 buttons: {
                     save : function() {
@@ -174,9 +203,11 @@ $(function(){
 					       title: calEvent.title}, { success: _this.createEventSuccess});
 
                         $dialogContent.dialog("close");
+			$dialogContent.html("");
                     },
                     cancel : function() {
                         $dialogContent.dialog("close");
+			$dialogContent.html("");
                     }
                 }
             }).show();
@@ -184,9 +215,9 @@ $(function(){
             $dialogContent.find(".date_holder").text(this.$calendar.weekCalendar("formatDate", calEvent.start));
             this.setupStartAndEndTimeFields(startField, endField, calEvent, this.$calendar.weekCalendar("getTimeslotTimes", calEvent.start));
         },
-	createEventSuccess: function(collection, model) {
+	createEventSuccess: function(model, resp, options) {
 	    //TODO: check for error and then use notify
-	    this.calEventWaiting.id = model.id;
+	    this.calEventWaiting = model;
 	    this.$calendar.weekCalendar("removeUnsavedEvents");
             this.$calendar.weekCalendar("updateEvent", this.calEventWaiting);
 	},
@@ -254,10 +285,14 @@ $(function(){
 	    /*
 	     * Returns the backbone model corresponding to the calEvent (which is a copy of the origin model)
 	     */
+	    //debugger;
 	    return this.eventList.get(calEvent.id);
 	},
         changedEvent: function(calEvent) {
+
             var event_model = this.getOriginalModel(calEvent);
+	    //debugger;
+	    console.log(calEvent, event_model, this.eventList);
             event_model.attributes.start_time = this.jsDateToDjango(calEvent.start);
             event_model.attributes.end_time = this.jsDateToDjango(calEvent.end);
             event_model.attributes.title = calEvent.title;

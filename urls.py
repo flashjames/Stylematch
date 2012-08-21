@@ -109,7 +109,7 @@ urlpatterns += patterns(
     (r'^om-oss/',
      TemplateView.as_view(template_name="about_us.html"),
      {},
-     'about_page'),
+     'about_us_page'),
     (r'^om-stylematch/',
      TemplateView.as_view(template_name="about_stylematch.html"),
      {},

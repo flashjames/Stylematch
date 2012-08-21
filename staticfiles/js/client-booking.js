@@ -339,13 +339,9 @@
 	    }
 	},
 	getOpeningTime: function() {
-	    // should be fetched from profile's openinghours 
 	    return EARLIEST_OPENING;
 	},
 	getClosingTime: function() {
-	    // should be fetched from profile's openinghours 
-	    // dont forget it may be a string
-	    //return 17;
 	    return LATEST_CLOSING;
 	},
 	createBlockRow: function(number_of_blocks, blockViewsRowIndex) {

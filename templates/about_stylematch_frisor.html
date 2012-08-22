@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load url from future %}
+
+{% block html-head %}
+
+{% endblock %}
+
+{% block title %}Om Tjänsten{% endblock %}
+
+{% block content %}
+<div class="row about-stylematch">
+		<div class="span12">
+		<ul class="nav nav-tabs">
+			  <li >
+			    <a href="/om-stylematch/privatperson/">Privatperson</a>
+			  </li>
+			  <li class="active"><a href="/om-stylematch/frisör/">Frisör</a></li>
+			</ul>
+			<div class="main-argument" >
+				<h1>Ditt bästa sätt att marknadsföra <br>dig online</h1>
+				<h2>Oavsett om du är salongsägare, hyrstol eller anställd, med StyleMatch kan du enkelt hålla kontakt med dina gamla kunder samtidigt som dina nya kunder hittar dig.</h2>
+				
+				<a href="/accounts/register/" class="btn btn-large btn-info">Skapa en profil</a>
+				
+			</div>
+			
+		</div>
+	
+	<div class="span12 second-arguments">
+		<div class="span3 offset1">
+			<img style="width:350px" src="{{ STATIC_URL }}img/Om-StyleMatch_hampus.png"/>
+		</div>
+		<div class="span7 argument-1"">
+			<h4>Skapa en egen profilsida</h4>
+			<p>Som frisör skapar du enkelt en egen profilsida. Du får en egen adress (stylematch.se/förnamn-efternamn). Med din profil visar du upp vem du är och var du jobbar så kunder lätt kan hitta dig. Din profil blir ditt ansikte på internet.</p>
+		</div>
+		<div class="span7 argument-2">
+						<h4>Attrahera fler kunder</h4>
+			<p>Vi hjälper dig att sprida din profilsida på stora sociala medier så som Facebook, Twitter mm. Nu kan dina kunder rekommendera och dela din profilsida till sina vänner.</p>
+		</div>
+		<div class="span7 argument-3">
+						<h4>Bli listad där kunder letar</h4>
+			<p>Vi vill att du ska synas där kunden letar. I vår söklista kan nya och gamla kunder enkelt hitta din profilsidan för att hitta information och boka dig.</p>
+		</div>
+		<div class="span7 argument-4">
+						<h4>StyleMatch ger dig resultat</h4>
+			<p>När du är inloggad kan du enkelt se hur många kunder som sett din profil under de senaste dagarna. Du ser även hur många som gillat dina galleribilder. <br><br>
+
+Du ska alltid känna att StyleMatch ger resultat. </p>
+		</div>
+		
+
+		
+	</div>
+	
+  <div class="span12 about-page-after-arguments">
+
+        <a href="/accounts/register/" class="btn btn-large btn-info">Skapa en profil</a>
+  </div>
+	
+	<div class="span12 frisor-page-seen-in">
+    <hr class="soften" style="margin:25px 0px;">
+    <h4>StyleMatch i Media</h4>
+		
+		<div class="first-row"> 
+		 <!--   CORREN		 -->
+		        <a target="_blank"  href="{{ STATIC_URL }}img/in_media/Corren-stor.png"><img src="{{ STATIC_URL }}img/frisor_page_logos/correnfull_opacity.png"
+		onmouseover="this.src='{{ STATIC_URL }}img/frisor_page_logos/correnfull.png'"
+		onmouseout="this.src='{{ STATIC_URL }}img/frisor_page_logos/correnfull_opacity.png'" border="0"/></a>
+		  <!--   END CORREN		 -->
+		  <!--   WEBBKOMET		 -->
+			<a target="_blank"  href="http://webbkomet.se/project/index/id/1040"><img src="{{ STATIC_URL }}img/frisor_page_logos/webbkommetfull_opacity.png"
+		onmouseover="this.src='{{ STATIC_URL }}img/frisor_page_logos/webbkommetfull.png'"
+		onmouseout="this.src='{{ STATIC_URL }}img/frisor_page_logos/webbkommetfull_opacity.png'" border="0"/></a>
+		  <!--  END WEBBKOMET		 -->  
+		  <!--   AFFÄRSLIV		 -->
+			<a target="_blank"  href="http://www.affarsliv.com/?articleid=6101574&date=&menuids="><img src="{{ STATIC_URL }}img/frisor_page_logos/affarslivfull_opacity.png"
+		onmouseover="this.src='{{ STATIC_URL }}img/frisor_page_logos/affarslivfull.png'"
+		onmouseout="this.src='{{ STATIC_URL }}img/frisor_page_logos/affarslivfull_opacity.png'" border="0"/></a>
+		  <!--  END AFFÄRSLIVS</div>		 -->
+		</div><div class="second-row"><!--   NT		 -->
+			<a target="_blank"  href="{{ STATIC_URL }}img/in_media/nt-tidning.jpg"><img src="{{ STATIC_URL }}img/frisor_page_logos/ntfull_opacity.png"
+		onmouseover="this.src='{{ STATIC_URL }}img/frisor_page_logos/ntfull.png'"
+		onmouseout="this.src='{{ STATIC_URL }}img/frisor_page_logos/ntfull_opacity.png'" border="0"/></a>
+		  <!--  END NT		 -->
+		  <!--   LINKÖPINGS TIDNING		 -->
+			<a target="_blank"  href="http://www.linkopingstidning.se/article/articleview/48270/1/73/"><img src="{{ STATIC_URL }}img/frisor_page_logos/linkopingstidningenfull_opacity.png"
+		onmouseover="this.src='{{ STATIC_URL }}img/frisor_page_logos/linkopingstidningenfull.png'"
+		onmouseout="this.src='{{ STATIC_URL }}img/frisor_page_logos/linkopingstidningenfull_opacity.png'" border="0"/></a>
+		  <!--  END LINKÖPINGS TIDNING		 --> </div>
+		  
+  
+  
+  </div>
+
+
+</div>
+
+{% endblock %}

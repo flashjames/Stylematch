@@ -314,6 +314,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'index.context_processors.galleria_urls',
     'index.context_processors.django_settings',
+    'accounts.context_processors.is_stylist',
+    'accounts.context_processors.is_client',
     # used to access STATIC_URL in templates
     'django.core.context_processors.media',
     'django.core.context_processors.static',

@@ -14,32 +14,33 @@
       <a class="brand" href="/"><img src="{{STATIC_URL}}img/logo.png"/></a>
       <div class="profile-dropdown dropdown pull-right">
         <a class="dropdown-toggle dropdown" data-toggle="dropdown" href="#">
-            {% with user.get_profile|profile_image_thumbnail as pit %}
-            {% if pit|get_class != 'ImageFieldFile' %}
-            <img src="{{ pit }}" />
-            {% else %}
-            {% thumbnail user.get_profile|profile_image_thumbnail:user.is_authenticated "29x29" crop="center" as im %}
-            <img src="{{ im.url }}" />
-            {% endthumbnail %}
-            {% endif %}
-            {% endwith %}
-            <span class="profile-name">{{ user.first_name }} {{ user.last_name }}<b class="caret"></b></span> 
-           
+          {% with user.get_profile|profile_image_thumbnail as pit %}
+          {% if pit|get_class != 'ImageFieldFile' %}
+          <img src="{{ pit }}" />
+          {% else %}
+          {% thumbnail user.get_profile|profile_image_thumbnail:user.is_authenticated "29x29" crop="center" as im %}
+          <img src="{{ im.url }}" />
+          {% endthumbnail %}
+          {% endif %}
+          {% endwith %}
+          <span class="profile-name">{{ user.first_name }} {{ user.last_name }}<b class="caret"></b></span>
+
         </a>
         <ul class="dropdown-menu">
           <li><a href="{% url 'edit-account-settings' %}">Kontoinställningar</a></li>
           <!-- Disabled for now
-	      <li><a href="{% url 'dashboard-invitecode' %}">Inbjudningskoder</a></li>-->
+               <li><a href="{% url 'dashboard-invitecode' %}">Inbjudningskoder</a></li>-->
           <li class="divider"></li>
           <li><a href="{% url 'logout' %}">Logga ut</a></li>
         </ul>
       </div>
       <div class="nav-collapse">
         <ul class="nav">
+	  {% if is_stylist %}
           {% url 'dashboard' as pdr %}<li class="{% active request pdr %}{% if extra_user_guidance %}call-to-action{% endif %}"><a href="{{ pdr }}">Översikt</a></li>
-          
-          
-          
+
+
+
           {% url 'profile_edit' as pe %}
           {% url 'edit_images' as ei %}
           {% url 'profiles_edit_services' as pes %}
@@ -49,36 +50,46 @@
           {% url 'search' as sp %}
           {% url 'profile_display_with_profile_url' slug=user.get_profile.profile_url as pdr %}
           {% url 'promote_page' as pp %}
-            <li class="{% active request pdr %}"><a href="{{ pdr }}">Visa profil</a></li>
-            <li class="{% active request ei  %}"><a href="{{ ei  }}">Lägg upp bilder</a></li>
-            <li class="{% active request pp %}"><a href="{{ pp }}">Marknadsför</a></li>
+          <li class="{% active request pdr %}"><a href="{{ pdr }}">Visa profil</a></li>
+          <li class="{% active request ei  %}"><a href="{{ ei  }}">Lägg upp bilder</a></li>
+          <li class="{% active request pp %}"><a href="{{ pp }}">Marknadsför</a></li>
 
-		    <li class="dropdown {% active request pe pes pah %}"> <a href="#"
-		          class="dropdown-toggle"
-		          data-toggle="dropdown">
-		          Förändra profil
-		          <b class="caret"></b>
-		    </a>
-		    <ul class="dropdown-menu">
-		 
-		          <li class="{% active request pe  %}"><a href="{{ pe  }}">Förändra kontaktinformation</a></li>
-		          <li class="{% active request pes %}"><a href="{{ pes }}">Förändra prislista</a></li>
-		          <li class="{% active request pah %}"><a href="{{ pah }}">Förändra öppettider</a></li>
-		          <li class="{% active request psp %}" style="display:none;"><a href="{{ psp }}">Förändra specialitéer</a></li>
-		    </ul>
-		    </li>
-		    
-		    <li class="dropdown {% active request ip sp %}"> <a href="#"
-		          class="dropdown-toggle"
-		          data-toggle="dropdown">
-		          Andra frisörer
-		          <b class="caret"></b>
-		    </a>
-		        <ul class="dropdown-menu">
-		    <li class="{% active request ip  %}"><a href="{{ ip }}">Inspiration</a></li>
-		    <li class="{% active request sp  %}"><a href="{{ sp }}">Se andra frisörer</a></li>
-		    </ul>
-          
+          <li class="dropdown {% active request pe pes pah %}"> <a href="#"
+                                                                   class="dropdown-toggle"
+                                                                   data-toggle="dropdown">
+              Förändra profil
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+
+              <li class="{% active request pe  %}"><a href="{{ pe  }}">Förändra kontaktinformation</a></li>
+              <li class="{% active request pes %}"><a href="{{ pes }}">Förändra prislista</a></li>
+              <li class="{% active request pah %}"><a href="{{ pah }}">Förändra öppettider</a></li>
+              <li class="{% active request psp %}" style="display:none;"><a href="{{ psp }}">Förändra specialitéer</a></li>
+            </ul>
+          </li>
+
+          <li class="dropdown {% active request ip sp %}"> <a href="#"
+                                                              class="dropdown-toggle"
+                                                              data-toggle="dropdown">
+              Andra frisörer
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li class="{% active request ip  %}"><a href="{{ ip }}">Inspiration</a></li>
+              <li class="{% active request sp  %}"><a href="{{ sp }}">Se andra frisörer</a></li>
+            </ul>
+
+            {% else %}
+	    {% url 'client_dashboard' as client_dashboard %}<li class="{% active request as client_dashboard %}"><a href="{{ client_dashboard }}">Översikt</a></li>
+            {% url 'search' as search %}
+            {% url 'inspiration_page' as inspiration %}
+            {% url 'about_private_page' as about %}
+          <li class="{% active request search %}"><a href="{{ search }}">Visa frisörer</a></li>
+          <li class="{% active request inspiration %}"><a href="{{ inspiration }}">Se bilder</a></li>
+          <li class="{% active request about %}"><a href="{{ about }}">Om StyleMatch</a></li>
+          {% endif %}
+
 
         </ul>
       </div>

@@ -16,7 +16,7 @@ from index.views import (IndexPageView,
                          error500)
 from django.contrib import admin
 from django.views.generic.simple import redirect_to
-from registration.views import register
+from accounts.register_views import register
 from accounts.register_views import (UserRegistrationForm,
                                      SignupView,
                                      SignupStep2View)
@@ -68,10 +68,13 @@ urlpatterns += patterns(
     url(r'',
             include('social_auth.urls')),
     url(r'^accounts/register/$',
-            register,
-            {'backend': 'accounts.register_views.RegisterCustomBackend',
-             'form_class': UserRegistrationForm},
-            name='registration_register'),
+        register,
+        {'form_class': UserRegistrationForm},
+        name='registration_register'),
+    url(r'^client-register/$',
+        register,
+        {'form_class': UserRegistrationForm, 'stylist': False},
+        name='client_register'),
     url(r'accounts/register/complete/',
             redirect_to,
             {'url': '/konto/registrering-steg1/'},

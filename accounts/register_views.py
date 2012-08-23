@@ -9,7 +9,16 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from registration.backends.default import DefaultBackend
 from registration.forms import RegistrationForm
+from django.contrib.auth.models import User
+from django.shortcuts import redirect
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+from django.template.loader import render_to_string
+from registration.signals import user_registered
+from django.conf import settings
+from django.contrib.auth.models import Group
 
+from accounts.models import OpenHours, UserProfile, ClientUserProfile
 from accounts.views import (OpenHoursView,
                             ServicesView,
                             SaveProfileImageView,
@@ -17,6 +26,7 @@ from accounts.views import (OpenHoursView,
 
 from index.models import BetaEmail
 
+import uuid
 import logging
 logger = logging.getLogger(__name__)
 
@@ -141,21 +151,12 @@ class RegisterCustomBackend(DefaultBackend):
         # set is_active = True, must be set and saved to DB after login
         # function is called.
         user.is_active = True
-
         user.save()
-
-        #handle_invite_code(request, user)
-
-        # update the used invitecode (if any)
-        #invite_code = kwargs['invite_code']
-        #if invite_code is not None:
-        #    invite_code.reciever = user
-        #    invite_code.save()
-
+        
         return user
 
 
-class UserRegistrationForm(RegistrationForm):
+class UserRegistrationForm(forms.Form):
     """
     Custom user registration form. Used as the main registration form.
     """
@@ -163,11 +164,25 @@ class UserRegistrationForm(RegistrationForm):
     email = forms.CharField(required=False)
     first_name = forms.CharField(label="Förnamn")
     last_name = forms.CharField(label="Efternamn")
-    #invite_code = forms.CharField(label="Inbjudningskod "
-    #                                    "(just nu behövs en inbjudan "
-    #                                    "för att gå med)")
 
     username = forms.EmailField(max_length=64, label="Emailadress")
+    password1 = forms.CharField(widget=forms.PasswordInput(render_value=True),
+                                label=_("Password"))
+    password2 = forms.CharField(widget=forms.PasswordInput(render_value=True),
+                                label=_("Password (again)"), required=False)
+
+    def clean_username(self):
+        """
+        Validate that the username is alphanumeric and is not already
+        in use.
+        
+        """
+        existing = User.objects.filter(username__iexact=self.cleaned_data['username'])
+        if existing.exists():
+            raise forms.ValidationError(_("A user with that username already exists."))
+        else:
+            return self.cleaned_data['username']
+
 
     def clean_email(self):
         """
@@ -179,45 +194,9 @@ class UserRegistrationForm(RegistrationForm):
             email = self.cleaned_data['username']
         except:
             email = ""
-
+        
         return email
 
-    def UNUSED_clean_invite_code(self):
-        """
-        Validates that the user have supplied a valid invite code.
-        And marks the code as used, if the other fields are correctly filled.
-
-        NOTE: Match on invite code is case insensitive.
-
-        """
-        supplied_invite_code = self.cleaned_data['invite_code']
-        try:
-            invite_code = InviteCode.objects.get(
-                        invite_code__iexact=supplied_invite_code,
-                        used=False,
-                        reciever=None)
-        except InviteCode.DoesNotExist:
-            # a permanent key which can be used by us
-            if (supplied_invite_code == "permanent1" or
-                supplied_invite_code == "gxc347"):
-                return None
-
-            raise forms.ValidationError(u'Din inbjudningskod (\'%s\') '
-                                        u'var felaktig. Vänligen kontrollera '
-                                        u'att du skrev rätt.'
-                                        % supplied_invite_code)
-
-        # only set the invite code to used=True if all other fields have
-        # validated correctly
-        # TODO:
-        # this is run even if the passwords doesnt match in the clean()
-        # method. since this function is run before clean()
-        if self.is_valid():
-            invite_code.used = True
-            invite_code.save()
-            return invite_code
-
-        return None
 
     def clean(self):
         """
@@ -226,24 +205,91 @@ class UserRegistrationForm(RegistrationForm):
         ``non_field_errors()`` because it doesn't apply to a single
         field.
         """
-        if ('password1' in self.cleaned_data and
-            'password2' in self.cleaned_data):
-            password1 = self.cleaned_data.get('password1')
-            password2 = self.cleaned_data.get('password2')
 
-
-            if password1 != password2:
-                error_msg = "Lösenorden stämmer ej överens"
-                self._errors['password1'] = self.error_class([error_msg])
-                raise ValidationError(error_msg)
-
+        if 'password1' in self.cleaned_data:
             MIN_LENGTH = 5
+            password1 = self.cleaned_data.get('password1')
             if len(password1) < MIN_LENGTH:
                 error_msg = "Lösenordet är för kort, minst 5 tecken."
                 self._errors['password1'] = self.error_class([error_msg])
                 raise forms.ValidationError(error_msg)
 
+        if ('password1' in self.cleaned_data and
+            'password2' in self.cleaned_data):
+            password2 = self.cleaned_data.get('password2')
+
+            #  we may have came from a template that only ask user to supply one password
+            # so this is not always checked
+            if password1 != password2:
+                error_msg = "Lösenorden stämmer ej överens"
+                self._errors['password1'] = self.error_class([error_msg])
+                raise ValidationError(error_msg)
+
         return self.cleaned_data
 
     class Meta:
         exclude = ('email',)
+
+def register(request, success_url=None, form_class=None,
+             template_name='registration/registration_form.html',
+             redirect_to="signupstep1_page", stylist=True):
+
+    if request.method == 'POST':
+        form = form_class(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            username, email, password = form.cleaned_data['username'], form.cleaned_data['username'], form.cleaned_data['password1'] # username contains the email
+            
+            new_user = User.objects.create_user(username, email, password)
+
+            # login user
+            new_user.backend = 'django.contrib.auth.backends.ModelBackend'
+            login(request, new_user)
+            
+            new_user.first_name = form.cleaned_data['first_name']
+            new_user.last_name = form.cleaned_data['last_name']
+            
+            # set is_active = True, must be set and saved to DB after login
+            # function is called.
+            new_user.is_active = True
+            new_user.save()
+            
+            if stylist:
+                UserProfile.objects.create(
+                    user=new_user,
+                    temporary_profile_url=uuid.uuid4().hex,
+                    )
+            
+                OpenHours.objects.create(user=new_user)
+                group, created = Group.objects.get_or_create(name='Stylist')
+                new_user.groups.add(group)
+
+                subject = render_to_string('registration/activation_email_subject.txt')
+                # Email subject *must not* contain newlines
+                subject = ''.join(subject.splitlines())
+        
+                message = render_to_string('registration/activation_email.txt')
+                new_user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
+
+                user_registered.send(sender="register",
+                                     user=new_user,
+                                     request=request)
+
+
+
+            else:
+                ClientUserProfile.objects.create(user=new_user)
+                group, created = Group.objects.get_or_create(name='Client')
+                new_user.groups.add(group)
+
+            if success_url is None:
+                return redirect(redirect_to)
+            else:
+                return redirect(success_url)
+    else:
+        form = form_class()
+    
+    context = RequestContext(request)
+
+    return render_to_response(template_name,
+                              {'form': form},
+                              context_instance=context)

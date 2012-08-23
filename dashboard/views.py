@@ -5,13 +5,13 @@ from django.views.generic import TemplateView
 from django.core.urlresolvers import reverse
 from accounts.models import Service, GalleryImage
 from index.models import InspirationVote
-from braces.views import LoginRequiredMixin
+from braces.views import LoginRequiredMixin, StylistRequiredMixin
 from dashboard.google_analytics import profile_statistics
 from datetime import datetime, timedelta
 
 logger = logging.getLogger(__name__)
 
-class DashboardView(LoginRequiredMixin, TemplateView):
+class DashboardView(StylistRequiredMixin, TemplateView):
     template_name="dashboard.html"
 
     def get_tasks_to_be_done(self, userprofile):

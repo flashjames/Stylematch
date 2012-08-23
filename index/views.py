@@ -250,7 +250,10 @@ class IndexPageView(TemplateView):
         # if logged in, redirect to dashboard
         # instead of displaying index poage
         if request.user.is_authenticated():
-            return redirect(reverse('dashboard'))
+            if request.user.groups.filter(name="Stylist").count():
+                return redirect(reverse('dashboard'))
+            else:
+                return redirect(reverse('client_dashboard'))
         else:
             return super(IndexPageView, self).get(request)
 

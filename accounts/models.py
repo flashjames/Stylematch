@@ -139,21 +139,6 @@ def check_profile(sender, userprofile, create_checks=True, **kwargs):
     return True
 approved_user_criteria_changed.connect(check_profile)
 
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    """
-    When a a new user is created, create a corresponding UserProfile
-    TODO:
-    Create different profiles depending on if it's a stylist or a regular user
-    """
-    if created:
-        UserProfile.objects.create(
-                user=instance,
-                temporary_profile_url=uuid.uuid4().hex,
-                #referrer_key=encode_url(instance.id),
-                                   )
-        OpenHours.objects.create(user=instance)
-
         
 def create_temporary_profile_url(first_name, last_name, userprofile):
     """
@@ -467,9 +452,8 @@ class GalleryImage(BaseImage):
 
 class UserProfile(DirtyFieldsMixin, models.Model):
     """
-    TODO:
-    fixa så twitter och facebook profil visas här, se styleseat
-    fixa description till denna modell
+    This is a UserProfile for stylists, since most of the service is for stylists
+    this UserProfile is the default UserProfile used
     """
     user = models.OneToOneField(User, parent_link=True,
                                 unique=True, editable=False)
@@ -639,6 +623,16 @@ class UserProfile(DirtyFieldsMixin, models.Model):
         return u'%s %s, %s' % (self.user.first_name,
                                self.user.last_name,
                                self.salon_city)
+
+
+class ClientUserProfile(models.Model):
+    user = models.OneToOneField(User, parent_link=True,
+                                unique=True, editable=False)
+    phone_number = models.CharField("Personligt telefonnummer",
+                                    max_length=30,
+                                    blank=True,
+                                    null=True)
+
 
 
 # Signals handler for deleting files after object record deleted

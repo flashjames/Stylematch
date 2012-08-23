@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% load thumbnail %}
+
+{% block title %}Översikt{% endblock %}
+
+
+{% block content %}
+
+<div class="page-header">
+  <h1>
+    Översikt
+    <small>{{ user.first_name.title }} {{ user.last_name.title }}</small>
+  </h1>
+</div>
+{% endblock %}{# /content #}

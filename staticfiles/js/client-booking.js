@@ -160,30 +160,25 @@
     });
 
     window.EventView = Backbone.View.extend({
-        el: $("body"),
+	el: $("#client-booking-container"),
 	currentTopDate: DATE_TODAY, //the date that is displayed in the first row, starts at the todays date  TODO: remove the wrong default
 	cutNumberOfBlocks: 8, //this is the number of time-blocks the choosed cut/cuts take
 	weekDay: {0: "sön", 1: "mån", 2: "tis", 3: "ons", 4: "tors", 5: "fre", 6: "lör"}, // start of week is sunday, in Date()
 	selectedServices: [1], //TODO: Remove this default
 	blocksPerRow: null, // number of blocks each row is
+	template:_.template($('#tpl-booking-schedule').html()),
         initialize:function () {
             //Glue code, that initialize's all views and models
             this.eventList = new EventCollection();
 	    this.on('possibleToBook', this.possibleToBook, this);
 	    this.on('unHighlightBlocks', this.unHighlightBlocks, this);
-	    _.bindAll(this, 'success', 'selectService');
-	    
-	    this.blocksPerRow = this.getBlocksPerRow();
-	    this.fetch();
-	    this.createBlocks();
-	    this.displayTimes();
+	    _.bindAll(this, 'success');
 	    //_.bindAll(this, 'loadData', 'fetchSuccess'); 
 	    
         },
 	events: {
 	    'click #but': 'fetchNextWeek',
 	    'click #but2': 'fetchPreviousWeek',
-	    'click .service-book-me': 'selectService',
 	},
 	fetch: function() {
 	    var data = {_start_time: this.currentTopDate};
@@ -285,7 +280,7 @@
 		}
 		i=++i;
 	    }
-	    
+
 	    if(sum_not_busy_blocks == this.cutNumberOfBlocks) {
 		_.each(this.not_busy_blocks, function(block) {
 		    block.highlight();
@@ -347,7 +342,7 @@
 	createBlockRow: function(number_of_blocks, blockViewsRowIndex) {
 	    var block_views_row = []; var current_block;
 	    var current_tr = $("<tr></tr>");
-	    $('table').append(current_tr);
+	    this.$('table').append(current_tr);
 	    var right_block = false
 	    while(number_of_blocks-- > 0) {
 	 	//sum = ++sum;
@@ -498,9 +493,6 @@
 			needed_empty_blocks = _this.cutNumberOfBlocks;
 			current_blocks = []
 		    }
-		    if(outer_index == 5 && index > 10) {
-			debugger;
-		    }
 
 		});
 
@@ -567,15 +559,63 @@
 	    }
 	    return {success: success, open_times: open_times, closed_times: closed_times}
 	},
-        render:function (eventName) {
+	setServiceLength: function() {
+	    // same service but in the clientbooking service list
+	    var total_length = 0;
+	    _.each(this.selectedServices, function(service_id) {
+		var service_in_dropdown = $('#service-dropdown').find('#service-dropdown-id-' + service_id);
+		var service_length = service_in_dropdown.find('.service-dropdown-length').text();
+		var length_in_blocks = service_length / 15;
+		total_length += length_in_blocks;
+	    });
+	    this.cutNumberOfBlocks = total_length;
+
+	    
+	},
+	render:function (eventName) {
+            this.$el.html(this.template());
+            this.blocksPerRow = this.getBlocksPerRow();
+	    this.setServiceLength();
+            this.fetch();
+	    this.createBlocks();
+            this.displayTimes();
             return this;
-        },
+         },
         close:function () {
             $(this.el).unbind();
             $(this.el).empty();
         }
     });
-    this.EventView = new EventView();
+
+    window.BookingView = Backbone.View.extend({
+        el: $("#booking-part"),
+	initialize:function () { 
+            _.bindAll(this, 'selectService');
+	    
+
+       },
+       events: {
+           'click .service-book-me': 'selectService',
+       },
+       selectService: function(event) {
+           
+           var service_id = $(event.currentTarget).attr('id');
+
+           if(!this.EventView) {
+               this.EventView = new EventView();
+	       this.EventView.selectedServices = [service_id];
+	       this.EventView.render();
+           } else {
+	       this.EventView.selectedServices = [service_id];
+	       this.EventView.setServiceLength();
+	       this.EventView.setInactiveBlocks();
+           }
+
+           return false;
+       },
+
+    });
+    this.BookingView = new BookingView();
 
 })(jQuery);
 

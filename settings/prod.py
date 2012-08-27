@@ -18,7 +18,8 @@ DATABASES = {
 }
 
 # Sentry (loggin) DSN value, the key used to send logs to Sentry
-SENTRY_DSN = 'http://3d949b7351ba4e4e803fdd131ee267b7:4c3da4fdcf7d40a785e18f9f75badffe@sentry.stylematch.se/1'
+#SENTRY_DSN = 'http://3d949b7351ba4e4e803fdd131ee267b7:4c3da4fdcf7d40a785e18f9f75badffe@sentry.stylematch.se/1'
+SENTRY_DSN = "http://20195eef47244f21a845b9eaa12a3af3:68325bc8efe64aceaec134815ef41850@sentry.stylematch.se/1"
 
 LOGGING = SENTRY_LOGGING
 

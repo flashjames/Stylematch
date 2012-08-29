@@ -73,7 +73,7 @@ urlpatterns += patterns(
         name='registration_register'),
     url(r'^client-register/$',
         register,
-        {'form_class': UserRegistrationForm, 'stylist': False},
+        {'form_class': UserRegistrationForm, 'stylist': False, 'success_url': 'client_dashboard'},
         name='client_register'),
     url(r'accounts/register/complete/',
             redirect_to,

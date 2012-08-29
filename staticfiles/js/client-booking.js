@@ -6,6 +6,8 @@
         cache: false
     });
 
+    vent = _.extend({}, Backbone.Events);
+
     window.Event = Backbone.Model.extend({ });
     window.EventCollection = Backbone.Collection.extend({
         model:Event,
@@ -79,6 +81,13 @@
 	    console.log(date_formatted, this.options.blockViewsRowIndex);
 	    return date_formatted;
 	},
+	timeDisplayedToUser: function(django_formatted_starttime, django_formatted_endtime) {
+	    var start = django_formatted_starttime.split("T"),
+	    end_time = django_formatted_endtime.split("T")[1];
+	    output = "Datum: " + start[0]+ "<span id='time'>Tid: " + start[1] + " - " + end_time + "</span>";
+
+	    return output;
+	},
 	book: function() {
 	    var parent = this.options.parent;
 	    if(this.inactive || this.busy) return false
@@ -90,17 +99,12 @@
 	    date = this.getDate(),
 	    django_formatted_starttime = date + "T" + start_time,
 	    django_formatted_endtime = date + "T" + end_time;
+	    time_displayed_to_user = this.timeDisplayedToUser(django_formatted_starttime, django_formatted_endtime);
 	    
 	    if(!parent.selectedServices) {
 		l("no service selected");
 	    }
-
-	    //TODO: handle booking of multiple services
-	    var service_id = parent.selectedServices[0];
-	    console.log(django_formatted_starttime, django_formatted_endtime);
-	    parent.eventList.create({start_time: django_formatted_starttime, 
-				     end_time: django_formatted_endtime, 
-				     title: 'booked_online'});
+	    vent.trigger("bookChangeView", django_formatted_starttime, django_formatted_endtime, time_displayed_to_user);
 	},
 	setBusy: function() {
 	    this.busy = true;
@@ -186,7 +190,7 @@
 	    var date_next_week = this.getDateDaysAhead(this.parseDate(this.currentTopDate), 7)
 	    var date_formatted = this.formatDate(date_next_week);
 	    data['_end_time'] = date_formatted;
-		
+
 	    this.eventList.fetch({
 		data: data,
 		success: this.success
@@ -206,18 +210,6 @@
 	    this.blocksOutsideOpenhours();
 	    this.setInactiveBlocks();
         },
-	selectService: function(event) {
-	    var service_id = $(event.currentTarget).attr('id');
-
-	    // same service but in the clientbooking service list
-	    var service_in_dropdown = $('#service-dropdown').find('#service-dropdown-id-' + service_id);
-	    this.selectedServices = [service_id];
-	    var service_length = service_in_dropdown.find('.service-dropdown-length').text();
-	    var length_in_blocks = service_length / 15;
-	    this.cutNumberOfBlocks = length_in_blocks;
-	    this.setInactiveBlocks();
-	    return false;
-	},
 	formatDate: function(date) {
 	    //YYYY-MM-DD
 	    return date.getFullYear() + "-" + this.padZeros(date.getMonth() + 1) + "-" + date.getDate();
@@ -457,7 +449,7 @@
 		number_of_blocks = this.numberOfBlocksBetween(start_time, end_time);
 
 		var block_row = this.getBlockRow(event.get('start_time').split("T")[0]);
-		l('fillbusyblocks', start_time, end_time, number_of_blocks, block_row);
+		l('fillbusyblocks', event.get('start_time'), event.get('end_time').split("T"), number_of_blocks, block_row);
 		this.setBlocksBusy(start_time, number_of_blocks, block_row);
 
             }, this);
@@ -559,23 +551,10 @@
 	    }
 	    return {success: success, open_times: open_times, closed_times: closed_times}
 	},
-	setServiceLength: function() {
-	    // same service but in the clientbooking service list
-	    var total_length = 0;
-	    _.each(this.selectedServices, function(service_id) {
-		var service_in_dropdown = $('#service-dropdown').find('#service-dropdown-id-' + service_id);
-		var service_length = service_in_dropdown.find('.service-dropdown-length').text();
-		var length_in_blocks = service_length / 15;
-		total_length += length_in_blocks;
-	    });
-	    this.cutNumberOfBlocks = total_length;
-
-	    
-	},
-	render:function (eventName) {
+	render:function () {
             this.$el.html(this.template());
+	    vent.trigger("eventViewTemplateRendered");
             this.blocksPerRow = this.getBlocksPerRow();
-	    this.setServiceLength();
             this.fetch();
 	    this.createBlocks();
             this.displayTimes();
@@ -587,35 +566,120 @@
         }
     });
 
-    window.BookingView = Backbone.View.extend({
+    window.BookingConfirmationView = Backbone.View.extend({
+        el: $("#client-booking-container"),
+	template:_.template($('#tpl-booking-confirmation').html()),
+	events: {
+	    'click #confirm-booking': function() {
+		vent.trigger("bookingConfirmed");
+		// should destroy this view too?
+	    },
+	    //'click #confirm-booking': 'confirmBooking',
+	},
+	render:function (services_info, time_displayed_to_user) {
+	    this.$el.html(this.template({services_info: services_info, time_displayed_to_user: time_displayed_to_user}));
+	    return this;
+	},
+    });
+
+    window.BookingDoneView = Backbone.View.extend({
+        el: $("#client-booking-container"),
+	template:_.template($('#tpl-booking-done').html()),
+	events: {
+	    'click #confirm-booking': function() {
+		vent.trigger("bookingConfirmed");
+		// should destroy this view too?
+	    },
+	    //'click #confirm-booking': 'confirmBooking',
+	},
+	render:function (services_info, time_displayed_to_user) {
+	    this.$el.html(this.template());
+	    return this;
+	},
+    });
+    
+
+    window.BookingMainView = Backbone.View.extend({
         el: $("#booking-part"),
 	initialize:function () { 
-            _.bindAll(this, 'selectService');
+            _.bindAll(this, 'selectService', 'bookChangeView', 'setServiceLength', 'bookingConfirmed');
+	    vent.on("bookChangeView", this.bookChangeView);
+	    // set service length, need to be called after template have been rendered
+	    vent.on("eventViewTemplateRendered", this.setServiceLength);
+	    vent.on("bookingConfirmed", this.bookingConfirmed);
+	    this.EventView = new EventView();this.selectedServices = [1];this.EventView.render();this.EventView.blockViews[4][10].book();
+	},
+	events: {
+            'click .service-book-me': 'selectService',
+	},
+	selectService: function(event) {
+            var service_id = $(event.currentTarget).attr('id');
+
+            if(!this.EventView) {
+		this.EventView = new EventView();
+		this.selectedServices = [service_id];
+		this.EventView.render();
+            } else {
+		this.selectedServices = [service_id];
+		this.setServiceLength();
+		this.EventView.setInactiveBlocks();
+            }
 	    
+            return false;
+	},
+	setServiceLength: function() {
+	    // same service but in the clientbooking service list
+	    var total_length = 0;
+	    _.each(this.selectedServices, function(service_id) {
+		var service = this.getServiceInfo(service_id);
+		var length_in_blocks = service.length / 15;
+		total_length += length_in_blocks;
+	    }, this);
+	    this.EventView.cutNumberOfBlocks = total_length;
+	},
+	getServiceInfo: function(service_id) {
+	    var service = {};
+	    var service_in_dropdown = $('#service-dropdown').find('#service-dropdown-id-' + service_id);
+	    service.length = service_in_dropdown.find('.service-dropdown-length').text();
+	    service.name = service_in_dropdown.find('.service-dropdown-name').text();
+	    return service;
+	},
+	bookingConfirmed: function() {	    
+	    var _this = this;
+ 	    this.EventView.eventList.create({start_time: this.django_formatted_starttime, 
+					     end_time: this.django_formatted_endtime, 
+	    				     note: 'Bokad online',
+					     stylist_user_id: STYLIST_ID,
+					     services: this.selectedServices
+					    }, {success: function() {
+						console.log("added");
+						_this.bookingDoneView = new BookingDoneView().render();
+					    }});
+	    this.$('#loading-img').css("display","inline-block");
+	    this.$('#confirm-booking').toggle();
+	},
+	bookChangeView: function(django_formatted_starttime, django_formatted_endtime, time_displayed_to_user) {
 
-       },
-       events: {
-           'click .service-book-me': 'selectService',
-       },
-       selectService: function(event) {
-           
-           var service_id = $(event.currentTarget).attr('id');
-
-           if(!this.EventView) {
-               this.EventView = new EventView();
-	       this.EventView.selectedServices = [service_id];
-	       this.EventView.render();
-           } else {
-	       this.EventView.selectedServices = [service_id];
-	       this.EventView.setServiceLength();
-	       this.EventView.setInactiveBlocks();
-           }
-
-           return false;
-       },
-
+	    var services_info = "";
+	    _.each(this.selectedServices, function(service_id, i) {
+		service = this.getServiceInfo(service_id);
+		services_info += service.name + " (" + service.length + " minuter)";
+		
+		// comma at all services, except last service
+		if(this.selectedServices.length - 1 != i) services_info += ", ";
+		
+	    }, this);
+	    //TODO: handle booking of multiple services
+	    console.log(django_formatted_starttime, django_formatted_endtime, time_displayed_to_user);
+	    // TODO: when this view is no longer used, this variable should be destroyed. on view level?
+	    this.BookingConfirmationView = new BookingConfirmationView().render(services_info, time_displayed_to_user);
+	    this.django_formatted_starttime = django_formatted_starttime;
+	    this.django_formatted_endtime = django_formatted_endtime;
+	    
+	    this.bookingConfirmed(); //TODO: REMOVE!!
+	},
     });
-    this.BookingView = new BookingView();
+    this.BookingMainView = new BookingMainView();
 
 })(jQuery);
 

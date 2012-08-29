@@ -230,9 +230,9 @@ class UserRegistrationForm(forms.Form):
     class Meta:
         exclude = ('email',)
 
-def register(request, success_url=None, form_class=None,
+def register(request, form_class=None,
              template_name='registration/registration_form.html',
-             redirect_to="signupstep1_page", stylist=True):
+             success_url="signupstep1_page", stylist=True):
 
     if request.method == 'POST':
         form = form_class(data=request.POST, files=request.FILES)
@@ -281,10 +281,7 @@ def register(request, success_url=None, form_class=None,
                 group, created = Group.objects.get_or_create(name='Client')
                 new_user.groups.add(group)
 
-            if success_url is None:
-                return redirect(redirect_to)
-            else:
-                return redirect(success_url)
+            return redirect(success_url)
     else:
         form = form_class()
     

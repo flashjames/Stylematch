@@ -26,9 +26,9 @@ from django.core.validators import MaxLengthValidator
 import uuid
 import os
 import re
-import logging
 import urllib
 
+import logging
 logger = logging.getLogger(__name__)
 
 

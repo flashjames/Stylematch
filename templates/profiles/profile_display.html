@@ -30,6 +30,25 @@
 <meta property="og:country-name" content="SWEDEN">
 <meta property="og:title" content="{{ first_name }} {{ last_name }}">
 </script>
+
+{# Client booking #}
+{% if got_onlinebooking %}
+<script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
+<script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
+<!-- include this or backbone collection's wont be parsed correctly -->
+<script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
+<script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
+<!-- used in the service.js file, to know where the service api is located -> doesnt need to hardcode the url -->
+<script>
+  var CALENDAREVENTS_API_URL = "{% url 'api_dispatch_list' api_name="booking" resource_name="calendar_event" %}";
+  var DATE_TODAY = "{{ date_today }}";
+  var EARLIEST_OPENING = "{{ earliest_opening }}";
+  var LATEST_CLOSING = "{{ latest_closing }}";
+  var CSRF_TOKEN = "{{ CSRF_TOKEN }}";
+  var OPENING_HOURS = {{ weekdays|safe }};
+  var STYLIST_ID = {{ STYLIST_ID }};
+</script>
+{% endif %}
 {% endblock %} {# html-head #}
 
 {% block title %}
@@ -42,6 +61,74 @@
 
 
 {% block content %}
+<script type="text/template" id="tpl-booking-confirmation">
+  <div id="outer" class="booking-confirmation">
+    <div id="inner">
+      <h1>Du är på gång att boka:</h1>
+      <div id="information-block">
+	<h3><%= services_info %></h3>
+	<p><%= time_displayed_to_user %></p>
+      </div>
+      <h2>Har du ett meddelande till {{ first_name.title }} {{ last_name.title }}?</h2>
+      <textarea id="message" rows="3" cols="220" name="message"></textarea>
+    </div>
+
+    <div id="submit">
+      <button type="submit" name="confirm-booking" id="confirm-booking" class="btn btn-primary btn-large">Boka tiden!</button>
+      <div id="loading-img">
+      <img src="{{ STATIC_URL }}img/facebook_loading.gif" />
+      </div>
+      <button type="submit" name="cancel-booking" id="cancel-booking" class="btn btn-large">Avbryt</button>
+    </div>
+
+  </div>
+</script>
+
+<script type="text/template" id="tpl-booking-done">
+  <h1>Du har nu bokat tiden!</h1>
+</script>
+
+<script type="text/template" id="tpl-booking-schedule">
+
+  <div id="outer">
+    <div id="inner">
+
+      <div id="dates-container">
+        <ul>
+          <li>
+            <a id="but2" class="btn" href="#">
+              <i class="icon-chevron-up"></i>
+            </a>
+          </li>
+          <div id="dates">
+          </div>
+          <li>
+            <a id="but" class="btn">
+              <i class="icon-chevron-down"></i>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+      <div id="table-container">
+        <ul id="times">
+        </ul>
+        <table>
+        </table>
+      </div>
+      <ul id="service-dropdown" style="display:none">
+        {% for service in services %}
+        <li id="service-dropdown-id-{{ service.id }}">
+          <div class="service-dropdown-name">{{ service.name }}</div>
+          <div class="service-dropdown-length">{{ service.length }}</div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</script>
+
+
 <div id="fb-root"></div>
 
 {% if user.is_superuser %}
@@ -133,124 +220,81 @@
 
 <hr class="soften">
 
-<div class="row" >
-  <div class="span8">
-    {% if services %}
-    <h3>Prislista</h3>
-    {% for service in services %}
-    {% include "profiles/display_service_snippet.html" with service=service %}
-    {% endfor %}
-    {% else %}
-    {% if user.is_authenticated and logged_in_user_profile %}
-    <h3>Prislista</h3>
-    <div class="alert alert-error">
-      <p><strong>Du har inte fyllt i någon prislista än!</strong></p>
-      <a href="{% url 'profiles_edit_services' %}">
-        Fyll i din prislista här!
-      </a>
-    </div>
-    {% endif %}
-    {% endif %} {# services #}
-  </div>
-
-  <div class="span3 pull-right">
-    {% if openhours_reviewed %}
-    <div>
-      <table class="open-hours-profile">
-        <thead>
-          <th>&nbsp;</th>
-          <th style="padding-left:15px;">Öppettider</th>
-        </thead>
-        <tbody>
-          {% for day in weekdays %}
-          <tr>
-            <td > {{ day.day }}</td>
-
-            {% if day.open == -1 or day.closed == -1 %}
-            <td style="padding-left:15px;">Stängt</td>
-            {% else %}
-            <td style="padding-left:15px;">{{ day.open }} - {{ day.closed }}</td>
-            {% endif %}
-
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      {% else %}
-      {% if user.is_authenticated and logged_in_user_profile %}
-      <div class="alert alert-error">
-        <p><strong>Du har inte fyllt i dina öppettider!</strong></p>
-        <a href="{% url 'profiles_add_hours' %}">Fyll i dina öppettider här</a>
-      </div>
-      {% endif %}
-      {% endif %}
-    </div>
-  </div>
-
-  {# Display a red bar over navigation if the user just have registered #}
-  {% if extra_user_guidance %}
-  <script type="text/javascript">
-    setTimeout(function() {
-    $('#major-notification').slideDown();
-    $('.masthead').css('margin-top','48px');
-    }, 3000);
-  </script>
-  {% endif %}
+<div id="booking-part">
+  <div class="row" >
+    <div class="span8">
+        {% if got_onlinebooking %}
 
 
+	    <div id="client-booking-container"></div>
 
-  {# Client booking #}
-  <script src="{{ STATIC_URL }}js/underscore/underscore-min.js"></script>
-  <script src="{{ STATIC_URL }}js/backbone/backbone-min.js"></script>
-  <!-- include this or backbone collection's wont be parsed correctly -->
-  <script src="{{ STATIC_URL }}js/backbone-tastypie.js"></script>
-  <script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
-  <!-- used in the service.js file, to know where the service api is located -> doesnt need to hardcode the url -->
-  <script>
-    var CALENDAREVENTS_API_URL = "{% url 'api_dispatch_list' api_name="booking" resource_name="calendar_event" %}";
-    var DATE_TODAY = "{{ date_today }}";
-    var EARLIEST_OPENING = "{{ earliest_opening }}";
-    var LATEST_CLOSING = "{{ latest_closing }}";
-    var CSRF_TOKEN = "{{ CSRF_TOKEN }}";
-    var OPENING_HOURS = {{ weekdays|safe }};
-  </script>
 
-  <div id="client-booking-container">
-    <div id="dates-container">
-      <ul>
-        <li>
-          <a id="but2" class="btn" href="#">
-            <i class="icon-chevron-up"></i>
+	<script src="{{ STATIC_URL }}js/client-booking.js"></script>
+	{% endif %}
+
+      <div id="services">
+        {% if services %}
+        <h3>Prislista</h3>
+        {% for service in services %}
+        {% include "profiles/display_service_snippet.html" with service=service %}
+        {% endfor %}
+        {% else %}
+        {% if user.is_authenticated and logged_in_user_profile %}
+        <h3>Prislista</h3>
+        <div class="alert alert-error">
+          <p><strong>Du har inte fyllt i någon prislista än!</strong></p>
+          <a href="{% url 'profiles_edit_services' %}">
+            Fyll i din prislista här!
           </a>
-        </li>
-        <div id="dates">
         </div>
-        <li>
-          <a id="but" class="btn">
-            <i class="icon-chevron-down"></i>
-          </a>
-        </li>
+        {% endif %}
+        {% endif %} {# services #}
+      </div>
+    </div>
 
-      </ul>
+    <div class="span3 pull-right">
+      {% if openhours_reviewed %}
+      <div>
+        <table class="open-hours-profile">
+          <thead>
+            <th>&nbsp;</th>
+            <th style="padding-left:15px;">Öppettider</th>
+          </thead>
+          <tbody>
+            {% for day in weekdays %}
+            <tr>
+              <td > {{ day.day }}</td>
+
+              {% if day.open == -1 or day.closed == -1 %}
+              <td style="padding-left:15px;">Stängt</td>
+              {% else %}
+              <td style="padding-left:15px;">{{ day.open }} - {{ day.closed }}</td>
+              {% endif %}
+
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        {% if user.is_authenticated and logged_in_user_profile %}
+        <div class="alert alert-error">
+          <p><strong>Du har inte fyllt i dina öppettider!</strong></p>
+          <a href="{% url 'profiles_add_hours' %}">Fyll i dina öppettider här</a>
+        </div>
+        {% endif %}
+        {% endif %}
+      </div>
     </div>
-    <div id="table-container">
-      <ul id="times">
-      </ul>
-      <table>
-      </table>
-    </div>
+
+    {# Display a red bar over navigation if the user just have registered #}
+    {% if extra_user_guidance %}
+    <script type="text/javascript">
+      setTimeout(function() {
+      $('#major-notification').slideDown();
+      $('.masthead').css('margin-top','48px');
+      }, 3000);
+    </script>
+    {% endif %}
   </div>
-
-  <script src="{{ STATIC_URL }}js/client-booking.js"></script>
-
-  <ul id="service-dropdown" style="display:none">
-    {% for service in services %}
-    <li id="service-dropdown-id-{{ service.id }}">
-      <div class="service-dropdown-name">{{ service.name }}</div>
-      <div class="service-dropdown-length">{{ service.length }}</div>
-    </li>
-    {% endfor %}
-  </ul>
-
 
   {% endblock %}

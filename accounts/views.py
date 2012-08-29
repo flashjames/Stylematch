@@ -189,6 +189,7 @@ class DisplayProfileView(DetailView):
         context['date_today'] = datetime.now().strftime("%Y-%m-%d")
         context['got_onlinebooking'] = True
         context['CSRF_TOKEN'] = get_token(self.request)
+        context['STYLIST_ID'] = self.request.user.id;
 
         context['site_domain'] = settings.SITE_DOMAIN
 

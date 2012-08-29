@@ -6,7 +6,7 @@ $(function(){
 
             this.start = new Date(Date.parse(response.start_time));;
             this.end = new Date(Date.parse(response.end_time));;
-            this.title = response.title;
+            this.title = response.note;
             this.id = response.id;
             return response;
         },
@@ -49,7 +49,7 @@ $(function(){
                 timeslotHeigh: 30,
                 hourLine: true,
                 data: this.data,
-                timeFormat: "h:i",
+                timeFormat: "H:i",
                 firstDayOfWeek: 1,
                 use24Hour: true,
                 timeSeparator: " - ",
@@ -323,7 +323,7 @@ $(function(){
 	    console.log(calEvent, event_model, this.eventList);
             event_model.attributes.start_time = this.jsDateToDjango(calEvent.start);
             event_model.attributes.end_time = this.jsDateToDjango(calEvent.end);
-            event_model.attributes.title = calEvent.title;
+            event_model.attributes.note = calEvent.title;
             event_model.save({silent:true});
         },
         jsDateToDjango: function(date_object) {

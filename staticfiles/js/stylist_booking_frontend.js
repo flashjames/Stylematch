@@ -43,7 +43,7 @@ $(function(){
 		var month = d.getMonth();
 		var day = d.getDate();
 	    //console.log({"start": new Date(year, month, day+0, 00), "end": new Date(year, month, day+3, 00, 00), "free": false});
-	    console.log($(this.el));
+	    //console.log($(this.el));
             this.$calendar = $(this.el).weekCalendar({
                 timeslotsPerHour: 4,
                 timeslotHeigh: 30,
@@ -53,6 +53,7 @@ $(function(){
                 firstDayOfWeek: 1,
                 use24Hour: true,
                 timeSeparator: " - ",
+		newEventText: "",
                 buttonText: {today : "idag", lastWeek : "<", nextWeek : ">"},
                 shortMonths:  ['Jan', 'Feb', 'Mar', 'Apr', 'Maj', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'],
                 shortDays: ['Sön', 'Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör'],
@@ -192,13 +193,19 @@ $(function(){
 
         },
         createEvent: function(calEvent, $event) {
+	    // calEvent is a backbone model on editEvent/changeEvent, there is the title attribute called note
+	    // and we use the same underscore template..
+	    calEvent.note = calEvent.title;
+
 	    var $dialogContent = $('#dialog-content-holder').append(this.template(calEvent));
             //resetForm($dialogContent);
             var startField = $dialogContent.find("select[name='start']").val(calEvent.start);
             var endField = $dialogContent.find("select[name='end']").val(calEvent.end);
+
             var titleField = $dialogContent.find("input[name='title']");
             var bodyField = $dialogContent.find("textarea[name='body']");
 	    var _this = this;
+
 	    
             $dialogContent.dialog({
                 modal: true,
@@ -226,7 +233,7 @@ $(function(){
 			// save event to database
 			_this.eventList.create({start_time: _this.jsDateToDjango(calEvent.start),
 					       end_time: _this.jsDateToDjango(calEvent.end),
-					       title: calEvent.title}, { success: _this.createEventSuccess});
+					       note: calEvent.title}, { success: _this.createEventSuccess});
 
                         $dialogContent.dialog("close");
 			$dialogContent.html("");

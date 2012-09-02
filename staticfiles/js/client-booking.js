@@ -185,7 +185,7 @@
 	    'click #but2': 'fetchPreviousWeek',
 	},
 	fetch: function() {
-	    var data = {_start_time: this.currentTopDate};
+	    var data = {_start_time: this.currentTopDate, stylist_user: STYLIST_ID};
 	    // end_time needs to be the date + 1, or django will filter the last date
 	    var date_next_week = this.getDateDaysAhead(this.parseDate(this.currentTopDate), 7)
 	    var date_formatted = this.formatDate(date_next_week);
@@ -607,7 +607,7 @@
 	    // set service length, need to be called after template have been rendered
 	    vent.on("eventViewTemplateRendered", this.setServiceLength);
 	    vent.on("bookingConfirmed", this.bookingConfirmed);
-	    this.EventView = new EventView();this.selectedServices = [1];this.EventView.render();this.EventView.blockViews[4][10].book();
+	    this.EventView = new EventView();this.selectedServices = [1];this.EventView.render();//this.EventView.blockViews[4][10].book();
 	},
 	events: {
             'click .service-book-me': 'selectService',
@@ -649,7 +649,7 @@
  	    this.EventView.eventList.create({start_time: this.django_formatted_starttime, 
 					     end_time: this.django_formatted_endtime, 
 	    				     note: 'Bokad online',
-					     stylist_user_id: STYLIST_ID,
+					     stylist_user: STYLIST_ID,
 					     services: this.selectedServices
 					    }, {success: function() {
 						console.log("added");

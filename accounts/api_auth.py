@@ -15,6 +15,19 @@ class PerUserAuthorization(Authorization):
 
             return object_list.none()
 
+class StylistAuthorization(Authorization):
+    """
+    Only show objects that's related to the user
+    http://stackoverflow.com/questions/7015638/django-and-backbone-js-questions
+    """
+    def apply_limits(self, request, object_list):
+        if request and hasattr(request, 'user'):
+            if request.user.is_authenticated():
+
+                object_list = object_list.filter(stylist_user=request.user)
+                return object_list
+
+        return object_list.none()
 
 class DjangoBasicAuthentication(BasicAuthentication):
     """

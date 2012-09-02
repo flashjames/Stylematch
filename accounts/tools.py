@@ -1,5 +1,6 @@
 # coding:utf-8
 import uuid
+from django.core.exceptions import ObjectDoesNotExist
 
 def format_minutes_to_hhmm(minutes):
     """
@@ -184,3 +185,19 @@ class UrlEncoder(object):
 
 def encode_url(n, min_length=MIN_LENGTH):
     return UrlEncoder().encode_url(n, min_length)
+
+def is_stylist(user):
+    try:
+        userprofile = user.userprofile
+    except ObjectDoesNotExist:
+        return False
+
+    return True
+        
+def is_client(user):
+    try:
+        userprofile = user.clientuserprofile
+    except ObjectDoesNotExist:
+        return False
+
+    return True

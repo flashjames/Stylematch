@@ -40,7 +40,7 @@
 <script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
 <!-- used in the service.js file, to know where the service api is located -> doesnt need to hardcode the url -->
 <script>
-  var CALENDAREVENTS_API_URL = "{% url 'api_dispatch_list' api_name="booking" resource_name="calendar_event" %}";
+  var CALENDAREVENTS_API_URL = "{% url 'api_dispatch_list' api_name="booking" resource_name="client_calendar_event" %}";
   var DATE_TODAY = "{{ date_today }}";
   var EARLIEST_OPENING = "{{ earliest_opening }}";
   var LATEST_CLOSING = "{{ latest_closing }}";

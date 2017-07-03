@@ -1,4 +1,4 @@
-#Avizera - ProjectX
+#Stylist marketing
 
 ###INSTALLATION
 
